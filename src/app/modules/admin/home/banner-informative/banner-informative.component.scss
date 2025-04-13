@@ -1,0 +1,35 @@
+.banner {
+    border-bottom-left-radius: 30px;
+    border-top-right-radius: 30px;
+}
+
+.description-banner {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    background-color: #F6EBE5;
+    border-bottom-right-radius: 30px;
+    width: 334px;
+    height: 112px;
+    padding: 1rem;
+
+    padding: 20px 30px;
+}
+
+.name-banner {
+    color: #CD202C;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 42px;
+    letter-spacing: 1.16px;
+}
+
+.welcome-banner {
+    //font-family: "Museo Sans";
+    color: #565A5C;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 16px;
+    letter-spacing: 0.6px;
+}

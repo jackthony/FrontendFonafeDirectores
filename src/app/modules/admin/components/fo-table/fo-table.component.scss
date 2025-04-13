@@ -1,0 +1,114 @@
+@media (max-width: 1350px) {
+    .table-responsive {
+        display: block;
+        width: 99%;
+        overflow-x: auto;
+
+        .mat-table {
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 1rem;
+            display: table;
+            border-collapse: collapse;
+            margin: 0px;
+        }
+    }
+
+    .mat-cell,
+    .mat-header-cell {
+        padding: 0px 5px;
+        white-space: nowrap;
+    }
+}
+
+.mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
+    background-color: #99df99 !important;
+}
+
+.mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
+    background-color: #3ccf68 !important;
+}
+
+.mat-slide-toggle .mat-slide-toggle-bar {
+    background-color: rgb(233, 129, 129) !important;
+}
+
+.mat-slide-toggle .mat-slide-toggle-thumb {
+    background-color: rgb(220, 38, 38) !important;
+}
+
+.mat-checkbox-inner-container {
+    margin-right: 0 !important;
+}
+
+
+.btnIcon {
+    color: white;
+}
+
+th {
+    font-family: "inter-regular";
+    font-weight: 600;
+    font-size: 14px;
+    color: #233559;
+    border-bottom: none;
+}
+
+tr.mat-header-row {
+    height: 50px;
+}
+
+table tr:first-child th:first-child {
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+
+table tr:last-child th:last-child {
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.mdc-data-table__row {
+    border-bottom-color: var(
+        --mat-table-row-item-outline-color,
+        rgba(0, 0, 0, 0.12)
+    );
+    border-bottom-width: var(--mat-table-row-item-outline-width, 1px);
+    border-bottom-style: solid;
+}
+
+span {
+    font-family: "inter-regular";
+    font-size: 13px;
+    font-weight: 400;
+    color: #1e293b;
+}
+
+bu-toggle {
+    margin-left: 8px;
+}
+
+img {
+    cursor: pointer;
+}
+
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8); /* Fondo semi-transparente */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Asegúrate de que esté encima de la tabla */
+}
+
+.loading-text {
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #555; /* Color del texto */
+}

@@ -3,6 +3,13 @@
     "compileOnSave": false,
     "compilerOptions": {
         "baseUrl": "./src",
+        "paths": {
+            "@components/*": ["app/modules/admin/components/*"],
+            "@services/*": ["app/core/services/*"],
+            "@models/*": ["app/core/models/*"],
+            "@entities/*": ["app/core/entities/*"],
+            "@shared/*": ["app/shared/models/*"],
+        },
         "outDir": "./dist/out-tsc",
         "esModuleInterop": true,
         "sourceMap": true,

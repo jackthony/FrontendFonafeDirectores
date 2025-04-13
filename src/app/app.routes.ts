@@ -60,13 +60,13 @@ export const appRoutes: Route[] = [
             layout: 'empty'
         },
         children: [
-            {path: 'home', loadChildren: () => import('app/modules/landing/home/home.routes')},
+            //{path: 'home', loadChildren: () => import('app/modules/landing/home/home.routes')},
         ]
     },
 
     // Admin routes
     {
-        path: '',
+        path: 'example',
         canActivate: [AuthGuard],
         canActivateChild: [AuthGuard],
         component: LayoutComponent,
@@ -74,7 +74,25 @@ export const appRoutes: Route[] = [
             initialData: initialDataResolver
         },
         children: [
+            { path: 'home', loadComponent: () => import('app/modules/admin/home/home.component') },
             {path: 'example', loadChildren: () => import('app/modules/admin/example/example.routes')},
+        ]
+    },
+
+    {
+        path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        data: {
+            layout: 'fonafe'
+        },
+        /* resolve: {
+            initialData: initialDataResolver
+        }, */
+        children: [
+            { path: 'home', loadComponent: () => import('app/modules/admin/home/home.component') },
+            //{path: 'example', loadChildren: () => import('app/modules/admin/example/example.routes')},
         ]
     }
 ];

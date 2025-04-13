@@ -51,5 +51,11 @@ export class IconsService {
                 'icons/heroicons-mini.svg'
             )
         );
+        matIconRegistry.addSvgIconSetInNamespace(
+            'fonafe',
+            domSanitizer.bypassSecurityTrustResourceUrl(
+                'icons/fonafe.svg'
+            )
+        );
     }
 }

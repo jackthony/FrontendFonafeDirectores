@@ -1,0 +1,25 @@
+<div class="grid grid-cols-1 lg:grid-cols-5 gap-6 p-6 w-full">
+    <!-- Sección izquierda: 60% -->
+    <div class="lg:col-span-3">
+        <div>
+            <app-banner-informative>
+            </app-banner-informative>
+            <div class="my-8">
+                <fo-sub-title-card [text]="'Mis actividades'"></fo-sub-title-card>
+            </div>
+            <fo-table 
+                [headers]="headerTable()"
+                [data]="dataTableActivities()">
+
+            </fo-table>
+
+        </div>
+
+      <!-- Contenido principal (imagen, saludo, tabla) -->
+    </div>
+  
+    <!-- Sección derecha: 40% -->
+    <div class="lg:col-span-2">
+      <!-- Acciones rápidas / Mis procesos -->
+    </div>
+</div>

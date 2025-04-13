@@ -1,6 +1,7 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 import {
+    ChangeDetectorRef,
     Component,
     inject,
     Input,
@@ -25,6 +26,7 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class FuseLoadingBarComponent implements OnChanges, OnInit, OnDestroy {
     private _fuseLoadingService = inject(FuseLoadingService);
+    private _cd = inject(ChangeDetectorRef)
 
     @Input() autoMode: boolean = true;
     mode: 'determinate' | 'indeterminate';
@@ -72,6 +74,7 @@ export class FuseLoadingBarComponent implements OnChanges, OnInit, OnDestroy {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((value) => {
                 this.show = value;
+                this._cd.detectChanges();
             });
     }
 
