@@ -1,0 +1,18 @@
+
+.btn-default {
+    background-color: #CD202C !important;
+    border-radius: 16px !important;
+    gap: 5px;
+    mat-icon {
+        color: #ffffff;
+        margin-right: 10px !important;
+    }
+    span {
+        font-family: "Museo Sans";
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 100%;
+        letter-spacing: 0.6px;
+        color: #ffffff;
+    }
+}

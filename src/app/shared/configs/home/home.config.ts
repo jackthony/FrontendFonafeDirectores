@@ -1,4 +1,4 @@
-import { TableColumnsDefInterface } from "../interfaces/ITableColumnsDefInterface";
+import { TableColumnsDefInterface } from "../../interfaces/ITableColumnsDefInterface";
 
 export const COLUMNS_ACTIVITIES: TableColumnsDefInterface[] = [
     {
@@ -38,15 +38,15 @@ export const COLUMNS_ACTIVITIES: TableColumnsDefInterface[] = [
         type: "string"
     },
     {
-        id: 5,
+        id: 6,
         name: "solicit",
         displayedName: "Solicitante",
         type: "string"
     },
     {
-        id: 5,
+        id: 7,
         name: "none",
-        displayedName: "NUEVO BOTON",
-        type: "string"
+        displayedName: "",
+        type: "enter"
     }
 ];

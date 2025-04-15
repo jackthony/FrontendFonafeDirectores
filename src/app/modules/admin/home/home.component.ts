@@ -1,5 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { COLUMNS_ACTIVITIES } from 'app/shared/configs/home.config';
+import { COLUMNS_ACTIVITIES } from 'app/shared/configs/home/home.config';
 import { HOME_IMPORTS } from 'app/shared/imports/components/home.imports';
 import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDefInterface';
 
@@ -44,6 +44,8 @@ export default class HomeComponent implements OnInit {
 
 	headerTable = signal<TableColumnsDefInterface[]>([]);
 	dataTableActivities = signal<any[]>([]);
+
+	
 
 	ngOnInit(): void {
 		this.headerTable.set(COLUMNS_ACTIVITIES);

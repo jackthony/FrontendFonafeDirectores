@@ -1,6 +1,6 @@
-<div class="grid grid-cols-1 lg:grid-cols-5 gap-6 p-6 w-full">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6 w-full">
     <!-- Sección izquierda: 60% -->
-    <div class="lg:col-span-3">
+    <div class="lg:col-span-2">
         <div>
             <app-banner-informative>
             </app-banner-informative>
@@ -10,7 +10,6 @@
             <fo-table 
                 [headers]="headerTable()"
                 [data]="dataTableActivities()">
-
             </fo-table>
 
         </div>
@@ -19,7 +18,7 @@
     </div>
   
     <!-- Sección derecha: 40% -->
-    <div class="lg:col-span-2">
-      <!-- Acciones rápidas / Mis procesos -->
+    <div class="lg:col-span-1">
+        <app-my-processes></app-my-processes>
     </div>
 </div>

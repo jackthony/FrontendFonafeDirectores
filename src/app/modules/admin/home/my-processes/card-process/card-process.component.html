@@ -1,0 +1,11 @@
+<div class="card-body">
+    <div class="flex items-center">
+        <mat-icon class="text-white icon-size-8" [svgIcon]="icon()"></mat-icon>
+        <span class="text-card m-4">{{ text() }}</span>
+    </div>
+    <div>
+        <button mat-mini-fab class="icon-enter" aria-label="Ingresar" (click)="toClickOption()">
+            <mat-icon svgIcon="keyboard_arrow_right"></mat-icon>
+          </button>
+    </div>
+</div>

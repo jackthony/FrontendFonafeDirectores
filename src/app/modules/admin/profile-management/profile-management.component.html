@@ -1,0 +1,12 @@
+<div class="w-full grid grid-cols-1 gap-4">
+    <fo-return></fo-return>
+    <fo-cont-card>
+        <fo-title-module [text]="titleModule()"></fo-title-module>
+    </fo-cont-card>
+    <app-search-users></app-search-users>
+    <fo-table 
+        [headers]="headerTable()"
+        [data]="dataTableActivities()"
+        [icons]="iconsTable()">
+    </fo-table>
+</div>

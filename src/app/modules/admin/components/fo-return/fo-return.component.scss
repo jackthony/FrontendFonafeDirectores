@@ -1,0 +1,30 @@
+.btn-icon-tiny {
+    margin-right: 12px;
+    background-color: #CD202C;
+    width: 25px;
+    height: 25px;
+    padding: 0;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.btn-icon-tiny:hover {
+    box-shadow: 0 0 0 1px rgba(144, 2, 2, 0.8); /* Simula un "borde" blanco */
+}
+  
+.btn-icon-tiny mat-icon {
+    color: #ffffff !important;
+}
+
+.text-back {
+    font-family: "Museo Sans";
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0.6px;
+    color: #565A5C;
+
+}

@@ -1,0 +1,17 @@
+<button
+    class="btn-default"
+    type="button"
+    [disabled]="disabledBtn()"
+    [attr.form]="nameForm()"
+    mat-button
+    (click)="emitAction()"
+>
+    @if(icon()) {
+        <mat-icon
+            [svgIcon]="icon()">
+        </mat-icon>
+    }
+    <span>
+        {{ text() }}
+    </span>
+</button>

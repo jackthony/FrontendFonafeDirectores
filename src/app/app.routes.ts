@@ -92,6 +92,8 @@ export const appRoutes: Route[] = [
         }, */
         children: [
             { path: 'home', loadComponent: () => import('app/modules/admin/home/home.component') },
+            { path: 'gestion-perfiles', loadComponent: () => import('app/modules/admin/profile-management/profile-management.component') },
+
             //{path: 'example', loadChildren: () => import('app/modules/admin/example/example.routes')},
         ]
     }

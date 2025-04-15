@@ -1,0 +1,26 @@
+.card-body {
+    width: 100%;
+    height: 80px;
+    border-radius: 22px;
+    background-color: #CD202C;   
+    padding: 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.text-card {
+    color: #FFFFFF;
+    font-family: "Mulish";
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 18px;
+    letter-spacing: 0.16px;
+}
+
+.icon-enter {
+    background-color: white;
+    mat-icon {
+    color: #CF422F !important;
+    }
+}

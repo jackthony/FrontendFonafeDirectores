@@ -1,0 +1,6 @@
+<mat-card class="w-full rounded-2xl p-6">
+    @if(title) {
+        <fo-sub-title-card [text]="title()"></fo-sub-title-card>
+    }
+    <ng-content></ng-content>
+</mat-card>

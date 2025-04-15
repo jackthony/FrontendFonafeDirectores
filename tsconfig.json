@@ -9,6 +9,7 @@
             "@models/*": ["app/core/models/*"],
             "@entities/*": ["app/core/entities/*"],
             "@shared/*": ["app/shared/models/*"],
+            "@public/*": ["/public"]
         },
         "outDir": "./dist/out-tsc",
         "esModuleInterop": true,

@@ -26,15 +26,12 @@
 
 <div class="table-responsive">
         @defer {
-            <table mat-table [dataSource]="dataSource" style="width: 100%" class="mat-cell">
+            <table mat-table [dataSource]="dataSource" style="width: 100%" class="mat-cell table-fonafe">
                 @for (item of headers(); track item.id) {
                     <ng-container [matColumnDef]="item.name">
                         <th
-                            [ngStyle]="{
-                                'background-color': '#F8F8F8'
-                            }"
                             mat-header-cell
-                            class="pl-5"
+                            class="pl-5 header-table"
                             *matHeaderCellDef>
                             @if (item.displayedName === 'checkbox') {
                                 <ng-container
@@ -46,15 +43,11 @@
                                     </mat-checkbox>
                                 </ng-container>
                             } @else {
-                                
-                                    
-                                    <span> {{ item.displayedName }}</span>
-                                    
-                                <!-- {{ 'scopeHeaders :' + scopeHeaders }}
-                                {{ item.displayedName | transloco: { scope: scopeHeaders } }} -->
+                                <span> {{ item.displayedName }}</span>
                             }
                         </th>
                         <td
+                            class="body-table"
                             mat-cell
                             *matCellDef="let element; let indice = index"
                             [attr.data-label]="item.displayedName"
@@ -138,7 +131,7 @@
                                 @case ("acciones") {
                                     <div class="flex flex-row items-center">
                                         @if (item.name === 'none' || element[item.name]) {
-                                            @for (icon of icons; track $index) {
+                                            @for (icon of icons(); track $index) {
                                                 @if(!icon.isHidden(element)) {
                                                     <span [matTooltip]="showMessageT($index, element, item, icon)">
                                                         <button
@@ -150,13 +143,23 @@
                                                             "
                                                             [ngStyle]="{ color: icon.color }">
                                                             <mat-icon
-                                                                class="icon-size-5 text-current"
+                                                                class="icon-size-5 text-current icon-options"
                                                                 [svgIcon]="icon.type + ':' + icon.name"></mat-icon>
                                                         </button>
                                                     </span>
                                                 }
                                             }
                                         }
+                                    </div>
+                                }
+                                @case ("enter") {
+                                    <div class="flex items-center">
+                                        <button class="btn-ingresar">
+                                            <span>Ingresar</span>
+                                        </button>
+                                        <button class="ml-2" mat-icon-button>
+                                            <mat-icon class="text-black">more_vert</mat-icon>
+                                        </button>
                                     </div>
                                 }
                                 @default {
@@ -174,7 +177,7 @@
                         No se encontró datos registrados
                     </td>
                 </tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                <tr class="row-table" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
             </table>
         } @placeholder {
             <!-- <ngx-skeleton-loader count="5" appearance="line" /> -->

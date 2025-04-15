@@ -1,4 +1,4 @@
-import { Component, EventEmitter, input, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, input, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatTable, MatTableDataSource } from "@angular/material/table";
 
 import { FO_TABLE_IMPORTS } from 'app/shared/imports/components/fo-table.imports';
@@ -10,7 +10,8 @@ import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDef
   standalone: true,
   imports: [...FO_TABLE_IMPORTS],
   templateUrl: './fo-table.component.html',
-  styleUrl: './fo-table.component.scss'
+  styleUrl: './fo-table.component.scss',
+  encapsulation: ViewEncapsulation.None
 })
 export class FoTableComponent<T> {
 	@ViewChild(MatTable) table: MatTable<T>;

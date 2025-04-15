@@ -1,0 +1,15 @@
+<fo-cont-card>
+    <div class="grid grid-cols-1 md:grid-cols-8 lg:grid-cols-8">
+        <div class="col-span-1 md:col-span-4 lg:col-span-2 ">
+            <app-fo-search [placeText]="placeTextSearch()"></app-fo-search>
+        </div>
+        <div class="col-span-1 md:col-span-4 lg:col-span-6 flex justify-end items-center">
+            <fo-button
+                
+                [text]="textBtnSearch()" 
+                [icon]="iconBtnSearch()">
+            </fo-button>
+
+        </div>
+    </div>
+</fo-cont-card>

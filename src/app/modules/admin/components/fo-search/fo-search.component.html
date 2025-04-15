@@ -1,0 +1,14 @@
+<div class="flex border my-2 container-search border-gray-400 justify-between">
+    <!-- <button class="ml-3 mt-2" [ngClass]="{ 'pointer-events-none': disabledBtn() }">
+        <mat-icon>search</mat-icon>
+    </button> -->
+    <input
+        #valueText
+        [disabled]="disabledBtn()"
+        type="text"
+        [value]="defaultValue()"
+        class="search-input"
+        [placeholder]="placeText()"
+        (keyup)="search(valueText.value)" />
+    <mat-icon class="icon-search">search</mat-icon>
+</div>
