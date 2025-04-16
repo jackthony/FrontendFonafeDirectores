@@ -1,0 +1,78 @@
+.fuse-confirmation-dialog-panel {
+
+    @screen md {
+        @apply w-128;
+    }
+
+    .mat-mdc-dialog-container {
+
+        .mat-mdc-dialog-surface {
+            padding: 0 !important;
+        }
+    }
+}
+
+.title-dialog {
+    color: #565A5C;
+    font-family: "Museo Sans";
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 100%;
+}
+
+.body-dialog {
+    font-family: "Museo Sans";
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 140%;
+    text-align: center;
+    color: #565A5C;
+}
+
+.btn-default-dialog {
+    border: 1px solid #CD202C;
+    background-color: #CD202C !important;
+    border-radius: 8px !important;
+    /* padding: 14px 20px 14px 20px !important; */
+    gap: 10px;
+    height: 47px;
+    width: 159px;
+    max-height: 48px !important;
+    mat-icon {
+        color: #ffffff;
+        margin-right: 10px !important;
+    }
+    span {
+        font-family: "Inter var";
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 100%;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        color: #F5F5F5;
+    }
+}
+
+.btn-default-dialog-cancel {
+    border: 1px solid #CD202C;
+    background-color: #FFFFFF !important;
+    border-radius: 8px !important;
+    /* padding: 14px 20px 14px 20px !important; */
+    gap: 10px;
+    height: 47px;
+    width: 159px;
+    max-height: 48px !important;
+    mat-icon {
+        color: #ffffff;
+        margin-right: 10px !important;
+    }
+    span {
+        font-family: "Inter var";
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 100%;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        color: #CD202C;
+    }
+}

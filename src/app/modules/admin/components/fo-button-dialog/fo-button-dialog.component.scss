@@ -1,0 +1,35 @@
+.btn-default-dialog {
+    border-radius: 8px !important;
+    gap: 10px;
+    height: 47px;
+    width: 159px;
+    max-height: 48px !important;
+}
+
+.btn-default-dialog-send {
+    border: 1px solid #CD202C;
+    background-color: #CD202C !important;
+    span {
+        font-family: "Inter var";
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 100%;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        color: #F5F5F5;
+    }
+}
+
+.btn-default-dialog-cancel {
+    border: 1px solid #CD202C;
+    background-color: #FFFFFF !important;
+    span {
+        font-family: "Inter var";
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 100%;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        color: #CD202C;
+    }
+}

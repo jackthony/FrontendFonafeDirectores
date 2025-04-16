@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, input, signal } from '@angular/core';
+import { Component, EventEmitter, input, Output, signal } from '@angular/core';
 import { FoButtonComponent } from '@components/fo-button/fo-button.component';
 import { FoContCardComponent } from '@components/fo-cont-card/fo-cont-card.component';
 import { FoSearchComponent } from '@components/fo-search/fo-search.component';
@@ -15,4 +15,12 @@ export class SearchUsersComponent {
     placeTextSearch = signal<string>('Busca por nombre de usuario');
 	iconBtnSearch = signal<string>('mat_outline:add_circle_outline');
 	textBtnSearch = signal<string>('Agregar usuario');
+
+	@Output() eventNewUser: EventEmitter<void> = new EventEmitter<void>();
+
+	addUser(): void {
+		this.eventNewUser.emit();
+	}
+
+
 }

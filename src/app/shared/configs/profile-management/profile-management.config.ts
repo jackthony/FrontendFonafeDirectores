@@ -1,3 +1,4 @@
+import { DialogConfirmation } from "@components/fo-dialog-confirmation/models/dialog-confirmation.interface";
 import { TableColumnsDefInterface } from "../../interfaces/ITableColumnsDefInterface";
 
 export const COLUMNS_PROFILE_MANAGEMENT: TableColumnsDefInterface[] = [
@@ -50,9 +51,14 @@ export const COLUMNS_PROFILE_MANAGEMENT: TableColumnsDefInterface[] = [
         type: "string"
     },
     {
-        id: 7,
+        id: 8,
         name: "none",
         displayedName: "",
         type: "acciones"
     }
 ];
+
+export const CONFIG_DELETE_DIALOG_PROFILE: DialogConfirmation = {
+    title: "¿Estás seguro de eliminar al usuario?",
+    message: "Recuerda que una vez se haya eliminado al usuario no podrá ingresar al portal, ni realizar ninguna acción en el."
+}

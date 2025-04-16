@@ -1,0 +1,13 @@
+<button
+    [class]="{
+        'btn-default-dialog-send': typeButton() === buttonEnum().SEND,
+        'btn-default-dialog-cancel': typeButton() === buttonEnum().CANCEL,
+    }"
+    class="btn-default-dialog px-5 py-[14px]"
+    type="button"
+    mat-button
+>
+    <span>
+        {{ textBtn() }}
+    </span>
+</button>

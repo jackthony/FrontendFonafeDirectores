@@ -1,8 +1,13 @@
-import { Component, signal } from '@angular/core';
-import { COLUMNS_PROFILE_MANAGEMENT } from 'app/shared/configs/profile-management/profile-management.config';
+import { Component, inject, signal } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogConfirmation } from '@components/fo-dialog-confirmation/models/dialog-confirmation.interface';
+import { FuseConfirmationService } from '@fuse/services/confirmation';
+import { COLUMNS_PROFILE_MANAGEMENT, CONFIG_DELETE_DIALOG_PROFILE } from 'app/shared/configs/profile-management/profile-management.config';
 import { PROFILE_MANAGEMENT_IMPORTS } from 'app/shared/imports/components/profile-management.imports';
 import { IconOption } from 'app/shared/interfaces/IGenericIcon';
 import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDefInterface';
+import { DialogConfirmationService } from 'app/shared/services/dialog-confirmation.service';
+import { FormProfileComponent } from './dialog/form-profile/form-profile.component';
 
 export const mockData = [
 	{
@@ -115,8 +120,10 @@ export const mockData = [
   styleUrl: './profile-management.component.scss'
 })
 export default class ProfileManagementComponent {
+	private _matDialog: MatDialog = inject(MatDialog);
+	private _dialogConfirmationService = inject(DialogConfirmationService);
+	
     titleModule = signal<string>('Gestión de perfiles');
-
 	headerTable = signal<TableColumnsDefInterface[]>([]);
 	dataTableActivities = signal<any[]>([]);
 	iconsTable = signal<IconOption<any>[]>([]);
@@ -129,11 +136,36 @@ export default class ProfileManagementComponent {
 		this.iconsTable.set(this.defineIconsTable())
 	}
 
+	openFormDialog(): void {
+		const respDialogo = this._matDialog.open(FormProfileComponent, {
+			data: null,
+		    disableClose: true,
+			width: "700px",
+		    minWidth: "350px",
+			panelClass: 'mat-dialog-not-padding',
+		});
+		/* respDialogo.beforeClosed().subscribe(res => {
+		    if(res){
+			    this._ngxToastrService.messageSave(element);
+			    this.eventToListTable.emit();
+		    }
+		}); */
+	}
+
+
 	defineIconsTable(): IconOption<any>[]{
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
         const iconDelete = new IconOption("delete", "mat_outline", "Eliminar");
 
+		iconDelete.actionIcono = (data: any) => {
+            this.openDialogDelete();
+        };
+
     
         return [iconEdit, iconDelete];
     }
+
+	openDialogDelete(): void {
+		this._dialogConfirmationService.open(CONFIG_DELETE_DIALOG_PROFILE);
+	}
 }

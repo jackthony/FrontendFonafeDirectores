@@ -1,6 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { APP_INITIALIZER, ApplicationConfig, inject } from '@angular/core';
-import { LuxonDateAdapter } from '@angular/material-luxon-adapter';
+import { LuxonDateAdapter, MAT_LUXON_DATE_FORMATS } from '@angular/material-luxon-adapter';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import {
@@ -36,7 +36,8 @@ export const appConfig: ApplicationConfig = {
         },
         {
             provide: MAT_DATE_FORMATS,
-            useValue: {
+            useValue: MAT_LUXON_DATE_FORMATS
+            /* useValue: {
                 parse: {
                     dateInput: 'D',
                 },
@@ -46,7 +47,7 @@ export const appConfig: ApplicationConfig = {
                     dateA11yLabel: 'DD',
                     monthYearA11yLabel: 'LLLL yyyy',
                 },
-            },
+            }, */
         },
 
         // Transloco Config
