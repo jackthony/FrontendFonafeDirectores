@@ -10,4 +10,6 @@ import { Component, input } from '@angular/core';
 })
 export class FoTitleModuleComponent {
     text = input.required<string>();
+
+    titleBold = input<boolean>(false);
 }

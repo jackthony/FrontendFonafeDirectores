@@ -107,6 +107,7 @@ const config = {
                 sans: `"Inter var", ${defaultTheme.fontFamily.sans.join(',')}`,
                 mono: `"IBM Plex Mono", ${defaultTheme.fontFamily.mono.join(',')}`,
                 museosans: `"Museo Sans", ${defaultTheme.fontFamily.sans.join(',')}`,
+                museosansbold: `"Museo Sans Bold", ${defaultTheme.fontFamily.sans.join(',')}`,
             },
             opacity: {
                 12: '0.12',

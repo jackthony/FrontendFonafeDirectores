@@ -5,11 +5,11 @@ import { FoSearchForButtonComponent } from "@components/fo-search-for-button/fo-
 import { FoTableComponent } from "@components/fo-table/fo-table.component";
 import { FoTitleModuleComponent } from "@components/fo-title-module/fo-title-module.component";
 
-export const PROFILE_MANAGEMENT_IMPORTS = [
+export const BUSINESS_MANAGEMENT_IMPORTS = [
   CommonModule,
   FoReturnComponent,
+  FoContCardComponent,
   FoTitleModuleComponent,
   FoTableComponent,
-  FoSearchForButtonComponent,
-  FoContCardComponent
+  FoSearchForButtonComponent
 ];

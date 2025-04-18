@@ -188,4 +188,28 @@
                 <div class="loading-text">Cargando...</div>
             </div>
         }
+
+        <div class="paginator">
+            <div class="flex bg-white">
+                <button class="flex items-center gap-2" (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">
+                    <mat-icon svgIcon="mat_outline:chevron_left"></mat-icon>
+                    Anterior
+                </button>
+                @for (page of pages; track $index; let f = $first; let l = $last) {
+                    <span 
+                        [ngClass]="{'ml-2': f, 'mr-2' : l}"
+                        (click)="onPageChange(page)" 
+                        [class.active]="page === currentPage">
+                      {{ page }}
+                    </span>
+    
+                }
+                
+                <button class="flex items-center gap-2" (click)="onPageChange(currentPage + 1)" [disabled]="currentPage === totalPages">
+                    Siguiente
+                    <mat-icon svgIcon="mat_outline:chevron_right"></mat-icon>
+                </button>
+
+            </div>
+        </div>
 </div>

@@ -1359,3 +1359,58 @@ textarea.mat-mdc-input-element {
     border-top-right-radius: 12px !important;
     border-bottom-right-radius: 12px !important;
 }
+
+/* -------------------------------------------------------------------------- */
+/*  @ Mat Tab
+/* -------------------------------------------------------------------------- */
+
+.mat-tab-custom-fonafe {
+    .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+        color: #ffffff;
+    }
+    .mat-mdc-tab.mdc-tab--active:focus .mdc-tab__text-label {
+        color: #ffffff;
+    }
+    .mat-mdc-tab.mdc-tab--active:hover .mdc-tab__text-label {
+        color: #ffffff;
+    }
+    .mat-mdc-tab:not(.mdc-tab--active) .mdc-tab__text-label {
+        color: #565A5C; /* o el color que desees cuando no esté seleccionado */
+    }
+    .mat-mdc-tab.mdc-tab {
+        background-color: #ffffff;
+        height: 34px;
+    }
+    .mdc-tab-indicator {
+        display: none;
+    }
+    .mat-mdc-tab.mdc-tab--active .mat-mdc-tab-ripple {
+        background-color: #CD202C !important;
+        border-radius: 6px;
+    }
+    .mdc-tab__text-label {
+        font-family: "Inter";
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 20px;
+    }
+    .mat-mdc-card {
+        border-radius: 0px 1rem 1rem 1rem !important;
+    }
+}
+.mat-tab-custom-fonafe.mat-mdc-tab-group:not(.mat-background-primary):not(.mat-background-accent) .mat-mdc-tab-header .mat-mdc-tab-label-container {
+    box-shadow: none !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/*  @ Mat Card
+/* -------------------------------------------------------------------------- */
+
+.not-padding-body.mat-mdc-tab-group {
+    .mat-mdc-tab-label-container {
+        margin: 0px;
+    }
+    .mat-mdc-tab-body-content {
+        padding: 0px;
+    }
+} 

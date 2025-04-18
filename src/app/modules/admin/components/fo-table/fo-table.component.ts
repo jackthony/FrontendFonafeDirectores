@@ -1,4 +1,4 @@
-import { Component, EventEmitter, input, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, input, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatTable, MatTableDataSource } from "@angular/material/table";
 
 import { FO_TABLE_IMPORTS } from 'app/shared/imports/components/fo-table.imports';
@@ -27,6 +27,28 @@ export class FoTableComponent<T> {
     @Output() eventFilterData: EventEmitter<string> = new EventEmitter<string>();
     @Output() eventRestoreData: EventEmitter<T> = new EventEmitter<T>();
 
+    /* PAGINADOR MOCK */
+
+    @Input() currentPage: number = 1;
+    @Input() totalPages: number = 10;
+    @Output() pageChanged: EventEmitter<number> = new EventEmitter<number>();
+
+    onPageChange(page: number): void {
+      if (page >= 1 && page <= this.totalPages) {
+        this.currentPage = page;
+        this.pageChanged.emit(this.currentPage);
+      }
+    }
+  
+    get pages(): number[] {
+      const pages = [];
+      for (let i = 1; i <= this.totalPages; i++) {
+        pages.push(i);
+      }
+      return pages;
+    }
+
+    /*FIN DE PAGINADOR*/
     
 
     public displayedColumns: string[] = [];

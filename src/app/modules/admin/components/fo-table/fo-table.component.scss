@@ -25,6 +25,12 @@
     background-color: transparent;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
+    .mdc-data-table__row {
+        border-bottom-color: #565A5C !important;
+    }
+    .mat-mdc-cell {
+        border-bottom-color: #565A5C !important;
+    }
 }
 
 .mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
@@ -160,3 +166,49 @@ img {
 .icon-options {
     color: #CD202C !important;
 }
+
+/*CSS PAGINATOR*/
+.paginator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Inter";
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0%;
+    text-align: center;
+    vertical-align: middle;
+    color: #565A5C;
+    margin-top: 40px;
+
+  }
+  
+  .paginator button {
+    padding: 5px 10px;
+    cursor: pointer;
+    background-color: #ffffff;
+    height: 36px;
+  }
+  
+  .paginator button:disabled {
+    background-color: lightgray;
+    cursor: not-allowed;
+  }
+  
+  .paginator span {
+    padding: 5px 10px;
+    cursor: pointer;
+    background-color: #ffffff;
+    height: 36px;
+    width: 36px;
+    align-content: center;
+  }
+  
+  .paginator span.active {
+    font-weight: 400;
+    background-color: #E0E2DE;
+    color: #565A5C;
+    border-radius: 6px;
+  }
+  
