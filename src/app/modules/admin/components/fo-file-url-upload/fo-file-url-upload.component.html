@@ -1,0 +1,35 @@
+<div class="w-full mt-10">
+    <mat-card class="card-upload p-6">
+        <div class="container-card-file">
+            <div>
+                <img
+                    alt="Archivo de repositorio"
+                    class="image-upload"
+                    src="images/uploads/repository-file.png"
+                />
+            </div>
+            <div>
+                <button class="btn-upload-file" type="button" mat-button>
+                    <div class="flex items-center gap-1">
+                        <span> Subir </span>
+                        <mat-icon
+                            suffix
+                            svgIcon="mat_outline:upload"
+                        ></mat-icon>
+                    </div>
+                </button>
+            </div>
+        </div>
+        <div class="flex flex-col gap-4">
+            <p class="text-link">También puedes agregar un link donde se encuentren todos tus archivos.</p>
+            <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Link</mat-label>
+                <input 
+                    matInput 
+                    placeholder="--"
+                    type="text"
+                    maxlength="50">
+            </mat-form-field>  
+        </div>
+    </mat-card>
+</div>

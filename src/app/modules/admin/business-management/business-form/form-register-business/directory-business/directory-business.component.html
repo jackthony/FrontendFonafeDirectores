@@ -1,0 +1,23 @@
+<fo-cont-card [enabledPadding]="false">
+    @if(newFormDirectory()) {
+        <app-form-directory></app-form-directory>
+    } @else {
+        <div class="p-6">
+            <div class="w-full flex justify-end mb-8">
+                <fo-button
+                    [text]="textButtonNew()"
+                    [icon]="iconButtonNew()"
+                    (eventAction)="openRegisterDirectory()"
+                    >
+                </fo-button>
+            </div>
+                <fo-table 
+                    [headers]="headerTable()"
+                    [data]="dataTableDirectory()"
+                    [icons]="iconsTable()">
+                </fo-table>
+    
+        </div>
+
+    }
+</fo-cont-card>

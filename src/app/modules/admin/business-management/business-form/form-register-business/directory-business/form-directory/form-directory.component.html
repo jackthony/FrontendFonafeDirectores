@@ -1,0 +1,379 @@
+<div class="w-full">
+    <div class="grid grid-cols-3 gap-4 p-10">
+        <div class="col-span-3 mb-4 flex justify-between items-center">
+            <fo-title-area [titleArea]="titlePersonal()"></fo-title-area>
+            <div>
+                <button
+                    class="btn-delete-directory"
+                    type="button"
+                    mat-button >
+                    <div class="flex items-center gap-2">
+                        <span>
+                            Eliminar director
+                        </span>
+                        <mat-icon svgIcon="mat_outline:cancel"></mat-icon>
+                    </div>
+                </button>
+
+            </div>
+        </div>
+        <div class="col-span-1">
+            <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Tipo de documento</mat-label>
+                <mat-select
+                    placeholder="--">
+                    @for (module of []; track $index) {
+                        <mat-option [value]="module?.ncodeModule">
+                            {{ module?.description }}
+                        </mat-option>
+                    }
+                    <mat-option [value]="1">
+                        {{ 'Programas' }}
+                    </mat-option>
+                    <mat-option [value]="2">
+                        {{ 'Inscripciones' }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="col-span-1">
+            <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Número de documento</mat-label>
+                <input
+                    matInput 
+                    placeholder="--"
+                    type="text"
+                    maxlength="50">
+            </mat-form-field>     
+        </div>
+        <div class="col-span-1">
+            <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Nombres</mat-label>
+                <input
+                    matInput 
+                    placeholder="--"
+                    type="text"
+                    maxlength="50">
+            </mat-form-field>     
+        </div>
+        <div class="col-span-1">
+            <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Apellidos</mat-label>
+                <input
+                    matInput 
+                    placeholder="--"
+                    type="text"
+                    maxlength="50">
+            </mat-form-field>     
+        </div>
+        <div class="col-span-1">
+            <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Fecha de nacimiento</mat-label>
+                <input
+                    matInput
+                    placeholder="--/--/----"
+                    [matDatepicker]="picker" />
+                <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker>
+                    <mat-datepicker-actions>
+                        <button mat-button matDatepickerCancel>
+                            Cancelar
+                        </button>
+                        <button mat-raised-button color="primary" matDatepickerApply>
+                            Aplicar
+                        </button>
+                    </mat-datepicker-actions>
+                </mat-datepicker>
+            </mat-form-field>
+        </div>
+        <div class="col-span-1">
+            <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Género</mat-label>
+                <mat-select
+                    placeholder="--">
+                    @for (module of []; track $index) {
+                        <mat-option [value]="module?.ncodeModule">
+                            {{ module?.description }}
+                        </mat-option>
+                    }
+                    <mat-option [value]="1">
+                        {{ 'Programas' }}
+                    </mat-option>
+                    <mat-option [value]="2">
+                        {{ 'Inscripciones' }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="col-span-1">
+            <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Distrito</mat-label>
+                <mat-select
+                    placeholder="--">
+                    @for (module of []; track $index) {
+                        <mat-option [value]="module?.ncodeModule">
+                            {{ module?.description }}
+                        </mat-option>
+                    }
+                    <mat-option [value]="1">
+                        {{ 'Programas' }}
+                    </mat-option>
+                    <mat-option [value]="2">
+                        {{ 'Inscripciones' }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="col-span-1">
+            <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Pronvincia</mat-label>
+                <mat-select
+                    placeholder="--">
+                    @for (module of []; track $index) {
+                        <mat-option [value]="module?.ncodeModule">
+                            {{ module?.description }}
+                        </mat-option>
+                    }
+                    <mat-option [value]="1">
+                        {{ 'Programas' }}
+                    </mat-option>
+                    <mat-option [value]="2">
+                        {{ 'Inscripciones' }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="col-span-1">
+            <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Departamento</mat-label>
+                <mat-select
+                    placeholder="--">
+                    @for (module of []; track $index) {
+                        <mat-option [value]="module?.ncodeModule">
+                            {{ module?.description }}
+                        </mat-option>
+                    }
+                    <mat-option [value]="1">
+                        {{ 'Programas' }}
+                    </mat-option>
+                    <mat-option [value]="2">
+                        {{ 'Inscripciones' }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="col-span-2">
+            <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Dirección</mat-label>
+                <input
+                    matInput 
+                    placeholder="--"
+                    type="text"
+                    maxlength="50">
+            </mat-form-field>     
+        </div>
+        <div class="col-span-1">
+            <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Teléfono</mat-label>
+                <input
+                    matInput 
+                    placeholder="--"
+                    type="text"
+                    maxlength="50">
+            </mat-form-field>     
+        </div>
+        <div class="col-span-1">
+            <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Correo</mat-label>
+                <input
+                    matInput 
+                    placeholder="--"
+                    type="text"
+                    maxlength="50">
+            </mat-form-field>     
+        </div>
+    </div>
+    
+    <div class="line-form"></div>
+    <div class="grid grid-cols-3 gap-4 p-10">
+
+        <div class="col-span-3 mb-4">
+            <fo-title-area [titleArea]="titleDirectory()"></fo-title-area>
+        </div>
+        <div class="col-span-1">
+            <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Cargo</mat-label>
+                <mat-select
+                    placeholder="--">
+                    @for (module of []; track $index) {
+                        <mat-option [value]="module?.ncodeModule">
+                            {{ module?.description }}
+                        </mat-option>
+                    }
+                    <mat-option [value]="1">
+                        {{ 'Programas' }}
+                    </mat-option>
+                    <mat-option [value]="2">
+                        {{ 'Inscripciones' }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="col-span-1">
+            <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Tipo de director</mat-label>
+                <mat-select
+                    placeholder="--">
+                    @for (module of []; track $index) {
+                        <mat-option [value]="module?.ncodeModule">
+                            {{ module?.description }}
+                        </mat-option>
+                    }
+                    <mat-option [value]="1">
+                        {{ 'Programas' }}
+                    </mat-option>
+                    <mat-option [value]="2">
+                        {{ 'Inscripciones' }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="col-span-1">
+            <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Profesión</mat-label>
+                <input
+                    matInput 
+                    placeholder="--"
+                    type="text"
+                    maxlength="50">
+            </mat-form-field>     
+        </div>
+
+        <div class="col-span-1">
+            <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Dieta</mat-label>
+                <input
+                    matInput 
+                    placeholder="--"
+                    type="text"
+                    maxlength="50">
+            </mat-form-field>     
+        </div>
+
+        <div class="col-span-1">
+            <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Especialidad</mat-label>
+                <mat-select
+                    placeholder="--">
+                    @for (module of []; track $index) {
+                        <mat-option [value]="module?.ncodeModule">
+                            {{ module?.description }}
+                        </mat-option>
+                    }
+                    <mat-option [value]="1">
+                        {{ 'Programas' }}
+                    </mat-option>
+                    <mat-option [value]="2">
+                        {{ 'Inscripciones' }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="col-span-1">
+            <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Fecha de nombramiento</mat-label>
+                <input
+                    matInput
+                    placeholder="--/--/----"
+                    [matDatepicker]="pickerAppointment" />
+                <mat-datepicker-toggle
+                    matSuffix
+                    [for]="pickerAppointment"></mat-datepicker-toggle>
+                <mat-datepicker #pickerAppointment>
+                    <mat-datepicker-actions>
+                        <button mat-button matDatepickerCancel>
+                            Cancelar
+                        </button>
+                        <button mat-raised-button color="primary" matDatepickerApply>
+                            Aplicar
+                        </button>
+                    </mat-datepicker-actions>
+                </mat-datepicker>
+            </mat-form-field>
+        </div>
+
+        <div class="col-span-1">
+            <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Fecha de designación</mat-label>
+                <input
+                    matInput
+                    placeholder="--/--/----"
+                    [matDatepicker]="pickerDesignation" />
+                <mat-datepicker-toggle
+                    matSuffix
+                    [for]="pickerDesignation"></mat-datepicker-toggle>
+                <mat-datepicker #pickerDesignation>
+                    <mat-datepicker-actions>
+                        <button mat-button matDatepickerCancel>
+                            Cancelar
+                        </button>
+                        <button mat-raised-button color="primary" matDatepickerApply>
+                            Aplicar
+                        </button>
+                    </mat-datepicker-actions>
+                </mat-datepicker>
+            </mat-form-field>
+        </div>
+
+        <div class="col-span-1">
+            <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Fecha de nombramiento</mat-label>
+                <input
+                    matInput
+                    placeholder="--/--/----"
+                    [matDatepicker]="pickerAppointmentTest" />
+                <mat-datepicker-toggle
+                    matSuffix
+                    [for]="pickerAppointmentTest"></mat-datepicker-toggle>
+                <mat-datepicker #pickerAppointmentTest>
+                    <mat-datepicker-actions>
+                        <button mat-button matDatepickerCancel>
+                            Cancelar
+                        </button>
+                        <button mat-raised-button color="primary" matDatepickerApply>
+                            Aplicar
+                        </button>
+                    </mat-datepicker-actions>
+                </mat-datepicker>
+            </mat-form-field>
+        </div>
+
+        <div class="col-span-3">
+            <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Comentario</mat-label>
+                <input
+                    matInput 
+                    placeholder="--"
+                    type="text"
+                    maxlength="50">
+            </mat-form-field>     
+        </div>
+
+        <div class="col-span-3 btn-options-user">
+            <fo-button-dialog
+                [textBtn]="'Cancelar'"
+                [typeButton]="buttonEnum().CANCEL"
+                matDialogClose>
+            </fo-button-dialog>
+    
+            <fo-button-dialog
+                [textBtn]="'Crear'">
+            </fo-button-dialog>
+        </div>
+        
+    </div>
+</div>

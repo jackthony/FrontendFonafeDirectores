@@ -1,17 +1,226 @@
-<div class="w-full">
-    <mat-tab-group
+<div class="w-full grid grid-cols-3 gap-4">
+    <div class="col-span-2">
+        <mat-tab-group
+                mat-align-tabs="start"
+                mat-stretch-tabs="false"
+                class="mat-tab-custom-fonafe not-padding-body">
+                <mat-tab class="first-mat-tab" label="Datos generales">
+                    <fo-cont-card [enabledPadding]="false">
+                        <div class="grid grid-cols-3 gap-4 p-10">
+                            <div class="col-span-1">
+                                <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                                    <mat-label>RUC</mat-label>
+                                    <input
+                                        matInput 
+                                        placeholder="--"
+                                        type="text"
+                                        maxlength="50">
+                                </mat-form-field>     
+                            </div>
+                            <div class="col-span-1">
+                                <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                                    <mat-label>Razón social</mat-label>
+                                    <input
+                                        matInput 
+                                        placeholder="--"
+                                        type="text"
+                                        maxlength="50">
+                                </mat-form-field>     
+                            </div>
+                            <div class="col-span-1">
+                                <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                                    <mat-label>Proponente</mat-label>
+                                    <mat-select
+                                        placeholder="--">
+                                        @for (module of []; track $index) {
+                                            <mat-option [value]="module?.ncodeModule">
+                                                {{ module?.description }}
+                                            </mat-option>
+                                        }
+                                        <mat-option [value]="1">
+                                            {{ 'Programas' }}
+                                        </mat-option>
+                                        <mat-option [value]="2">
+                                            {{ 'Inscripciones' }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-span-1">
+                                <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                                    <mat-label>Rubro del negocio</mat-label>
+                                    <mat-select
+                                        placeholder="--">
+                                        @for (module of []; track $index) {
+                                            <mat-option [value]="module?.ncodeModule">
+                                                {{ module?.description }}
+                                            </mat-option>
+                                        }
+                                        <mat-option [value]="1">
+                                            {{ 'Programas' }}
+                                        </mat-option>
+                                        <mat-option [value]="2">
+                                            {{ 'Inscripciones' }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-span-1">
+                                <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                                    <mat-label>Departamento</mat-label>
+                                    <mat-select
+                                        placeholder="--">
+                                        @for (module of []; track $index) {
+                                            <mat-option [value]="module?.ncodeModule">
+                                                {{ module?.description }}
+                                            </mat-option>
+                                        }
+                                        <mat-option [value]="1">
+                                            {{ 'Programas' }}
+                                        </mat-option>
+                                        <mat-option [value]="2">
+                                            {{ 'Inscripciones' }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-span-1">
+                                <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                                    <mat-label>Provincia</mat-label>
+                                    <mat-select
+                                        placeholder="--">
+                                        @for (module of []; track $index) {
+                                            <mat-option [value]="module?.ncodeModule">
+                                                {{ module?.description }}
+                                            </mat-option>
+                                        }
+                                        <mat-option [value]="1">
+                                            {{ 'Programas' }}
+                                        </mat-option>
+                                        <mat-option [value]="2">
+                                            {{ 'Inscripciones' }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-span-1">
+                                <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                                    <mat-label>Distrito</mat-label>
+                                    <mat-select
+                                        placeholder="--">
+                                        @for (module of []; track $index) {
+                                            <mat-option [value]="module?.ncodeModule">
+                                                {{ module?.description }}
+                                            </mat-option>
+                                        }
+                                        <mat-option [value]="1">
+                                            {{ 'Programas' }}
+                                        </mat-option>
+                                        <mat-option [value]="2">
+                                            {{ 'Inscripciones' }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-span-2">
+                                <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                                    <mat-label>Dirección</mat-label>
+                                    <input
+                                        matInput 
+                                        placeholder="--"
+                                        type="text"
+                                        maxlength="50">
+                                </mat-form-field>     
+                            </div>
+                            <div class="col-span-3">
+                                <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                                    <mat-label>Comentario</mat-label>
+                                    <input
+                                        matInput 
+                                        placeholder="--"
+                                        type="text"
+                                        maxlength="50">
+                                </mat-form-field>     
+                            </div>
+                        </div>
+                        <div class="line-form"></div>
+                        <div class="grid grid-cols-3 gap-4 p-10">
+                            <div class="col-span-3 mb-4">
+                                <fo-title-area [titleArea]="titleFinancial()"></fo-title-area>
+    
+                            </div>
+                            <div class="col-span-1">
+                                <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                                    <mat-label>Ingresos del último año</mat-label>
+                                    <input
+                                        matInput 
+                                        placeholder="--"
+                                        type="text"
+                                        maxlength="50">
+                                </mat-form-field>     
+                            </div>
+                            <div class="col-span-1">
+                                <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                                    <mat-label>Utilidad del último año</mat-label>
+                                    <input
+                                        matInput 
+                                        placeholder="--"
+                                        type="text"
+                                        maxlength="50">
+                                </mat-form-field>     
+                            </div>
+    
+                            <div class="col-span-1">
+                                <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                                    <mat-label>Conformación del capital social</mat-label>
+                                    <input
+                                        matInput 
+                                        placeholder="--"
+                                        type="text"
+                                        maxlength="50">
+                                </mat-form-field>     
+                            </div>
+                    
+                            <div class="col-span-1">
+                                <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                                    <mat-label>Números de miembros</mat-label>
+                                    <mat-select
+                                        placeholder="--">
+                                        @for (module of []; track $index) {
+                                            <mat-option [value]="module?.ncodeModule">
+                                                {{ module?.description }}
+                                            </mat-option>
+                                        }
+                                        <mat-option [value]="1">
+                                            {{ 'Programas' }}
+                                        </mat-option>
+                                        <mat-option [value]="2">
+                                            {{ 'Inscripciones' }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-span-2">
+                                <mat-checkbox
+                                    class="mat-checkbox-custom"
+                                    color="primary">
+                                    <span class="label-checkbox">Registrado en el mercado de valores</span>
+                                </mat-checkbox>
+                            </div>
+                            
+                        </div>
+                    </fo-cont-card>
+                </mat-tab>
+                <mat-tab label="Directorio">
+                    <app-directory-business></app-directory-business>
+                </mat-tab>
+            </mat-tab-group>
+    </div>
+    <div class="col-span-1">
+        <app-fo-file-url-upload>
 
-            mat-align-tabs="start"
-            mat-stretch-tabs="false"
-            class="mat-tab-custom-fonafe not-padding-body"
-        >
-            <mat-tab label="Datos generales">
-                <fo-cont-card>
-        
-                </fo-cont-card>
-            </mat-tab>
-            <mat-tab label="Directorio"></mat-tab>
-        </mat-tab-group>
+        </app-fo-file-url-upload>
+    </div>
     
 
 </div>

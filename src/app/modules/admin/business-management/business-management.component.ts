@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { COLUMNS_BUSINESS_MANAGEMENT, CONFIG_DELETE_DIALOG_BUSINESS } from 'app/shared/configs/business-management/business-management.config';
-import { BUSINESS_MANAGEMENT_IMPORTS } from 'app/shared/imports/components/business-management.imports';
+import { BUSINESS_MANAGEMENT_IMPORTS } from 'app/shared/imports/business-management/business-management.imports';
 import { IconOption } from 'app/shared/interfaces/IGenericIcon';
 import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDefInterface';
 import { DialogConfirmationService } from 'app/shared/services/dialog-confirmation.service';
@@ -68,9 +68,6 @@ export class BusinessManagementComponent {
 	dataTableBusiness = signal<any[]>([]);
 	iconsTable = signal<IconOption<any>[]>([]);
 	
-
-	
-
 	ngOnInit(): void {
 		this.headerTable.set(COLUMNS_BUSINESS_MANAGEMENT);
 		this.dataTableBusiness.set(mockDataBusiness);

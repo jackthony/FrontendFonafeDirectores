@@ -1,4 +1,4 @@
-<mat-card class="w-full rounded-2xl p-6">
+<mat-card class="w-full rounded-2xl" [ngClass]="{'p-6': enabledPadding()}">
     @if(title) {
         <fo-sub-title-card [text]="title()"></fo-sub-title-card>
     }

@@ -13,4 +13,6 @@ import { SubTitleCardComponent } from '@components/sub-title-card/sub-title-card
 })
 export class FoContCardComponent {
     title = input<string>('');
+
+    enabledPadding = input<boolean>(true);
 }

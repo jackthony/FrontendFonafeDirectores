@@ -1,0 +1,52 @@
+.card-upload {
+    background-color: #E6EBF0;
+    border-radius: 16px;
+
+}
+
+.image-upload {
+    width: 170px;
+    height: 101px;
+}
+
+.btn-upload-file {
+    background-color: #1F487D;
+    span {
+        color: #ffffff;
+        font-family: "Museo Sans";
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 100%;
+        letter-spacing: 1px;
+    }
+    .mat-icon {
+        color: #ffffff;
+    }
+}
+
+.btn-upload-file.mat-mdc-button {
+    height: 44px;
+    max-height: 44px;
+}
+
+.line-card-file {
+    width: 1px;
+    background-color: #FFFFFF;
+}
+
+.container-card-file {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #ffffff;
+    padding-bottom: 20px;
+    margin-bottom: 27px;
+}
+
+.text-link {
+    font-family: "Museo Sans";
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 18px;
+    color: #565A5C;
+}
