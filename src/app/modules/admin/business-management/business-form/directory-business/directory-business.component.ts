@@ -96,4 +96,8 @@ export class DirectoryBusinessComponent implements OnInit {
 		this.newFormDirectory.set(true);
 	}
 
+    cancelDirectory(): void {
+        this.newFormDirectory.set(false);
+    }
+
 }

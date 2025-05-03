@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { User } from 'app/core/user/user.types';
 import { map, Observable, ReplaySubject, tap } from 'rxjs';
 
@@ -7,6 +7,8 @@ import { map, Observable, ReplaySubject, tap } from 'rxjs';
 export class UserService {
     private _httpClient = inject(HttpClient);
     private _user: ReplaySubject<User> = new ReplaySubject<User>(1);
+    #userLogin = signal<User>(null);
+    public userLogin = computed(() => this.#userLogin());
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -20,6 +22,7 @@ export class UserService {
     set user(value: User) {
         // Store the value
         this._user.next(value);
+        this.#userLogin.set(value);
     }
 
     get user$(): Observable<User> {

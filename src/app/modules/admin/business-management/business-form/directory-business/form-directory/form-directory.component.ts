@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, EventEmitter, Output, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,7 +16,14 @@ import { FormInputModule } from 'app/shared/modules/form-input.module';
   styleUrl: './form-directory.component.scss'
 })
 export class FormDirectoryComponent {
+    @Output() eventCancelDirectory: EventEmitter<void> = new EventEmitter<void>();
+
   	titleDirectory = signal<string>('Datos directorio');
   	titlePersonal = signal<string>('Datos personales');
-	buttonEnum = signal<typeof ButtonEnum>(ButtonEnum);
+	  buttonEnum = signal<typeof ButtonEnum>(ButtonEnum);
+    
+
+    cancelDirectory(): void {
+      this.eventCancelDirectory.emit();
+    }
 }

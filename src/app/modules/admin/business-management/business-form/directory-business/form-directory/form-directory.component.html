@@ -365,6 +365,7 @@
 
         <div class="col-span-3 btn-options-user">
             <fo-button-dialog
+                (eventActionClick)="cancelDirectory()"
                 [textBtn]="'Cancelar'"
                 [typeButton]="buttonEnum().CANCEL"
                 matDialogClose>

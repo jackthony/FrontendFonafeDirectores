@@ -1,0 +1,1 @@
+export const PAGINATOR_PAGE_SIZE = 10;

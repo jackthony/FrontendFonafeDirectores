@@ -4,25 +4,25 @@ import { TableColumnsDefInterface } from "../../interfaces/ITableColumnsDefInter
 export const COLUMNS_BUSINESS_MANAGEMENT: TableColumnsDefInterface[] = [
     {
         id: 0,
-        name: "enterprise",
+        name: "sNombreEmpresa",
         displayedName: "Empresa",
         type: "string"
     },
     {
         id: 1,
-        name: "ruc",
+        name: "sRuc",
         displayedName: "RUC",
         type: "string"
     },
     {
         id: 2,
-        name: "companyName",
+        name: "sRazonSocial",
         displayedName: "Razón social",
         type: "string"
     },
     {
         id: 3,
-        name: "proponent",
+        name: "nIdProponente",
         displayedName: "Proponente",
         type: "string"
     },

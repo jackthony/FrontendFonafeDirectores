@@ -1,10 +1,10 @@
 <div class="w-full">
     <div class="grid grid-cols-1 gap-4">
-        <fo-return></fo-return>
+        <fo-return (eventActionClick)="returnInit()"></fo-return>
         <fo-cont-card>
             <fo-title-module [text]="titleModule()"></fo-title-module>
         </fo-cont-card>
-        <fo-search-for-button></fo-search-for-button>
+        <fo-search-for-button (eventNewElement)="openFormDialog()"></fo-search-for-button>
         <fo-table 
             [headers]="headerTable()"
             [data]="dataTableActivities()"

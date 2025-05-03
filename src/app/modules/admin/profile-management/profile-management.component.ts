@@ -8,6 +8,7 @@ import { IconOption } from 'app/shared/interfaces/IGenericIcon';
 import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDefInterface';
 import { DialogConfirmationService } from 'app/shared/services/dialog-confirmation.service';
 import { FormProfileComponent } from './dialog/form-profile/form-profile.component';
+import { Router } from '@angular/router';
 
 export const mockData = [
 	{
@@ -120,6 +121,8 @@ export const mockData = [
   styleUrl: './profile-management.component.scss'
 })
 export default class ProfileManagementComponent {
+	private readonly _router = inject(Router);
+
 	private _matDialog: MatDialog = inject(MatDialog);
 	private _dialogConfirmationService = inject(DialogConfirmationService);
 	
@@ -134,6 +137,10 @@ export default class ProfileManagementComponent {
 		this.headerTable.set(COLUMNS_PROFILE_MANAGEMENT);
 		this.dataTableActivities.set(mockData);
 		this.iconsTable.set(this.defineIconsTable())
+	}
+
+	returnInit(): void {
+		this._router.navigate(['home']);
 	}
 
 	openFormDialog(): void {

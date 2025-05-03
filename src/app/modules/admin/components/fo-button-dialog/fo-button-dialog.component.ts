@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, input, signal, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, input, Output, signal, ViewEncapsulation } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { ButtonEnum } from 'app/core/enums/button.enum';
 
@@ -12,7 +12,12 @@ import { ButtonEnum } from 'app/core/enums/button.enum';
   encapsulation: ViewEncapsulation.None
 })
 export class FoButtonDialogComponent {
+  @Output() eventActionClick: EventEmitter<void> = new EventEmitter<void>();
 	textBtn = input.required<string>();
 	typeButton = input<number>(ButtonEnum.SEND);
 	buttonEnum = signal<typeof ButtonEnum>(ButtonEnum);
+
+  actionClick(): void {
+    this.eventActionClick.emit();
+  }
 }
