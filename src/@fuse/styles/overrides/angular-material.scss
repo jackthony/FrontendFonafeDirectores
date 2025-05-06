@@ -1317,6 +1317,13 @@ textarea.mat-mdc-input-element {
     }
 }
 
+.mat-money {
+    .mat-mdc-form-field-infix {
+        display: flex;
+        align-items: center;
+    }
+}
+
 .mat-form-field-custom.mat-mdc-form-field.mat-form-field-appearance-outline:not(.mat-focused):not(.mat-form-field-invalid) .mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mdc-notched-outline .mdc-notched-outline__leading {
     border-color: #565A5C !important;
 }

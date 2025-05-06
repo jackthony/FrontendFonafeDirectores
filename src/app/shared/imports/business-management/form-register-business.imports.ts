@@ -10,6 +10,7 @@ import { FoTitleModuleComponent } from "@components/fo-title-module/fo-title-mod
 import { TranslateMessageForm } from "app/core/pipes/error-message-form.pipe";
 import { DirectoryBusinessComponent } from "app/modules/admin/business-management/business-form/directory-business/directory-business.component";
 import { FormInputModule } from "app/shared/modules/form-input.module";
+import { NgxMaskDirective } from "ngx-mask";
 
 export const FORM_BUSINESS_IMPORTS = [
     CommonModule, 
@@ -23,5 +24,6 @@ export const FORM_BUSINESS_IMPORTS = [
     DirectoryBusinessComponent,
     FoTitleAreaComponent,
     FoButtonDialogComponent,
-    TranslateMessageForm
+    TranslateMessageForm,
+    NgxMaskDirective
 ];

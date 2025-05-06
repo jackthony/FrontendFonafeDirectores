@@ -13,49 +13,6 @@ import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDef
 import { DialogConfirmationService } from 'app/shared/services/dialog-confirmation.service';
 import { finalize } from 'rxjs';
 
-export const mockDataBusiness = [
-	{
-	  enterprise: "TechNova S.A.",
-	  ruc: "20456789123",
-	  companyName: "Desarrollos Urbanos S.A.",
-	  proponent: "Carlos Gómez",
-	  sector: "Tecnología",
-	  location: "Cusco, Perú"
-	},
-	{
-	  enterprise: "AgroPerú S.R.L.",
-	  ruc: "20345678901",
-	  companyName: "Importaciones Globales E.I.R.L.",
-	  proponent: "Lucía Ríos",
-	  sector: "Agroindustria",
-	  location: "Piura, Perú"
-	},
-	{
-	  enterprise: "Constructora Andes S.A.C.",
-	  ruc: "20567891234",
-	  companyName: "Sistemas del Sur S.R.L.",
-	  proponent: "Andrés Torres",
-	  sector: "Construcción",
-	  location: "Lima, Perú"
-	},
-	{
-	  enterprise: "EcoSoluciones E.I.R.L.",
-	  ruc: "20678912345",
-	  companyName: "Consultores Empresariales SAC",
-	  proponent: "María Fernández",
-	  sector: "Consultoría",
-	  location: "Trujillo, Perú"
-	},
-	{
-	  enterprise: "RedDigital Corp.",
-	  ruc: "20123456789",
-	  companyName: "Servicios Generales Innovate S.A.C.",
-	  proponent: "Jorge Salazar",
-	  sector: "Comercio",
-	  location: "Arequipa, Perú"
-	}
-  ];
-
 @Component({
   selector: 'app-business-management',
   standalone: true,

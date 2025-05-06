@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Business } from '@models/business/business.interface';
+import { Ministry } from '@models/business/ministry.interface';
 import { environment } from 'app/environments/environment';
 import { HttpGenericService } from 'app/shared/services/http-generic.service';
 import { forkJoin } from 'rxjs';
@@ -7,8 +8,9 @@ import { forkJoin } from 'rxjs';
 @Injectable({
     providedIn: 'root',
 })
-export class BusinessService<T> extends HttpGenericService<T> {
+export class MinistryService extends HttpGenericService<Ministry> {
+    
     constructor() {
-        super(`${environment.apiUrlBase}/EMP_Empresa`);
+        super(`${environment.apiUrlBase}/Cat_Ministerio`);
     }
 }

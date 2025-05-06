@@ -20,7 +20,7 @@ export class HttpGenericService<T> {
   }
 
   get(request: RequestOption): Observable<ResponseModel<T>> {
-    request.url = `${this._url}`;
+    request.url = `${this._url}/${request.resource ?? ''}`;
     request.method = "GET";
 
     return this._httpRequest.callHttpParameters(request);

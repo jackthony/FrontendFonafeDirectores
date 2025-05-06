@@ -1,6 +1,8 @@
 import { DialogConfirmation } from "@components/fo-dialog-confirmation/models/dialog-confirmation.interface";
 import { TableColumnsDefInterface } from "../../interfaces/ITableColumnsDefInterface";
 
+export const CONST_COMPANY_SECTION = 1024;
+
 export const COLUMNS_BUSINESS_MANAGEMENT: TableColumnsDefInterface[] = [
     {
         id: 0,
