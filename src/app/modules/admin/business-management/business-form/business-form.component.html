@@ -280,7 +280,7 @@
                         </mat-tab>
                         @if(business()) {
                             <mat-tab label="Directorio">
-                                <app-directory-business></app-directory-business>
+                                <app-directory-business [business]="business()"></app-directory-business>
                             </mat-tab>
 
                         }

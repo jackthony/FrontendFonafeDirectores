@@ -1,0 +1,15 @@
+import { Injectable } from '@angular/core';
+
+import { environment } from 'app/environments/environment';
+import { HttpGenericService } from 'app/shared/services/http-generic.service';
+
+@Injectable({
+    providedIn: 'root',
+})
+export class DirectorService<T> extends HttpGenericService<T> {
+
+    constructor() {
+        super(`${environment.apiUrlBase}/Dir_Directorio`);
+    }
+
+}

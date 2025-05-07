@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, input, OnInit, signal } from '@angular/core';
 
 import { DialogConfirmationService } from 'app/shared/services/dialog-confirmation.service';
 
@@ -10,44 +10,13 @@ import { COLUMNS_DIRECTORY_BUSINESS, CONFIG_DELETE_DIALOG_DIRECTORY_BUSINESS } f
 import { IconOption } from 'app/shared/interfaces/IGenericIcon';
 import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDefInterface';
 import { FormDirectoryComponent } from './form-directory/form-directory.component';
-
-const mockDirectory = [
-    {
-        fullName: "Juan Pérez García",
-        typeDocument: "DNI",
-        document: "12345678",
-        role: "Gerente General",
-        typeDirector: "Principal"
-    },
-    {
-        fullName: "María López Torres",
-        typeDocument: "DNI",
-        document: "87654321",
-        role: "Directora Ejecutiva",
-        typeDirector: "Suplente"
-    },
-    {
-        fullName: "Carlos Mendoza Ríos",
-        typeDocument: "Pasaporte",
-        document: "X123456",
-        role: "Asesor Legal",
-        typeDirector: "Independiente"
-    },
-    {
-        fullName: "Ana Sofía Ramírez",
-        typeDocument: "Carné de extranjería",
-        document: "CE987654",
-        role: "Consultora Externa",
-        typeDirector: "Invitado"
-    },
-    {
-        fullName: "Luis Alberto Quispe",
-        typeDocument: "DNI",
-        document: "45678912",
-        role: "Director Financiero",
-        typeDirector: "Principal"
-    }
-];
+import { RequestOption } from 'app/shared/interfaces/IRequestOption';
+import { PAGINATOR_PAGE_SIZE } from 'app/core/config/paginator.config';
+import { Business } from '@models/business/business.interface';
+import { DirectorService } from '@services/director.service';
+import { finalize } from 'rxjs';
+import { ResponseModel } from '@models/IResponseModel';
+import { Director } from '@models/business/director.interface';
 
 
 @Component({
@@ -60,20 +29,46 @@ const mockDirectory = [
 export class DirectoryBusinessComponent implements OnInit {
 
 	private _dialogConfirmationService = inject(DialogConfirmationService);
+
+	private _directorService = inject(DirectorService);
 	
 	textButtonNew = signal<string>('Agregar director');
 	iconButtonNew = signal<string>('mat_outline:add_circle_outline');
+    business = input.required<Business>();
 	headerTable = signal<TableColumnsDefInterface[]>([]);
-	dataTableDirectory = signal<any[]>([]);
-	iconsTable = signal<IconOption<any>[]>([]);
+	dataTableDirectory = signal<Director[]>([]);
+	iconsTable = signal<IconOption<Director>[]>([]);
 
 	newFormDirectory = signal<boolean>(false);
+
+	loadingTable = signal<boolean>(false);
+
+    pageIndexTable = signal<number>(1);
 	
 
 	ngOnInit(): void {
 		this.headerTable.set(COLUMNS_DIRECTORY_BUSINESS);
-		this.dataTableDirectory.set(mockDirectory);
+		this.searchDirectors();
 		this.iconsTable.set(this.defineIconsTable())
+	}
+
+    searchDirectors(): void {
+		this.loadingTable.set(true);
+		const request = new RequestOption();
+		request.queryParams = [
+			{ key: 'pageIndex' , value: this.pageIndexTable() },
+			{ key: 'pageSize' , value: PAGINATOR_PAGE_SIZE },
+            { key: 'nIdEmpresa', value: this.business().nIdEmpresa  }
+		];
+		this._directorService.getByPagination(request).pipe(
+			finalize(() => this.loadingTable.set(false))
+		).subscribe({
+			next: ((response: ResponseModel<Director>) => {
+				if(response.isSuccess){
+					this.dataTableDirectory.set(response.lstItem);
+				} else this.dataTableDirectory.set([])
+			}),
+		})
 	}
 
 	defineIconsTable(): IconOption<any>[]{

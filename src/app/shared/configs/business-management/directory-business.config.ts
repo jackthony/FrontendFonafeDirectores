@@ -4,31 +4,31 @@ import { TableColumnsDefInterface } from "../../interfaces/ITableColumnsDefInter
 export const COLUMNS_DIRECTORY_BUSINESS: TableColumnsDefInterface[] = [
     {
         id: 0,
-        name: "fullName",
+        name: "sNombreCompleto",
         displayedName: "Nombres y apellidos",
         type: "string"
     },
     {
         id: 1,
-        name: "typeDocument",
+        name: "sTipoDocumentoDescripcion",
         displayedName: "Tipo de doc.",
         type: "string"
     },
     {
         id: 2,
-        name: "document",
+        name: "sNumeroDocumento",
         displayedName: "Documento",
         type: "string"
     },
     {
         id: 3,
-        name: "role",
+        name: "sCargoDescripcion",
         displayedName: "Cargo",
         type: "string"
     },
     {
         id: 4,
-        name: "typeDirector",
+        name: "sTipoDirectorDescripcion",
         displayedName: "Tipo de director",
         type: "string"
     },
