@@ -6,8 +6,8 @@ export const CONST_COMPANY_SECTION = 1024;
 export const COLUMNS_BUSINESS_MANAGEMENT: TableColumnsDefInterface[] = [
     {
         id: 0,
-        name: "sNombreEmpresa",
-        displayedName: "Empresa",
+        name: "sRazonSocial",
+        displayedName: "Razón social",
         type: "string"
     },
     {
@@ -18,30 +18,24 @@ export const COLUMNS_BUSINESS_MANAGEMENT: TableColumnsDefInterface[] = [
     },
     {
         id: 2,
-        name: "sRazonSocial",
-        displayedName: "Razón social",
-        type: "string"
-    },
-    {
-        id: 3,
         name: "nIdProponente",
         displayedName: "Proponente",
         type: "string"
     },
     {
-        id: 4,
+        id: 3,
         name: "sector",
         displayedName: "Rubro",
         type: "string"
     },
     {
-        id: 5,
+        id: 4,
         name: "location",
         displayedName: "Ubicación",
         type: "string"
     },
     {
-        id: 6,
+        id: 5,
         name: "none",
         displayedName: "",
         type: "acciones"

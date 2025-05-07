@@ -1,4 +1,4 @@
-<div class="w-full">
+<form class="w-full" [formGroup]="form" autocomplete="off">
     <div class="grid grid-cols-3 gap-4 p-10">
         <div class="col-span-3 mb-4 flex justify-between items-center">
             <fo-title-area [titleArea]="titlePersonal()"></fo-title-area>
@@ -21,55 +21,75 @@
             <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                 <mat-label>Tipo de documento</mat-label>
                 <mat-select
+                    formControlName="nTipoDocumento"
                     placeholder="--">
-                    @for (module of []; track $index) {
-                        <mat-option [value]="module?.ncodeModule">
-                            {{ module?.description }}
+                    @for (item of lstTypedocument(); track $index) {
+                        <mat-option [value]="item?.nConValor">
+                            {{ item?.sConDescripcion }}
                         </mat-option>
                     }
-                    <mat-option [value]="1">
-                        {{ 'Programas' }}
-                    </mat-option>
-                    <mat-option [value]="2">
-                        {{ 'Inscripciones' }}
-                    </mat-option>
                 </mat-select>
+                @if(form.get('nTipoDocumento').invalid) {
+                    <mat-error class="text-red-500">
+                        {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
+                    </mat-error>
+                }
             </mat-form-field>
         </div>
         <div class="col-span-1">
             <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                 <mat-label>Número de documento</mat-label>
                 <input
+                    formControlName="sNumeroDocumento"
                     matInput 
                     placeholder="--"
                     type="text"
-                    maxlength="50">
+                    maxlength="9">
+                    @if(form.get('sNumeroDocumento').invalid) {
+                        <mat-error class="text-red-500">
+                            {{ form.get("sNumeroDocumento") | translateMessageForm }}
+                        </mat-error>
+                    }
             </mat-form-field>     
         </div>
         <div class="col-span-1">
             <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                 <mat-label>Nombres</mat-label>
                 <input
+                    formControlName="sNombres"
                     matInput 
                     placeholder="--"
                     type="text"
-                    maxlength="50">
+                    maxlength="150">
+                @if(form.get('sNombres').invalid) {
+                    <mat-error class="text-red-500">
+                        {{ form.get("sNombres") | translateMessageForm }}
+                    </mat-error>
+                }
             </mat-form-field>     
         </div>
         <div class="col-span-1">
             <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                 <mat-label>Apellidos</mat-label>
                 <input
+                    formControlName="sApellidos"
                     matInput 
                     placeholder="--"
                     type="text"
-                    maxlength="50">
+                    maxlength="150">
+                @if(form.get('sApellidos').invalid) {
+                    <mat-error class="text-red-500">
+                        {{ form.get("sApellidos") | translateMessageForm }}
+                    </mat-error>
+                }
             </mat-form-field>     
         </div>
         <div class="col-span-1">
             <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                 <mat-label>Fecha de nacimiento</mat-label>
                 <input
+                    [max]="maxDate"
+                    formControlName="dFechaNacimiento"
                     matInput
                     placeholder="--/--/----"
                     [matDatepicker]="picker" />
@@ -86,112 +106,138 @@
                         </button>
                     </mat-datepicker-actions>
                 </mat-datepicker>
+                @if(form.get('dFechaNacimiento').invalid) {
+                    <mat-error class="text-red-500">
+                        {{ form.get("dFechaNacimiento") | translateMessageForm }}
+                    </mat-error>
+                }
             </mat-form-field>
         </div>
         <div class="col-span-1">
             <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                 <mat-label>Género</mat-label>
                 <mat-select
+                    formControlName="nGenero"
                     placeholder="--">
-                    @for (module of []; track $index) {
-                        <mat-option [value]="module?.ncodeModule">
-                            {{ module?.description }}
+                    @for (item of lstGender(); track $index) {
+                        <mat-option [value]="item?.nConValor">
+                            {{ item?.sConDescripcion }}
                         </mat-option>
                     }
-                    <mat-option [value]="1">
-                        {{ 'Programas' }}
-                    </mat-option>
-                    <mat-option [value]="2">
-                        {{ 'Inscripciones' }}
-                    </mat-option>
                 </mat-select>
-            </mat-form-field>
-        </div>
-        <div class="col-span-1">
-            <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
-                <mat-label>Distrito</mat-label>
-                <mat-select
-                    placeholder="--">
-                    @for (module of []; track $index) {
-                        <mat-option [value]="module?.ncodeModule">
-                            {{ module?.description }}
-                        </mat-option>
-                    }
-                    <mat-option [value]="1">
-                        {{ 'Programas' }}
-                    </mat-option>
-                    <mat-option [value]="2">
-                        {{ 'Inscripciones' }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-        <div class="col-span-1">
-            <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
-                <mat-label>Pronvincia</mat-label>
-                <mat-select
-                    placeholder="--">
-                    @for (module of []; track $index) {
-                        <mat-option [value]="module?.ncodeModule">
-                            {{ module?.description }}
-                        </mat-option>
-                    }
-                    <mat-option [value]="1">
-                        {{ 'Programas' }}
-                    </mat-option>
-                    <mat-option [value]="2">
-                        {{ 'Inscripciones' }}
-                    </mat-option>
-                </mat-select>
+                @if(form.get('nGenero').invalid) {
+                    <mat-error class="text-red-500">
+                        {{ form.get("nGenero") | translateMessageForm: 'select' }}
+                    </mat-error>
+                }
             </mat-form-field>
         </div>
         <div class="col-span-1">
             <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                 <mat-label>Departamento</mat-label>
                 <mat-select
+                    formControlName="sDepartamento"
                     placeholder="--">
-                    @for (module of []; track $index) {
-                        <mat-option [value]="module?.ncodeModule">
-                            {{ module?.description }}
+                    @for (item of lstDepartments(); track $index) {
+                        <mat-option [value]="item?.sCode">
+                            {{ item?.sName }}
                         </mat-option>
                     }
-                    <mat-option [value]="1">
-                        {{ 'Programas' }}
-                    </mat-option>
-                    <mat-option [value]="2">
-                        {{ 'Inscripciones' }}
-                    </mat-option>
                 </mat-select>
+                @if(form.get('sDepartamento').invalid) {
+                    <mat-error class="text-red-500">
+                        {{ form.get("sDepartamento") | translateMessageForm: 'select' }}
+                    </mat-error>
+                }
             </mat-form-field>
         </div>
+        <div class="col-span-1">
+            <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Pronvincia</mat-label>
+                <mat-select
+                    formControlName="sProvincia"
+                    placeholder="--">
+                    @for (item of lstProvinces(); track $index) {
+                        <mat-option [value]="item.sCode">
+                            {{ item.sName }}
+                        </mat-option>
+                    }
+                </mat-select>
+                @if(form.get('sProvincia').invalid) {
+                    <mat-error class="text-red-500">
+                        {{ form.get("sProvincia") | translateMessageForm: 'select' }}
+                    </mat-error>
+                }
+            </mat-form-field>
+        </div>
+
+        <div class="col-span-1">
+            <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Distrito</mat-label>
+                <mat-select
+                    formControlName="sDistrito"
+                    placeholder="--">
+                    @for (item of lstDistricts(); track $index) {
+                        <mat-option [value]="item.sCode">
+                            {{ item.sName }}
+                        </mat-option>
+                    }
+                </mat-select>
+                @if(form.get('sDistrito').invalid) {
+                    <mat-error class="text-red-500">
+                        {{ form.get("sDistrito") | translateMessageForm: 'select' }}
+                    </mat-error>
+                }
+            </mat-form-field>
+        </div>
+        
         <div class="col-span-2">
             <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                 <mat-label>Dirección</mat-label>
                 <input
+                    formControlName="sDireccion"
                     matInput 
                     placeholder="--"
                     type="text"
-                    maxlength="50">
+                    maxlength="255">
+                    @if(form.get('sDireccion').invalid) {
+                        <mat-error class="text-red-500">
+                            {{ form.get("sDireccion") | translateMessageForm }}
+                        </mat-error>
+                    }
             </mat-form-field>     
         </div>
         <div class="col-span-1">
             <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                 <mat-label>Teléfono</mat-label>
                 <input
+                    formControlName="sTelefono"
+                    mask="000 0000||000 000 000"
                     matInput 
                     placeholder="--"
                     type="text"
-                    maxlength="50">
+                    maxlength="25">
+                    @if(form.get('sTelefono').invalid) {
+                        <mat-error class="text-red-500">
+                            {{ form.get("sTelefono") | translateMessageForm }}
+                        </mat-error>
+                    }
             </mat-form-field>     
         </div>
         <div class="col-span-1">
             <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                 <mat-label>Correo</mat-label>
                 <input
+                    formControlName="sCorreo"
                     matInput 
                     placeholder="--"
                     type="text"
                     maxlength="50">
+                    @if(form.get('sCorreo').invalid) {
+                        <mat-error class="text-red-500">
+                            {{ form.get("sCorreo") | translateMessageForm }}
+                        </mat-error>
+                    }
             </mat-form-field>     
         </div>
     </div>
@@ -206,38 +252,38 @@
             <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                 <mat-label>Cargo</mat-label>
                 <mat-select
+                    formControlName="nCargo"
                     placeholder="--">
-                    @for (module of []; track $index) {
-                        <mat-option [value]="module?.ncodeModule">
-                            {{ module?.description }}
+                    @for (item of lstCargoManager(); track $index) {
+                        <mat-option [value]="item.nConValor">
+                            {{ item.sConDescripcion }}
                         </mat-option>
                     }
-                    <mat-option [value]="1">
-                        {{ 'Programas' }}
-                    </mat-option>
-                    <mat-option [value]="2">
-                        {{ 'Inscripciones' }}
-                    </mat-option>
                 </mat-select>
+                @if(form.get('nCargo').invalid) {
+                    <mat-error class="text-red-500">
+                        {{ form.get("nCargo") | translateMessageForm: 'select' }}
+                    </mat-error>
+                }
             </mat-form-field>
         </div>
         <div class="col-span-1">
             <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                 <mat-label>Tipo de director</mat-label>
                 <mat-select
+                    formControlName="nTipoDirector"
                     placeholder="--">
-                    @for (module of []; track $index) {
-                        <mat-option [value]="module?.ncodeModule">
-                            {{ module?.description }}
+                    @for (item of lstTypeDirector(); track $index) {
+                        <mat-option [value]="item.nConValor">
+                            {{ item.sConDescripcion }}
                         </mat-option>
                     }
-                    <mat-option [value]="1">
-                        {{ 'Programas' }}
-                    </mat-option>
-                    <mat-option [value]="2">
-                        {{ 'Inscripciones' }}
-                    </mat-option>
                 </mat-select>
+                @if(form.get('nTipoDirector').invalid) {
+                    <mat-error class="text-red-500">
+                        {{ form.get("nTipoDirector") | translateMessageForm: 'select' }}
+                    </mat-error>
+                }
             </mat-form-field>
         </div>
 
@@ -245,10 +291,16 @@
             <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                 <mat-label>Profesión</mat-label>
                 <input
+                    formControlName="sProfesion"
                     matInput 
                     placeholder="--"
                     type="text"
-                    maxlength="50">
+                    maxlength="150">
+                    @if(form.get('sProfesion').invalid) {
+                        <mat-error class="text-red-500">
+                            {{ form.get("sProfesion") | translateMessageForm }}
+                        </mat-error>
+                    }
             </mat-form-field>     
         </div>
 
@@ -256,10 +308,20 @@
             <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                 <mat-label>Dieta</mat-label>
                 <input
-                    matInput 
+                    formControlName="mDieta"
+                    matInput
+                    mask="separator.2"
+                    separatorLimit="999999999999"
+                    decimalMarker="."
+                    thousandSeparator=" "
+                    [dropSpecialCharacters]="false"
                     placeholder="--"
-                    type="text"
-                    maxlength="50">
+                    type="text">
+                    @if(form.get('mDieta').invalid) {
+                        <mat-error class="text-red-500">
+                            {{ form.get("mDieta") | translateMessageForm }}
+                        </mat-error>
+                    }
             </mat-form-field>     
         </div>
 
@@ -267,19 +329,19 @@
             <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                 <mat-label>Especialidad</mat-label>
                 <mat-select
+                    formControlName="nEspecialidad"
                     placeholder="--">
-                    @for (module of []; track $index) {
-                        <mat-option [value]="module?.ncodeModule">
-                            {{ module?.description }}
+                    @for (item of lstSpecialty(); track $index) {
+                        <mat-option [value]="item.nConValor">
+                            {{ item.sConDescripcion }}
                         </mat-option>
                     }
-                    <mat-option [value]="1">
-                        {{ 'Programas' }}
-                    </mat-option>
-                    <mat-option [value]="2">
-                        {{ 'Inscripciones' }}
-                    </mat-option>
                 </mat-select>
+                @if(form.get('nEspecialidad').invalid) {
+                    <mat-error class="text-red-500">
+                        {{ form.get("nEspecialidad") | translateMessageForm: 'select' }}
+                    </mat-error>
+                }
             </mat-form-field>
         </div>
 
@@ -287,13 +349,14 @@
             <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                 <mat-label>Fecha de nombramiento</mat-label>
                 <input
+                    formControlName="dFechaNombramiento"
                     matInput
                     placeholder="--/--/----"
-                    [matDatepicker]="pickerAppointment" />
+                    [matDatepicker]="pickerNo" />
                 <mat-datepicker-toggle
                     matSuffix
-                    [for]="pickerAppointment"></mat-datepicker-toggle>
-                <mat-datepicker #pickerAppointment>
+                    [for]="pickerNo"></mat-datepicker-toggle>
+                <mat-datepicker #pickerNo>
                     <mat-datepicker-actions>
                         <button mat-button matDatepickerCancel>
                             Cancelar
@@ -303,6 +366,11 @@
                         </button>
                     </mat-datepicker-actions>
                 </mat-datepicker>
+                @if(form.get('dFechaNombramiento').invalid) {
+                    <mat-error class="text-red-500">
+                        {{ form.get("dFechaNombramiento") | translateMessageForm }}
+                    </mat-error>
+                }
             </mat-form-field>
         </div>
 
@@ -310,6 +378,7 @@
             <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                 <mat-label>Fecha de designación</mat-label>
                 <input
+                    formControlName="dFechaDesignacion"
                     matInput
                     placeholder="--/--/----"
                     [matDatepicker]="pickerDesignation" />
@@ -326,20 +395,26 @@
                         </button>
                     </mat-datepicker-actions>
                 </mat-datepicker>
+                @if(form.get('dFechaDesignacion').invalid) {
+                    <mat-error class="text-red-500">
+                        {{ form.get("dFechaDesignacion") | translateMessageForm }}
+                    </mat-error>
+                }
             </mat-form-field>
         </div>
 
         <div class="col-span-1">
             <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                 <mat-label>Fecha de renuncia</mat-label>
-                <input
+                <input  
+                    formControlName="dFechaRenuncia"
                     matInput
                     placeholder="--/--/----"
-                    [matDatepicker]="pickerAppointmentTest" />
+                    [matDatepicker]="pickerRe" />
                 <mat-datepicker-toggle
                     matSuffix
-                    [for]="pickerAppointmentTest"></mat-datepicker-toggle>
-                <mat-datepicker #pickerAppointmentTest>
+                    [for]="pickerRe"></mat-datepicker-toggle>
+                <mat-datepicker #pickerRe>
                     <mat-datepicker-actions>
                         <button mat-button matDatepickerCancel>
                             Cancelar
@@ -349,6 +424,11 @@
                         </button>
                     </mat-datepicker-actions>
                 </mat-datepicker>
+                @if(form.get('dFechaRenuncia').invalid) {
+                    <mat-error class="text-red-500">
+                        {{ form.get("dFechaRenuncia") | translateMessageForm }}
+                    </mat-error>
+                }
             </mat-form-field>
         </div>
 
@@ -356,10 +436,16 @@
             <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                 <mat-label>Comentario</mat-label>
                 <input
+                    formControlName="sComentario"
                     matInput 
                     placeholder="--"
                     type="text"
-                    maxlength="50">
+                    maxlength="1000">
+                    @if(form.get('sComentario').invalid) {
+                        <mat-error class="text-red-500">
+                            {{ form.get("sComentario") | translateMessageForm }}
+                        </mat-error>
+                    }
             </mat-form-field>     
         </div>
 
@@ -372,9 +458,10 @@
             </fo-button-dialog>
     
             <fo-button-dialog
-                [textBtn]="'Crear'">
+                (eventActionClick)="registerForm()"
+                [textBtn]="director() ? 'Guardar' : 'Crear'">
             </fo-button-dialog>
         </div>
         
     </div>
-</div>
+</form>

@@ -1,6 +1,12 @@
 import { DialogConfirmation } from "@components/fo-dialog-confirmation/models/dialog-confirmation.interface";
 import { TableColumnsDefInterface } from "../../interfaces/ITableColumnsDefInterface";
 
+export const CONST_TYPE_DOCUMENT = 1;
+export const CONST_TYPE_DIRECTOR = 3;
+export const CONST_TYPE_SPECIALTY_DIRECTOR = 6;
+export const CONST_GENDER = 4;
+export const CONST_CARGO_MANAGER = 5;
+
 export const COLUMNS_DIRECTORY_BUSINESS: TableColumnsDefInterface[] = [
     {
         id: 0,

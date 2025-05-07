@@ -1,3 +1,4 @@
+import { DatePipe } from "@angular/common";
 import { Pipe, PipeTransform, inject } from "@angular/core";
 import { AbstractControl } from "@angular/forms";
 @Pipe({
@@ -6,6 +7,7 @@ import { AbstractControl } from "@angular/forms";
     pure: false
 })
 export class TranslateMessageForm implements PipeTransform {
+
     transform(value: AbstractControl, type?: string): string {
         if (!value || !value.errors) return "";
         const error = this.getErrorControl(value, type);
@@ -26,6 +28,11 @@ export class TranslateMessageForm implements PipeTransform {
         if (control.hasError("matDatepickerParse")) return "Formato de fecha incorrecta";
         if (control.hasError("customError")) return `${control.errors.customError}`;
         if (control.hasError("pattern")) return "El formato no es válido";
+        if (control.hasError("matDatepickerMax")) {
+            const date = control.errors.matDatepickerMax.max;
+            const formattedDate = date.toFormat('dd-MM-yyyy')
+            return `Máxima fecha: ${formattedDate} `;
+        } 
         return 'Campo inválido';
     }
 }

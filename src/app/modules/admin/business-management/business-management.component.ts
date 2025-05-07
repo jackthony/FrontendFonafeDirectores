@@ -71,17 +71,25 @@ export class BusinessManagementComponent {
 	}
 
 
-	defineIconsTable(): IconOption<any>[]{
+	defineIconsTable(): IconOption<Business>[]{
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
         const iconDelete = new IconOption("delete", "mat_outline", "Eliminar");
 
-		iconDelete.actionIcono = (data: any) => {
+		iconEdit.actionIcono = (data: Business) => {
+            this.editBussines(data);
+        };
+
+		iconDelete.actionIcono = (data: Business) => {
             this.openDialogDelete();
         };
 
     
         return [iconEdit, iconDelete];
     }
+
+	editBussines(data: Business): void {
+		this._router.navigate([`/gestion-empresas/registro/${data.nIdEmpresa}`]);
+	}
 
 	openDialogDelete(): void {
 		this._dialogConfirmationService.open(CONFIG_DELETE_DIALOG_BUSINESS);

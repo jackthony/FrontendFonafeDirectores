@@ -92,89 +92,23 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
     initForm(object: Business): void {
         this.form = this._fb.group({
             nIdEmpresa: [object ? object.nIdEmpresa : 0, Validators.required],
-            sRuc: [
-                object ? { disabled: object, value: object.sRuc } : '',
-                [
-                    Validators.required,
-                    this._validationFormService.validarRuc,
-                    Validators.maxLength(11),
-                ],
-            ],
-            sRazonSocial: [
-                object ? { disabled: object, value: object.sRazonSocial } : '',
-                [Validators.required, Validators.maxLength(255)],
-            ],
-            nIdProponente: [
-                object ? { disabled: object, value: object.nIdProponente } : 0,
-                [Validators.required, Validators.min(1)],
-            ],
-            nIdRubroNegocio: [
-                object
-                    ? { disabled: object, value: object.nIdRubroNegocio }
-                    : 0,
-                [Validators.required, Validators.min(1)],
-            ],
-            sIdDepartamento: [
-                object ? object.sIdDepartamento : 0,
-                [Validators.required, Validators.min(1)],
-            ],
-            sIdProvincia: [
-                object ? object.sIdProvincia : 0,
-                [Validators.required, Validators.min(1)],
-            ],
-            sIdDistrito: [
-                object ? object.sIdDistrito : 0,
-                [Validators.required, Validators.min(1)],
-            ],
-            sDireccion: [
-                object ? object.sDireccion : '',
-                [Validators.required, Validators.maxLength(255)],
-            ],
-            sComentario: [
-                object ? object.sComentario : '',
-                Validators.maxLength(1000),
-            ],
-            mIngresosUltimoAnio: [
-                object ? object.mIngresosUltimoAnio : null,
-                [
-                    Validators.required,
-                    Validators.min(0),
-                    Validators.max(9999999999999999.99),
-                ],
-            ],
-            mUtilidadUltimoAnio: [
-                object ? object.mUtilidadUltimoAnio : null,
-                [
-                    Validators.required,
-                    Validators.min(0),
-                    Validators.max(9999999999999999.99),
-                ],
-            ],
-            mConformacionCapitalSocial: [
-                object ? object.mConformacionCapitalSocial : null,
-                [
-                    Validators.required,
-                    Validators.min(0),
-                    Validators.max(9999999999999999.99),
-                ],
-            ],
-            nNumeroMiembros: {
-                disabled: true,
-                value: object ? object.nNumeroMiembros : 0,
-            },
-            bRegistradoMercadoValores: [
-                object ? object.bRegistradoMercadoValores : false,
-                [Validators.required],
-            ],
+            sRuc: [ object ? { disabled: object, value: object.sRuc } : '', [Validators.required, this._validationFormService.validarRuc, Validators.maxLength(11)] ],
+            sRazonSocial: [ object ? { disabled: object, value: object.sRazonSocial } : '', [Validators.required, Validators.maxLength(255)] ],
+            nIdProponente: [ object ? { disabled: object, value: object.nIdProponente } : 0, [Validators.required, Validators.min(1)] ],
+            nIdRubroNegocio: [ object ? { disabled: object, value: object.nIdRubroNegocio } : 0, [Validators.required, Validators.min(1)] ],
+            sIdDepartamento: [ object ? object.sIdDepartamento : 0, [Validators.required, Validators.min(1)] ],
+            sIdProvincia: [ object ? object.sIdProvincia : 0, [Validators.required, Validators.min(1)] ],
+            sIdDistrito: [ object ? object.sIdDistrito : 0, [Validators.required, Validators.min(1)] ],
+            sDireccion: [ object ? object.sDireccion : '', [Validators.required, Validators.maxLength(255)] ],
+            sComentario: [ object ? object.sComentario : '', Validators.maxLength(1000) ],
+            mIngresosUltimoAnio: [ object ? object.mIngresosUltimoAnio : null, [Validators.required, Validators.min(0), Validators.max(9999999999999999.99)] ],
+            mUtilidadUltimoAnio: [ object ? object.mUtilidadUltimoAnio : null, [Validators.required, Validators.min(0), Validators.max(9999999999999999.99)] ],
+            mConformacionCapitalSocial: [ object ? object.mConformacionCapitalSocial : null, [ Validators.required, Validators.min(0), Validators.max(9999999999999999.99)] ],
+            nNumeroMiembros: { disabled: true, value: object ? object.nNumeroMiembros : 0 },
+            bRegistradoMercadoValores: [ object ? object.bRegistradoMercadoValores : false, [Validators.required]],
             bActivo: [object ? object.bActivo : true, [Validators.required]],
-            sUsuarioRegistro: [
-                { disabled: object, value: this._userService.userLogin().id },
-                Validators.required,
-            ],
-            sUsuarioModificacion: [
-                { disabled: !object, value: this._userService.userLogin().id },
-                Validators.required,
-            ],
+            sUsuarioRegistro: [ { disabled: object, value: this._userService.userLogin().id }, Validators.required ],
+            sUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin().id },Validators.required ],
         });
     }
 

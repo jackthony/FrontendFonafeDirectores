@@ -14,9 +14,12 @@ import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { PAGINATOR_PAGE_SIZE } from 'app/core/config/paginator.config';
 import { Business } from '@models/business/business.interface';
 import { DirectorService } from '@services/director.service';
-import { finalize } from 'rxjs';
+import { finalize, forkJoin } from 'rxjs';
 import { ResponseModel } from '@models/IResponseModel';
 import { Director } from '@models/business/director.interface';
+import { DirectorFormService } from '@services/director-form.service';
+import { Constant } from '@models/business/constant.interface';
+import { Department } from '@models/business/departament.interface';
 
 
 @Component({
@@ -31,6 +34,7 @@ export class DirectoryBusinessComponent implements OnInit {
 	private _dialogConfirmationService = inject(DialogConfirmationService);
 
 	private _directorService = inject(DirectorService);
+	private _directorFormService = inject(DirectorFormService);
 	
 	textButtonNew = signal<string>('Agregar director');
 	iconButtonNew = signal<string>('mat_outline:add_circle_outline');
@@ -45,11 +49,22 @@ export class DirectoryBusinessComponent implements OnInit {
 
     pageIndexTable = signal<number>(1);
 	
+	director = signal<Director>(null);
+
+    lstTypedocument = signal<Constant[]>([]);
+    lstGender = signal<Constant[]>([]);
+    lstCargoManager = signal<Constant[]>([]);
+    lstTypeDirector = signal<Constant[]>([]);
+    lstSpecialty = signal<Constant[]>([]);
+
+    lstDepartments = signal<Department[]>([]);
+	
 
 	ngOnInit(): void {
 		this.headerTable.set(COLUMNS_DIRECTORY_BUSINESS);
 		this.searchDirectors();
-		this.iconsTable.set(this.defineIconsTable())
+		this.iconsTable.set(this.defineIconsTable());
+		this.loadDataForm();
 	}
 
     searchDirectors(): void {
@@ -71,17 +86,46 @@ export class DirectoryBusinessComponent implements OnInit {
 		})
 	}
 
-	defineIconsTable(): IconOption<any>[]{
+	loadDataForm(): void {
+		forkJoin({
+			typeDocument: this._directorFormService.getTypeDocument(),
+			gender: this._directorFormService.getGender(),
+			deparments : this._directorFormService.getDepartments(),
+			cargoManager: this._directorFormService.getCargoManager(),
+			typeDirector: this._directorFormService.getTypeDirector(),
+			specialty: this._directorFormService.getSpecialty()
+		}).subscribe({
+			next: (response => {
+				this.lstTypedocument.set(response.typeDocument),
+				this.lstGender.set(response.gender),
+				this.lstDepartments.set(response.deparments),
+				this.lstCargoManager.set(response.cargoManager),
+				this.lstTypeDirector.set(response.typeDirector),
+				this.lstSpecialty.set(response.specialty)
+			})
+		})
+	}
+
+	defineIconsTable(): IconOption<Director>[]{
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
         const iconDelete = new IconOption("delete", "mat_outline", "Eliminar");
 
-		iconDelete.actionIcono = (data: any) => {
+		iconEdit.actionIcono = (data: Director) => {
+            this.editDirector(data);
+        };
+
+		iconDelete.actionIcono = (data: Director) => {
             this.openDialogDelete();
         };
 
     
         return [iconEdit, iconDelete];
     }
+
+	editDirector(data: Director): void {
+		this.director.set(data);
+		this.newFormDirectory.set(true);
+	}
 
 	openDialogDelete(): void {
 		this._dialogConfirmationService.open(CONFIG_DELETE_DIALOG_DIRECTORY_BUSINESS);
@@ -94,5 +138,11 @@ export class DirectoryBusinessComponent implements OnInit {
     cancelDirectory(): void {
         this.newFormDirectory.set(false);
     }
+
+	refreshDirectory(): void {
+		this.searchDirectors();//RECARGAR PAGINA 1
+		this.newFormDirectory.set(false);
+		this.director.set(null);
+	}
 
 }

@@ -1,6 +1,18 @@
 <fo-cont-card [enabledPadding]="false">
     @if(newFormDirectory()) {
-        <app-form-directory (eventCancelDirectory)="cancelDirectory()"></app-form-directory>
+        <app-form-directory 
+            [director]="director()"
+            [business]="business()" 
+            (eventCancelDirectory)="cancelDirectory()"
+            [lstTypedocument]="lstTypedocument()"
+            [lstGender]="lstGender()"
+            [lstDepartments]="lstDepartments()"
+            [lstCargoManager]="lstCargoManager()"
+            [lstTypeDirector]="lstTypeDirector()"
+            [lstSpecialty]="lstSpecialty()"
+            (eventRefreshDirectory)="refreshDirectory()"
+            >
+        </app-form-directory>
     } @else {
         <div class="p-6">
             <div class="w-full flex justify-end mb-8">
