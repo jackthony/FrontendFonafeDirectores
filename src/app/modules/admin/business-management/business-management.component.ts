@@ -23,9 +23,6 @@ import { finalize } from 'rxjs';
 export class BusinessManagementComponent {
 	private readonly _router = inject(Router);
 
-	private _matDialog: MatDialog = inject(MatDialog);
-	private _dialogConfirmationService = inject(DialogConfirmationService);
-
 	private _businessService = inject(BusinessService);
 
 	placeHolderSearch = signal<string>('Busca por nombre de empresa');
@@ -39,6 +36,8 @@ export class BusinessManagementComponent {
 
 	businessSearch = signal<string>('');
 	pageIndexTable = signal<number>(1);
+
+	totalPagesTable = signal<number>(1);
 	
 	ngOnInit(): void {
 		this.headerTable.set(COLUMNS_BUSINESS_MANAGEMENT);
@@ -51,7 +50,7 @@ export class BusinessManagementComponent {
 		const request = new RequestOption();
 		request.queryParams = [
 			{ key: 'pageIndex' , value: this.pageIndexTable() },
-			{ key: 'pageSize' , value: PAGINATOR_PAGE_SIZE }
+			{ key: 'pageSize' , value: 2/*PAGINATOR_PAGE_SIZE*/ }
 		];
 		if(this.businessSearch()) 
 			request.queryParams.push({ key: 'nameEnterprise', value: this.businessSearch() });
@@ -60,10 +59,16 @@ export class BusinessManagementComponent {
 		).subscribe({
 			next: ((response: ResponseModel<Business>) => {
 				if(response.isSuccess){
+					const totalPages = Math.ceil(response.pagination.totalRows/2/*PAGINATOR_PAGE_SIZE*/);
+					this.totalPagesTable.set(totalPages > 0 ? totalPages : 1);
 					this.dataTableBusiness.set(response.lstItem);
 				} else this.dataTableBusiness.set([])
 			}),
 		})
+	}
+
+	changePageTable(event: number): void {
+		
 	}
 
 	addCompany(): void {

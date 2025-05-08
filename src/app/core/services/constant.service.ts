@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { ResponseModel } from '../models/IResponseModel';
-import { environment } from 'app/environments/environment';
+import { environment } from 'environments/environment';
 import { HttpGenericService } from 'app/shared/services/http-generic.service';
 import { Constant } from '@models/business/constant.interface';
 import { RequestOption } from 'app/shared/interfaces/IRequestOption';

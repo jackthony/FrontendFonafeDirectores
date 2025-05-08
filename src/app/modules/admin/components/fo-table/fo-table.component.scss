@@ -123,6 +123,8 @@ img {
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
 }
 
 .loading-text {
@@ -211,4 +213,9 @@ img {
 
 .back-paginator {
     border-radius: 6px;
+}
+
+
+.paginator button:disabled {
+    background-color: white !important;
 }

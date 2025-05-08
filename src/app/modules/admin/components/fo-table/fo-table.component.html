@@ -24,7 +24,7 @@
     <bu-search #searcher (eventChangeData)="emitFilterEvent($event)"></bu-search>
 } -->
 
-<div class="table-responsive">
+<div class="table-responsive relative">
         @defer {
             <table mat-table [dataSource]="dataSource" style="width: 100%" class="mat-cell table-fonafe">
                 @for (item of headers(); track item.id) {
@@ -180,7 +180,7 @@
                 <tr class="row-table" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
             </table>
         } @placeholder {
-            <!-- <ngx-skeleton-loader count="5" appearance="line" /> -->
+            <ngx-skeleton-loader count="5" appearance="line" />
         }
         @if(loading()){
             <div class="loading-overlay">
@@ -205,7 +205,7 @@
     
                 }
                 
-                <button class="flex items-center gap-2 back-paginator" (click)="onPageChange(currentPage + 1)" [disabled]="currentPage === totalPages">
+                <button class="flex items-center gap-2 back-paginator" (click)="onPageChange(currentPage + 1)" [disabled]="currentPage === totalPages()">
                     Siguiente
                     <mat-icon svgIcon="mat_outline:chevron_right"></mat-icon>
                 </button>

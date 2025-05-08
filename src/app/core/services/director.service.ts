@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { environment } from 'app/environments/environment';
+import { environment } from 'environments/environment';
 import { HttpGenericService } from 'app/shared/services/http-generic.service';
 
 @Injectable({

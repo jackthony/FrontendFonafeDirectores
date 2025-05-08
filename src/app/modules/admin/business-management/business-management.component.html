@@ -11,9 +11,11 @@
             >
         </fo-search-for-button>
         <fo-table 
+            [totalPages]="totalPagesTable()"
             [headers]="headerTable()"
             [data]="dataTableBusiness()"
-            [icons]="iconsTable()">
+            [icons]="iconsTable()"
+            (eventChangePage)="changePageTable($event)">
         </fo-table>
     </div>
 </div>
