@@ -68,7 +68,8 @@ export class BusinessManagementComponent {
 	}
 
 	changePageTable(event: number): void {
-		
+		this.pageIndexTable.set(event);
+		this.searchBusiness();
 	}
 
 	addCompany(): void {
