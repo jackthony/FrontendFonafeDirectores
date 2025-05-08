@@ -108,27 +108,17 @@ export class DirectoryBusinessComponent implements OnInit {
 
 	defineIconsTable(): IconOption<Director>[]{
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
-        const iconDelete = new IconOption("delete", "mat_outline", "Eliminar");
 
 		iconEdit.actionIcono = (data: Director) => {
             this.editDirector(data);
         };
 
-		iconDelete.actionIcono = (data: Director) => {
-            this.openDialogDelete();
-        };
-
-    
-        return [iconEdit, iconDelete];
+        return [iconEdit];
     }
 
 	editDirector(data: Director): void {
 		this.director.set(data);
 		this.newFormDirectory.set(true);
-	}
-
-	openDialogDelete(): void {
-		this._dialogConfirmationService.open(CONFIG_DELETE_DIALOG_DIRECTORY_BUSINESS);
 	}
 
 	openRegisterDirectory(): void {

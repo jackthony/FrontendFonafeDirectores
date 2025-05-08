@@ -18,19 +18,19 @@ export const COLUMNS_BUSINESS_MANAGEMENT: TableColumnsDefInterface[] = [
     },
     {
         id: 2,
-        name: "nIdProponente",
+        name: "sNombreMinisterio",
         displayedName: "Proponente",
         type: "string"
     },
     {
         id: 3,
-        name: "sector",
+        name: "sDescripcionRubro",
         displayedName: "Rubro",
         type: "string"
     },
     {
         id: 4,
-        name: "location",
+        name: "sProvinciaDescripcion",
         displayedName: "Ubicación",
         type: "string"
     },

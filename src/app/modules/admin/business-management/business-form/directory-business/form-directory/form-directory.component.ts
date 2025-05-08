@@ -21,6 +21,7 @@ import { TranslateMessageForm } from 'app/core/pipes/error-message-form.pipe';
 import { UserService } from 'app/core/user/user.service';
 import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { FormInputModule } from 'app/shared/modules/form-input.module';
+import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
 import { ValidationFormService } from 'app/shared/services/validation-form.service';
 import { DateTime } from 'luxon';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
@@ -40,12 +41,14 @@ export class FormDirectoryComponent implements OnInit {
 	private _fb = inject(FormBuilder);
 
 	private _spinner = inject(NgxSpinnerService);
+	private _ngxToastrService = inject(NgxToastrService);
 
 	private _directorService = inject(DirectorService);
 	private _validationFormService = inject(ValidationFormService);
 	private _provinceService = inject(ProvinceService);
 	private _districtService = inject(DistrictService);
 	private _userService = inject(UserService);
+	
 
     @Output() eventCancelDirectory: EventEmitter<void> = new EventEmitter<void>();
     @Output() eventRefreshDirectory: EventEmitter<void> = new EventEmitter<void>();
@@ -202,6 +205,7 @@ export class FormDirectoryComponent implements OnInit {
                 next: (response: ResponseModel<number>) => {
                     if (response.isSuccess) {
 						//MENSAJE DE SATISFACCION
+						this._ngxToastrService.showSuccess('Director registrado exitosamente', '¡Éxito!');
                         this.eventRefreshDirectory.emit();
                     }
                 },
@@ -217,6 +221,7 @@ export class FormDirectoryComponent implements OnInit {
             .subscribe({
                 next: (response: ResponseModel<boolean>) => {
                     if (response.isSuccess) {
+						this._ngxToastrService.showSuccess('Director actualizado exitosamente', '¡Éxito!');
 						//MENSAJE DE SATISFACCION
                         this.eventRefreshDirectory.emit();
                     }

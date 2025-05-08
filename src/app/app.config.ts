@@ -17,12 +17,14 @@ import { provideIcons } from 'app/core/icons/icons.provider';
 import { mockApiServices } from 'app/mock-api';
 import { firstValueFrom } from 'rxjs';
 import { TranslocoHttpLoader } from './core/transloco/transloco.http-loader';
+import { provideToastr } from 'ngx-toastr';
 
 export const appConfig: ApplicationConfig = {
     providers: [
         /* provideExperimentalZonelessChangeDetection(), */
         provideAnimations(),
         provideHttpClient(),
+        provideToastr(),
         provideRouter(
             appRoutes,
             withPreloading(PreloadAllModules),

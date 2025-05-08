@@ -32,6 +32,7 @@ import { ValidationFormService } from 'app/shared/services/validation-form.servi
 import { BusinessService } from '@services/business.service';
 import { provideNgxMask } from 'ngx-mask';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
 
 @Component({
     selector: 'app-business-form',
@@ -48,11 +49,13 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
 
     private _spinner = inject(NgxSpinnerService);
 
+    private _validationFormService = inject(ValidationFormService);
+    private _ngxToastrService = inject(NgxToastrService);
+
     private _businessService = inject(BusinessService);
     private _provinceService = inject(ProvinceService);
     private _districtService = inject(DistrictService);
     private _userService = inject(UserService);
-    private _validationFormService = inject(ValidationFormService);
 
     private destroy$ = new Subject<void>();
 
@@ -216,10 +219,10 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
             .subscribe({
                 next: (response: ResponseModel<number>) => {
                     if (response.isSuccess) {
+                        this._ngxToastrService.showSuccess('Empresa registrada exitosamente', '¡Éxito!');
                         this._router.navigate([response.item], {
                             relativeTo: this._activatedRoute,
                         });
-                        //this._router.navigate(['gestion-empresas', '']);
                     }
                 },
             });
@@ -249,6 +252,7 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
             )
             .subscribe({
                 next: (response: ResponseModel<Business>) => {
+                    this._ngxToastrService.showSuccess('Empresa actualizada exitosamente', '¡Éxito!');
                     this.business.set(response.item);
                     this.initForm(this.business());
                 },

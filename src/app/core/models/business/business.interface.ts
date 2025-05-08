@@ -20,4 +20,7 @@ export interface Business {
     sUsuarioRegistro: string;
     dtFechaModificacion: string;
     sUsuarioModificacion: string;
+    sDescripcionRubro?: string;
+    sNombreMinisterio?: string;
+    sProvinciaDescripcion?: string;
 }
