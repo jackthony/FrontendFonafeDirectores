@@ -24,9 +24,12 @@
                 </fo-button>
             </div>
                 <fo-table 
+                    [loading]="loadingTable()"
+                    [totalPages]="totalPagesTable()"
                     [headers]="headerTable()"
                     [data]="dataTableDirectory()"
-                    [icons]="iconsTable()">
+                    [icons]="iconsTable()"
+                    (eventChangePage)="changePageTable($event)">
                 </fo-table>
     
         </div>

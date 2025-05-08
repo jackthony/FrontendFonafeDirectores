@@ -50,7 +50,7 @@ export class BusinessManagementComponent {
 		const request = new RequestOption();
 		request.queryParams = [
 			{ key: 'pageIndex' , value: this.pageIndexTable() },
-			{ key: 'pageSize' , value: 2/*PAGINATOR_PAGE_SIZE*/ }
+			{ key: 'pageSize' , value: PAGINATOR_PAGE_SIZE }
 		];
 		if(this.businessSearch()) 
 			request.queryParams.push({ key: 'nameEnterprise', value: this.businessSearch() });
@@ -59,11 +59,15 @@ export class BusinessManagementComponent {
 		).subscribe({
 			next: ((response: ResponseModel<Business>) => {
 				if(response.isSuccess){
-					const totalPages = Math.ceil(response.pagination.totalRows/2/*PAGINATOR_PAGE_SIZE*/);
+					const totalPages = Math.ceil(response.pagination.totalRows/PAGINATOR_PAGE_SIZE);
 					this.totalPagesTable.set(totalPages > 0 ? totalPages : 1);
 					this.dataTableBusiness.set(response.lstItem);
 				} else this.dataTableBusiness.set([])
 			}),
+			error:(() => {
+				this.totalPagesTable.set(1);
+				this.dataTableBusiness.set([]);
+			})
 		})
 	}
 
@@ -71,6 +75,14 @@ export class BusinessManagementComponent {
 		this.pageIndexTable.set(event);
 		this.searchBusiness();
 	}
+
+	searchByEnterprise(event: string): void {
+		this.businessSearch.set(event);
+		this.pageIndexTable.set(1);
+		this.searchBusiness();
+	}
+
+
 
 	addCompany(): void {
 		this._router.navigate(['gestion-empresas', 'registro']);

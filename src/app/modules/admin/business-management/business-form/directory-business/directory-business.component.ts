@@ -48,6 +48,7 @@ export class DirectoryBusinessComponent implements OnInit {
 	loadingTable = signal<boolean>(false);
 
     pageIndexTable = signal<number>(1);
+	totalPagesTable = signal<number>(1);
 	
 	director = signal<Director>(null);
 
@@ -58,6 +59,9 @@ export class DirectoryBusinessComponent implements OnInit {
     lstSpecialty = signal<Constant[]>([]);
 
     lstDepartments = signal<Department[]>([]);
+
+
+	
 	
 
 	ngOnInit(): void {
@@ -80,10 +84,21 @@ export class DirectoryBusinessComponent implements OnInit {
 		).subscribe({
 			next: ((response: ResponseModel<Director>) => {
 				if(response.isSuccess){
+					const totalPages = Math.ceil(response.pagination.totalRows/PAGINATOR_PAGE_SIZE);
+					this.totalPagesTable.set(totalPages > 0 ? totalPages : 1);
 					this.dataTableDirectory.set(response.lstItem);
 				} else this.dataTableDirectory.set([])
 			}),
+			error:(() => {
+				this.totalPagesTable.set(1);
+				this.dataTableDirectory.set([]);
+			})
 		})
+	}
+
+	changePageTable(event: number): void {
+		this.pageIndexTable.set(event);
+		this.searchDirectors();
 	}
 
 	loadDataForm(): void {

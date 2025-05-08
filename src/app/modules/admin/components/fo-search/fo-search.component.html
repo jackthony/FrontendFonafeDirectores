@@ -10,5 +10,7 @@
         class="search-input"
         [placeholder]="placeText()"
         (keyup)="search(valueText.value)" />
-    <mat-icon class="icon-search">search</mat-icon>
+        <button mat-icon-button (click)="searchValue()">
+            <mat-icon class="icon-search">search</mat-icon>
+        </button>
 </div>

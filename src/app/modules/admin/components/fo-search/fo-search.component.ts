@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, input, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, input, OnDestroy, OnInit, Output, signal, ViewEncapsulation } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { debounceTime, Subject, takeUntil } from 'rxjs';
@@ -18,10 +18,12 @@ export class FoSearchComponent implements OnInit, OnDestroy {
 	delaySearch = input<number>(0);
 	searchTerms = new Subject<string>();
 	placeText = input<string>('');
+	#searchTerms = signal<string>('');
 
 	private _unsubscribeAll: Subject<null> = new Subject<null>();
 
 	@Output() eventChangeData = new EventEmitter<string>();
+	@Output() eventClickSearch = new EventEmitter<string>();
 	
 	
 	ngOnInit(): void {
@@ -36,6 +38,12 @@ export class FoSearchComponent implements OnInit, OnDestroy {
 
 	search(text: string): void {
 		this.searchTerms.next(text);
+		this.#searchTerms.set(text);
+		
+	}
+
+	searchValue(): void {
+		this.eventClickSearch.emit(this.#searchTerms());
 	}
 
 	ngOnDestroy(): void

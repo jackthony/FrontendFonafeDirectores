@@ -2,7 +2,7 @@
     <div class="grid grid-cols-1 gap-8">
         <fo-return (eventActionClick)="returnEnterprise()" [text]="textReturn()"></fo-return>
         <fo-cont-card>
-        <fo-title-module  [titleBold]="titleBold()" [text]="form.get('sRazonSocial').value ?? '--'"></fo-title-module>
+        <fo-title-module  [titleBold]="titleBold()" [text]="form.get('sRazonSocial').value || '--'"></fo-title-module>
         </fo-cont-card>
         <!-- <app-form-register-business></app-form-register-business> -->
         <div class="w-full grid grid-cols-3 gap-4">
