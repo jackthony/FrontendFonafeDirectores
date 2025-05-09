@@ -1,4 +1,4 @@
-<div>
+<form class="w-full" [formGroup]="form">
     <div class="header-dialog-user">
         <div class="header-container-user gap-3 flex">
             <mat-icon class="icon-size-7" svgIcon="mat_outline:person_outline"></mat-icon>
@@ -11,142 +11,118 @@
                 <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                     <mat-label>Nombres y apellidos</mat-label>
                     <input 
-                        [formControl]="test"
+                        formControlName="sNombresApellidos"
                         matInput 
                         placeholder="--"
                         type="text"
-                        maxlength="50">
+                        maxlength="255">
+                        @if(form.get('sNombresApellidos').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ form.get("sNombresApellidos") | translateMessageForm }}
+                            </mat-error>
+                        }
                 </mat-form-field>     
             </div>
             <div class="col-span-1">
                 <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                     <mat-label>Cargo</mat-label>
                     <mat-select
-                        [formControl]="test"
-                        placeholder="--">
-                        @for (module of []; track $index) {
-                            <mat-option [value]="module?.ncodeModule">
-                                {{ module?.description }}
-                            </mat-option>
-                        }
-                        <mat-option [value]="1">
-                            {{ 'Programas' }}
-                        </mat-option>
-                        <mat-option [value]="2">
-                            {{ 'Inscripciones' }}
-                        </mat-option>
+                            formControlName="nIdCargo"
+                            placeholder="--">
+                            @for (item of data.lstPosition; track $index) {
+                                <mat-option [value]="item.nConValor">
+                                    {{ item.sConDescripcion }}
+                                </mat-option>
+                            }
                     </mat-select>
+                    @if(form.get('nIdCargo').invalid) {
+                        <mat-error class="text-red-500">
+                            {{ form.get("nIdCargo") | translateMessageForm: "select" }}
+                        </mat-error>
+                    }
                 </mat-form-field>
             </div>
             <div class="col-span-1">
                 <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                     <mat-label>Pefil</mat-label>
                     <mat-select
-                        [formControl]="test"
+                        formControlName="nIdRol"
                         placeholder="--">
-                        @for (module of []; track $index) {
-                            <mat-option [value]="module?.ncodeModule">
-                                {{ module?.description }}
+                        @for (item of data.lstProfile; track $index) {
+                            <mat-option [value]="item.nConValor">
+                                {{ item.sConDescripcion }}
                             </mat-option>
                         }
-                        <mat-option [value]="1">
-                            {{ 'Programas' }}
-                        </mat-option>
-                        <mat-option [value]="2">
-                            {{ 'Inscripciones' }}
-                        </mat-option>
                     </mat-select>
+                    @if(form.get('nIdRol').invalid) {
+                        <mat-error class="text-red-500">
+                            {{ form.get("nIdRol") | translateMessageForm: "select" }}
+                        </mat-error>
+                    }
                 </mat-form-field>
             </div>
             <div class="col-span-1">
                 <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                     <mat-label>Estado</mat-label>
                     <mat-select
-                        [formControl]="test"
+                        formControlName="nEstado"
                         placeholder="--">
-                        @for (module of []; track $index) {
-                            <mat-option [value]="module?.ncodeModule">
-                                {{ module?.description }}
+                        @for (item of data.lstStatus; track $index) {
+                            <mat-option [value]="item.nConValor">
+                                {{ item.sConDescripcion }}
                             </mat-option>
                         }
-                        <mat-option [value]="1">
-                            {{ 'Programas' }}
-                        </mat-option>
-                        <mat-option [value]="2">
-                            {{ 'Inscripciones' }}
-                        </mat-option>
                     </mat-select>
+                    @if(form.get('nEstado').invalid) {
+                        <mat-error class="text-red-500">
+                            {{ form.get("nEstado") | translateMessageForm: "select" }}
+                        </mat-error>
+                    }
                 </mat-form-field>
             </div>
-            <!-- <div class="col-span-1">
-                <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
-                    <mat-label>Fecha de creación</mat-label>
-                    <input
-                        [formControl]="test"
-                        matInput
-                        placeholder="--/--/----"
-                        [matDatepicker]="picker" />
-                    <mat-datepicker-toggle
-                        matSuffix
-                        [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker>
-                        <mat-datepicker-actions>
-                            <button mat-button matDatepickerCancel>
-                                Cancelar
-                            </button>
-                            <button mat-raised-button color="primary" matDatepickerApply>
-                                Aplicar
-                            </button>
-                        </mat-datepicker-actions>
-                    </mat-datepicker>
-                </mat-form-field>
-            </div>
-
-            <div class="col-span-1">
-                <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
-                    <mat-label>Última modificación</mat-label>
-                    <input
-                        [formControl]="test"
-                        placeholder="--/--/----"
-                        matInput
-                        [matDatepicker]="pickerEnd" />
-                    <mat-datepicker-toggle
-                        matSuffix
-                        [for]="pickerEnd"></mat-datepicker-toggle>
-                    <mat-datepicker #pickerEnd>
-                        <mat-datepicker-actions>
-                            <button mat-button matDatepickerCancel>
-                                Cancelar
-                            </button>
-                            <button mat-raised-button color="primary" matDatepickerApply>
-                                Aplicar
-                            </button>
-                        </mat-datepicker-actions>
-                    </mat-datepicker>
-                </mat-form-field>
-            </div> -->
-            
-
             <div class="col-span-1">
                 <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                     <mat-label>Correo</mat-label>
                     <input 
-                        [formControl]="test"
+                        formControlName="sCorreoElectronico"
                         matInput 
                         placeholder="--"
                         type="text"
-                        maxlength="50">
+                        maxlength="150">
+                        @if(form.get('sCorreoElectronico').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ form.get("sCorreoElectronico") | translateMessageForm }}
+                            </mat-error>
+                        }
                 </mat-form-field>     
             </div>
             <div class="col-span-1">
-                <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-form-field class="mat-form-field-custom w-full icon-password" appearance="outline" floatLabel="always">
                     <mat-label>Clave</mat-label>
                     <input 
-                        [formControl]="test"
+                        formControlName="sContrasena"
                         matInput 
                         placeholder="--"
-                        type="password"
-                        maxlength="50">
+                        [type]="typeInputPassword() ? 'text' : 'password'"
+                        maxlength="32">
+                        @if(form.get('sContrasena').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ form.get("sContrasena") | translateMessageForm }}
+                            </mat-error>
+                        }
+                        <button
+                            class="self-center"
+                            (click)="viewPassword()"
+                            type="button"
+                            mat-icon-button
+                            [matTooltip]="typeInputPassword() ? 'Ocultar contraseña' : 'Ver contraseña'">
+                            <mat-icon
+                                class="icon-size-5"
+                                [svgIcon]="
+                                    viewPassword ? 'heroicons_outline:eye-slash' : 'heroicons_outline:eye'
+                                ">
+                            </mat-icon>
+                        </button>
                 </mat-form-field>     
             </div>
         </div>
@@ -156,10 +132,12 @@
                 [typeButton]="buttonEnum().CANCEL"
                 matDialogClose>
             </fo-button-dialog>
-    
             <fo-button-dialog
-                [textBtn]="'Crear'">
+                [btnDisabled]="loadingService()"
+                [textBtn]="isEdit() ? 'Guardar' : 'Crear'"
+                (eventActionClick)="registerForm()"
+                >
             </fo-button-dialog>
         </div>
     </div>
-</div>
+</form>

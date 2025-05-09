@@ -16,6 +16,7 @@ export class FoButtonDialogComponent {
 	textBtn = input.required<string>();
 	typeButton = input<number>(ButtonEnum.SEND);
 	buttonEnum = signal<typeof ButtonEnum>(ButtonEnum);
+  btnDisabled = input<boolean>(false);
 
   actionClick(): void {
     this.eventActionClick.emit();

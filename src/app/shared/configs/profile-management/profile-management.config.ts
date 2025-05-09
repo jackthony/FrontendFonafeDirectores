@@ -1,6 +1,10 @@
 import { DialogConfirmation } from "@components/fo-dialog-confirmation/models/dialog-confirmation.interface";
 import { TableColumnsDefInterface } from "../../interfaces/ITableColumnsDefInterface";
 
+export const CONST_STATUS_USER = 10;
+export const CONST_POSITION_USER = 11;
+export const CONST_PROFILE_USER = 12;
+
 export const COLUMNS_PROFILE_MANAGEMENT: TableColumnsDefInterface[] = [
     {
         id: 0,

@@ -1,4 +1,5 @@
 <button
+    [disabled]="btnDisabled()"
     [class]="{
         'btn-default-dialog-send': typeButton() === buttonEnum().SEND,
         'btn-default-dialog-cancel': typeButton() === buttonEnum().CANCEL,

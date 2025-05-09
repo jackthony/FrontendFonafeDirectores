@@ -29,3 +29,7 @@
     display: flex;
     justify-content: end;
 }
+
+.icon-password .mat-mdc-form-field-infix {
+    display: flex !important;
+}

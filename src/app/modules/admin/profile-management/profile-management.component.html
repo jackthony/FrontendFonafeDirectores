@@ -4,7 +4,7 @@
         <fo-cont-card>
             <fo-title-module [text]="titleModule()"></fo-title-module>
         </fo-cont-card>
-        <fo-search-for-button (eventNewElement)="openFormDialog()"></fo-search-for-button>
+        <fo-search-for-button (eventNewElement)="loadDataFormDialog()"></fo-search-for-button>
         <fo-table 
             [headers]="headerTable()"
             [data]="dataTableActivities()"
