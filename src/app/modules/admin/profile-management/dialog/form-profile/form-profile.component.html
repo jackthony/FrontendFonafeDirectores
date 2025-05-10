@@ -9,16 +9,48 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="col-span-1">
                 <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
-                    <mat-label>Nombres y apellidos</mat-label>
+                    <mat-label>Apellido paterno</mat-label>
                     <input 
-                        formControlName="sNombresApellidos"
+                        formControlName="sApellidoPaterno"
                         matInput 
                         placeholder="--"
                         type="text"
-                        maxlength="255">
-                        @if(form.get('sNombresApellidos').invalid) {
+                        maxlength="50">
+                        @if(form.get('sApellidoPaterno').invalid) {
                             <mat-error class="text-red-500">
-                                {{ form.get("sNombresApellidos") | translateMessageForm }}
+                                {{ form.get("sApellidoPaterno") | translateMessageForm }}
+                            </mat-error>
+                        }
+                </mat-form-field>     
+            </div>
+            <div class="col-span-1">
+                <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                    <mat-label>Apellido Materno</mat-label>
+                    <input 
+                        formControlName="sApellidoMaterno"
+                        matInput 
+                        placeholder="--"
+                        type="text"
+                        maxlength="50">
+                        @if(form.get('sApellidoMaterno').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ form.get("sApellidoMaterno") | translateMessageForm }}
+                            </mat-error>
+                        }
+                </mat-form-field>     
+            </div>
+            <div class="col-span-1">
+                <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                    <mat-label>Nombres</mat-label>
+                    <input 
+                        formControlName="sNombres"
+                        matInput 
+                        placeholder="--"
+                        type="text"
+                        maxlength="150">
+                        @if(form.get('sNombres').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ form.get("sNombres") | translateMessageForm }}
                             </mat-error>
                         }
                 </mat-form-field>     

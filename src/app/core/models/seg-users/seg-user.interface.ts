@@ -1,6 +1,8 @@
 export interface SegUser {
 	nIdUsuario: number;
-    sNombresApellidos: string;
+    sApellidoPaterno: string;
+    sApellidoMaterno: string;
+    sNombres: string;
     nIdCargo: number;
     nIdRol: number;
     nEstado: number;

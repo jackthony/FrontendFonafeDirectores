@@ -68,7 +68,9 @@ export class FormProfileComponent implements OnInit {
 	initForm(object: SegUser): void {
         this.form = this._fb.group({
             nIdUsuario: [{ disabled: !object, value: object?.nIdUsuario }, Validators.required],
-            sNombresApellidos: [ { disabled: object, value: object?  object.sNombresApellidos : '' }, [Validators.required, Validators.maxLength(255)] ],
+            sApellidoPaterno: [ { disabled: object, value: object?  object.sApellidoPaterno : '' }, [Validators.required, Validators.maxLength(50)] ],
+            sApellidoMaterno: [ { disabled: object, value: object?  object.sApellidoMaterno : '' }, [Validators.required, Validators.maxLength(50)] ],
+            sNombres: [ { disabled: object, value: object?  object.sNombres : '' }, [Validators.required, Validators.maxLength(150)] ],
             nIdCargo: [ object? object.nIdCargo : 0, [Validators.required, Validators.min(1)] ],
             nIdRol: [ object? object.nIdRol : 0, [Validators.required, Validators.min(1)] ],
             nEstado: [ object? object.nEstado : 0, [Validators.required, Validators.min(1)] ],

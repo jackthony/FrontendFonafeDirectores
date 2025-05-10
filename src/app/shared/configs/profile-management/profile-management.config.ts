@@ -8,8 +8,8 @@ export const CONST_PROFILE_USER = 12;
 export const COLUMNS_PROFILE_MANAGEMENT: TableColumnsDefInterface[] = [
     {
         id: 0,
-        name: "sNombresApellidos",
-        displayedName: "Nombres y Apellidos",
+        name: "sNombreCompleto",
+        displayedName: "Apellidos y nombre",
         type: "string"
     },
     {
