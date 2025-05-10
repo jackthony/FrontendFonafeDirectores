@@ -79,6 +79,11 @@
                                         {{ element[item.name] + "%" }}
                                     </span>
                                 }
+                                @case ("password") {
+                                    <span class="lg:text-justify text-right pl-4 lg:pl-0 md:pl-2">
+                                        ******
+                                    </span>
+                                }
                                 @case ("url") {
                                     <span
                                         class="lg:text-justify text-right pl-4 lg:pl-0 md:pl-2"

@@ -8,51 +8,51 @@ export const CONST_PROFILE_USER = 12;
 export const COLUMNS_PROFILE_MANAGEMENT: TableColumnsDefInterface[] = [
     {
         id: 0,
-        name: "fullName",
+        name: "sNombresApellidos",
         displayedName: "Nombres y Apellidos",
         type: "string"
     },
     {
         id: 1,
-        name: "status",
+        name: "sCargoDescripcion",
         displayedName: "Cargo",
         type: "string"
     },
     {
         id: 2,
-        name: "dDate",
+        name: "sPerfilDescripcion",
         displayedName: "Perfil",
-        type: "date"
+        type: "string"
     },
     {
         id: 3,
-        name: "transcurrido",
+        name: "sEstadoDescripcion",
         displayedName: "Estado",
         type: "string"
     },
     {
         id: 4,
-        name: "enterprise",
+        name: "dtFechaRegistro",
         displayedName: "Fecha de creación",
-        type: "string"
+        type: "date"
     },
     {
         id: 5,
-        name: "proponent",
+        name: "dtFechaModificacion",
         displayedName: "Ult. modificación",
-        type: "string"
+        type: "date"
     },
     {
         id: 6,
-        name: "solicit",
+        name: "sCorreoElectronico",
         displayedName: "Correo",
         type: "string"
     },
     {
         id: 7,
-        name: "clave",
+        name: "hide",
         displayedName: "Clave",
-        type: "string"
+        type: "password"
     },
     {
         id: 8,

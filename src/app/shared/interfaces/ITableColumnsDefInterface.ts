@@ -26,7 +26,8 @@ export interface TableColumnsDefInterface {
         | "statusIndicator"
         | "photo"
         | "detail"
-        | "enter";
+        | "enter"
+        | "password";
     format?: "fullDate" | "shortTime" | "shortTimeHour";
     customIcon?: string[][];
     minMaxDecimal?: [number, number];

@@ -73,15 +73,13 @@ export class FormProfileComponent implements OnInit {
             nIdRol: [ object? object.nIdRol : 0, [Validators.required, Validators.min(1)] ],
             nEstado: [ object? object.nEstado : 0, [Validators.required, Validators.min(1)] ],
             sCorreoElectronico:  [ { disabled: object, value: object ? object.sCorreoElectronico : '' }, [Validators.required, Validators.maxLength(150), this._validationFormService.validationMail] ],
-            sContrasena:  [ '' , [Validators.required, Validators.maxLength(32)] ],
+            sContrasena:  [ { disabled: object, value: object ? '******' : '' } , [Validators.required, Validators.maxLength(32)] ],
             sUsuarioRegistro: [ { disabled: object, value: this._userService.userLogin().id }, Validators.required ],
             sUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin().id },Validators.required ],
         });
     }
 
 	registerForm() {
-		console.log('formmmmmm', this.form);
-		
         if (this.form.invalid) {
             this.form.markAllAsTouched();
             return;

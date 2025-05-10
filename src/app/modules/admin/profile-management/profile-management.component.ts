@@ -15,6 +15,10 @@ import { finalize, forkJoin } from 'rxjs';
 import { ConstantService } from '@services/constant.service';
 import { Constant } from '@models/business/constant.interface';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { RequestOption } from 'app/shared/interfaces/IRequestOption';
+import { PAGINATOR_PAGE_SIZE } from 'app/core/config/paginator.config';
+import { SegUserService } from '@services/seg-user.service';
+import { ResponseModel } from '@models/IResponseModel';
 
 @Component({
   selector: 'app-profile-management',
@@ -27,26 +31,72 @@ export default class ProfileManagementComponent {
 	private readonly _router = inject(Router);
 
 	private _matDialog: MatDialog = inject(MatDialog);
+
+	private _segUserService = inject(SegUserService);
+	private _constantService = inject(ConstantService);
+
 	private _ngxToastrService = inject(NgxToastrService);
 	private _spinner = inject(NgxSpinnerService);
-
-	private _constantService = inject(ConstantService);
+	
 	
     titleModule = signal<string>('Gestión de perfiles');
 	headerTable = signal<TableColumnsDefInterface[]>([]);
 	dataTableActivities = signal<SegUser[]>([]);
 	iconsTable = signal<IconOption<SegUser>[]>([]);
 
+	loadingTable = signal<boolean>(false);
+	pageIndexTable = signal<number>(1);
+	totalPagesTable = signal<number>(1);
+	userSearch = signal<string>('');
+	placeHolderSearch = signal<string>('Busca por nombres y/o apellidos');
+
 	
 
 	ngOnInit(): void {
 		this.headerTable.set(COLUMNS_PROFILE_MANAGEMENT);
-		this.dataTableActivities.set([]);
-		this.iconsTable.set(this.defineIconsTable())
+		this.iconsTable.set(this.defineIconsTable());
+		this.searchUsers();
 	}
 
 	returnInit(): void {
 		this._router.navigate(['home']);
+	}
+
+	searchUsers(): void {
+		this.loadingTable.set(true);
+		const request = new RequestOption();
+		request.queryParams = [
+			{ key: 'pageIndex' , value: this.pageIndexTable() },
+			{ key: 'pageSize' , value: PAGINATOR_PAGE_SIZE }
+		];
+		if(this.userSearch()) 
+			request.queryParams.push({ key: 'fullName', value: this.userSearch() });
+		this._segUserService.getByPagination(request).pipe(
+			finalize(() => this.loadingTable.set(false))
+		).subscribe({
+			next: ((response: ResponseModel<SegUser>) => {
+				if(response.isSuccess){
+					const totalPages = Math.ceil(response.pagination.totalRows/PAGINATOR_PAGE_SIZE);
+					this.totalPagesTable.set(totalPages > 0 ? totalPages : 1);
+					this.dataTableActivities.set(response.lstItem);
+				} else this.dataTableActivities.set([])
+			}),
+			error:(() => {
+				this.totalPagesTable.set(1);
+				this.dataTableActivities.set([]);
+			})
+		})
+	}
+
+	changePageTable(event: number): void {
+		this.pageIndexTable.set(event);
+		this.searchUsers();
+	}
+
+	searchByUser(event: string): void {
+		this.userSearch.set(event);
+		this.pageIndexTable.set(1);
+		this.searchUsers();
 	}
 
 
@@ -70,6 +120,7 @@ export default class ProfileManagementComponent {
 		});
 		respDialogo.beforeClosed().subscribe(res => {
 		    if(res){
+				this.searchByUser(null);
 				if(element) this._ngxToastrService.showSuccess('Usuario actualizado exitosamente', '¡Éxito!');
 			    else this._ngxToastrService.showSuccess('Usuario registrado exitosamente', '¡Éxito!');
 		    }

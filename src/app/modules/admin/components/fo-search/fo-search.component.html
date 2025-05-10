@@ -9,7 +9,7 @@
         [value]="defaultValue()"
         class="search-input"
         [placeholder]="placeText()"
-        (keyup)="search(valueText.value)" />
+        (input)="search($event.target.value)" />
         <button mat-icon-button (click)="searchValue()">
             <mat-icon class="icon-search">search</mat-icon>
         </button>

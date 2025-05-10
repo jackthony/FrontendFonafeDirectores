@@ -4,11 +4,18 @@
         <fo-cont-card>
             <fo-title-module [text]="titleModule()"></fo-title-module>
         </fo-cont-card>
-        <fo-search-for-button (eventNewElement)="loadDataFormDialog()"></fo-search-for-button>
+        <fo-search-for-button 
+            [placeTextSearch]="placeHolderSearch()"
+            (eventClickSearch)="searchByUser($event)"
+            (eventNewElement)="loadDataFormDialog()">
+        </fo-search-for-button>
         <fo-table 
+            [loading]="loadingTable()"
+            [totalPages]="totalPagesTable()"
             [headers]="headerTable()"
             [data]="dataTableActivities()"
-            [icons]="iconsTable()">
+            [icons]="iconsTable()"
+            (eventChangePage)="changePageTable($event)">
         </fo-table>
     </div>
 </div>
