@@ -48,9 +48,7 @@ export default class ProfileManagementComponent {
 	pageIndexTable = signal<number>(1);
 	totalPagesTable = signal<number>(1);
 	userSearch = signal<string>('');
-	placeHolderSearch = signal<string>('Busca por nombres y/o apellidos');
-
-	
+	placeHolderSearch = signal<string>('Busca por apellidos y/o nombres');
 
 	ngOnInit(): void {
 		this.headerTable.set(COLUMNS_PROFILE_MANAGEMENT);
