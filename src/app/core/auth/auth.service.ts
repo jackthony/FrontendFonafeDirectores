@@ -4,12 +4,19 @@ import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
 import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
 import { User } from '../user/user.types';
+import { SegUserService } from '@services/seg-user.service';
+import { RequestOption } from 'app/shared/interfaces/IRequestOption';
+import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
+import { AuthMockApi } from 'app/mock-api/common/auth/api';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
     private _authenticated: boolean = false;
     private _httpClient = inject(HttpClient);
+    private _ngxToastrService = inject(NgxToastrService);
+    private _segUserService = inject(SegUserService);
     private _userService = inject(UserService);
+    private _GenJWT=inject(AuthMockApi);
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
     // -----------------------------------------------------------------------------------------------------
@@ -58,7 +65,33 @@ export class AuthService {
             return throwError('User is already logged in.');
         }
 
-        return this._httpClient.post('api/auth/sign-in', credentials).pipe(
+        const request = new RequestOption();
+        request.request = credentials;
+        request.resource = "Login";
+        return this._segUserService.create(request).pipe(
+            switchMap((response: any) => {
+
+                if(!response || !response.item){
+                    this._ngxToastrService.showError('Credenciales inválidas');
+                    return throwError(() => new Error('Error validación'))
+                }
+                
+                // Store the access token in the local storage
+                //this.accessToken = response.accessToken;
+                this.accessToken =  this._GenJWT._generateJWTToken()
+                // Set the authenticated flag to true
+                this._authenticated = true;
+
+                // Store the user on the user service
+                this._userService.user = response.item;
+                localStorage.setItem("user", JSON.stringify(response.item));
+
+                // Return a new observable with the response
+                return of(response);
+            })
+        );
+
+        /* return this._httpClient.post('api/auth/sign-in', credentials).pipe(
             switchMap((response: any) => {
                 // Store the access token in the local storage
                 this.accessToken = response.accessToken;
@@ -72,7 +105,7 @@ export class AuthService {
                 // Return a new observable with the response
                 return of(response);
             })
-        );
+        ); */
     }
 
     /**
@@ -105,7 +138,8 @@ export class AuthService {
                     this._authenticated = true;
 
                     // Store the user on the user service
-                    this._userService.user = response.user;
+                    //this._userService.user = response.user;
+                    this._userService.user = JSON.parse(localStorage.getItem("user"));
 
                     // Return true
                     return of(true);
@@ -122,6 +156,9 @@ export class AuthService {
 
         // Set the authenticated flag to false
         this._authenticated = false;
+
+        localStorage.removeItem('user');
+        this._userService.user = null;
 
         // Return the observable
         return of(true);

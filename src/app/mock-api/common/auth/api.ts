@@ -167,7 +167,7 @@ export class AuthMockApi {
      *
      * @private
      */
-    private _generateJWTToken(): string {
+    public _generateJWTToken(): string {
         // Define token header
         const header = {
             alg: 'HS256',
