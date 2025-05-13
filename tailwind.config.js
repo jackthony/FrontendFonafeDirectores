@@ -23,7 +23,7 @@ const themes = {
     default: {
         primary: {
             ...colors.indigo,
-            DEFAULT: colors.indigo[600],
+            DEFAULT: '#CD202C',
         },
         accent: {
             ...colors.slate,
