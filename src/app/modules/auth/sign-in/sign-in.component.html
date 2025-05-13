@@ -18,26 +18,6 @@
                     >Sign up
                 </a> -->
             </div>
-            <!-- <fuse-alert
-                class="mt-8"
-                [appearance]="'outline'"
-                [showIcon]="false"
-                [type]="'info'"
-            >
-                You are browsing <strong>Fuse Demo</strong>. Click on the "Sign
-                in" button to access the Demo and Documentation.
-            </fuse-alert>
-            @if (showAlert) {
-                <fuse-alert
-                    class="mt-8"
-                    [appearance]="'outline'"
-                    [showIcon]="false"
-                    [type]="alert.type"
-                    [@shake]="alert.type === 'error'"
-                >
-                    {{ alert.message }}
-                </fuse-alert>
-            } -->
             <form class="mt-4" [formGroup]="signInForm" #signInNgForm="ngForm">
                 <mat-form-field class="w-full">
                     <mat-label>Correo</mat-label>
@@ -120,5 +100,10 @@
                 </button>
             </form>
         </div>
+                    <div class="hidden md:block absolute bottom-0 right-0 max-w-[200px] md:max-w-[200px] lg:max-w-[300px]  pointer-events-none select-none">
+                    <img
+                    src="images/logo/login.png"
+                    />
+            </div>
     </div>
 </div>
