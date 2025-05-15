@@ -3,5 +3,5 @@ import { Environment } from "./environment.interface";
 
 export const environment: Environment = {
     production: false,
-    apiUrlBase: 'https://localhost:7063'
+    apiUrlBase: 'http://172.191.184.95:8088'
 };
