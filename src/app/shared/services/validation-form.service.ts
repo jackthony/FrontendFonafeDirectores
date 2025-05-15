@@ -50,8 +50,8 @@ export class ValidationFormService {
           return { customError: 'Debe contener al menos un carácter especial.' };
         }
 
-        if(value.length < 8) {
-          return { customError: 'La contraseña debe tener mínimo 12 caracteres.' }
+        if(value.length < 7) {
+          return { customError: 'La contraseña debe tener mínimo 7 caracteres.' }
         }
 
   
