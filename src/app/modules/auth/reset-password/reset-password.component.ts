@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import {
     FormsModule,
@@ -18,8 +19,10 @@ import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { FuseValidators } from '@fuse/validators';
 import { User } from '@models/user.interface';
 import { AuthService } from 'app/core/auth/auth.service';
+import { TranslateMessageForm } from 'app/core/pipes/error-message-form.pipe';
 import { UserService } from 'app/core/user/user.service';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
+import { ValidationFormService } from 'app/shared/services/validation-form.service';
 import { finalize, Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -29,6 +32,7 @@ import { finalize, Subject, takeUntil } from 'rxjs';
     animations: fuseAnimations,
     standalone: true,
     imports: [
+        CommonModule,
         FuseAlertComponent,
         FormsModule,
         ReactiveFormsModule,
@@ -38,6 +42,7 @@ import { finalize, Subject, takeUntil } from 'rxjs';
         MatIconModule,
         MatProgressSpinnerModule,
         RouterLink,
+        TranslateMessageForm
     ],
 })
 export class AuthResetPasswordComponent implements OnInit {
@@ -61,7 +66,8 @@ export class AuthResetPasswordComponent implements OnInit {
         private _authService: AuthService,
         private _formBuilder: UntypedFormBuilder,
         private _ngxToastrService: NgxToastrService,
-        private _router: Router
+        private _router: Router,
+        private _validationFormService: ValidationFormService
     ) {}
 
     // -----------------------------------------------------------------------------------------------------
@@ -79,8 +85,8 @@ export class AuthResetPasswordComponent implements OnInit {
         // Create the form
         this.resetPasswordForm = this._formBuilder.group(
             {
-                password: ['', Validators.required],
-                passwordConfirm: ['', Validators.required],
+                password: ['', [Validators.required, Validators.maxLength(32), this._validationFormService.passwordDetailedValidator]],
+                passwordConfirm: ['', [Validators.required, Validators.maxLength(32)]],
             },
             {
                 validators: FuseValidators.mustMatch(
@@ -89,6 +95,10 @@ export class AuthResetPasswordComponent implements OnInit {
                 ),
             }
         );
+    }
+
+    test() {
+        console.log('thisformm', this.resetPasswordForm)
     }
 
     // -----------------------------------------------------------------------------------------------------

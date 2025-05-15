@@ -34,6 +34,30 @@ export class ValidationFormService {
         return null;
     }
 
+    passwordDetailedValidator(control: AbstractControl): ValidationErrors | null {
+        const value = control.value;
+        if (!value) return null;
+
+        if (!/[A-Z]/.test(value)) {
+          return { customError: 'Debe contener al menos una letra mayúscula.' };
+        }
+      
+        if (!/\d/.test(value)) {
+          return { customError: 'Debe contener al menos un número.' };
+        }
+      
+        if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
+          return { customError: 'Debe contener al menos un carácter especial.' };
+        }
+
+        if(value.length < 12) {
+          return { customError: 'La contraseña debe tener mínimo 12 caracteres.' }
+        }
+
+  
+        return null;
+    }
+
     validationPhone(control: AbstractControl): ValidationErrors | null {
         const value = control.value;
         if (!value) return null;
