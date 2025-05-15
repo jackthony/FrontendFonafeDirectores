@@ -7,18 +7,21 @@ import { MatIconModule } from '@angular/material/icon';
 import { FoButtonDialogComponent } from '@components/fo-button-dialog/fo-button-dialog.component';
 import { FoTitleAreaComponent } from '@components/fo-title-area/fo-title-area.component';
 import { Business } from '@models/business/business.interface';
+import { CompanyAllowance } from '@models/business/companyAllowance.interface';
 import { Constant } from '@models/business/constant.interface';
 import { Department } from '@models/business/departament.interface';
 import { Director } from '@models/business/director.interface';
 import { District } from '@models/business/district.interface';
 import { Province } from '@models/business/province.interface';
 import { ResponseModel } from '@models/IResponseModel';
+import { CompanyAllowanceService } from '@services/company_allowance.service';
 import { DirectorService } from '@services/director.service';
 import { DistrictService } from '@services/district.service';
 import { ProvinceService } from '@services/province.service';
 import { ButtonEnum } from 'app/core/enums/button.enum';
 import { TranslateMessageForm } from 'app/core/pipes/error-message-form.pipe';
 import { UserService } from 'app/core/user/user.service';
+import { PermissionButtonDirective } from 'app/shared/directives/permission-button.directive';
 import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { FormInputModule } from 'app/shared/modules/form-input.module';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
@@ -26,12 +29,12 @@ import { ValidationFormService } from 'app/shared/services/validation-form.servi
 import { DateTime } from 'luxon';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { distinctUntilChanged, finalize, forkJoin, map, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { catchError, distinctUntilChanged, finalize, forkJoin, map, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
 
 @Component({
   selector: 'app-form-directory',
   standalone: true,
-  imports: [CommonModule, FormInputModule, MatDatepickerModule, FoTitleAreaComponent, MatButtonModule, MatIconModule, FoButtonDialogComponent, TranslateMessageForm, NgxMaskDirective],
+  imports: [CommonModule, FormInputModule, MatDatepickerModule, FoTitleAreaComponent, MatButtonModule, MatIconModule, FoButtonDialogComponent, TranslateMessageForm, NgxMaskDirective, PermissionButtonDirective],
   templateUrl: './form-directory.component.html',
   styleUrl: './form-directory.component.scss',
   providers: [provideNgxMask()],
@@ -48,6 +51,7 @@ export class FormDirectoryComponent implements OnInit {
 	private _provinceService = inject(ProvinceService);
 	private _districtService = inject(DistrictService);
 	private _userService = inject(UserService);
+	private _companyAllowance = inject(CompanyAllowanceService);
 	
 
     @Output() eventCancelDirectory: EventEmitter<void> = new EventEmitter<void>();
@@ -57,7 +61,7 @@ export class FormDirectoryComponent implements OnInit {
 
 	business = input.required<Business>();
 
-  	titleDirectory = signal<string>('Datos directorio');
+  	titleDirectory = signal<string>('Composición del Directorio');
   	titlePersonal = signal<string>('Datos personales');
 	buttonEnum = signal<typeof ButtonEnum>(ButtonEnum);
 
@@ -104,7 +108,11 @@ export class FormDirectoryComponent implements OnInit {
 			sDistrito: [ this.director() ? this.director().sDistrito : 0, [Validators.required, Validators.min(1)] ],
 			sDireccion: [ this.director() ? this.director().sDireccion : '', [Validators.required, Validators.maxLength(255)] ],
 			sTelefono: [ this.director() ? this.director().sTelefono : '', [Validators.required, this._validationFormService.validationPhone] ],
-			sCorreo: [ this.director() ? this.director().sCorreo : '', [Validators.required, this._validationFormService.validationMail] ],
+			sTelefonoSecundario: [ this.director() ? this.director().sTelefonoSecundario : '', [this._validationFormService.validationPhone] ],
+			sTelefonoTerciario: [ this.director() ? this.director().sTelefonoTerciario : '', [this._validationFormService.validationPhone] ],
+			sCorreo: [ this.director() ? this.director().sCorreo : '', [Validators.required, Validators.maxLength(250), this._validationFormService.validationMail] ],
+			sCorreoSecundario: [ this.director() ? this.director().sCorreoSecundario : '', [ Validators.maxLength(250), this._validationFormService.validationMail] ],
+			sCorreoTerciario: [ this.director() ? this.director().sCorreoTerciario : '', [ Validators.maxLength(250), this._validationFormService.validationMail] ],
 			nCargo: [ this.director() ? this.director().nCargo : 0, [Validators.required, Validators.min(1)] ],
 			nTipoDirector: [ this.director() ? this.director().nTipoDirector : 0, [Validators.required, Validators.min(1)] ],
 			sProfesion: [ this.director() ? this.director().sProfesion : '', [Validators.required, Validators.maxLength(150)] ],
@@ -112,10 +120,10 @@ export class FormDirectoryComponent implements OnInit {
 			nEspecialidad: [ this.director() ? this.director().nEspecialidad : 0, [Validators.required, Validators.min(1)] ],
 			dFechaNombramiento: [ this.director() ? this.director().dFechaNombramiento : null, Validators.required ],
 			dFechaDesignacion: [ this.director() ? this.director().dFechaDesignacion : null, Validators.required ],
-			dFechaRenuncia: [ this.director() ? this.director().dFechaRenuncia : null, Validators.required ],
+			dFechaRenuncia: [ { disabled: true, value: this.director() ? this.director().dFechaRenuncia : null } , Validators.required ],
 			sComentario: [ this.director() ? this.director().sComentario : '', Validators.maxLength(1000) ],
-			sUsuarioRegistro: [ { disabled: this.director(), value: this._userService.userLogin().id }, Validators.required ],
-            sUsuarioModificacion: [ { disabled: !this.director(), value: this._userService.userLogin().id }, Validators.required ],
+			nUsuarioRegistro: [ { disabled: this.director(), value: this._userService.userLogin().usuario }, Validators.required ],
+            nUsuarioModificacion: [ { disabled: !this.director(), value: this._userService.userLogin().usuario }, Validators.required ],
 		})
 	}
 
@@ -130,7 +138,12 @@ export class FormDirectoryComponent implements OnInit {
                 }),
                 switchMap((deptId) =>
                     deptId ? this._provinceService.getByPagination(new RequestOption({ pathVariables: [deptId] }))
-                        .pipe( map((res: ResponseModel<Province>) =>res.lstItem) )
+                        .pipe( 
+							map((res: ResponseModel<Province>) =>res.lstItem),
+							catchError(() => {
+								return of([]); 
+							})
+						)
 						: of([])
                 ),
                 takeUntil(this.destroy$)
@@ -146,12 +159,36 @@ export class FormDirectoryComponent implements OnInit {
                 }),
                 switchMap((provId) =>
 					provId ? this._districtService.getByPagination(new RequestOption({ pathVariables: [provId] }))
-                        .pipe( map((res: ResponseModel<District>) => res.lstItem ) )
+                        .pipe( 
+							map((res: ResponseModel<District>) => res.lstItem ),
+							catchError(() => {
+								return of([]); 
+							})
+						)
                         : of([])
                 ),
                 takeUntil(this.destroy$)
             )
             .subscribe((lstItem) => this.lstDistricts.set(lstItem));
+
+		this.form.get('nCargo').valueChanges
+		.pipe(
+			distinctUntilChanged(),
+			switchMap((value) => {
+				const request = new RequestOption();
+				request.pathVariables = [this.business().sRuc, value];
+				request.resource = 'GetByRuc';
+				return this._companyAllowance.get(request).pipe(
+					map( (res: ResponseModel<CompanyAllowance>) => res.item?.mDieta ?? 0),
+					catchError(() => {
+						return of(0); 
+					})
+				)
+			}),
+			takeUntil(this.destroy$)
+		).subscribe((item) => {
+			this.form.get('mDieta').setValue(item);
+		})
     }
 
 	

@@ -1,3 +1,9 @@
-<button mat-icon-button>
-    <mat-icon [svgIcon]="'fonafe:quit'"></mat-icon>
+<!-- <button mat-button [matMenuTriggerFor]="menu">Menu</button> -->
+<button mat-icon-button [matMenuTriggerFor]="menu" class="btn-quit">
+    <mat-icon [svgIcon]="'mat_solid:logout'"></mat-icon>
 </button>
+<mat-menu #menu="matMenu" class="menu-quit">
+    <button mat-menu-item (click)="signOut()">
+        <span class="options-menu"> Cerrar sesión </span>
+    </button>
+</mat-menu>

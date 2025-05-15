@@ -8,10 +8,13 @@ import { SegUserService } from '@services/seg-user.service';
 import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
 import { AuthMockApi } from 'app/mock-api/common/auth/api';
+import { AuthorizationService } from 'app/shared/services/authorization.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
     private _authenticated: boolean = false;
+    private _sessionState = signal<'ACTIVE' | 'FORCE_PASSWORD_UPDATE' | null>(null);
+    private _authorizationService = inject(AuthorizationService);
     private _httpClient = inject(HttpClient);
     private _ngxToastrService = inject(NgxToastrService);
     private _segUserService = inject(SegUserService);
@@ -50,8 +53,12 @@ export class AuthService {
      *
      * @param password
      */
-    resetPassword(password: string): Observable<any> {
-        return this._httpClient.post('api/auth/reset-password', password);
+    resetPassword(credentials: { nIdUsuario: number,nuevaClave: string, repetirClave: string, nUsuarioModificacion: number }): Observable<any> {
+        //return this._httpClient.post('api/auth/reset-password', password);
+        const request = new RequestOption();
+        request.resource = "ChangePassword";
+        request.request = credentials;
+        return this._segUserService.update(request)
     }
 
     /**
@@ -82,9 +89,12 @@ export class AuthService {
                 // Set the authenticated flag to true
                 this._authenticated = true;
 
+                this._sessionState.set(response.item.sessionState);
+
                 // Store the user on the user service
                 this._userService.user = response.item;
                 localStorage.setItem("user", JSON.stringify(response.item));
+                this._authorizationService.setPermissions(response.item.permissions)
 
                 // Return a new observable with the response
                 return of(response);
@@ -140,6 +150,8 @@ export class AuthService {
                     // Store the user on the user service
                     //this._userService.user = response.user;
                     this._userService.user = JSON.parse(localStorage.getItem("user"));
+                    this._sessionState.set(JSON.parse(localStorage.getItem("user")).sessionState);
+                    this._authorizationService.setPermissions(JSON.parse(localStorage.getItem("user")).permissions);
 
                     // Return true
                     return of(true);
@@ -159,6 +171,7 @@ export class AuthService {
 
         localStorage.removeItem('user');
         this._userService.user = null;
+        this._sessionState.set(null);
 
         // Return the observable
         return of(true);
@@ -211,6 +224,10 @@ export class AuthService {
 
         // If the access token exists, and it didn't expire, sign in using it
         return this.signInUsingToken();
+    }
+
+    getSessionState(): 'ACTIVE' | 'FORCE_PASSWORD_UPDATE' | null {
+        return this._sessionState();
     }
 
 }

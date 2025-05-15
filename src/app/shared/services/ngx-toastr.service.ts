@@ -7,7 +7,7 @@ import { ToastrService } from "ngx-toastr";
 export class NgxToastrService {
     private readonly toastr = inject(ToastrService);
 
-	showSuccess(message: string, tittle: string): void {
+	showSuccess(message: string, tittle?: string): void {
 		this.toastr.success(message, tittle);
 	}
 

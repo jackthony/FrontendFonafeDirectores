@@ -8,7 +8,7 @@ import { IconOption } from 'app/shared/interfaces/IGenericIcon';
 import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDefInterface';
 import { DialogConfirmationService } from 'app/shared/services/dialog-confirmation.service';
 import { FormProfileComponent } from './dialog/form-profile/form-profile.component';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SegUser } from '@models/seg-users/seg-user.interface';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
 import { finalize, forkJoin } from 'rxjs';
@@ -19,6 +19,10 @@ import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { PAGINATOR_PAGE_SIZE } from 'app/core/config/paginator.config';
 import { SegUserService } from '@services/seg-user.service';
 import { ResponseModel } from '@models/IResponseModel';
+import { ChangePasswordAdmComponent } from './dialog/change-password-adm/change-password-adm.component';
+import { AuthorizationService } from 'app/shared/services/authorization.service';
+import { RoleService } from '@services/role.service';
+import { Role } from '@models/business/role.interface';
 
 @Component({
   selector: 'app-profile-management',
@@ -29,21 +33,23 @@ import { ResponseModel } from '@models/IResponseModel';
 })
 export default class ProfileManagementComponent {
 	private readonly _router = inject(Router);
+	private readonly _route = inject(ActivatedRoute);
 
 	private _matDialog: MatDialog = inject(MatDialog);
 
 	private _segUserService = inject(SegUserService);
+	private _authorizationService = inject(AuthorizationService);
 	private _constantService = inject(ConstantService);
+	private _roleService = inject(RoleService);
 
 	private _ngxToastrService = inject(NgxToastrService);
 	private _spinner = inject(NgxSpinnerService);
-	
 	
     titleModule = signal<string>('Gestión de perfiles');
 	headerTable = signal<TableColumnsDefInterface[]>([]);
 	dataTableActivities = signal<SegUser[]>([]);
 	iconsTable = signal<IconOption<SegUser>[]>([]);
-
+	
 	loadingTable = signal<boolean>(false);
 	pageIndexTable = signal<number>(1);
 	totalPagesTable = signal<number>(1);
@@ -98,17 +104,44 @@ export default class ProfileManagementComponent {
 	}
 
 
-	defineIconsTable(): IconOption<any>[]{
+	defineIconsTable(): IconOption<SegUser>[]{
+		const resolvedModule = this._route.snapshot.data['module'];
+		const authorization = this._authorizationService.canPerform(resolvedModule, 'write');
+
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
+        const iconRestore = new IconOption("restart_alt", "mat_outline", "Reestablecer contraseña");
 
 		iconEdit.actionIcono = (data: SegUser) => {
             this.loadDataFormDialog(data);
         };
 
-        return [iconEdit];
+		iconRestore.actionIcono = (data: SegUser) => {
+            this.restorePassword(data);
+        };
+
+		iconEdit.isDisabled = (data: SegUser) => !authorization;
+		iconRestore.isDisabled = (data: SegUser) => !authorization;
+
+        return [iconEdit, iconRestore];
     }
 
-	openFormDialog(element: SegUser | null, lstStatus: Constant[], lstPosition: Constant[], lstProfile: Constant[]): void {
+	restorePassword(element: SegUser) {
+		const respDialogo = this._matDialog.open(ChangePasswordAdmComponent, {
+			data: { object: element },
+		    disableClose: true,
+			width: "450px",
+		    minWidth: "450px",
+			panelClass: 'mat-dialog-not-padding',
+		});
+		respDialogo.beforeClosed().subscribe(res => {
+		    if(res){
+				this.searchByUser(null);
+			    this._ngxToastrService.showSuccess('Cambio de clave realizado exitosamente', '¡Éxito!');
+		    }
+		});
+	}
+
+	openFormDialog(element: SegUser | null, lstStatus: Constant[], lstPosition: Constant[], lstProfile: Role[]): void {
 		const respDialogo = this._matDialog.open(FormProfileComponent, {
 			data: { object: element, lstStatus, lstPosition, lstProfile},
 		    disableClose: true,
@@ -127,10 +160,16 @@ export default class ProfileManagementComponent {
 
 	loadDataFormDialog(element?: SegUser | null): void {
 		this._spinner.show();
+		const reqProfile = new RequestOption();
+		reqProfile.queryParams = [
+			{ key: 'pageIndex', value: 0 },
+			{ key: 'pageSize', value: 0 },
+		]
 		forkJoin({
 			status: this._constantService.getAll(CONST_STATUS_USER),
 			position: this._constantService.getAll(CONST_POSITION_USER),
-			profile: this._constantService.getAll(CONST_PROFILE_USER),
+			//profile: this._constantService.getAll(CONST_PROFILE_USER),
+			profile: this._roleService.getByPagination(reqProfile)
 		})
 		.pipe(
 			finalize(() => this._spinner.hide())

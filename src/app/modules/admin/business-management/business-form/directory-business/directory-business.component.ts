@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, input, OnInit, signal } from '@angular/core';
+import { Component, EventEmitter, inject, input, OnInit, Output, signal } from '@angular/core';
 
 import { DialogConfirmationService } from 'app/shared/services/dialog-confirmation.service';
 
@@ -20,12 +20,13 @@ import { Director } from '@models/business/director.interface';
 import { DirectorFormService } from '@services/director-form.service';
 import { Constant } from '@models/business/constant.interface';
 import { Department } from '@models/business/departament.interface';
+import { PermissionButtonDirective } from 'app/shared/directives/permission-button.directive';
 
 
 @Component({
   selector: 'app-directory-business',
   standalone: true,
-  imports: [CommonModule, FoContCardComponent, FoButtonComponent, FoTableComponent, FormDirectoryComponent],
+  imports: [CommonModule, FoContCardComponent, FoButtonComponent, FoTableComponent, FormDirectoryComponent, PermissionButtonDirective],
   templateUrl: './directory-business.component.html',
   styleUrl: './directory-business.component.scss'
 })
@@ -60,9 +61,8 @@ export class DirectoryBusinessComponent implements OnInit {
 
     lstDepartments = signal<Department[]>([]);
 
+	@Output() eventTotalMembers: EventEmitter<number> = new EventEmitter<number>();
 
-	
-	
 
 	ngOnInit(): void {
 		this.headerTable.set(COLUMNS_DIRECTORY_BUSINESS);
@@ -87,11 +87,16 @@ export class DirectoryBusinessComponent implements OnInit {
 					const totalPages = Math.ceil(response.pagination.totalRows/PAGINATOR_PAGE_SIZE);
 					this.totalPagesTable.set(totalPages > 0 ? totalPages : 1);
 					this.dataTableDirectory.set(response.lstItem);
-				} else this.dataTableDirectory.set([])
+					this.eventTotalMembers.emit(response?.pagination?.totalRows || 0);
+				} else {
+					this.dataTableDirectory.set([]);
+					this.eventTotalMembers.emit(0);
+				} 
 			}),
 			error:(() => {
 				this.totalPagesTable.set(1);
 				this.dataTableDirectory.set([]);
+				this.eventTotalMembers.emit(0);
 			})
 		})
 	}

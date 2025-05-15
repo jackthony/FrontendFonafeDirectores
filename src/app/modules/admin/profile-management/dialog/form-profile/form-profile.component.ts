@@ -9,6 +9,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FoButtonDialogComponent } from '@components/fo-button-dialog/fo-button-dialog.component';
 import { Constant } from '@models/business/constant.interface';
+import { Role } from '@models/business/role.interface';
 import { ResponseModel } from '@models/IResponseModel';
 import { SegUser } from '@models/seg-users/seg-user.interface';
 import { SegUserService } from '@services/seg-user.service';
@@ -49,7 +50,7 @@ export class FormProfileComponent implements OnInit {
 	private _segUserService = inject(SegUserService);
 	private _validationFormService = inject(ValidationFormService);
 
-	public data: { object: SegUser, lstStatus: Constant[], lstPosition: Constant[], lstProfile: Constant[] } = inject(MAT_DIALOG_DATA);
+	public data: { object: SegUser, lstStatus: Constant[], lstPosition: Constant[], lstProfile: Role[] } = inject(MAT_DIALOG_DATA);
 
     test = new FormControl('', Validators.required);
     buttonEnum = signal<typeof ButtonEnum>(ButtonEnum);
@@ -76,8 +77,8 @@ export class FormProfileComponent implements OnInit {
             nEstado: [ object? object.nEstado : 0, [Validators.required, Validators.min(1)] ],
             sCorreoElectronico:  [ { disabled: object, value: object ? object.sCorreoElectronico : '' }, [Validators.required, Validators.maxLength(150), this._validationFormService.validationMail] ],
             sContrasena:  [ { disabled: object, value: object ? '******' : '' } , [Validators.required, Validators.maxLength(32)] ],
-            sUsuarioRegistro: [ { disabled: object, value: this._userService.userLogin().id }, Validators.required ],
-            sUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin().id },Validators.required ],
+            nUsuarioRegistro: [ { disabled: object, value: this._userService.userLogin().usuario }, Validators.required ],
+            nUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin().usuario },Validators.required ],
         });
     }
 

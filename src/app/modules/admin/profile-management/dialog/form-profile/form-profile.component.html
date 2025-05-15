@@ -81,8 +81,8 @@
                         formControlName="nIdRol"
                         placeholder="--">
                         @for (item of data.lstProfile; track $index) {
-                            <mat-option [value]="item.nConValor">
-                                {{ item.sConDescripcion }}
+                            <mat-option [value]="item.nIdRol">
+                                {{ item.sNombreRol }}
                             </mat-option>
                         }
                     </mat-select>
@@ -150,9 +150,7 @@
                             [matTooltip]="typeInputPassword() ? 'Ocultar contraseña' : 'Ver contraseña'">
                             <mat-icon
                                 class="icon-size-5"
-                                [svgIcon]="
-                                    viewPassword ? 'heroicons_outline:eye-slash' : 'heroicons_outline:eye'
-                                ">
+                                [svgIcon]="typeInputPassword() ? 'heroicons_outline:eye-slash' : 'heroicons_outline:eye'">
                             </mat-icon>
                         </button>
                 </mat-form-field>     

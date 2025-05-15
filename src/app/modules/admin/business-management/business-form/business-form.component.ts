@@ -71,6 +71,8 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
     provinces = signal<Province[]>([]);
     districts = signal<District[]>([]);
 
+    totalMembers = signal<number>(0);
+
     form: FormGroup;
 
     ngOnInit(): void {
@@ -90,6 +92,7 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
 
         this.initForm(this.business());
         this.valueChangesForm();
+        if(this.business()) this.totalMembers.set(this.business().nNumeroMiembros);
     }
 
     initForm(object: Business): void {
@@ -107,11 +110,11 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
             mIngresosUltimoAnio: [ object ? object.mIngresosUltimoAnio : null, [Validators.required, Validators.min(0), Validators.max(9999999999999999.99)] ],
             mUtilidadUltimoAnio: [ object ? object.mUtilidadUltimoAnio : null, [Validators.required, Validators.min(0), Validators.max(9999999999999999.99)] ],
             mConformacionCapitalSocial: [ object ? object.mConformacionCapitalSocial : null, [ Validators.required, Validators.min(0), Validators.max(9999999999999999.99)] ],
-            nNumeroMiembros: { disabled: true, value: object ? object.nNumeroMiembros : 0 },
+            //nNumeroMiembros: { disabled: true, value: object ? object.nNumeroMiembros : 0 },
             bRegistradoMercadoValores: [ object ? object.bRegistradoMercadoValores : false, [Validators.required]],
             bActivo: [object ? object.bActivo : true, [Validators.required]],
-            sUsuarioRegistro: [ { disabled: object, value: this._userService.userLogin().id }, Validators.required ],
-            sUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin().id },Validators.required ],
+            nUsuarioRegistro: [ { disabled: object, value: this._userService.userLogin().usuario }, Validators.required ],
+            nUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin().usuario },Validators.required ],
         });
     }
 
@@ -257,5 +260,9 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
                     this.initForm(this.business());
                 },
             });
+    }
+
+    setTotalMembers(event: number) {
+        this.totalMembers.set(event);
     }
 }

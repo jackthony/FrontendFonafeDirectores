@@ -3,4 +3,5 @@ export interface ListOfProcesses {
     icon: string;
     value: number;
     url: string;
+    module: string;
 }

@@ -252,7 +252,8 @@
                                             <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                                                 <mat-label>Números de miembros</mat-label>
                                                 <input
-                                                    formControlName="nNumeroMiembros"
+                                                    [disabled]="true"
+                                                    [value]="totalMembers()"
                                                     matInput
                                                     placeholder="--"
                                                     type="number">
@@ -266,7 +267,7 @@
                                                 <span class="label-checkbox">Registrado en el mercado de valores</span>
                                             </mat-checkbox>
                                         </div>
-                                        <div class="col-span-3 btn-options-user">
+                                        <div appPermissionButton class="col-span-3 btn-options-user">
                                             <fo-button-dialog
                                                 (click)="registerForm()"
                                                 [textBtn]="business() ? 'Guardar' : 'Crear'">
@@ -280,7 +281,7 @@
                         </mat-tab>
                         @if(business()) {
                             <mat-tab label="Directorio">
-                                <app-directory-business [business]="business()"></app-directory-business>
+                                <app-directory-business (eventTotalMembers)="setTotalMembers($event)" [business]="business()"></app-directory-business>
                             </mat-tab>
 
                         }

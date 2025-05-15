@@ -1,0 +1,19 @@
+.menu-quit .mat-mdc-menu-content {
+    padding: 0px;
+    .mat-mdc-menu-item .mat-mdc-menu-item-text {
+        padding: 0px;
+        justify-content: center;
+    }
+}
+
+.options-menu {
+    color: #565A5C;
+    font-family: "Museo Sans Bold";
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: -0.6%;
+}
+
+.btn-quit mat-icon {
+    color: #CD202C !important;
+}

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { User } from 'app/core/user/user.types';
+import { User } from '@models/user.interface';
 import { map, Observable, ReplaySubject, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -25,7 +25,7 @@ export class UserService {
         this.#userLogin.set(value);
     }
 
-    get user$(): Observable<User> {
+    get user$(): Observable<any> {
         return this._user.asObservable();
     }
 

@@ -9,7 +9,6 @@ import { ButtonEnum } from 'app/core/enums/button.enum';
   imports: [CommonModule, MatButtonModule],
   templateUrl: './fo-button-dialog.component.html',
   styleUrl: './fo-button-dialog.component.scss',
-  encapsulation: ViewEncapsulation.None
 })
 export class FoButtonDialogComponent {
   @Output() eventActionClick: EventEmitter<void> = new EventEmitter<void>();

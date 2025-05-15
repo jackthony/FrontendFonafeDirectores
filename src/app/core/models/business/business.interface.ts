@@ -17,9 +17,9 @@ export interface Business {
     bRegistradoMercadoValores: boolean;
     bActivo: boolean;
     dtFechaRegistro: string;
-    sUsuarioRegistro: string;
+    nUsuarioRegistro: number;
     dtFechaModificacion: string;
-    sUsuarioModificacion: string;
+    nUsuarioModificacion: number;
     sDescripcionRubro?: string;
     sNombreMinisterio?: string;
     sProvinciaDescripcion?: string;

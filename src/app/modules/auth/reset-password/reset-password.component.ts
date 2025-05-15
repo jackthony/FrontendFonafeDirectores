@@ -12,12 +12,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { FuseValidators } from '@fuse/validators';
+import { User } from '@models/user.interface';
 import { AuthService } from 'app/core/auth/auth.service';
-import { finalize } from 'rxjs';
+import { UserService } from 'app/core/user/user.service';
+import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
+import { finalize, Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'auth-reset-password',
@@ -40,19 +43,25 @@ import { finalize } from 'rxjs';
 export class AuthResetPasswordComponent implements OnInit {
     @ViewChild('resetPasswordNgForm') resetPasswordNgForm: NgForm;
 
+    private _unsubscribeAll: Subject<void> = new Subject<void>();
+
     alert: { type: FuseAlertType; message: string } = {
         type: 'success',
         message: '',
     };
     resetPasswordForm: UntypedFormGroup;
     showAlert: boolean = false;
+    user: User;
 
     /**
      * Constructor
      */
     constructor(
+        private _userService: UserService,
         private _authService: AuthService,
-        private _formBuilder: UntypedFormBuilder
+        private _formBuilder: UntypedFormBuilder,
+        private _ngxToastrService: NgxToastrService,
+        private _router: Router
     ) {}
 
     // -----------------------------------------------------------------------------------------------------
@@ -63,6 +72,10 @@ export class AuthResetPasswordComponent implements OnInit {
      * On init
      */
     ngOnInit(): void {
+        this._userService.user$
+            .subscribe((user: User) => {
+                this.user = user;
+            });
         // Create the form
         this.resetPasswordForm = this._formBuilder.group(
             {
@@ -91,6 +104,9 @@ export class AuthResetPasswordComponent implements OnInit {
             return;
         }
 
+        console.log('thisuserssssss', this.user);
+        
+
         // Disable the form
         this.resetPasswordForm.disable();
 
@@ -98,8 +114,14 @@ export class AuthResetPasswordComponent implements OnInit {
         this.showAlert = false;
 
         // Send the request to the server
+        const body = {
+            nIdUsuario: this.user.usuario,
+            nuevaClave: this.resetPasswordForm.get('password').value,
+            repetirClave: this.resetPasswordForm.get('passwordConfirm').value,
+            nUsuarioModificacion: this.user.usuario,
+        }
         this._authService
-            .resetPassword(this.resetPasswordForm.get('password').value)
+            .resetPassword(body)
             .pipe(
                 finalize(() => {
                     // Re-enable the form
@@ -109,24 +131,35 @@ export class AuthResetPasswordComponent implements OnInit {
                     this.resetPasswordNgForm.resetForm();
 
                     // Show the alert
-                    this.showAlert = true;
+                    //this.showAlert = true;
                 })
             )
             .subscribe(
                 (response) => {
+
+                    this._authService.signOut();
+                    this._ngxToastrService.showSuccess('Su contraseña ha sido restablecida.', '¡Éxito!');
+                    this._router.navigate(['sign-in']);
+
                     // Set the alert
-                    this.alert = {
+                    /* this.alert = {
                         type: 'success',
-                        message: 'Your password has been reset.',
-                    };
+                        message: 'Su contraseña ha sido restablecida.',
+                    }; */
                 },
                 (response) => {
                     // Set the alert
                     this.alert = {
                         type: 'error',
-                        message: 'Something went wrong, please try again.',
+                        message: 'Algo salió mal, por favor inténtalo de nuevo.',
                     };
+                    this.showAlert = true;
                 }
             );
+    }
+
+    ngOnDestroy(): void {
+        this._unsubscribeAll.next(null);
+        this._unsubscribeAll.complete();
     }
 }

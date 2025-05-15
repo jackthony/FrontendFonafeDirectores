@@ -12,7 +12,11 @@ export interface Director {
     sDepartamento: string;
     sDireccion: string;
     sTelefono: string;
+    sTelefonoSecundario: string;
+    sTelefonoTerciario: string;
     sCorreo: string;
+    sCorreoSecundario: string;
+    sCorreoTerciario: string;
     nCargo: number;
     nTipoDirector: number;
     sProfesion: string;

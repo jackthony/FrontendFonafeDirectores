@@ -9,7 +9,7 @@ export interface SegUser {
     sCorreoElectronico: string;
     sContrasena: string;
     dtFechaRegistro: string;
-    sUsuarioRegistro: string;
+    nUsuarioRegistro: number;
     dtFechaModificacion: string;
-    sUsuarioModificacion: string;
+    nUsuarioModificacion: number;
 }

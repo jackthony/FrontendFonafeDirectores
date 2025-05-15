@@ -193,7 +193,7 @@
                     }
             </mat-form-field>     
         </div>
-        <div class="col-span-1">
+        <div class="col-start-1 col-span-1">
             <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                 <mat-label>Teléfono</mat-label>
                 <input
@@ -212,16 +212,82 @@
         </div>
         <div class="col-span-1">
             <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
-                <mat-label>Correo</mat-label>
+                <mat-label>Teléfono opcional 1</mat-label>
+                <input
+                    formControlName="sTelefonoSecundario"
+                    mask="000 0000||000 000 000"
+                    matInput 
+                    placeholder="--"
+                    type="text"
+                    maxlength="25">
+                    @if(form.get('sTelefonoSecundario').invalid) {
+                        <mat-error class="text-red-500">
+                            {{ form.get("sTelefonoSecundario") | translateMessageForm }}
+                        </mat-error>
+                    }
+            </mat-form-field>     
+        </div>
+        <div class="col-span-1">
+            <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Teléfono  opcional 2</mat-label>
+                <input
+                    formControlName="sTelefonoTerciario"
+                    mask="000 0000||000 000 000"
+                    matInput 
+                    placeholder="--"
+                    type="text"
+                    maxlength="25">
+                    @if(form.get('sTelefonoTerciario').invalid) {
+                        <mat-error class="text-red-500">
+                            {{ form.get("sTelefonoTerciario") | translateMessageForm }}
+                        </mat-error>
+                    }
+            </mat-form-field>     
+        </div>
+        <div class="col-span-1">
+            <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Correo principal</mat-label>
                 <input
                     formControlName="sCorreo"
                     matInput 
                     placeholder="--"
                     type="text"
-                    maxlength="50">
+                    maxlength="250">
                     @if(form.get('sCorreo').invalid) {
                         <mat-error class="text-red-500">
                             {{ form.get("sCorreo") | translateMessageForm }}
+                        </mat-error>
+                    }
+            </mat-form-field>     
+        </div>
+        <div class="col-span-1">
+            <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Correo opcional 1</mat-label>
+                <input
+                    formControlName="sCorreoSecundario"
+                    matInput 
+                    placeholder="--"
+                    type="text"
+                    maxlength="250">
+                    @if(form.get('sCorreoSecundario').invalid) {
+                        <mat-error class="text-red-500">
+                            {{ form.get("sCorreoSecundario") | translateMessageForm }}
+                        </mat-error>
+                    }
+            </mat-form-field>     
+        </div>
+        <div class="col-span-1">
+            <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Correo opcional 2</mat-label>
+                <input
+                    formControlName="sCorreoTerciario"
+                    matInput 
+                    placeholder="--"
+                    type="text"
+                    maxlength="250">
+                    @if(form.get('sCorreoTerciario').invalid) {
+                        <mat-error class="text-red-500">
+                            {{ form.get("sCorreoTerciario") | translateMessageForm }}
                         </mat-error>
                     }
             </mat-form-field>     
@@ -442,8 +508,8 @@
                 [typeButton]="buttonEnum().CANCEL"
                 matDialogClose>
             </fo-button-dialog>
-    
             <fo-button-dialog
+                appPermissionButton
                 (eventActionClick)="registerForm()"
                 [textBtn]="director() ? 'Guardar' : 'Crear'">
             </fo-button-dialog>

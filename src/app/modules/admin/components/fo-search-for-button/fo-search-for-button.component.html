@@ -3,7 +3,7 @@
         <div class="col-span-1 md:col-span-4 lg:col-span-2 ">
             <app-fo-search (eventClickSearch)="clickSearch($event)" [placeText]="placeTextSearch()"></app-fo-search>
         </div>
-        <div class="col-span-1 md:col-span-4 lg:col-span-6 flex justify-end items-center">
+        <div appPermissionButton [disableDirective]="disableDirective()" class="col-span-1 md:col-span-4 lg:col-span-6 text-end content-center">
             <fo-button
                 (eventAction)="addUser()"
                 [text]="textBtnSearch()" 

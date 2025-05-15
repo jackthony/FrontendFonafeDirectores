@@ -16,7 +16,7 @@ export class ValidationFormService {
         }
 
         const tipoContribuyente = ruc.substring(0, 2);
-        const tiposPermitidos = ['10', '20'];
+        const tiposPermitidos = ['20'];
         if (!tiposPermitidos.includes(tipoContribuyente)) {
             return { customError: 'Tipo de contribuyente inválido' };
         }
