@@ -34,7 +34,7 @@ export class HttpGenericService<T> {
   }
 
   update(request: RequestOption): Observable<ResponseModel<T>> {
-    request.method = "PUT";
+    request.method = "POST";
     request.url = `${this._url}/${request.resource ?? 'Update'}`;
 
     return this._httpRequest.http(request);
