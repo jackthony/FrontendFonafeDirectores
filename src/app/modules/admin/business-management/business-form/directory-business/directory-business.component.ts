@@ -142,6 +142,7 @@ export class DirectoryBusinessComponent implements OnInit {
 	}
 
 	openRegisterDirectory(): void {
+		this.director.set(null);
 		this.newFormDirectory.set(true);
 	}
 

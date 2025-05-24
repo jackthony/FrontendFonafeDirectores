@@ -13,8 +13,8 @@ export const LIST_OF_PROCESSES: ListOfProcesses[] = [
         label: 'Mantenimiento de candidatos',
         icon: 'mat_outline:event_available',
         value: OptionsProcess.candidateMaintenance,
-        url: '',
-        module: "mantenimiento-candidatos"
+        url: 'mantenimiento-candidatos',
+        module: "Mantenimiento Candidatos"
     },
     {
         label: 'Gestión de perfiles',
