@@ -191,8 +191,6 @@ export class FormDirectoryComponent implements OnInit {
 		})
     }
 
-	
-
 	loadProvincesDistricts(): void {
 		if(this.director()){
 			forkJoin({
@@ -233,6 +231,13 @@ export class FormDirectoryComponent implements OnInit {
 	}
 
 	registerDirector(): void {
+		const fields = ['sNombres', 'sApellidos'];
+        fields.forEach(field => {
+            const control = this.form.get(field);
+            if (control && typeof control.value === 'string') {
+                control.setValue(control.value.toUpperCase(), { emitEvent: false });
+            }
+        });
         const request = new RequestOption();
         request.request = this.form.value;
         this._directorService

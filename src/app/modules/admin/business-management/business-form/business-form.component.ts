@@ -101,7 +101,7 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
             sRuc: [ object ? { disabled: object, value: object.sRuc } : '', [Validators.required, this._validationFormService.validarRuc, Validators.maxLength(11)] ],
             sRazonSocial: [ object ? { disabled: object, value: object.sRazonSocial } : '', [Validators.required, Validators.maxLength(255)] ],
             nIdProponente: [ object ? { disabled: object, value: object.nIdProponente } : 0, [Validators.required, Validators.min(1)] ],
-            nIdRubroNegocio: [ object ? { disabled: object, value: object.nIdRubroNegocio } : 0, [Validators.required, Validators.min(1)] ],
+            nIdRubroNegocio: [ object ? object.nIdRubroNegocio : 0, [Validators.required, Validators.min(1)] ],
             sIdDepartamento: [ object ? object.sIdDepartamento : 0, [Validators.required, Validators.min(1)] ],
             sIdProvincia: [ object ? object.sIdProvincia : 0, [Validators.required, Validators.min(1)] ],
             sIdDistrito: [ object ? object.sIdDistrito : 0, [Validators.required, Validators.min(1)] ],

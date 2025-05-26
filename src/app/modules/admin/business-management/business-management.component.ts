@@ -38,6 +38,8 @@ export class BusinessManagementComponent {
 	pageIndexTable = signal<number>(1);
 
 	totalPagesTable = signal<number>(1);
+
+	delaySearchBusiness = signal<number>(400);
 	
 	ngOnInit(): void {
 		this.headerTable.set(COLUMNS_BUSINESS_MANAGEMENT);

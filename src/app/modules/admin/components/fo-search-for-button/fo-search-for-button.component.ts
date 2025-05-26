@@ -23,17 +23,17 @@ export class FoSearchForButtonComponent {
     iconBtnSearch = input<string>('mat_outline:add_circle_outline');
     textBtnSearch = input<string>('Agregar usuario');
     disableDirective = input(false, { transform: booleanAttribute });
+    delaySearch = input<number>(0);
 
     @Output() eventNewElement: EventEmitter<void> = new EventEmitter<void>();
-    @Output() eventClickSearch: EventEmitter<string> =
+    @Output() eventSearch: EventEmitter<string> =
         new EventEmitter<string>();
 
     addUser(): void {
         this.eventNewElement.emit();
     }
 
-    clickSearch(event: string): void {
-        
-        this.eventClickSearch.emit(event);
+    getDataSearch(event: string): void {
+        this.eventSearch.emit(event);
     }
 }

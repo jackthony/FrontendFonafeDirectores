@@ -5,14 +5,16 @@
             <fo-title-module [text]="titleModule()"></fo-title-module>
         </fo-cont-card>
         <fo-search-for-button 
+            [delaySearch]="delaySearchProfile()"
             [placeTextSearch]="placeHolderSearch()"
-            (eventClickSearch)="searchByUser($event)"
+            (eventSearch)="searchByUser($event)"
             (eventNewElement)="loadDataFormDialog()">
         </fo-search-for-button>
         <fo-table 
             [loading]="loadingTable()"
             [totalPages]="totalPagesTable()"
             [headers]="headerTable()"
+            [currentPage]="pageIndexTable()"
             [data]="dataTableActivities()"
             [icons]="iconsTable()"
             (eventChangePage)="changePageTable($event)">

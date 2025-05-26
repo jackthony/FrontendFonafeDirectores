@@ -93,6 +93,13 @@ export class FormProfileComponent implements OnInit {
     }
 
     registerBusiness(): void {
+        const fields = ['sNombres', 'sApellidoPaterno', 'sApellidoMaterno'];
+        fields.forEach(field => {
+            const control = this.form.get(field);
+            if (control && typeof control.value === 'string') {
+                control.setValue(control.value.toUpperCase(), { emitEvent: false });
+            }
+        });
         const request = new RequestOption();
         request.request = this.form.value;
         this._segUserService

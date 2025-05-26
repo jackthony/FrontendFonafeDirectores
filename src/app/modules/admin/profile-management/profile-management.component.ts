@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogConfirmation } from '@components/fo-dialog-confirmation/models/dialog-confirmation.interface';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
@@ -23,6 +23,7 @@ import { ChangePasswordAdmComponent } from './dialog/change-password-adm/change-
 import { AuthorizationService } from 'app/shared/services/authorization.service';
 import { RoleService } from '@services/role.service';
 import { Role } from '@models/business/role.interface';
+import { FoTableComponent } from '@components/fo-table/fo-table.component';
 
 @Component({
   selector: 'app-profile-management',
@@ -55,6 +56,8 @@ export default class ProfileManagementComponent {
 	totalPagesTable = signal<number>(1);
 	userSearch = signal<string>('');
 	placeHolderSearch = signal<string>('Busca por apellidos y/o nombres');
+
+	delaySearchProfile = signal<number>(400);
 
 	ngOnInit(): void {
 		this.headerTable.set(COLUMNS_PROFILE_MANAGEMENT);
@@ -100,6 +103,7 @@ export default class ProfileManagementComponent {
 	searchByUser(event: string): void {
 		this.userSearch.set(event);
 		this.pageIndexTable.set(1);
+		//this._foTableComponent.re
 		this.searchUsers();
 	}
 
@@ -151,9 +155,10 @@ export default class ProfileManagementComponent {
 		});
 		respDialogo.beforeClosed().subscribe(res => {
 		    if(res){
-				this.searchByUser(null);
+				this.searchUsers();
 				if(element) this._ngxToastrService.showSuccess('Usuario actualizado exitosamente', '¡Éxito!');
 			    else this._ngxToastrService.showSuccess('Usuario registrado exitosamente', '¡Éxito!');
+				
 		    }
 		});
 	}
