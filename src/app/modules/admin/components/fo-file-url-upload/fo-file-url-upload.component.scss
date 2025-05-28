@@ -15,8 +15,7 @@
         color: #ffffff;
         font-family: "Museo Sans";
         font-weight: 600;
-        font-size: 12px;
-        line-height: 100%;
+        font-size: 13px;
         letter-spacing: 1px;
     }
     .mat-icon {
@@ -49,4 +48,23 @@
     font-size: 14px;
     line-height: 18px;
     color: #565A5C;
+}
+
+.btn-folder {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-direction: row-reverse;
+    font-family: "Museo Sans";
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 1px;
+    .mat-icon {
+        color: #FBB241;
+    }
+}
+
+.btn-folder.mat-mdc-unelevated-button:not(:disabled) {
+    background-color: #1F487D !important;
+    color: #FFFFFF;
 }

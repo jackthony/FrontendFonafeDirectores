@@ -8,7 +8,7 @@
                     src="images/uploads/repository-file.png"
                 />
             </div>
-            <div>
+            <div class="grid gap-4 justify-items-end">
                 <button (click)="uploadFile()" class="btn-upload-file" type="button" mat-button>
                     <div class="flex items-center gap-1">
                         <span> Subir </span>
@@ -18,6 +18,13 @@
                         ></mat-icon>
                     </div>
                 </button>
+                <div class="flex justify-end">
+                    <button (click)="openFolder()" mat-flat-button class="btn-folder">
+                        
+                        <span>Ver archivos</span>
+                        <mat-icon [svgIcon]="'heroicons_solid:folder-open'"></mat-icon>
+                    </button>
+                </div>
             </div>
         </div>
         <div class="flex flex-col gap-4">

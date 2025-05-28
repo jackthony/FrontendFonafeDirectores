@@ -270,7 +270,6 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
     }
 
     async fileUpload(): Promise<void> {
-        
         const file = await this._archivingProcessService.uploadFile();
         const formData: FormData = new FormData();
         formData.append('archivo', file);
@@ -293,5 +292,11 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
             },
         })
         
+    }
+
+    async openFolder(): Promise<void> {
+        const folderPath = 'C:/FonafeStorage/Empresa';
+        const url = `file:///${folderPath.replace(/\\/g, '/')}`;
+        window.open(url, '_blank');
     }
 }
