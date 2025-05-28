@@ -1,10 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { ResponseModel } from '@models/IResponseModel';
+import { ArchivingProcessService } from '@services/archiving-process.service';
+import { FileComponentStateService } from '@services/file-component-state.service';
+import { UserService } from 'app/core/user/user.service';
+import { FileComponentState } from 'app/shared/interfaces/file-component-state.interface';
+import { RequestOption } from 'app/shared/interfaces/IRequestOption';
+import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { finalize, Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'app-fo-file-url-upload',
@@ -22,15 +31,71 @@ import { MatInputModule } from '@angular/material/input';
     //encapsulation: ViewEncapsulation.None
     //encapsulation: ViewEncapsulation.None
 })
-export class FoFileUrlUploadComponent {
-    @Output() eventClickUpload: EventEmitter<void> = new EventEmitter<void>();
-    @Output() eventOpenFolder: EventEmitter<void> = new EventEmitter<void>();
+export class FoFileUrlUploadComponent implements OnInit {
+    
+    private _fileComponentStateService = inject(FileComponentStateService);
+    private _archivingProcessService = inject(ArchivingProcessService);
+    private _userService = inject(UserService);
+    private _spinner = inject(NgxSpinnerService);
+    private _ngxToastrService = inject(NgxToastrService);
 
-    uploadFile(): void {
-        this.eventClickUpload.emit();
+    fileComponent = signal<FileComponentState>(null); 
+    private destroy$: Subject<void> = new Subject<void>();
+
+    ngOnInit(): void {
+        this._fileComponentStateService.fileComponentState$
+        .pipe(
+            takeUntil(this.destroy$)
+        )
+        .subscribe((value: FileComponentState) => {
+            this.fileComponent.set(value);
+        })
     }
 
-	openFolder(): void {
-        this.eventOpenFolder.emit();
+    async uploadFile(): Promise<void> {
+        const file = await this._archivingProcessService.uploadFile();
+        const formData: FormData = new FormData();
+        formData.append('archivo', file);
+        formData.append('nIdEntidadRelacionada', '1'),
+        formData.append('nUserId', this._userService.userLogin().usuario.toString()),
+        formData.append('nIdEntidad', '1');
+        formData.append('sRuta', `${this.fileComponent().root}` );
+        this._spinner.show();
+        this._archivingProcessService.create(new RequestOption({ request: formData }))
+        .pipe(
+            finalize(() => this._spinner.hide())
+        )
+        .subscribe({
+            next: (response: ResponseModel<number>) => {
+                if (response.isSuccess) {
+                    //MENSAJE DE SATISFACCION
+                    this._ngxToastrService.showSuccess('Documento registrado exitosamente', '¡Éxito!');
+                    //refrescar
+                    //this.eventRefreshDirectory.emit();
+                }
+            },
+        })
+        
+    }
+
+    //BORRAR ................
+    async openFolder(): Promise<void> {
+        this._archivingProcessService.get(new RequestOption({resource: 'OpenFolder', pathVariables: [this.fileComponent().root] })).pipe(
+		).subscribe({
+			next: ((response) => {
+			}),
+			error:(() => {
+			
+			})
+		})
+        /* const folderPath = 'C:/FonafeStorage/Empresa';
+        const url = `file:///${folderPath.replace(/\\/g, '/')}`;
+        window.open(url, '_blank'); */
+    }
+
+
+    ngOnDestroy() {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 }

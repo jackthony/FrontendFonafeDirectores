@@ -21,6 +21,7 @@ import { DirectorFormService } from '@services/director-form.service';
 import { Constant } from '@models/business/constant.interface';
 import { Department } from '@models/business/departament.interface';
 import { PermissionButtonDirective } from 'app/shared/directives/permission-button.directive';
+import { FileComponentStateService } from '@services/file-component-state.service';
 
 
 @Component({
@@ -36,6 +37,7 @@ export class DirectoryBusinessComponent implements OnInit {
 
 	private _directorService = inject(DirectorService);
 	private _directorFormService = inject(DirectorFormService);
+	private _fileComponentStateService = inject(FileComponentStateService);
 	
 	textButtonNew = signal<string>('Agregar director');
 	iconButtonNew = signal<string>('mat_outline:add_circle_outline');
@@ -148,12 +150,25 @@ export class DirectoryBusinessComponent implements OnInit {
 
     cancelDirectory(): void {
         this.newFormDirectory.set(false);
+		this.setFileComponentToEnterprise();
     }
 
 	refreshDirectory(): void {
 		this.searchDirectors();//RECARGAR PAGINA 1
 		this.newFormDirectory.set(false);
 		this.director.set(null);
+		this.setFileComponentToEnterprise();
+		
+	}
+
+	setFileComponentToEnterprise(): void {
+		//Necesita cambiar el estado del fileComponent
+		const fileState = {
+			title: 'Empresa',
+			isDisabled: false,
+			root: `Empresa\\${this.business().sRazonSocial}`
+		}
+		this._fileComponentStateService.setFileComponentState(fileState);
 	}
 
 }

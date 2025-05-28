@@ -17,6 +17,7 @@ import { ResponseModel } from '@models/IResponseModel';
 import { CompanyAllowanceService } from '@services/company_allowance.service';
 import { DirectorService } from '@services/director.service';
 import { DistrictService } from '@services/district.service';
+import { FileComponentStateService } from '@services/file-component-state.service';
 import { ProvinceService } from '@services/province.service';
 import { ButtonEnum } from 'app/core/enums/button.enum';
 import { TranslateMessageForm } from 'app/core/pipes/error-message-form.pipe';
@@ -52,6 +53,7 @@ export class FormDirectoryComponent implements OnInit {
 	private _districtService = inject(DistrictService);
 	private _userService = inject(UserService);
 	private _companyAllowance = inject(CompanyAllowanceService);
+	private _fileComponentStateService = inject(FileComponentStateService);
 	
 
     @Output() eventCancelDirectory: EventEmitter<void> = new EventEmitter<void>();
@@ -86,6 +88,23 @@ export class FormDirectoryComponent implements OnInit {
 		this.initFormDirector();
 		this.valueChangesForm();
 		this.loadProvincesDistricts();
+
+		if(this.director()) {
+            const fileState = {
+                title: 'Director',
+                isDisabled: false,
+                root: `Empresa\\${this.business().sRazonSocial}\\${this.director().sNumeroDocumento}`
+            }
+            this._fileComponentStateService.setFileComponentState(fileState);
+        } else {
+            const fileState = {
+                title: 'Director',
+                isDisabled: true,
+                message: '* Debe registrar al director, para registrar archivos',
+            }
+            this._fileComponentStateService.setFileComponentState(fileState)
+        }
+		
 	}
     
 

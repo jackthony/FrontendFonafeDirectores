@@ -50,6 +50,14 @@
     color: #565A5C;
 }
 
+.text-link-block {
+    font-family: 'Inter var';
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 18px;
+    color: #d70a18;
+}
+
 .btn-folder {
     display: flex;
     gap: 8px;
@@ -67,4 +75,15 @@
 .btn-folder.mat-mdc-unelevated-button:not(:disabled) {
     background-color: #1F487D !important;
     color: #FFFFFF;
+}
+
+
+.title-dialog-upload {
+    font-family: 'Inter';
+    font-weight: 700;
+    font-size: 20px;
+    color: #39549b;
+    display: flex;
+    margin-bottom: 10px;
+    justify-content: start;
 }

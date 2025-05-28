@@ -35,6 +35,7 @@ import { provideNgxMask } from 'ngx-mask';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
 import { ArchivingProcessService } from '@services/archiving-process.service';
+import { FileComponentStateService } from '@services/file-component-state.service';
 
 @Component({
     selector: 'app-business-form',
@@ -48,6 +49,7 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
     private readonly _router = inject(Router);
     private readonly _activatedRoute = inject(ActivatedRoute);
     private _fb = inject(FormBuilder);
+    private _fileComponentStateService = inject(FileComponentStateService);
 
     private _spinner = inject(NgxSpinnerService);
 
@@ -58,7 +60,7 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
     private _provinceService = inject(ProvinceService);
     private _districtService = inject(DistrictService);
     private _userService = inject(UserService);
-    private _archivingProcessService = inject(ArchivingProcessService);
+    
 
     private destroy$ = new Subject<void>();
 
@@ -95,7 +97,25 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
 
         this.initForm(this.business());
         this.valueChangesForm();
-        if(this.business()) this.totalMembers.set(this.business().nNumeroMiembros);
+        
+
+
+        if(this.business()) {
+            const fileState = {
+                title: 'Empresa',
+                isDisabled: false,
+                root: `Empresa\\${this.business().sRazonSocial}`
+            }
+            this._fileComponentStateService.setFileComponentState(fileState);
+            this.totalMembers.set(this.business().nNumeroMiembros);
+        } else {
+            const fileState = {
+                title: 'Empresa',
+                isDisabled: true,
+                message: '* Debe registrar la empresa, para registrar archivos',
+            }
+            this._fileComponentStateService.setFileComponentState(fileState)
+        }
     }
 
     initForm(object: Business): void {
@@ -269,34 +289,5 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
         this.totalMembers.set(event);
     }
 
-    async fileUpload(): Promise<void> {
-        const file = await this._archivingProcessService.uploadFile();
-        const formData: FormData = new FormData();
-        formData.append('archivo', file);
-        formData.append('nIdEntidadRelacionada', '1'),
-        formData.append('nUserId', this._userService.userLogin().usuario.toString()),
-        formData.append('sIdEntidad', this.business().nIdEmpresa.toString());
-        this._spinner.show();
-        this._archivingProcessService.create(new RequestOption({ request: formData }))
-        .pipe(
-            finalize(() => this._spinner.hide())
-        )
-        .subscribe({
-            next: (response: ResponseModel<number>) => {
-                if (response.isSuccess) {
-                    //MENSAJE DE SATISFACCION
-                    this._ngxToastrService.showSuccess('Documento registrado exitosamente', '¡Éxito!');
-                    //refrescar
-                    //this.eventRefreshDirectory.emit();
-                }
-            },
-        })
-        
-    }
-
-    async openFolder(): Promise<void> {
-        const folderPath = 'C:/FonafeStorage/Empresa';
-        const url = `file:///${folderPath.replace(/\\/g, '/')}`;
-        window.open(url, '_blank');
-    }
+    
 }
