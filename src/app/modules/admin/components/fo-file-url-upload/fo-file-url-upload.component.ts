@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Output, ViewEncapsulation } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,6 +14,10 @@ import { MatInputModule } from '@angular/material/input';
   styleUrl: './fo-file-url-upload.component.scss',
   //encapsulation: ViewEncapsulation.None
 })
-export class FoFileUrlUploadComponent {
+export class FoFileUrlUploadComponent {  
+	@Output() eventClickUpload: EventEmitter<void> = new EventEmitter<void>();
 
-}
+	uploadFile(): void {
+		this.eventClickUpload.emit();
+	}
+}	

@@ -8,6 +8,7 @@ import {
     finalize,
     map,
     of,
+    pipe,
     Subject,
     switchMap,
     takeUntil,
@@ -33,6 +34,7 @@ import { BusinessService } from '@services/business.service';
 import { provideNgxMask } from 'ngx-mask';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
+import { ArchivingProcessService } from '@services/archiving-process.service';
 
 @Component({
     selector: 'app-business-form',
@@ -56,6 +58,7 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
     private _provinceService = inject(ProvinceService);
     private _districtService = inject(DistrictService);
     private _userService = inject(UserService);
+    private _archivingProcessService = inject(ArchivingProcessService);
 
     private destroy$ = new Subject<void>();
 
@@ -264,5 +267,31 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
 
     setTotalMembers(event: number) {
         this.totalMembers.set(event);
+    }
+
+    async fileUpload(): Promise<void> {
+        
+        const file = await this._archivingProcessService.uploadFile();
+        const formData: FormData = new FormData();
+        formData.append('archivo', file);
+        formData.append('nIdEntidadRelacionada', '1'),
+        formData.append('nUserId', this._userService.userLogin().usuario.toString()),
+        formData.append('sIdEntidad', this.business().nIdEmpresa.toString());
+        this._spinner.show();
+        this._archivingProcessService.create(new RequestOption({ request: formData }))
+        .pipe(
+            finalize(() => this._spinner.hide())
+        )
+        .subscribe({
+            next: (response: ResponseModel<number>) => {
+                if (response.isSuccess) {
+                    //MENSAJE DE SATISFACCION
+                    this._ngxToastrService.showSuccess('Documento registrado exitosamente', '¡Éxito!');
+                    //refrescar
+                    //this.eventRefreshDirectory.emit();
+                }
+            },
+        })
+        
     }
 }
