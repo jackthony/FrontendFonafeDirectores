@@ -30,6 +30,7 @@
                     matInput 
                     placeholder="--"
                     type="text"
+                    [mask]="form.get('nTipoDocumento').value === typeDocument().ce ? '000000000':'00000000'"
                     maxlength="9">
                     @if(form.get('sNumeroDocumento').invalid) {
                         <mat-error class="text-red-500">
@@ -85,6 +86,7 @@
                     [max]="maxDate"
                     formControlName="dFechaNacimiento"
                     matInput
+                    maxlength="10"
                     placeholder="--/--/----"
                     [matDatepicker]="picker" />
                 <mat-datepicker-toggle
@@ -351,6 +353,8 @@
             <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                 <mat-label>Profesión</mat-label>
                 <input
+                    (keypress)="onKeyPress($event)"
+                    (input)="onInput($event, 'sProfesion')"
                     formControlName="sProfesion"
                     matInput 
                     placeholder="--"
@@ -413,6 +417,7 @@
                     (input)="onInputDate($event, 'dFechaNombramiento')"
                     formControlName="dFechaNombramiento"
                     matInput
+                    maxlength="10"
                     placeholder="--/--/----"
                     [matDatepicker]="pickerNo" />
                 <mat-datepicker-toggle
@@ -440,6 +445,7 @@
             <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                 <mat-label>Fecha de designación</mat-label>
                 <input
+                    maxlength="10"
                     (keypress)="onKeyPressDate($event)"
                     (input)="onInputDate($event, 'dFechaDesignacion')"
                     formControlName="dFechaDesignacion"

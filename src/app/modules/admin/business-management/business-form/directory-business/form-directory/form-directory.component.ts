@@ -23,10 +23,12 @@ import { ButtonEnum } from 'app/core/enums/button.enum';
 import { TranslateMessageForm } from 'app/core/pipes/error-message-form.pipe';
 import { UserService } from 'app/core/user/user.service';
 import { PermissionButtonDirective } from 'app/shared/directives/permission-button.directive';
+import { TypeDocument } from 'app/shared/enums/type-document.enum';
 import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { FormInputModule } from 'app/shared/modules/form-input.module';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
 import { ValidationFormService } from 'app/shared/services/validation-form.service';
+import { DateUtilsService } from 'app/utils/date-utils.service';
 import { DateTime } from 'luxon';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -54,6 +56,7 @@ export class FormDirectoryComponent implements OnInit {
 	private _userService = inject(UserService);
 	private _companyAllowance = inject(CompanyAllowanceService);
 	private _fileComponentStateService = inject(FileComponentStateService);
+	private _dateUtilsService = inject(DateUtilsService);
 	
 
     @Output() eventCancelDirectory: EventEmitter<void> = new EventEmitter<void>();
@@ -82,6 +85,8 @@ export class FormDirectoryComponent implements OnInit {
 
 	form: FormGroup;
 	maxDate: Date;
+
+	typeDocument = signal<typeof TypeDocument>(TypeDocument);
 
 	ngOnInit(): void {
 		this.maxDate = this.calculateMinDate().toJSDate();
@@ -120,7 +125,7 @@ export class FormDirectoryComponent implements OnInit {
 			sNumeroDocumento: [ this.director() ? { disabled: true, value: this.director().sNumeroDocumento } : '', [Validators.required, this._validationFormService.validationDocument] ],
 			sNombres: [ this.director() ? { disabled: true, value: this.director().sNombres } : '', [Validators.required, Validators.maxLength(150)] ],
 			sApellidos: [ this.director() ? { disabled: true, value: this.director().sApellidos } : '', [Validators.required, Validators.maxLength(150)] ],
-			dFechaNacimiento: [ this.director() ? { disabled: true, value: this.director().dFechaNacimiento } : null, [Validators.required] ],
+			dFechaNacimiento: [ this.director() ? { disabled: true, value: this.director().dFechaNacimiento } : null, [Validators.required, Validators.maxLength(10)] ],
 			nGenero: [ this.director() ? { disabled: true, value: this.director().nGenero } : 0, [Validators.required, Validators.min(1)] ],
 			sDepartamento: [ this.director() ? this.director().sDepartamento : 0, [Validators.required, Validators.min(1)] ],
 			sProvincia: [ this.director() ? this.director().sProvincia : 0, [Validators.required, Validators.min(1)] ],
@@ -137,8 +142,8 @@ export class FormDirectoryComponent implements OnInit {
 			sProfesion: [ this.director() ? this.director().sProfesion : '', [Validators.required, Validators.maxLength(150)] ],
 			mDieta: [ this.director() ? this.director().mDieta : null, [Validators.required, Validators.min(0), Validators.max(999999999999.99)] ],
 			nEspecialidad: [ this.director() ? this.director().nEspecialidad : 0, [Validators.required, Validators.min(1)] ],
-			dFechaNombramiento: [ this.director() ? this.director().dFechaNombramiento : null, Validators.required ],
-			dFechaDesignacion: [ this.director() ? this.director().dFechaDesignacion : null, Validators.required ],
+			dFechaNombramiento: [ this.director() ? this._dateUtilsService.formatDateToString(this.director().dFechaNombramiento) : null, [Validators.required,  Validators.maxLength(10)] ],
+			dFechaDesignacion: [ this.director() ? this._dateUtilsService.formatDateToString(this.director().dFechaDesignacion) : null, [Validators.required, Validators.maxLength(10)] ],
 			dFechaRenuncia: [ { disabled: true, value: this.director() ? this.director().dFechaRenuncia : null } , Validators.required ],
 			sComentario: [ this.director() ? this.director().sComentario : '', Validators.maxLength(1000) ],
 			nUsuarioRegistro: [ { disabled: this.director(), value: this._userService.userLogin().usuario }, Validators.required ],
@@ -208,6 +213,18 @@ export class FormDirectoryComponent implements OnInit {
 		).subscribe((item) => {
 			this.form.get('mDieta').setValue(item);
 		})
+
+		if(!(this.director()) && !(this.form.get('nTipoDocumento').value)) this.form.get('sNumeroDocumento').disable();
+
+		this.form.get('nTipoDocumento').valueChanges
+		.pipe(
+			distinctUntilChanged(),
+			takeUntil(this.destroy$)
+		).subscribe((value) => {
+			if(value) this.form.get('sNumeroDocumento').enable();
+			this.form.get('sNumeroDocumento').setValue('');
+			this.form.get('sNumeroDocumento').markAsUntouched();
+		})
     }
 
 	loadProvincesDistricts(): void {
@@ -226,6 +243,8 @@ export class FormDirectoryComponent implements OnInit {
 	}
 
 	registerForm(): void {
+		console.log('formmm', this.form);
+		
 		if (this.form.invalid) {
             this.form.markAllAsTouched();
             return;
@@ -333,5 +352,14 @@ export class FormDirectoryComponent implements OnInit {
 		  // Actualizar el form control sin disparar eventos para evitar loops
 		  this.form.get(nameForm)?.setValue(cleaned, { emitEvent: false });
 		}
-	  }
+	}
+
+	formatDate(date: string): string {
+		if(!date) return null;
+		const dt = DateTime.fromISO(date);
+		const dateFormat = dt.toFormat('yyyy-MM-dd');
+		return dateFormat;
+	}
+
+
 }
