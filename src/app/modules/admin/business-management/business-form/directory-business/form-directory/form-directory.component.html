@@ -47,6 +47,8 @@
                     matInput 
                     placeholder="--"
                     type="text"
+                    (keypress)="onKeyPress($event)"
+                    (input)="onInput($event, 'sNombres')"
                     maxlength="150">
                 @if(form.get('sNombres').invalid) {
                     <mat-error class="text-red-500">
@@ -63,6 +65,8 @@
                     formControlName="sApellidos"
                     matInput 
                     placeholder="--"
+                    (keypress)="onKeyPress($event)"
+                    (input)="onInput($event, 'sApellidos')"
                     type="text"
                     maxlength="150">
                 @if(form.get('sApellidos').invalid) {
@@ -76,6 +80,8 @@
             <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                 <mat-label>Fecha de nacimiento</mat-label>
                 <input
+                    (keypress)="onKeyPressDate($event)"
+                    (input)="onInputDate($event, 'dFechaNacimiento')"
                     [max]="maxDate"
                     formControlName="dFechaNacimiento"
                     matInput
@@ -96,7 +102,7 @@
                 </mat-datepicker>
                 @if(form.get('dFechaNacimiento').invalid) {
                     <mat-error class="text-red-500">
-                        {{ form.get("dFechaNacimiento") | translateMessageForm }}
+                        {{ form.get("dFechaNacimiento") | translateMessageForm: "date" }}
                     </mat-error>
                 }
             </mat-form-field>
@@ -403,6 +409,8 @@
             <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                 <mat-label>Fecha de nombramiento</mat-label>
                 <input
+                    (keypress)="onKeyPressDate($event)"
+                    (input)="onInputDate($event, 'dFechaNombramiento')"
                     formControlName="dFechaNombramiento"
                     matInput
                     placeholder="--/--/----"
@@ -432,6 +440,8 @@
             <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                 <mat-label>Fecha de designación</mat-label>
                 <input
+                    (keypress)="onKeyPressDate($event)"
+                    (input)="onInputDate($event, 'dFechaDesignacion')"
                     formControlName="dFechaDesignacion"
                     matInput
                     placeholder="--/--/----"

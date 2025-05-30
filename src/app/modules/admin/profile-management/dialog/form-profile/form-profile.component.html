@@ -16,6 +16,8 @@
                         matInput 
                         placeholder="--"
                         type="text"
+                        (keypress)="onKeyPress($event)"
+                        (input)="onInput($event, 'sApellidoPaterno')"
                         maxlength="50">
                         @if(form.get('sApellidoPaterno').invalid) {
                             <mat-error class="text-red-500">
@@ -32,6 +34,8 @@
                         formControlName="sApellidoMaterno"
                         matInput 
                         placeholder="--"
+                        (keypress)="onKeyPress($event)"
+                        (input)="onInput($event, 'sApellidoMaterno')"
                         type="text"
                         maxlength="50">
                         @if(form.get('sApellidoMaterno').invalid) {
@@ -48,6 +52,8 @@
                         class="uppercase"
                         formControlName="sNombres"
                         matInput 
+                        (keypress)="onKeyPress($event)"
+                        (input)="onInput($event, 'sNombres')"
                         placeholder="--"
                         type="text"
                         maxlength="150">

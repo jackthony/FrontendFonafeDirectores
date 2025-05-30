@@ -211,7 +211,6 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
             return;
         }
         this._spinner.show();
-        console.log(this.form);
 
         const income = this.form.get('mIngresosUltimoAnio');
         const profits = this.form.get('mUtilidadUltimoAnio');

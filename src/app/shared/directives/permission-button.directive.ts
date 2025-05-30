@@ -20,7 +20,6 @@ export class PermissionButtonDirective {
 
   ngOnInit(): void {
     if(this.disableDirective) return;
-    // Obtén el módulo del input o la ruta
     const resolvedModule = this.module ?? this.route.snapshot.data['module'];
 
     if (!resolvedModule) {
@@ -28,24 +27,12 @@ export class PermissionButtonDirective {
       this.applyMode(false);
       return;
     }
-
-
     const hasAccess = this.auth.canPerform(resolvedModule, this.action || 'write');
-
-    console.log('this.atuhh', this.auth.getPermission());
-    
-
-    console.log('resolvedModule',resolvedModule)
-    console.log('hasACcess', hasAccess);
-    console.log('hasACcess', this.mode);
-    
     this.applyMode(hasAccess);
   }
 
   private applyMode(hasAccess: boolean): void {
     if (this.mode === 'hide') {
-        console.log('ENTROOO AL HIDE');
-        
       // Oculta el elemento si no tiene acceso
       this.el.nativeElement.style.display = hasAccess ? '' : 'none';
     } else if (this.mode === 'disable') {

@@ -226,8 +226,6 @@ export class FormDirectoryComponent implements OnInit {
 	}
 
 	registerForm(): void {
-		console.log(this.form);
-
 		if (this.form.invalid) {
             this.form.markAllAsTouched();
             return;
@@ -294,8 +292,46 @@ export class FormDirectoryComponent implements OnInit {
 		return DateTime.local().minus({ years: 18 });
 	}
 
+	onKeyPress(event: KeyboardEvent) {
+        const allowedRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]$/;
+        if (!allowedRegex.test(event.key)) {
+          event.preventDefault();
+        }
+    }
+    
+    onInput(event: Event, nameForm: string) {
+        const input = event.target as HTMLInputElement;
+        const validPattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/;
+    
+        if (!validPattern.test(input.value)) {
+          const cleaned = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+          input.value = cleaned;
+          this.form.get(nameForm).setValue(cleaned, { emitEvent: false });
+        }
+    }
+
 	ngOnDestroy() {
         this.destroy$.next();
         this.destroy$.complete();
     }
+
+	onKeyPressDate(event: KeyboardEvent) {
+		const allowedRegex = /[0-9\/]/;
+		if (!allowedRegex.test(event.key)) {
+		  event.preventDefault();
+		}
+	}
+
+	onInputDate(event: Event, nameForm: string) {
+		const input = event.target as HTMLInputElement;
+		const validPattern = /^[0-9\/]*$/;
+		if (!validPattern.test(input.value)) {
+		  // Eliminar caracteres no válidos
+		  const cleaned = input.value.replace(/[^0-9\/]/g, '');
+		  input.value = cleaned;
+	  
+		  // Actualizar el form control sin disparar eventos para evitar loops
+		  this.form.get(nameForm)?.setValue(cleaned, { emitEvent: false });
+		}
+	  }
 }

@@ -129,5 +129,29 @@ export class FormProfileComponent implements OnInit {
 		this.typeInputPassword.set(!this.typeInputPassword());
 	}
 
+    onKeyPress(event: KeyboardEvent) {
+        const allowedRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]$/;
+        if (!allowedRegex.test(event.key)) {
+          event.preventDefault();
+        }
+      }
+    
+      /**
+       * Limpia el input en cada cambio para eliminar caracteres inválidos que
+       * podrían ser pegados o ingresados por otros medios.
+       */
+      onInput(event: Event, nameForm: string) {
+        const input = event.target as HTMLInputElement;
+        const validPattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/;
+    
+        if (!validPattern.test(input.value)) {
+          // Elimina cualquier carácter que no sea letra o espacio
+          const cleaned = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+          input.value = cleaned;
+          // Actualiza el form control sin emitir evento para evitar loop infinito
+          this.form.get(nameForm).setValue(cleaned, { emitEvent: false });
+        }
+      }
+
 
 }
