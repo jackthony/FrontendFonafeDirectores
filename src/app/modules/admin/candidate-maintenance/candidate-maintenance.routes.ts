@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
-import CandidateMaintenanceComponent from './candidate-maintenance.component';
+
 import { CandidateFormComponent } from './candidate-form/candidate-form.component';
+import { CandidateMaintenanceComponent } from './candidate-maintenance.component';
 
 export default [
     {
