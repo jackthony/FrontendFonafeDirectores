@@ -3,9 +3,9 @@ import { Business } from '@models/business/business.interface';
 import { Constant } from '@models/business/constant.interface';
 import { Department } from '@models/business/departament.interface';
 import { District } from '@models/business/district.interface';
-import { Ministry } from '@models/business/ministry.interface';
 import { Province } from '@models/business/province.interface';
 import { ResponseModel } from '@models/IResponseModel';
+import { Ministry } from '@models/system-maintenance/ministry.interface';
 
 export interface BusinessResolveData {
   item: Business | null;

@@ -1,0 +1,44 @@
+<form class="w-full" [formGroup]="form">
+    <div class="header-dialog">
+        <div class="header-container gap-3 flex">
+            <mat-icon class="icon-size-7" svgIcon="mat_outline:person_outline"></mat-icon>
+            <div class="header-text">Agregar ministerio</div>
+        </div>
+    </div>
+    <div class="body-dialog">
+        <div class="grid grid-cols-1 gap-4">
+            <div class="col-span-1">
+                <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                    <mat-label>Nombre</mat-label>
+                    <input
+                        class="uppercase"
+                        formControlName="sNombreMinisterio"
+                        matInput 
+                        (keypress)="onKeyPress($event)"
+                        (input)="onInput($event, 'sNombreMinisterio')"
+                        placeholder="--"
+                        type="text"
+                        maxlength="255">
+                        @if(form.get('sNombreMinisterio').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ form.get("sNombreMinisterio") | translateMessageForm }}
+                            </mat-error>
+                        }
+                </mat-form-field>     
+            </div>
+        </div>
+        <div class="btn-options">
+            <fo-button-dialog
+                [textBtn]="'Cancelar'"
+                [typeButton]="buttonEnum().CANCEL"
+                matDialogClose>
+            </fo-button-dialog>
+            <fo-button-dialog
+                [btnDisabled]="loadingService()"
+                [textBtn]="isEdit() ? 'Guardar' : 'Crear'"
+                (eventActionClick)="validRegisterForm()"
+                >
+            </fo-button-dialog>
+        </div>
+    </div>
+</form>

@@ -127,10 +127,10 @@
                                 }
                                 @case ("estado") {
                                     <div class="w-20">
-                                        <!-- <bu-pill
-                                            [text]="defineTextPill(element[item.name])"
-                                            [type]="element[item.estado] ?? convertBoolToNumber(element[item.name])">
-                                        </bu-pill> -->
+                                        <fo-pill
+                                            [text]="element[item.name]"
+                                            [type]="element[item.estado]">
+                                        </fo-pill>
                                     </div>
                                 }
                                 @case ("acciones") {

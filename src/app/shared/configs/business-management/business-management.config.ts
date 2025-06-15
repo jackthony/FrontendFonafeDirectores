@@ -6,36 +6,48 @@ export const CONST_COMPANY_SECTION = 1024;
 export const COLUMNS_BUSINESS_MANAGEMENT: TableColumnsDefInterface[] = [
     {
         id: 0,
+        name: "indice",
+        displayedName: "Nro",
+        type: "string"
+    },
+    {
+        id: 1,
         name: "sRazonSocial",
         displayedName: "Razón social",
         type: "string"
     },
     {
-        id: 1,
+        id: 2,
         name: "sRuc",
         displayedName: "RUC",
         type: "string"
     },
     {
-        id: 2,
+        id: 3,
         name: "sNombreMinisterio",
         displayedName: "Proponente",
         type: "string"
     },
     {
-        id: 3,
+        id: 4,
         name: "sDescripcionRubro",
         displayedName: "Rubro",
         type: "string"
     },
     {
-        id: 4,
+        id: 5,
         name: "sProvinciaDescripcion",
         displayedName: "Ubicación",
         type: "string"
     },
     {
-        id: 5,
+        id: 6,
+        name: "bActivo",
+        displayedName: "Estado",
+        type: "estado"
+    },
+    {
+        id: 7,
         name: "none",
         displayedName: "",
         type: "acciones"

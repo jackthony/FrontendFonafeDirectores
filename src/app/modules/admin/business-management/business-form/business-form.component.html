@@ -252,11 +252,15 @@
                                             <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                                                 <mat-label>Números de miembros</mat-label>
                                                 <input
-                                                    [disabled]="true"
-                                                    [value]="totalMembers()"
+                                                    formControlName="nNumeroMiembros"
                                                     matInput
                                                     placeholder="--"
                                                     type="number">
+                                                    @if(form.get('nNumeroMiembros').invalid) {
+                                                        <mat-error class="text-red-500">
+                                                            {{ form.get("nNumeroMiembros") | translateMessageForm }}
+                                                        </mat-error>
+                                                    }
                                             </mat-form-field>
                                         </div>
                                         <div class="col-span-2">

@@ -24,3 +24,21 @@
     color: #CF422F !important;
     }
 }
+
+.option-list {
+    width: 100%;
+    padding: 0 20px;
+    button {
+        display: flex;
+        justify-content: start;
+        width: 100%;
+        padding: 10px 0;
+        //border-bottom: 1px solid #DDDDDD;
+        align-items: center;
+        margin-top: 7px;
+        border: 2px solid #CD202C;
+    }
+    .mat-icon {
+        color: #CD202C;
+    }
+}

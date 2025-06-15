@@ -11,7 +11,10 @@ import { IconOption } from 'app/shared/interfaces/IGenericIcon';
 import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDefInterface';
 import { DialogConfirmationService } from 'app/shared/services/dialog-confirmation.service';
-import { finalize } from 'rxjs';
+import { finalize, firstValueFrom } from 'rxjs';
+import { DialogConfirmation } from '@components/fo-dialog-confirmation/models/dialog-confirmation.interface';
+import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-business-management',
@@ -24,8 +27,11 @@ export class BusinessManagementComponent {
 	private readonly _router = inject(Router);
 
 	private _businessService = inject(BusinessService);
+	private _dialogConfirmationService = inject(DialogConfirmationService);
+	private _ngxToastrService = inject(NgxToastrService);
+	private _spinner = inject(NgxSpinnerService);
 
-	placeHolderSearch = signal<string>('Busca por nombre de empresa');
+	placeHolderSearch = signal<string>('Busca por múltiples campos');
 	addEnterprise = signal<string>('Agregar empresa');
 	
     titleModule = signal<string>('Gestión de empresas');
@@ -93,17 +99,71 @@ export class BusinessManagementComponent {
 
 	defineIconsTable(): IconOption<Business>[]{
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
+        const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar");
+        const iconActive = new IconOption("restart_alt", "mat_outline", "Activar");
 
 		iconEdit.actionIcono = (data: Business) => {
             this.editBussines(data);
         };
 
-        return [iconEdit];
+		iconInactive.actionIcono = (data: Business) => {
+            this.deleteBussines(data);
+        };
+
+		iconActive.actionIcono = (data: Business) => {
+            this.deleteBussines(data);
+        };
+
+		iconInactive.isHidden = (data: Business) => !data.bActivo;
+		iconActive.isHidden = (data: Business) => data.bActivo;
+
+
+        return [iconEdit, iconInactive, iconActive];
     }
 
 	editBussines(data: Business): void {
 		this._router.navigate([`/gestion-empresas/registro/${data.nIdEmpresa}`]);
 	}
+
+	async deleteBussines(data: Business): Promise<void> {
+		const title = data.bActivo ? '¿Estás seguro de desactivar la empresa?' : '¿Estás seguro de activar la empresa?';
+		const message = data.bActivo ? 'Recuerda que una vez desactivada la empresa, no podrá ser visualizada como activa, pero podrás consultar su información.' : 'Recuerda que una vez activada la empresa, sera visualizada como activa';
+		const button = data.bActivo ? 'Desactivar' : "Activar";
+		const config: DialogConfirmation = {
+			title: title,
+			message: message,
+			actions: {
+				confirm: {
+					label: button,
+				},
+				iconClose: false
+			},
+		};
+
+		const dialogRef = await this._dialogConfirmationService.open(config);
+        const isValid = await firstValueFrom(dialogRef.afterClosed());
+		if(isValid) {
+			this._spinner.show();
+			const request = new RequestOption();
+				request.resource = "Delete",
+				request.pathVariables = [data.nIdEmpresa];
+				this._businessService
+					.delete(request)
+					.pipe(finalize(() => this._spinner.hide()))
+					.subscribe({
+						next: (response: ResponseModel<number>) => {
+							if (response.isSuccess) {
+								const messageToast = data.bActivo ? 'Empresa desactivada exitosamente' : 'Empresa activada exitosamente';
+								this._ngxToastrService.showSuccess(messageToast, '¡Éxito!');
+								this.searchBusiness();
+							}
+						},
+					});
+		}
+		
+	}
+
+
 
 	returnInit(): void {
 		this._router.navigate(['home']);

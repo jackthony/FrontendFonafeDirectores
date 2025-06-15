@@ -18,10 +18,13 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
+import { environment } from 'environments/environment';
+import { NgxCaptchaModule } from 'ngx-captcha';
 
 @Component({
     selector: 'auth-sign-in',
     templateUrl: './sign-in.component.html',
+    styleUrls: ['./sign-in.scss'],
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations,
     standalone: true,
@@ -36,6 +39,7 @@ import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
         MatIconModule,
         MatCheckboxModule,
         MatProgressSpinnerModule,
+        NgxCaptchaModule
     ],
 })
 export class AuthSignInComponent implements OnInit {
@@ -47,6 +51,7 @@ export class AuthSignInComponent implements OnInit {
     };
     signInForm: UntypedFormGroup;
     showAlert: boolean = false;
+    keyCaptcha = `${environment.siteKeyCaptcha}`;
 
     /**
      * Constructor
@@ -74,6 +79,7 @@ export class AuthSignInComponent implements OnInit {
                 [Validators.required, Validators.email],
             ],
             password: ['123456', Validators.required],
+            recaptcha: ['', Validators.required],
             rememberMe: [''],
         });
     }

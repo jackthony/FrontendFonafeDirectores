@@ -1,0 +1,51 @@
+.pill-active {
+    text-align: center;
+    background-color: #EAEAEA;
+    padding: 3px 10px;
+    border-radius: 54px;
+    font-family: "inter-regular";
+    font-size: 12px;
+    color: #22c55e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    .status-point {
+        width: 10px;
+        height: 10px;
+        border-radius: 100%;
+        background-color: #22c55e;
+    }
+    .text-pill {
+        font-family: "Museo Sans";
+        //font-size: 15px;
+        color: #69725F;
+    }
+    
+
+}
+
+.pill-inactive {
+    text-align: center;
+    background-color: #EAEAEA;
+    padding: 3px 10px;
+    border-radius: 54px;
+    font-family: "inter-regular";
+    font-size: 12px;
+    color: #22c55e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    .status-point {
+        width: 10px;
+        height: 10px;
+        border-radius: 100%;
+        background-color: #e84340;
+    }
+    .text-pill {
+        font-family: "Museo Sans";
+        //font-size: 15px;
+        color: #6B333D;
+    }
+}

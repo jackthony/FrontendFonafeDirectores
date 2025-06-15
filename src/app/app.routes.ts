@@ -119,6 +119,12 @@ export const appRoutes: Route[] = [
                 canActivate: [permissionGuard],
                 data: { module: 'Mantenimiento Candidatos', action: 'read' }
             },
+            { 
+                path: 'mantenedores-sistema', 
+                loadChildren: () => import('app/modules/admin/system-maintenance/system-maintenance.routes'),
+                canActivate: [permissionGuard],
+                data: { module: 'mantenimiento-sistemas', action: 'read' }
+            },
             { path: 'error-404', pathMatch: 'full', loadChildren: () => import('app/modules/admin/error/error-404/error-404.routes')},
             { path: '**', redirectTo: 'error-404'}
         ]

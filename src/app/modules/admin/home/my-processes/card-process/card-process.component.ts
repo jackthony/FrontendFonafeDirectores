@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, input, Output } from '@angular/core';
+import { Component, EventEmitter, input, Output, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { PermissionButtonDirective } from 'app/shared/directives/permission-button.directive';
+import { ListOfProcesses, ListOptionsProcesses } from 'app/shared/interfaces/IListOfProcesses';
 
 @Component({
   selector: 'app-card-process',
@@ -12,14 +13,23 @@ import { PermissionButtonDirective } from 'app/shared/directives/permission-butt
   styleUrl: './card-process.component.scss'
 })
 export class CardProcessComponent {
-    icon = input.required<string>();
-	text = input.required<string>();
-	module = input.required<string>();
+	process = input.required<ListOfProcesses>();
+	viewListOptions = signal<boolean>(false);
 
-	@Output() eventActionClick: EventEmitter<void> = new EventEmitter<void>();
+	@Output() eventActionClick: EventEmitter<string> = new EventEmitter<string>();
 
-	toClickOption(): void {
-		this.eventActionClick.emit();
+	toClickOption(url: string): void {
+		if(!url) {
+			this.listOptions();
+			return;
+		} 
+		this.eventActionClick.emit(url);
 	}
+
+	listOptions(): void {
+		this.viewListOptions.set(!this.viewListOptions());
+	}
+
+
 
 }

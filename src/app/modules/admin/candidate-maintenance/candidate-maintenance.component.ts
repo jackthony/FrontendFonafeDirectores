@@ -1,9 +1,8 @@
 import { booleanAttribute, Component, EventEmitter, inject, input, Output, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Business } from '@models/business/business.interface';
-import { Ministry } from '@models/business/ministry.interface';
 import { SegUser } from '@models/seg-users/seg-user.interface';
+import { Ministry } from '@models/system-maintenance/ministry.interface';
 import { COLUMNS_PROFILE_MANAGEMENT } from 'app/shared/configs/profile-management/profile-management.config';
 import { CANDIDATE_MAINTENANCE_IMPORTS } from 'app/shared/imports/business-management/candidate-maintenance.import';
 import { IconOption } from 'app/shared/interfaces/IGenericIcon';

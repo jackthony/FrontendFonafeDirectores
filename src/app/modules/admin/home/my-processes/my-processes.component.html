@@ -1,7 +1,9 @@
 <fo-cont-card [title]="titleProcess()">
     <div class="flex flex-col space-y-4 mt-6">
         @for (item of lstProcess(); track $index) {
-            <app-card-process [module]="item.module" [icon]="item.icon" [text]="item.label" (eventActionClick)="enterOption(item)"></app-card-process>
+            <div [appPermissionButton]="'read'" [module]="item.module">
+                <app-card-process [process]="item" (eventActionClick)="enterOption($event)"></app-card-process>
+            </div>
         }
     </div>
 

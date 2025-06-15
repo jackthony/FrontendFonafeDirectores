@@ -41,7 +41,7 @@ export class HttpGenericService<T> {
   }
 
   delete(request: RequestOption): Observable<ResponseModel<T>> {
-    request.method = "DELETE";
+    request.method = "POST";
     request.url = `${this._url}/${request.resource ?? 'Delete'}`;
 
     return this._httpRequest.callHttpParameters(request);

@@ -42,9 +42,9 @@ export class TranslateMessageForm implements PipeTransform {
         } 
         if (control.hasError("min")) {
             if (type === "select") return 'Seleccione una opción';
-            return `Valor mínimo: ${control.errors?.min?.min}`;
+            return `Número mínimo: ${control.errors?.min?.min}`;
         }
-        if (control.hasError("max")) return `Valor máximo ${control.errors?.max?.max}`;
+        if (control.hasError("max")) return `Número máximo: ${control.errors?.max?.max}`;
         if (control.hasError("minlength")) return `Mínimo ${control.errors.minlength.requiredLength} caracteres`;
         if (control.hasError("maxlength")) return `Máximo ${control.errors.maxlength.requiredLength} caracteres`;
         if (control.hasError("matStartDateInvalid")) return "Fecha inicial fuera de rango";

@@ -19,7 +19,6 @@ import { Business } from '@models/business/business.interface';
 import { Constant } from '@models/business/constant.interface';
 import { Department } from '@models/business/departament.interface';
 import { District } from '@models/business/district.interface';
-import { Ministry } from '@models/business/ministry.interface';
 import { Province } from '@models/business/province.interface';
 import { ResponseModel } from '@models/IResponseModel';
 import { DistrictService } from '@services/district.service';
@@ -36,6 +35,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
 import { ArchivingProcessService } from '@services/archiving-process.service';
 import { FileComponentStateService } from '@services/file-component-state.service';
+import { Ministry } from '@models/system-maintenance/ministry.interface';
 
 @Component({
     selector: 'app-business-form',
@@ -133,7 +133,7 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
             mIngresosUltimoAnio: [ object ? object.mIngresosUltimoAnio : null, [Validators.required, Validators.min(0), Validators.max(9999999999999999.99)] ],
             mUtilidadUltimoAnio: [ object ? object.mUtilidadUltimoAnio : null, [Validators.required, Validators.min(0), Validators.max(9999999999999999.99)] ],
             mConformacionCapitalSocial: [ object ? object.mConformacionCapitalSocial : null, [ Validators.required, Validators.min(0), Validators.max(9999999999999999.99)] ],
-            //nNumeroMiembros: { disabled: true, value: object ? object.nNumeroMiembros : 0 },
+            nNumeroMiembros: [object ? object.nNumeroMiembros : 1, [ Validators.required, Validators.min(1), Validators.max(100)] ] ,
             bRegistradoMercadoValores: [ object ? object.bRegistradoMercadoValores : false, [Validators.required]],
             bActivo: [object ? object.bActivo : true, [Validators.required]],
             nUsuarioRegistro: [ { disabled: object, value: this._userService.userLogin().usuario }, Validators.required ],
