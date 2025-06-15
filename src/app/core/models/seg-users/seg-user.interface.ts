@@ -12,4 +12,7 @@ export interface SegUser {
     nUsuarioRegistro: number;
     dtFechaModificacion: string;
     nUsuarioModificacion: number;
+    nTipoDocumento?: number;
+    sNumeroDocumento?: string;
+    sApellidosNombres?: string;
 }
