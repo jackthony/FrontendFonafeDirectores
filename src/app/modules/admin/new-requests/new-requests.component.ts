@@ -14,9 +14,12 @@ import { FoTitleModuleComponent } from '@components/fo-title-module/fo-title-mod
 })
 export class NewRequestsComponent {
 
+	// Inyección del servicio Router para permitir la navegación entre vistas de la aplicación.
 	private readonly _router = inject(Router);
 
+	// Método que redirige al usuario a la página de inicio (home) cuando se invoca.
 	returnInit(): void {
+		// Utiliza el servicio Router para navegar hacia la ruta 'home'.
 		this._router.navigate(['home']);
 	}
 }

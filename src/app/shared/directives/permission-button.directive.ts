@@ -7,41 +7,60 @@ import { AuthorizationService } from '../services/authorization.service';
     standalone: true,
 })
 export class PermissionButtonDirective {
-  @Input('appPermissionButton') action: string = 'write';
-  @Input() module?: string;
-  @Input() mode: 'hide' | 'disable' = 'hide';
-  @Input() disableDirective: boolean = false;
+  // Define los inputs que recibirán valores de las propiedades del HTML donde se use la directiva
+  @Input('appPermissionButton') action: string = 'write'; // Acción para la que se verificará el permiso (por defecto 'write')
+  @Input() module?: string; // Módulo sobre el que se verificará el permiso (opcional)
+  @Input() mode: 'hide' | 'disable' = 'hide'; // Define si el botón debe ser ocultado o deshabilitado (por defecto 'hide')
+  @Input() disableDirective: boolean = false; // Si es true, desactiva la directiva y no aplica ningún cambio al elemento
 
+  // Inyecta las dependencias necesarias en el constructor
   constructor(
-    private el: ElementRef<HTMLElement>,
-    private auth: AuthorizationService,
-    private route: ActivatedRoute
+    private el: ElementRef<HTMLElement>, // Referencia al elemento del DOM donde se aplica la directiva
+    private auth: AuthorizationService, // Servicio para verificar permisos
+    private route: ActivatedRoute // Servicio para obtener información de la ruta activa
   ) {}
 
+  /**
+   * Método que se ejecuta cuando la directiva es inicializada.
+   * Realiza la comprobación de permisos y aplica el modo correspondiente (ocultar o deshabilitar).
+   */
   ngOnInit(): void {
+    // Si la directiva está deshabilitada, no realiza ninguna acción
     if(this.disableDirective) return;
+
+    // Si no se proporciona un módulo, se obtiene del snapshot de la ruta activa
     const resolvedModule = this.module ?? this.route.snapshot.data['module'];
 
+    // Si no se encontró el módulo, se muestra una advertencia y se aplica el modo de ocultar
     if (!resolvedModule) {
       console.warn('[PermissionButtonDirective] No se encontró módulo.');
-      this.applyMode(false);
+      this.applyMode(false); // No tiene acceso, oculta el elemento
       return;
     }
+
+    // Verifica si el usuario tiene permiso para realizar la acción en el módulo especificado
     const hasAccess = this.auth.canPerform(resolvedModule, this.action || 'write');
+    
+    // Aplica el modo correspondiente (ocultar o deshabilitar) según si el usuario tiene acceso
     this.applyMode(hasAccess);
   }
 
+  /**
+   * Método privado que aplica el modo 'hide' o 'disable' dependiendo de los permisos.
+   * @param hasAccess Indica si el usuario tiene acceso para realizar la acción.
+   */
   private applyMode(hasAccess: boolean): void {
     if (this.mode === 'hide') {
-      // Oculta el elemento si no tiene acceso
+      // Si el modo es 'hide', oculta el elemento si no tiene acceso
       this.el.nativeElement.style.display = hasAccess ? '' : 'none';
     } else if (this.mode === 'disable') {
-      // Deshabilita el elemento si tiene propiedad disabled, sino simula deshabilitado
+      // Si el modo es 'disable', deshabilita el elemento si tiene propiedad 'disabled'
       if ('disabled' in this.el.nativeElement) {
-        (this.el.nativeElement as any).disabled = !hasAccess;
+        (this.el.nativeElement as any).disabled = !hasAccess; // Si tiene 'disabled', lo habilita o deshabilita
       } else {
-        this.el.nativeElement.style.pointerEvents = hasAccess ? '' : 'none';
-        this.el.nativeElement.style.opacity = hasAccess ? '' : '0.5';
+        // Si no tiene 'disabled', simula el comportamiento de deshabilitarlo
+        this.el.nativeElement.style.pointerEvents = hasAccess ? '' : 'none'; // Desactiva los eventos de puntero
+        this.el.nativeElement.style.opacity = hasAccess ? '' : '0.5'; // Ajusta la opacidad para simular un botón deshabilitado
       }
     }
   }

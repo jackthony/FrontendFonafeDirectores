@@ -43,29 +43,41 @@ import { finalize } from 'rxjs';
 })
 export class FormProfileComponent implements OnInit {
 	
+	// Inyección del FormBuilder para crear formularios reactivos de manera más sencilla
 	private _fb = inject(FormBuilder);
+
+	// Inyección de los datos del diálogo que se pasan desde el componente que invoca este diálogo
+	public data: { object: SegUser, lstStatus: Constant[], lstPosition: Constant[], lstProfile: Role[] } = inject(MAT_DIALOG_DATA);
+
+	// Referencia al diálogo para cerrar el diálogo después de una acción
 	private readonly dialogRef = inject(MatDialogRef<FormProfileComponent>);
-	
+
+	// Servicios inyectados para obtener y manejar la información del usuario
 	private _userService = inject(UserService);
 	private _segUserService = inject(SegUserService);
 	private _validationFormService = inject(ValidationFormService);
 
-	public data: { object: SegUser, lstStatus: Constant[], lstPosition: Constant[], lstProfile: Role[] } = inject(MAT_DIALOG_DATA);
-
+	// Inicialización de señales y controles de formularios
     test = new FormControl('', Validators.required);
     buttonEnum = signal<typeof ButtonEnum>(ButtonEnum);
 
+	// Formulario reactivo que contendrá los controles y validaciones
 	form: FormGroup;
 
+	// Señales reactivas que controlan si estamos editando o no y el estado de carga
 	isEdit = signal<boolean>(false);
 	loadingService = signal<boolean>(false);
 	typeInputPassword = signal<boolean>(false);
 
+	// Método que se ejecuta cuando el componente es inicializado
 	ngOnInit(): void {
+		// Verifica si hay datos para decidir si estamos en modo edición
 		this.isEdit.set(this.data.object ? true : false);
+		// Inicializa el formulario con los datos del usuario
 		this.initForm(this.data?.object);
 	}
 
+	// Método para inicializar el formulario con valores de datos o vacíos
 	initForm(object: SegUser): void {
         this.form = this._fb.group({
             nIdUsuario: [{ disabled: !object, value: object?.nIdUsuario }, Validators.required],
@@ -82,17 +94,20 @@ export class FormProfileComponent implements OnInit {
         });
     }
 
+	// Método que se ejecuta cuando el formulario se registra o actualiza
 	registerForm() {
         if (this.form.invalid) {
-            this.form.markAllAsTouched();
+            this.form.markAllAsTouched(); // Marca todos los campos como tocados para mostrar errores
             return;
         }
-        this.loadingService.set(true);
-        if (this.isEdit()) this.updateBusiness();
-        else this.registerBusiness();
+        this.loadingService.set(true); // Indica que se está procesando la acción
+        if (this.isEdit()) this.updateBusiness(); // Si estamos editando, actualizamos los datos
+        else this.registerBusiness(); // Si estamos creando, registramos los nuevos datos
     }
 
+	// Método para registrar un nuevo usuario
     registerBusiness(): void {
+        // Convierte los nombres de los campos a mayúsculas antes de enviar
         const fields = ['sNombres', 'sApellidoPaterno', 'sApellidoMaterno'];
         fields.forEach(field => {
             const control = this.form.get(field);
@@ -100,52 +115,55 @@ export class FormProfileComponent implements OnInit {
                 control.setValue(control.value.toUpperCase(), { emitEvent: false });
             }
         });
+        // Crea una solicitud con los valores del formulario
         const request = new RequestOption();
         request.request = this.form.value;
         this._segUserService
-            .create(request)
-            .pipe(finalize(() => this.loadingService.set(false)))
+            .create(request) // Llama al servicio para crear el nuevo usuario
+            .pipe(finalize(() => this.loadingService.set(false))) // Finaliza la operación de carga
             .subscribe({
                 next: (response: ResponseModel<number>) => {
-                    if (response.isSuccess) this.dialogRef.close(true);
+                    if (response.isSuccess) this.dialogRef.close(true); // Si la operación es exitosa, cierra el diálogo
                 },
             });
     }
 
+	// Método para actualizar la información de un usuario existente
     updateBusiness(): void {
         const request = new RequestOption();
         request.request = this.form.value;
         this._segUserService
-            .update(request)
-            .pipe(finalize(() => this.loadingService.set(false)))
+            .update(request) // Llama al servicio para actualizar el usuario
+            .pipe(finalize(() => this.loadingService.set(false))) // Finaliza la operación de carga
             .subscribe({
                 next: (response: ResponseModel<boolean>) => {
-                    if (response.isSuccess) this.dialogRef.close(true);
+                    if (response.isSuccess) this.dialogRef.close(true); // Si la operación es exitosa, cierra el diálogo
                 },
             });
     }
 
-	viewPassword(): void {
+	// Método para alternar la visibilidad de la contraseña
+    viewPassword(): void {
 		this.typeInputPassword.set(!this.typeInputPassword());
 	}
 
+	// Método que restringe la entrada a solo caracteres permitidos en los formularios
     onKeyPress(event: KeyboardEvent) {
-        const allowedRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]$/;
+        const allowedRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]$/; // Expresión regular que solo permite letras y espacios
         if (!allowedRegex.test(event.key)) {
-          event.preventDefault();
+          event.preventDefault(); // Previene la entrada si no es válida
         }
     }
     
+	// Método que limpia los caracteres no permitidos cuando se ingresan en los formularios
     onInput(event: Event, nameForm: string) {
         const input = event.target as HTMLInputElement;
-        const validPattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/;
+        const validPattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/; // Expresión regular que solo permite letras y espacios
     
         if (!validPattern.test(input.value)) {
-          const cleaned = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+          const cleaned = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, ''); // Limpia los caracteres no permitidos
           input.value = cleaned;
-          this.form.get(nameForm).setValue(cleaned, { emitEvent: false });
+          this.form.get(nameForm).setValue(cleaned, { emitEvent: false }); // Actualiza el valor del formulario
         }
     }
-
-
 }
