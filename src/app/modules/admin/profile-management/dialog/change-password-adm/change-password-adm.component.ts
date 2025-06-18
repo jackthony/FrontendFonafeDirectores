@@ -45,62 +45,85 @@ import { finalize, Subject, takeUntil } from 'rxjs';
 	encapsulation: ViewEncapsulation.None
 })
 export class ChangePasswordAdmComponent implements OnInit, OnDestroy {
+    // Inyección del FormBuilder para crear formularios reactivos de manera más sencilla
     private _fb = inject(FormBuilder);
 
+    // Inyección de los datos del diálogo que se pasan desde el componente que invoca este diálogo
     public data: { object: SegUser } = inject(MAT_DIALOG_DATA);
-    private readonly dialogRef = inject(
-        MatDialogRef<ChangePasswordAdmComponent>
-    );
+
+    // Referencia al diálogo para cerrar el diálogo después de una acción
+    private readonly dialogRef = inject(MatDialogRef<ChangePasswordAdmComponent>);
+
+    // Servicios inyectados para obtener y manejar la información del usuario
     private _userService = inject(UserService);
     private _segUserService = inject(SegUserService);
 
+    // Subject para controlar el ciclo de vida de las suscripciones y evitar memory leaks
     private _unsubscribeAll: Subject<void> = new Subject<void>();
 
+    // Señales reactivas para controlar el estado de carga, botones y tipo de entrada de la contraseña
     loadingService = signal<boolean>(false);
     buttonEnum = signal<typeof ButtonEnum>(ButtonEnum);
-	typeInputPassword = signal<boolean>(false);
+    typeInputPassword = signal<boolean>(false);
 
+    // Variables que almacenan los datos del usuario y el formulario reactivo
     user: User;
     form: FormGroup;
 
+    // Método que se ejecuta cuando el componente se inicializa
     ngOnInit(): void {
+        // Se suscribe al observable 'user$' de UserService para obtener los datos del usuario
         this._userService.user$
-            .pipe(takeUntil(this._unsubscribeAll))
+            .pipe(takeUntil(this._unsubscribeAll)) // Usamos 'takeUntil' para cancelar la suscripción cuando el componente se destruya
             .subscribe((user: User) => {
                 this.user = user;
             });
 
+        // Inicializa el formulario reactivo con los valores predeterminados
         this.form = this._fb.group({
-            user: [this.data.object.nIdUsuario, Validators.required],
-            password: ['', [Validators.required, Validators.maxLength(32)]],
-            sUsuarioModificacion: [this.user.nombreVisual, Validators.required],
+            user: [this.data.object.nIdUsuario, Validators.required], // Campo de usuario, requerido
+            password: ['', [Validators.required, Validators.maxLength(32)]], // Campo de contraseña, requerido y con un límite de 32 caracteres
+            sUsuarioModificacion: [this.user.nombreVisual, Validators.required], // Campo de usuario que realiza la modificación
         });
     }
 
+    // Método para cambiar la contraseña
     changePassword(): void {
+        // Si el formulario es inválido, marca todos los campos como tocados para mostrar los errores
         if (this.form.invalid) {
             this.form.markAllAsTouched();
             return;
         }
+
+        // Marca que el servicio está en proceso de carga
         this.loadingService.set(true);
+
+        // Crea una nueva solicitud con los datos del formulario
         const request = new RequestOption();
-        request.resource = 'ChangePassAdmin';
-        request.request = this.form.value;
+        request.resource = 'ChangePassAdmin'; // Define el recurso que se utilizará
+        request.request = this.form.value; // Asigna los valores del formulario a la solicitud
+
+        // Llama al servicio para cambiar la contraseña y maneja la respuesta
         this._segUserService
-            .create(request)
-            .pipe(finalize(() => this.loadingService.set(false)))
+            .create(request) // Llama al servicio para crear la solicitud
+            .pipe(finalize(() => this.loadingService.set(false))) // Finaliza la operación y desactiva el estado de carga
             .subscribe({
                 next: (response: ResponseModel<boolean>) => {
+                    // Si la respuesta es exitosa, cierra el diálogo con un valor verdadero
                     if (response.isSuccess) this.dialogRef.close(true);
                 },
             });
     }
 
-	viewPassword(): void {
-		this.typeInputPassword.set(!this.typeInputPassword());
-	}
+    // Método para alternar la visibilidad de la contraseña
+    viewPassword(): void {
+        // Alterna el tipo de entrada para la contraseña (mostrar u ocultar)
+        this.typeInputPassword.set(!this.typeInputPassword());
+    }
 
+    // Método que se ejecuta cuando el componente es destruido
     ngOnDestroy(): void {
+        // Limpia las suscripciones activas para evitar memory leaks
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }

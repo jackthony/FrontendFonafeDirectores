@@ -1,11 +1,12 @@
 import { TableColumnsDefInterface } from "../../interfaces/ITableColumnsDefInterface";
 
+// Define la configuración de las columnas para la tabla de actividades
 export const COLUMNS_ACTIVITIES: TableColumnsDefInterface[] = [
     {
-        id: 0,
-        name: "fullName",
-        displayedName: "Nombre y Apellido",
-        type: "string"
+        id: 0, // Identificador único de la columna
+        name: "fullName", // Nombre interno de la columna, representando el nombre completo del usuario
+        displayedName: "Nombre y Apellido", // Nombre que se mostrará en el encabezado de la columna
+        type: "string" // Tipo de dato de la columna (cadena de texto)
     },
     {
         id: 1,

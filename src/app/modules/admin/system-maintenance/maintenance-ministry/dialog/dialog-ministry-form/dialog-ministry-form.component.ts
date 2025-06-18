@@ -28,87 +28,101 @@ import { finalize } from 'rxjs';
   styleUrl: './dialog-ministry-form.component.scss'
 })
 export class DialogMinistryFormComponent {
-    private _fb = inject(FormBuilder);
-	private readonly dialogRef = inject(MatDialogRef<DialogMinistryFormComponent>);
-	
-	private _userService = inject(UserService);
-	private _ministryService = inject(MinistryService);
+    // Inyección de dependencias para formularios, diálogos y servicios
+    private _fb = inject(FormBuilder); // Inyecta el servicio FormBuilder para crear formularios reactivos
+	private readonly dialogRef = inject(MatDialogRef<DialogMinistryFormComponent>); // Inyecta MatDialogRef para cerrar el diálogo
 
+    private _userService = inject(UserService); // Inyecta el servicio UserService para obtener información del usuario
+	private _ministryService = inject(MinistryService); // Inyecta el servicio MinistryService para interactuar con los datos del ministerio
+
+	// Datos que se pasan al diálogo, incluyendo la información del ministerio
 	public data: { object: Ministry } = inject(MAT_DIALOG_DATA);
 
+    // Señal reactiva que maneja los tipos de botones a mostrar
     buttonEnum = signal<typeof ButtonEnum>(ButtonEnum);
 
+	// El formulario reactivo que contiene los controles y validaciones
 	form: FormGroup;
 
+	// Señales reactivas que controlan si estamos editando el ministerio y el estado de carga
 	isEdit = signal<boolean>(false);
 	loadingService = signal<boolean>(false);
 
+	// Método que se ejecuta cuando el componente es inicializado
 	ngOnInit(): void {
+		// Verifica si estamos editando un ministerio basado en los datos proporcionados
 		this.isEdit.set(this.data?.object ? true : false);
+		// Inicializa el formulario con los datos del ministerio
 		this.initForm(this.data?.object);
 	}
 
+	// Método para inicializar el formulario con los datos proporcionados (o vacíos si no existe el objeto)
 	initForm(object: Ministry): void {
         this.form = this._fb.group({
-            nIdMinisterio: [{ disabled: !object, value: object?.nIdMinisterio }, Validators.required],
-            sNombreMinisterio: [ object?  object.sNombreMinisterio : '', [Validators.required, Validators.maxLength(255)] ],
-            bActivo: [ object? object.bActivo : true, Validators.required ],
-            nUsuarioRegistro: [ { disabled: object, value: this._userService.userLogin().usuario }, Validators.required ],
-            nUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin().usuario },Validators.required ],
+            nIdMinisterio: [{ disabled: !object, value: object?.nIdMinisterio }, Validators.required], // Campo ID del ministerio, requerido
+            sNombreMinisterio: [ object?  object.sNombreMinisterio : '', [Validators.required, Validators.maxLength(255)] ], // Campo nombre del ministerio, requerido
+            bActivo: [ object? object.bActivo : true, Validators.required ], // Campo para saber si el ministerio está activo, requerido
+            nUsuarioRegistro: [ { disabled: object, value: this._userService.userLogin().usuario }, Validators.required ], // Usuario que registra el ministerio
+            nUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin().usuario },Validators.required ], // Usuario que modifica el ministerio
         });
     }
 
+	// Método para validar el formulario antes de enviarlo
 	validRegisterForm() {
         if (this.form.invalid) {
-            this.form.markAllAsTouched();
+            this.form.markAllAsTouched(); // Marca todos los campos como tocados para mostrar los errores
             return;
         }
-        this.loadingService.set(true);
-        if (this.isEdit()) this.updateForm();
-        else this.registerForm();
+        this.loadingService.set(true); // Activa el estado de carga
+        if (this.isEdit()) this.updateForm(); // Si estamos editando, actualiza el ministerio
+        else this.registerForm(); // Si estamos creando, registra el ministerio
     }
 
+	// Método para registrar un nuevo ministerio
     registerForm(): void {
         const request = new RequestOption();
-        request.request = this.form.value;
+        request.request = this.form.value; // Crea una solicitud con los valores del formulario
         this._ministryService
-            .create(request)
-            .pipe(finalize(() => this.loadingService.set(false)))
+            .create(request) // Llama al servicio MinistryService para registrar el ministerio
+            .pipe(finalize(() => this.loadingService.set(false))) // Finaliza la operación y desactiva el estado de carga
             .subscribe({
                 next: (response: ResponseModel<Ministry>) => {
-                    if (response.isSuccess) this.dialogRef.close(true);
+                    if (response.isSuccess) this.dialogRef.close(true); // Cierra el diálogo si la operación es exitosa
                 },
             });
     }
 
+	// Método para actualizar un ministerio existente
     updateForm(): void {
         const request = new RequestOption();
-        request.request = this.form.value;
+        request.request = this.form.value; // Crea una solicitud con los valores del formulario
         this._ministryService
-            .update(request)
-            .pipe(finalize(() => this.loadingService.set(false)))
+            .update(request) // Llama al servicio MinistryService para actualizar el ministerio
+            .pipe(finalize(() => this.loadingService.set(false))) // Finaliza la operación y desactiva el estado de carga
             .subscribe({
                 next: (response: ResponseModel<Ministry>) => {
-                    if (response.isSuccess) this.dialogRef.close(true);
+                    if (response.isSuccess) this.dialogRef.close(true); // Cierra el diálogo si la operación es exitosa
                 },
             });
     }
 
+	// Método que restringe la entrada de caracteres no permitidos en el formulario (solo letras y espacios)
 	onKeyPress(event: KeyboardEvent) {
-        const allowedRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]$/;
+        const allowedRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]$/; // Expresión regular para permitir solo letras y espacios
         if (!allowedRegex.test(event.key)) {
-          event.preventDefault();
+          event.preventDefault(); // Previene la entrada si el carácter no es permitido
         }
     }
-    
+
+	// Método que limpia los caracteres no permitidos en el campo de texto del formulario
     onInput(event: Event, nameForm: string) {
         const input = event.target as HTMLInputElement;
-        const validPattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/;
+        const validPattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/; // Expresión regular para permitir solo letras y espacios
     
         if (!validPattern.test(input.value)) {
-          const cleaned = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+          const cleaned = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, ''); // Elimina los caracteres no permitidos
           input.value = cleaned;
-          this.form.get(nameForm).setValue(cleaned, { emitEvent: false });
+          this.form.get(nameForm).setValue(cleaned, { emitEvent: false }); // Actualiza el valor del formulario sin emitir el evento
         }
     }
 }
