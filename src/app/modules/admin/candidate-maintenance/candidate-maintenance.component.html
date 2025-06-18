@@ -1,17 +1,17 @@
 <form [formGroup]="form" class="w-full">
-    <div class="grid grid-cols-1 gap-4">
+    <div class="grid grid-cols-1 gap-4 xs:py-1 px-5">
         <fo-return (eventActionClick)="returnInit()"></fo-return>
         <div class="w-full">
             <p class="name-banner">Buscamos al candidato</p>
         </div>
         <div
-            class="xs:grid-cols-1 mt-4 grid grid-cols-8 gap-4 sm:grid-cols-1 md:grid-cols-8 lg:grid-cols-8"
+            class=" mt-4 grid  gap-4 sm:grid-cols-1 md:grid-cols-8 lg:grid-cols-8 xs:col-span-4"
         >
             <div
-                class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
+                class=" col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:col-span-1"
             >
                 <mat-form-field
-                    class="mat-form-field-custom w-full"
+                    class="mat-form-field-custom w-full"s
                     appearance="outline"
                     floatLabel="always"
                 >
@@ -34,7 +34,7 @@
                 </mat-form-field>
             </div>
             <div
-                class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
+                class=" col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:col-span-1"
             >
                 <mat-form-field
                     class="mat-form-field-custom w-full"
@@ -57,7 +57,7 @@
                 </mat-form-field>
             </div>
             <div
-                class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
+                class=" col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:col-span-1"
             >
                 <mat-form-field
                     class="mat-form-field-custom w-full"
@@ -81,7 +81,7 @@
             </div>
             <div
                 appPermissionButton
-                class="xs:grid-cols-1 col-span-1 w-full items-center justify-end text-end sm:col-span-1 md:col-span-2 lg:col-span-1"
+                class=" col-span-1 w-full items-center justify-end text-end sm:col-span-1 md:col-span-2 lg:col-span-1 xs:col-span-1"
             >
                 <fo-button
                     (eventAction)="searchuser()"
