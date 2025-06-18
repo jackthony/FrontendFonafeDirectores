@@ -132,6 +132,7 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
             sIdDepartamento: [object ? object.sIdDepartamento : 0, [Validators.required, Validators.min(1)]], // Campo de departamento
             sIdProvincia: [object ? object.sIdProvincia : 0, [Validators.required, Validators.min(1)]], // Campo de provincia
             sIdDistrito: [object ? object.sIdDistrito : 0, [Validators.required, Validators.min(1)]], // Campo de distrito
+            nIdRubroNegocio: [ object ? object.nIdRubroNegocio : 0, [Validators.required, Validators.min(1)] ],
             sDireccion: [object ? object.sDireccion : '', [Validators.required, Validators.maxLength(255)]], // Campo de dirección
             sComentario: [object ? object.sComentario : '', Validators.maxLength(1000)], // Campo de comentario
             mIngresosUltimoAnio: [object ? object.mIngresosUltimoAnio : null, [Validators.required, Validators.min(0), Validators.max(9999999999999999.99)]], // Campo de ingresos del último año
