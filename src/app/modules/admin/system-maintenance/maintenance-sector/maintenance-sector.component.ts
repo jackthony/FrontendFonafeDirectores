@@ -1,4 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Sector } from '@models/system-maintenance/sector.interface';
+import { IconOption } from 'app/shared/interfaces/IGenericIcon';
+import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDefInterface';
+import { AuthorizationService } from 'app/shared/services/authorization.service';
+import { DialogConfirmationService } from 'app/shared/services/dialog-confirmation.service';
+import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-maintenance-sector',
@@ -22,8 +31,8 @@ export default class MaintenanceSectorComponent {
 	
     titleModule = signal<string>('Mantenedor de ministerios');
 	headerTable = signal<TableColumnsDefInterface[]>([]);
-	dataTable = signal<Ministry[]>([]);
-	iconsTable = signal<IconOption<Ministry>[]>([]);
+	dataTable = signal<Sector[]>([]);
+	iconsTable = signal<IconOption<Sector>[]>([]);
 	nameBtnAdd = signal<string>('Agregar ministerio');
 	
 	loadingTable = signal<boolean>(false);
@@ -35,7 +44,7 @@ export default class MaintenanceSectorComponent {
 	delaySearchTable = signal<number>(400);
 
 	ngOnInit(): void {
-		this.headerTable.set(MAINTENANCE_MINISTRY_MANAGEMENT);
+		this.headerTable.set([]);
 		this.iconsTable.set(this.defineIconsTable());
 		this.searchTable();
 	}
