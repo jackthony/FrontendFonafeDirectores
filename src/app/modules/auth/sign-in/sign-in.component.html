@@ -18,8 +18,9 @@
                     >Sign up
                 </a> -->
             </div>
+            
             <form class="mt-4" [formGroup]="signInForm" #signInNgForm="ngForm">
-                <mat-form-field class="w-full">
+                <mat-form-field class="w-full mb-2" [subscriptSizing]="'fixed'">
                     <mat-label>Correo</mat-label>
                     <input id="email" matInput [formControlName]="'email'" />
                     @if (signInForm.get('email').hasError('required')) {
@@ -31,7 +32,7 @@
                         </mat-error>
                     }
                 </mat-form-field>
-                <mat-form-field class="w-full">
+                <mat-form-field class="w-full" [subscriptSizing]="'fixed'">
                     <mat-label>Clave</mat-label>
                     <input
                         id="password"
@@ -66,15 +67,15 @@
                     <mat-error>Se requiere contraseña</mat-error>
                 </mat-form-field>
                 <div
-                    class="mt-1.5 inline-flex w-full items-center justify-between"
+                    class="mb-1.5 inline-flex w-full items-center justify-end"
                 >
-                    <mat-checkbox
+                    <!-- <mat-checkbox
                         class="-ml-2"
                         [color]="'primary'"
                         [formControlName]="'rememberMe'"
                     >
                         Recuerdame
-                    </mat-checkbox>
+                    </mat-checkbox> -->
                         <a
                         class="text-md font-medium hover:underline"
                         style="color: #CD202C"
@@ -82,6 +83,23 @@
                         >
                         Recuperar contraseña
                         </a>
+                </div>
+                <div class="w-full flex justify-center">
+                    <mat-form-field class="field-captcha">
+                        <input
+                            class="hidden"
+                            matInput
+                            [formControlName]="'recaptcha'"
+                        />
+                        <ngx-recaptcha2 formControlName="recaptcha" [siteKey]="keyCaptcha"></ngx-recaptcha2>
+                        @if (signInForm.get('recaptcha').hasError('required')) {
+                            <mat-error class="back-color">
+                                Verificar captcha
+                            </mat-error>
+                        }
+                    </mat-form-field>
+                    
+                    
                 </div>
                 <button
                     class="fuse-mat-button-large mt-6 w-full"

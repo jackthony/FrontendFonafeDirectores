@@ -4,4 +4,10 @@ export interface ListOfProcesses {
     value: number;
     url: string;
     module: string;
+    options: ListOptionsProcesses[]
+}
+
+export interface ListOptionsProcesses {
+    label: string;
+    url: string;
 }

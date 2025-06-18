@@ -5,13 +5,15 @@
             <fo-title-module [text]="titleModule()"></fo-title-module>
         </fo-cont-card>
         <fo-search-for-button
-            (eventClickSearch)="searchByEnterprise($event)"
+            [delaySearch]="delaySearchBusiness()"
+            (eventSearch)="searchByEnterprise($event)"
             (eventNewElement)="addCompany()"
             [placeTextSearch]="placeHolderSearch()"
             [textBtnSearch]="addEnterprise()"
             >
         </fo-search-for-button>
         <fo-table 
+            [currentPage]="pageIndexTable()"
             [loading]="loadingTable()"
             [totalPages]="totalPagesTable()"
             [headers]="headerTable()"

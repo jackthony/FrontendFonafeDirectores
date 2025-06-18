@@ -97,10 +97,6 @@ export class AuthResetPasswordComponent implements OnInit {
         );
     }
 
-    test() {
-        console.log('thisformm', this.resetPasswordForm)
-    }
-
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
@@ -113,9 +109,6 @@ export class AuthResetPasswordComponent implements OnInit {
         if (this.resetPasswordForm.invalid) {
             return;
         }
-
-        console.log('thisuserssssss', this.user);
-        
 
         // Disable the form
         this.resetPasswordForm.disable();

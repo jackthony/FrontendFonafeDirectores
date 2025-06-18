@@ -23,17 +23,21 @@ export class FoSearchForButtonComponent {
     iconBtnSearch = input<string>('mat_outline:add_circle_outline');
     textBtnSearch = input<string>('Agregar usuario');
     disableDirective = input(false, { transform: booleanAttribute });
+    delaySearch = input<number>(0);
+
+    // Nuevas propiedades para controlar la visibilidad de los botones
+    showBtn1 = input<boolean>(true);  // Por ejemplo, el botón 1
+    showBtn2 = input<boolean>(true);  // El botón 2
+    showBtn3 = input<boolean>(true);  // El botón 3
 
     @Output() eventNewElement: EventEmitter<void> = new EventEmitter<void>();
-    @Output() eventClickSearch: EventEmitter<string> =
-        new EventEmitter<string>();
+    @Output() eventSearch: EventEmitter<string> = new EventEmitter<string>();
 
     addUser(): void {
         this.eventNewElement.emit();
     }
 
-    clickSearch(event: string): void {
-        
-        this.eventClickSearch.emit(event);
+    getDataSearch(event: string): void {
+        this.eventSearch.emit(event);
     }
 }

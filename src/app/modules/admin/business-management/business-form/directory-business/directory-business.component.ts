@@ -21,6 +21,7 @@ import { DirectorFormService } from '@services/director-form.service';
 import { Constant } from '@models/business/constant.interface';
 import { Department } from '@models/business/departament.interface';
 import { PermissionButtonDirective } from 'app/shared/directives/permission-button.directive';
+import { FileComponentStateService } from '@services/file-component-state.service';
 
 
 @Component({
@@ -30,92 +31,101 @@ import { PermissionButtonDirective } from 'app/shared/directives/permission-butt
   templateUrl: './directory-business.component.html',
   styleUrl: './directory-business.component.scss'
 })
-export class DirectoryBusinessComponent implements OnInit {
+export class DirectoryBusinessComponent implements OnInit { // Define la clase del componente que implementa OnInit
 
-	private _dialogConfirmationService = inject(DialogConfirmationService);
+	// Inyección de dependencias necesarias para la funcionalidad del componente
+	private _dialogConfirmationService = inject(DialogConfirmationService); // Servicio para mostrar diálogos de confirmación
+	private _directorService = inject(DirectorService); // Servicio para interactuar con los directores
+	private _directorFormService = inject(DirectorFormService); // Servicio para interactuar con los formularios de los directores
+	private _fileComponentStateService = inject(FileComponentStateService); // Servicio para manejar el estado de los archivos
 
-	private _directorService = inject(DirectorService);
-	private _directorFormService = inject(DirectorFormService);
-	
-	textButtonNew = signal<string>('Agregar director');
-	iconButtonNew = signal<string>('mat_outline:add_circle_outline');
-    business = input.required<Business>();
-	headerTable = signal<TableColumnsDefInterface[]>([]);
-	dataTableDirectory = signal<Director[]>([]);
-	iconsTable = signal<IconOption<Director>[]>([]);
+	// Señales de texto y valores reactivamente configurados
+	textButtonNew = signal<string>('Agregar director'); // Texto del botón para agregar director
+	iconButtonNew = signal<string>('mat_outline:add_circle_outline'); // Icono del botón para agregar director
+    business = input.required<Business>(); // Empresa requerida
+	headerTable = signal<TableColumnsDefInterface[]>([]); // Columnas de la tabla
+	dataTableDirectory = signal<Director[]>([]); // Datos de la tabla de directores
+	iconsTable = signal<IconOption<Director>[]>([]); // Iconos en la tabla de directores
+	newFormDirectory = signal<boolean>(false); // Determina si el formulario de director está activo
+	loadingTable = signal<boolean>(false); // Indica si la tabla está cargando datos
+	pageIndexTable = signal<number>(1); // Página actual de la tabla
+	totalPagesTable = signal<number>(1); // Total de páginas en la tabla
+	director = signal<Director>(null); // Director seleccionado
+    lstTypedocument = signal<Constant[]>([]); // Lista de tipos de documento
+    lstGender = signal<Constant[]>([]); // Lista de géneros
+    lstCargoManager = signal<Constant[]>([]); // Lista de cargos de gerente
+    lstTypeDirector = signal<Constant[]>([]); // Lista de tipos de director
+    lstSpecialty = signal<Constant[]>([]); // Lista de especialidades
+    lstDepartments = signal<Department[]>([]); // Lista de departamentos
 
-	newFormDirectory = signal<boolean>(false);
+	@Output() eventTotalMembers: EventEmitter<number> = new EventEmitter<number>(); // Evento para emitir el total de miembros
 
-	loadingTable = signal<boolean>(false);
-
-    pageIndexTable = signal<number>(1);
-	totalPagesTable = signal<number>(1);
-	
-	director = signal<Director>(null);
-
-    lstTypedocument = signal<Constant[]>([]);
-    lstGender = signal<Constant[]>([]);
-    lstCargoManager = signal<Constant[]>([]);
-    lstTypeDirector = signal<Constant[]>([]);
-    lstSpecialty = signal<Constant[]>([]);
-
-    lstDepartments = signal<Department[]>([]);
-
-	@Output() eventTotalMembers: EventEmitter<number> = new EventEmitter<number>();
-
-
+	/**
+	 * Método que se ejecuta al inicializar el componente
+	 */
 	ngOnInit(): void {
-		this.headerTable.set(COLUMNS_DIRECTORY_BUSINESS);
-		this.searchDirectors();
-		this.iconsTable.set(this.defineIconsTable());
-		this.loadDataForm();
+		this.headerTable.set(COLUMNS_DIRECTORY_BUSINESS); // Establece las columnas de la tabla
+		this.searchDirectors(); // Realiza la búsqueda de los directores
+		this.iconsTable.set(this.defineIconsTable()); // Establece los iconos en la tabla
+		this.loadDataForm(); // Carga los datos necesarios para el formulario
 	}
 
+    /**
+     * Método para buscar los directores
+     */
     searchDirectors(): void {
-		this.loadingTable.set(true);
+		this.loadingTable.set(true); // Establece que la tabla está cargando
 		const request = new RequestOption();
 		request.queryParams = [
-			{ key: 'pageIndex' , value: this.pageIndexTable() },
-			{ key: 'pageSize' , value: PAGINATOR_PAGE_SIZE },
-            { key: 'nIdEmpresa', value: this.business().nIdEmpresa  }
+			{ key: 'pageIndex' , value: this.pageIndexTable() }, // Paginación por índice
+			{ key: 'pageSize' , value: PAGINATOR_PAGE_SIZE }, // Tamaño de página
+            { key: 'nIdEmpresa', value: this.business().nIdEmpresa  } // ID de la empresa
 		];
 		this._directorService.getByPagination(request).pipe(
-			finalize(() => this.loadingTable.set(false))
+			finalize(() => this.loadingTable.set(false)) // Finaliza la carga de la tabla
 		).subscribe({
 			next: ((response: ResponseModel<Director>) => {
-				if(response.isSuccess){
-					const totalPages = Math.ceil(response.pagination.totalRows/PAGINATOR_PAGE_SIZE);
-					this.totalPagesTable.set(totalPages > 0 ? totalPages : 1);
-					this.dataTableDirectory.set(response.lstItem);
-					this.eventTotalMembers.emit(response?.pagination?.totalRows || 0);
-				} else {
-					this.dataTableDirectory.set([]);
-					this.eventTotalMembers.emit(0);
+				if(response.isSuccess){ // Si la respuesta es exitosa
+					const totalPages = Math.ceil(response.pagination.totalRows/PAGINATOR_PAGE_SIZE); // Calcula el total de páginas
+					this.totalPagesTable.set(totalPages > 0 ? totalPages : 1); // Establece el total de páginas
+					this.dataTableDirectory.set(response.lstItem); // Establece los datos de los directores
+					this.eventTotalMembers.emit(response?.pagination?.totalRows || 0); // Emite el total de miembros
+				} else { // Si la respuesta es negativa
+					this.dataTableDirectory.set([]); // Establece la tabla vacía
+					this.eventTotalMembers.emit(0); // Emite cero miembros
 				} 
 			}),
-			error:(() => {
-				this.totalPagesTable.set(1);
-				this.dataTableDirectory.set([]);
-				this.eventTotalMembers.emit(0);
+			error:(() => { // Si ocurre un error
+				this.totalPagesTable.set(1); // Establece una sola página
+				this.dataTableDirectory.set([]); // Establece la tabla vacía
+				this.eventTotalMembers.emit(0); // Emite cero miembros
 			})
 		})
 	}
 
+	/**
+	 * Método para cambiar la página de la tabla
+	 */
 	changePageTable(event: number): void {
-		this.pageIndexTable.set(event);
-		this.searchDirectors();
+		this.pageIndexTable.set(event); // Cambia el índice de la página
+		this.searchDirectors(); // Realiza nuevamente la búsqueda de los directores
 	}
 
+	/**
+	 * Método para cargar los datos del formulario
+	 */
 	loadDataForm(): void {
+		// Carga las listas de opciones para los campos del formulario
 		forkJoin({
-			typeDocument: this._directorFormService.getTypeDocument(),
-			gender: this._directorFormService.getGender(),
-			deparments : this._directorFormService.getDepartments(),
-			cargoManager: this._directorFormService.getCargoManager(),
-			typeDirector: this._directorFormService.getTypeDirector(),
-			specialty: this._directorFormService.getSpecialty()
+			typeDocument: this._directorFormService.getTypeDocument(), // Obtiene los tipos de documento
+			gender: this._directorFormService.getGender(), // Obtiene los géneros
+			deparments : this._directorFormService.getDepartments(), // Obtiene los departamentos
+			cargoManager: this._directorFormService.getCargoManager(), // Obtiene los cargos de gerente
+			typeDirector: this._directorFormService.getTypeDirector(), // Obtiene los tipos de director
+			specialty: this._directorFormService.getSpecialty() // Obtiene las especialidades
 		}).subscribe({
 			next: (response => {
+				// Establece los datos en las señales correspondientes
 				this.lstTypedocument.set(response.typeDocument),
 				this.lstGender.set(response.gender),
 				this.lstDepartments.set(response.deparments),
@@ -126,33 +136,63 @@ export class DirectoryBusinessComponent implements OnInit {
 		})
 	}
 
+	/**
+	 * Método para definir los iconos de la tabla
+	 */
 	defineIconsTable(): IconOption<Director>[]{
-        const iconEdit = new IconOption("create", "mat_outline", "Editar");
+        const iconEdit = new IconOption("create", "mat_outline", "Editar"); // Icono de editar
 
 		iconEdit.actionIcono = (data: Director) => {
-            this.editDirector(data);
+            this.editDirector(data); // Ejecuta el método de edición
         };
 
-        return [iconEdit];
+        return [iconEdit]; // Devuelve los iconos de la tabla
     }
 
+	/**
+	 * Método para editar un director
+	 */
 	editDirector(data: Director): void {
-		this.director.set(data);
-		this.newFormDirectory.set(true);
+		this.director.set(data); // Establece el director seleccionado
+		this.newFormDirectory.set(true); // Activa el formulario para editar
 	}
 
+	/**
+	 * Método para abrir el formulario de registro de un nuevo director
+	 */
 	openRegisterDirectory(): void {
-		this.newFormDirectory.set(true);
+		this.director.set(null); // Establece que no hay director seleccionado
+		this.newFormDirectory.set(true); // Activa el formulario para agregar un nuevo director
 	}
 
+	/**
+	 * Método para cancelar la edición o registro de un director
+	 */
     cancelDirectory(): void {
-        this.newFormDirectory.set(false);
+        this.newFormDirectory.set(false); // Desactiva el formulario
+		this.setFileComponentToEnterprise(); // Establece el estado del componente de archivos
     }
 
+	/**
+	 * Método para refrescar la lista de directores
+	 */
 	refreshDirectory(): void {
-		this.searchDirectors();//RECARGAR PAGINA 1
-		this.newFormDirectory.set(false);
-		this.director.set(null);
+		this.searchDirectors(); // Recarga la página 1 de la lista de directores
+		this.newFormDirectory.set(false); // Desactiva el formulario
+		this.director.set(null); // Elimina el director seleccionado
+		this.setFileComponentToEnterprise(); // Establece el estado del componente de archivos
+	}
+
+	/**
+	 * Método para establecer el estado del componente de archivos
+	 */
+	setFileComponentToEnterprise(): void {
+		const fileState = {
+			title: 'Empresa', // Título del archivo
+			isDisabled: false, // Habilita el componente de archivo
+			root: `Empresa\\${this.business().sRazonSocial}` // Ruta raíz para los archivos
+		}
+		this._fileComponentStateService.setFileComponentState(fileState); // Establece el estado del componente de archivos
 	}
 
 }

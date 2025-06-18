@@ -4,5 +4,6 @@ export enum OptionsProcess {
     candidateMaintenance,
     profileManagement,
     businessManagement,
-    careHistory
+    careHistory,
+    systemMaintenance,
 }

@@ -10,7 +10,7 @@
         class="search-input"
         [placeholder]="placeText()"
         (input)="search($event.target.value)" />
-        <button mat-icon-button (click)="searchValue()">
+        <button mat-icon-button (click)="searchValue()" [ngClass]="{'pointer-events-none' : delaySearch() > 0}">
             <mat-icon class="icon-search">search</mat-icon>
         </button>
 </div>

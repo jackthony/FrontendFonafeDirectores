@@ -18,10 +18,13 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
+import { environment } from 'environments/environment';
+import { NgxCaptchaModule } from 'ngx-captcha';
 
 @Component({
     selector: 'auth-sign-in',
     templateUrl: './sign-in.component.html',
+    styleUrls: ['./sign-in.scss'],
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations,
     standalone: true,
@@ -36,27 +39,30 @@ import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
         MatIconModule,
         MatCheckboxModule,
         MatProgressSpinnerModule,
+        NgxCaptchaModule
     ],
 })
 export class AuthSignInComponent implements OnInit {
-    @ViewChild('signInNgForm') signInNgForm: NgForm;
+    // Inyecta los servicios y módulos necesarios
+    @ViewChild('signInNgForm') signInNgForm: NgForm; // Referencia al formulario de inicio de sesión
 
-    alert: { type: FuseAlertType; message: string } = {
+    alert: { type: FuseAlertType; message: string } = { // Configura el tipo y mensaje de alerta
         type: 'success',
         message: '',
     };
-    signInForm: UntypedFormGroup;
-    showAlert: boolean = false;
+    signInForm: UntypedFormGroup; // Define el formulario reactivo para el inicio de sesión
+    showAlert: boolean = false; // Controla la visibilidad de la alerta
+    keyCaptcha = `${environment.siteKeyCaptcha}`; // Captcha para la verificación de usuario, obtiene la clave desde el entorno
 
     /**
      * Constructor
      */
     constructor(
-        private _activatedRoute: ActivatedRoute,
-        private _authService: AuthService,
-        private _formBuilder: UntypedFormBuilder,
-        private _router: Router,
-        private _ngxToastrService: NgxToastrService
+        private _activatedRoute: ActivatedRoute, // Servicio para obtener parámetros de la ruta activada
+        private _authService: AuthService, // Servicio de autenticación para gestionar el inicio de sesión
+        private _formBuilder: UntypedFormBuilder, // Servicio para crear formularios reactivos
+        private _router: Router, // Servicio para la navegación de rutas
+        private _ngxToastrService: NgxToastrService // Servicio para mostrar notificaciones
     ) {}
 
     // -----------------------------------------------------------------------------------------------------
@@ -67,14 +73,15 @@ export class AuthSignInComponent implements OnInit {
      * On init
      */
     ngOnInit(): void {
-        // Create the form
+        // Crea el formulario de inicio de sesión
         this.signInForm = this._formBuilder.group({
             email: [
-                'rodrigo@fonafe.pe',
-                [Validators.required, Validators.email],
+                'rodrigo@fonafe.pe', // Valor predeterminado del correo
+                [Validators.required, Validators.email], // Validadores para asegurarse de que sea un correo válido
             ],
-            password: ['123456', Validators.required],
-            rememberMe: [''],
+            password: ['123456', Validators.required], // Valor predeterminado de la contraseña
+            recaptcha: ['', Validators.required], // Campo de captcha obligatorio
+            rememberMe: [''], // Campo para recordar la sesión (checkbox)
         });
     }
 
@@ -86,47 +93,41 @@ export class AuthSignInComponent implements OnInit {
      * Sign in
      */
     signIn(): void {
-        // Return if the form is invalid
+        // Si el formulario es inválido, retorna y no realiza la autenticación
         if (this.signInForm.invalid) {
             return;
         }
 
-        // Disable the form
+        // Deshabilita el formulario mientras se realiza la autenticación
         this.signInForm.disable();
 
-        // Hide the alert
+        // Oculta la alerta
         this.showAlert = false;
 
-        // Sign in
+        // Realiza la autenticación
         this._authService.signIn(this.signInForm.value).subscribe(
             (res) => {
-                // Set the redirect url.
-                // The '/signed-in-redirect' is a dummy url to catch the request and redirect the user
-                // to the correct page after a successful sign in. This way, that url can be set via
-                // routing file and we don't have to touch here.
+                // Obtiene la URL de redirección desde los parámetros de la ruta
                 const redirectURL =
                     this._activatedRoute.snapshot.queryParamMap.get(
                         'redirectURL'
                     ) || '/signed-in-redirect';
 
-                // Navigate to the redirect url
+                // Navega a la URL de redirección
                 this._router.navigateByUrl(redirectURL);
             },
             (response) => {
-                // Re-enable the form
+                // Vuelve a habilitar el formulario si la autenticación falla
                 this.signInForm.enable();
-                this._ngxToastrService.showError('Credenciales inválidas.')
+                this._ngxToastrService.showError('Credenciales inválidas.'); // Muestra un mensaje de error
 
-                // Reset the form
-                //this.signInNgForm.resetForm();
-
-                // Set the alert
+                // Establece el mensaje de alerta
                 this.alert = {
                     type: 'error',
-                    message: 'Wrong email or password',
+                    message: 'Wrong email or password', // Mensaje de error para las credenciales incorrectas
                 };
 
-                // Show the alert
+                // Muestra la alerta
                 this.showAlert = true;
             }
         );

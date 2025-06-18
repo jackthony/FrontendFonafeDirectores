@@ -32,8 +32,8 @@ export class FoTableComponent<T> {
 
     onPageChange(page: number): void {
       if (page >= 1 && page <= this.totalPages()) {
-        this.currentPage = page;
-        this.eventChangePage.emit(this.currentPage);
+        //this.currentPage = page;
+        this.eventChangePage.emit(page);
       }
     }
   

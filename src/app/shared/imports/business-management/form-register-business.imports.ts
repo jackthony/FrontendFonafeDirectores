@@ -27,5 +27,5 @@ export const FORM_BUSINESS_IMPORTS = [
     FoButtonDialogComponent,
     TranslateMessageForm,
     NgxMaskDirective,
-    PermissionButtonDirective
+    PermissionButtonDirective,
 ];
