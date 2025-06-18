@@ -32,7 +32,7 @@ export class HttpGenericService<T> {
    * @param request La solicitud con los parámetros de consulta.
    * @returns Un Observable con la respuesta del servidor.
    */
-  get(request: RequestOption): Observable<ResponseModel<T>> {
+  get(request: RequestOption): Observable<ResponseModel<T> | Blob> {
     request.url = `${this._url}/${request.resource ?? ''}`; // Establece la URL de la solicitud, utilizando el recurso si está presente
     request.method = "GET"; // Establece el método HTTP como GET
 

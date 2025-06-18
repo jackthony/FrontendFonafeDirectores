@@ -11,6 +11,38 @@
             [placeTextSearch]="placeHolderSearch()"
             [textBtnSearch]="addEnterprise()"
             >
+            <!-- <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+              <mat-icon>more_vert</mat-icon>
+            </button> -->
+            <fo-button
+                [matMenuTriggerFor]="menu"
+                [text]="'Importar/Exportar'" 
+                [icon]="'file_copy'">
+            </fo-button>
+            <mat-menu #menu="matMenu">
+              <button class="btn-export" mat-menu-item>
+                <mat-icon>upload</mat-icon>
+                <span>Importar excel</span>
+              </button>
+              <button (click)="exportExcel()" class="btn-export" mat-menu-item>
+                <mat-icon>download</mat-icon>
+                <span>Exportar excel</span>
+              </button>
+              <button (click)="exportPdf()"  class="btn-export" mat-menu-item>
+                <mat-icon>download</mat-icon>
+                <span>Exportar PDF</span>
+              </button>
+            </mat-menu>
+            <!-- <fo-button
+                (eventAction)="uploadExcel()"
+                [text]="'Subir Excel'" 
+                [icon]="'upload'">
+            </fo-button>
+            <fo-button
+                (eventAction)="downloadExcel()"
+                [text]="'Descargar Excel'" 
+                [icon]="'download'">
+            </fo-button> -->
         </fo-search-for-button>
         <fo-table 
             [currentPage]="pageIndexTable()"

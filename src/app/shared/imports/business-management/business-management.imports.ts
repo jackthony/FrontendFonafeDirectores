@@ -1,4 +1,8 @@
 import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { FoButtonComponent } from '@components/fo-button/fo-button.component';
 import { FoContCardComponent } from '@components/fo-cont-card/fo-cont-card.component';
 import { FoReturnComponent } from '@components/fo-return/fo-return.component';
 import { FoSearchForButtonComponent } from '@components/fo-search-for-button/fo-search-for-button.component';
@@ -12,4 +16,8 @@ export const BUSINESS_MANAGEMENT_IMPORTS = [
     FoTitleModuleComponent,
     FoTableComponent,
     FoSearchForButtonComponent,
+    FoButtonComponent,
+    MatButtonModule, 
+    MatMenuModule, 
+    MatIconModule
 ];

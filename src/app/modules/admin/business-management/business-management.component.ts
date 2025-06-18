@@ -30,6 +30,7 @@ export class BusinessManagementComponent {
   private _dialogConfirmationService = inject(DialogConfirmationService); // Servicio para diálogos de confirmación
   private _ngxToastrService = inject(NgxToastrService); // Servicio para mostrar notificaciones
   private _spinner = inject(NgxSpinnerService); // Servicio para mostrar un spinner de carga
+
   
   // Definición de variables reactivas y señales
   placeHolderSearch = signal<string>('Busca por múltiples campos'); // Texto para el campo de búsqueda
@@ -193,4 +194,13 @@ export class BusinessManagementComponent {
   returnInit(): void {
     this._router.navigate(['home']); // Redirige al inicio
   }
+
+  exportExcel(): void {
+    this._businessService.exportExcelEnterprise();
+  }
+
+  exportPdf(): void {
+    this._businessService.exportPdfEnterprise();
+  }
+
 }

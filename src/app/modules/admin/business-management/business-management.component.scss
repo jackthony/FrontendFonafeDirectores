@@ -1,0 +1,25 @@
+.btn-export {
+    font-family: "Museo Sans";
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 100%;
+    letter-spacing: 0.6px;
+    mat-icon {
+        color: #000000;
+    }
+    span {
+        
+        color: #000000;
+    }
+}
+
+.btn-export:hover {
+    background-color: #CD202C;
+    mat-icon {
+        color: #ffffff;
+    }
+    span {
+        
+        color: #ffffff;
+    }
+}
