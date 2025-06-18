@@ -6,7 +6,7 @@ import { FoTableComponent } from "@components/fo-table/fo-table.component";
 import { FoTitleModuleComponent } from "@components/fo-title-module/fo-title-module.component";
 import { PermissionButtonDirective } from "app/shared/directives/permission-button.directive";
 
-export const MAINTENANCE_MINISTRY_IMPORTS = [
+export const MAINTENANCE_GENERAL_IMPORTS = [
   CommonModule,
   FoReturnComponent,
   FoTitleModuleComponent,

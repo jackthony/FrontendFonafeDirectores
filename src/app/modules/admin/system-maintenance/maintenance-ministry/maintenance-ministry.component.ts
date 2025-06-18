@@ -4,7 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ResponseModel } from '@models/IResponseModel';
 import { MinistryService } from '@services/ministry.service';
 import { PAGINATOR_PAGE_SIZE } from 'app/core/config/paginator.config';
-import { MAINTENANCE_MINISTRY_IMPORTS } from 'app/shared/imports/system-maintenance/maintenance-ministry.imports';
 import { IconOption } from 'app/shared/interfaces/IGenericIcon';
 import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDefInterface';
@@ -16,11 +15,12 @@ import { DialogMinistryFormComponent } from './dialog/dialog-ministry-form/dialo
 import { Ministry } from '@models/system-maintenance/ministry.interface';
 import { CONFIG_DELETE_DIALOG_MINISTRY, MAINTENANCE_MINISTRY_MANAGEMENT } from 'app/shared/configs/system-maintenance/maintenance-ministry.config';
 import { DialogConfirmationService } from 'app/shared/services/dialog-confirmation.service';
+import { MAINTENANCE_GENERAL_IMPORTS } from 'app/shared/imports/system-maintenance/maintenance-ministry.imports';
 
 @Component({
   selector: 'app-maintenance-ministry',
   standalone: true,
-  imports: [...MAINTENANCE_MINISTRY_IMPORTS],
+  imports: [...MAINTENANCE_GENERAL_IMPORTS],
   templateUrl: './maintenance-ministry.component.html',
   styleUrl: './maintenance-ministry.component.scss'
 })
