@@ -8,6 +8,7 @@ export interface Business {
     sIdDepartamento: number;
     sIdProvincia: number;
     sIdDistrito: number;
+    nIDSector: number;
     sDireccion: string;
     sComentario: string;
     mIngresosUltimoAnio: number;

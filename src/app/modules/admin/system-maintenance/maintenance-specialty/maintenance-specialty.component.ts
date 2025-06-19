@@ -2,11 +2,10 @@ import { Component, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ResponseModel } from '@models/IResponseModel';
-import { Sector } from '@models/system-maintenance/sector.interface';
-import { SectorService } from '@services/sector.service';
+import { Specialty } from '@models/system-maintenance/specialty.interface';
+import { SpecialtyService } from '@services/specialty.service';
 import { PAGINATOR_PAGE_SIZE } from 'app/core/config/paginator.config';
-import { CONFIG_DELETE_DIALOG_MINISTRY } from 'app/shared/configs/system-maintenance/maintenance-ministry.config';
-import { CONFIG_DELETE_DIALOG_SECTOR, MAINTENANCE_SECTOR_HEADER_TABLE } from 'app/shared/configs/system-maintenance/maintenance-sector.config';
+import { CONFIG_DELETE_DIALOG_TYPE_SPECIALTY, MAINTENANCE_SPECIALTY_HEADER_TABLE } from 'app/shared/configs/system-maintenance/maintenance-specialty.config';
 import { IconOption } from 'app/shared/interfaces/IGenericIcon';
 import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDefInterface';
@@ -15,34 +14,34 @@ import { DialogConfirmationService } from 'app/shared/services/dialog-confirmati
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { finalize, firstValueFrom } from 'rxjs';
-import { DialogSectorFormComponent } from './dialog/dialog-sector-form/dialog-sector-form.component';
+import { DialogMaintenanceSpecialtyFormComponent } from './dialog/dialog-maintenance-specialty-form/dialog-maintenance-specialty-form.component';
 import { MAINTENANCE_GENERAL_IMPORTS } from 'app/shared/imports/system-maintenance/maintenance-ministry.imports';
 
 @Component({
-  selector: 'app-maintenance-sector',
+  selector: 'app-maintenance-specialty',
   standalone: true,
   imports: [...MAINTENANCE_GENERAL_IMPORTS],
-  templateUrl: './maintenance-sector.component.html',
-  styleUrl: './maintenance-sector.component.scss'
+  templateUrl: './maintenance-specialty.component.html',
+  styleUrl: './maintenance-specialty.component.scss'
 })
-export default class MaintenanceSectorComponent {
-  	private readonly _router = inject(Router);
+export default class MaintenanceSpecialtyComponent {
+    private readonly _router = inject(Router);
 	private readonly _route = inject(ActivatedRoute);
 	private _dialogConfirmationService = inject(DialogConfirmationService);
 
 	private _matDialog: MatDialog = inject(MatDialog);
 
-	private _sectorService = inject(SectorService);
+	private _specialtyService = inject(SpecialtyService);
 	private _authorizationService = inject(AuthorizationService);
 
 	private _ngxToastrService = inject(NgxToastrService);
 	private _spinner = inject(NgxSpinnerService);
 	
-    titleModule = signal<string>('Mantenedor de sectores');
+    titleModule = signal<string>('Mantenedor de especialidad');
 	headerTable = signal<TableColumnsDefInterface[]>([]);
-	dataTable = signal<Sector[]>([]);
-	iconsTable = signal<IconOption<Sector>[]>([]);
-	nameBtnAdd = signal<string>('Agregar sector');
+	dataTable = signal<Specialty[]>([]);
+	iconsTable = signal<IconOption<Specialty>[]>([]);
+	nameBtnAdd = signal<string>('Agregar especialidad');
 	
 	loadingTable = signal<boolean>(false);
 	pageIndexTable = signal<number>(1);
@@ -53,7 +52,7 @@ export default class MaintenanceSectorComponent {
 	delaySearchTable = signal<number>(400);
 
 	ngOnInit(): void {
-		this.headerTable.set(MAINTENANCE_SECTOR_HEADER_TABLE);
+		this.headerTable.set(MAINTENANCE_SPECIALTY_HEADER_TABLE);
 		this.iconsTable.set(this.defineIconsTable());
 		this.searchTable();
 	}
@@ -71,10 +70,10 @@ export default class MaintenanceSectorComponent {
 		];
 		if(this.paramSearchTable()) 
 			request.queryParams.push({ key: 'name', value: this.paramSearchTable() });
-		this._sectorService.getByPagination(request).pipe(
+		this._specialtyService.getByPagination(request).pipe(
 			finalize(() => this.loadingTable.set(false))
 		).subscribe({
-			next: ((response: ResponseModel<Sector>) => {
+			next: ((response: ResponseModel<Specialty>) => {
 				if(response.isSuccess){
 					const totalPages = Math.ceil(response.pagination.totalRows/PAGINATOR_PAGE_SIZE);
 					this.totalPagesTable.set(totalPages > 0 ? totalPages : 1);
@@ -100,43 +99,43 @@ export default class MaintenanceSectorComponent {
 	}
 
 
-	defineIconsTable(): IconOption<Sector>[]{
+	defineIconsTable(): IconOption<Specialty>[]{
 		const resolvedModule = this._route.snapshot.data['module'];
 		const authorization = this._authorizationService.canPerform(resolvedModule, 'write');
 
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
         const iconDelete = new IconOption("delete", "mat_outline", "Eliminar");
 
-		iconEdit.actionIcono = (data: Sector) => {
+		iconEdit.actionIcono = (data: Specialty) => {
             this.openFormDialog(data);
         };
 
-		iconDelete.actionIcono = (data: Sector) => {
+		iconDelete.actionIcono = (data: Specialty) => {
             this.deleteBussines(data);
         };
 
-		iconEdit.isDisabled = (data: Sector) => !authorization;
-		iconDelete.isDisabled = (data: Sector) => !authorization;
+		iconEdit.isDisabled = (data: Specialty) => !authorization;
+		iconDelete.isDisabled = (data: Specialty) => !authorization;
 
         return [iconEdit, iconDelete];
     }
 
-	async deleteBussines(data: Sector): Promise<void> {
+	async deleteBussines(data: Specialty): Promise<void> {
 
-		const dialogRef = await this._dialogConfirmationService.open(CONFIG_DELETE_DIALOG_SECTOR);
+		const dialogRef = await this._dialogConfirmationService.open(CONFIG_DELETE_DIALOG_TYPE_SPECIALTY);
         const isValid = await firstValueFrom(dialogRef.afterClosed());
 		if(isValid) {
 			this._spinner.show();
 			const request = new RequestOption();
 				request.resource = "Delete",
-				request.pathVariables = [data.nIdSector];
-				this._sectorService
+				request.pathVariables = [data.nIdEspecialidad];
+				this._specialtyService
 					.delete(request)
 					.pipe(finalize(() => this._spinner.hide()))
 					.subscribe({
-						next: (response: ResponseModel<Sector>) => {
+						next: (response: ResponseModel<Specialty>) => {
 							if (response.isSuccess) {
-								const messageToast = 'Sector eliminado exitosamente';
+								const messageToast = 'Especialidad eliminado exitosamente';
 								this._ngxToastrService.showSuccess(messageToast, '¡Éxito!');
 								this.searchTable();
 							}
@@ -145,8 +144,8 @@ export default class MaintenanceSectorComponent {
 		}
 	}
 
-	openFormDialog(element?: Sector | null): void {
-		const respDialogo = this._matDialog.open(DialogSectorFormComponent, {
+	openFormDialog(element?: Specialty | null): void {
+		const respDialogo = this._matDialog.open(DialogMaintenanceSpecialtyFormComponent, {
 			data: { object: element },
 		    disableClose: true,
 			width: "700px",
@@ -156,8 +155,8 @@ export default class MaintenanceSectorComponent {
 		respDialogo.beforeClosed().subscribe(res => {
 		    if(res){
 				this.searchTable();
-				if(element) this._ngxToastrService.showSuccess('Sector actualizado exitosamente', '¡Éxito!');
-			    else this._ngxToastrService.showSuccess('Sector registrado exitosamente', '¡Éxito!');
+				if(element) this._ngxToastrService.showSuccess('Especialidad actualizado exitosamente', '¡Éxito!');
+			    else this._ngxToastrService.showSuccess('Especialidad registrado exitosamente', '¡Éxito!');
 				
 		    }
 		});

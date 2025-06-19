@@ -52,8 +52,13 @@ export const LIST_OF_PROCESSES: ListOfProcesses[] = [
         module: 'mantenimiento-sistemas',
         // Este proceso tiene opciones adicionales que definen subprocesos
         options: [
-            { label: 'Mantenimiento de ministerio', url: 'mantenedores-sistema/ministerio' }, // Opción para acceder al mantenimiento de ministerios
-            { label: 'Manteniendo de sectores', url: 'mantenedores-sistema/sector' } // Opción para acceder al mantenimiento de sectores
+            { label: 'Mantenimiento de roles', url: 'mantenedores-sistema/rol' }, // Opción para acceder al mantenimiento de roles
+            { label: 'Mantenimiento de ministerios', url: 'mantenedores-sistema/ministerio' }, // Opción para acceder al mantenimiento de ministerios
+            { label: 'Mantenimiento de sectores', url: 'mantenedores-sistema/sector' }, // Opción para acceder al mantenimiento de sectores
+            { label: 'Mantenimiento de rubros', url: 'mantenedores-sistema/rubro' }, // Opción para acceder al mantenimiento de rubros
+            { label: 'Mantenimiento de cargos', url: 'mantenedores-sistema/cargo' }, // Opción para acceder al mantenimiento de cargo
+            { label: 'Mantenimiento de tipo de director', url: 'mantenedores-sistema/tipo-director' }, // Opción para acceder al mantenimiento de cargo
+            { label: 'Mantenimiento de especialidad', url: 'mantenedores-sistema/especialidad' }, // Opción para acceder al mantenimiento de cargo
         ]
     }
 ]

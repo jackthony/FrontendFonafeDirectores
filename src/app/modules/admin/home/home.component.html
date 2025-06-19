@@ -1,23 +1,20 @@
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 w-full">
     <!-- Sección izquierda: 60% (orden de la tabla en pantallas pequeñas) -->
-    <div class="lg:col-span-3 order-1 lg:order-1">
-        <div>
-            <app-banner-informative></app-banner-informative>
+    <div class="lg:col-span-2">
+        <app-banner-informative></app-banner-informative>
+        <div class="lg:col-span-1 lg:hidden mt-4">
+            <app-my-processes></app-my-processes>
         </div>
-    </div>
-    <div class="lg:col-span-2 order-3 lg:order-2">
-        <div>
-            <div class="my-8">
-                <fo-sub-title-card [text]="'Mis actividades'"></fo-sub-title-card>
-            </div>
-            <fo-table [headers]="headerTable()" [data]="dataTableActivities()">
-            </fo-table>
+        <div class="my-8">
+            <fo-sub-title-card [text]="'Mis actividades'"></fo-sub-title-card>
         </div>
+        
+        <fo-table [headers]="headerTable()" [data]="dataTableActivities()">
+        </fo-table>
     </div>
     
-
-    <!-- Sección derecha: 40% (orden del componente my-processes en pantallas pequeñas) -->
-    <div class="lg:col-span-1 order-2 lg:order-3">
+    <!-- Sección derecha: 40% en pantallas grandes -->
+    <div class="lg:col-span-1 hidden lg:block ">
         <app-my-processes></app-my-processes>
     </div>
 </div>

@@ -2,7 +2,7 @@
     <div class="header-dialog">
         <div class="header-container gap-3 flex">
             <mat-icon class="icon-size-7" svgIcon="mat_outline:person_outline"></mat-icon>
-            <div class="header-text">Agregar ministerio</div>
+            <div class="header-text">Agregar tipo</div>
         </div>
     </div>
     <div class="body-dialog">
@@ -11,16 +11,16 @@
                 <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                     <mat-label>Nombre</mat-label>
                     <input
-                        formControlName="sNombreMinisterio"
+                        formControlName="sNombreTipoDirector"
                         matInput 
                         (keypress)="onKeyPress($event)"
-                        (input)="onInput($event, 'sNombreMinisterio')"
+                        (input)="onInput($event, 'sNombreTipoDirector')"
                         placeholder="--"
                         type="text"
                         maxlength="255">
-                        @if(form.get('sNombreMinisterio').invalid) {
+                        @if(form.get('sNombreTipoDirector').invalid) {
                             <mat-error class="text-red-500">
-                                {{ form.get("sNombreMinisterio") | translateMessageForm }}
+                                {{ form.get("sNombreTipoDirector") | translateMessageForm }}
                             </mat-error>
                         }
                 </mat-form-field>     

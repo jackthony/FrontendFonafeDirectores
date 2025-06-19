@@ -1,8 +1,8 @@
-@media (max-width: 1350px) {
+@media (max-width: 1400px) {
     .table-responsive {
         display: block;
         width: 99%;
-        overflow-x: auto;
+        overflow: auto;
 
         .mat-table {
             width: 100%;

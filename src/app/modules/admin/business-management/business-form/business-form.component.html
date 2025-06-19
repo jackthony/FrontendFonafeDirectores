@@ -67,24 +67,43 @@
                                                 }
                                             </mat-form-field>
                                             </div>
-                                            <div class="col-span-1">
-                                            <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
-                                                <mat-label>Rubro del negocio</mat-label>
-                                                <mat-select
-                                                    formControlName="nIdRubroNegocio"
-                                                    placeholder="--">
-                                                    @for (item of companySection(); track $index) {
-                                                        <mat-option [value]="item.nConValor">
-                                                            {{ item.sConDescripcion }}
-                                                        </mat-option>
+                                            <!-- <div class="col-span-1">
+                                                <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                                                    <mat-label>Sector del proponente</mat-label>
+                                                    <mat-select
+                                                        formControlName="nIDSector"
+                                                        placeholder="--">
+                                                        @for (item of []; track $index) {
+                                                            <mat-option [value]="item.nConValor">
+                                                                {{ item.sConDescripcion }}
+                                                            </mat-option>
+                                                        }
+                                                    </mat-select>
+                                                    @if(form.get('nIdRubroNegocio').invalid) {
+                                                        <mat-error class="text-red-500">
+                                                            {{ form.get("nIdRubroNegocio") | translateMessageForm: "select" }}
+                                                        </mat-error>
                                                     }
-                                                </mat-select>
-                                                @if(form.get('nIdRubroNegocio').invalid) {
-                                                    <mat-error class="text-red-500">
-                                                        {{ form.get("nIdRubroNegocio") | translateMessageForm: "select" }}
-                                                    </mat-error>
-                                                }
-                                            </mat-form-field>
+                                                </mat-form-field>
+                                            </div> -->
+                                            <div class="col-span-1">
+                                                <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                                                    <mat-label>Rubro del negocio</mat-label>
+                                                    <mat-select
+                                                        formControlName="nIdRubroNegocio"
+                                                        placeholder="--">
+                                                        @for (item of companySection(); track $index) {
+                                                            <mat-option [value]="item.nConValor">
+                                                                {{ item.sConDescripcion }}
+                                                            </mat-option>
+                                                        }
+                                                    </mat-select>
+                                                    @if(form.get('nIdRubroNegocio').invalid) {
+                                                        <mat-error class="text-red-500">
+                                                            {{ form.get("nIdRubroNegocio") | translateMessageForm: "select" }}
+                                                        </mat-error>
+                                                    }
+                                                </mat-form-field>
                                             </div>
                                             <div class="col-span-1">
                                             <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
