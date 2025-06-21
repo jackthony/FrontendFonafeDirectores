@@ -9,7 +9,7 @@ export default [
         component: CandidateMaintenanceComponent,
     },
     {
-        path     : ':id',
+        path     : 'registro',
         component: CandidateFormComponent,
     },
 

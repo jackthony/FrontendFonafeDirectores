@@ -1,7 +1,4 @@
-import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
-import { businessResolver } from 'app/core/resolvers/business.resolver';
-import MaintenanceSectorComponent from './maintenance-sector/maintenance-sector.component';
 
 export default [
     {

@@ -6,7 +6,6 @@ export interface GenericIcon<T> {
     transitionIcon?: GenericIcon<T>;
     executeAction(dato: T): void;
 }
-
 export class IconOption<T> implements GenericIcon<T> {
     id: string;
     name: string;
@@ -17,7 +16,6 @@ export class IconOption<T> implements GenericIcon<T> {
     color?: string;
     actionIcono: (data?: T) => void;
     isHidden: (data?: T) => boolean;
-
     constructor(name: string, type: string, tooltip?: string, transitionIcon?: IconOption<T>, id?: string, color?: string, isHidden?: (data?: T) => boolean, isDisabled?: (data?: T) => boolean) {
         this.name = name;
         this.type = type;
@@ -28,7 +26,6 @@ export class IconOption<T> implements GenericIcon<T> {
         this.isDisabled = isDisabled ?? (() => false);
         this.isHidden = isHidden ?? (() => false);
     }
-
     executeAction(elemento: T): void {
         this.actionIcono(elemento);
     }

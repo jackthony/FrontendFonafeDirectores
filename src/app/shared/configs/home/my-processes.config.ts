@@ -7,9 +7,9 @@ export const LIST_OF_PROCESSES: ListOfProcesses[] = [
         label: 'Ingresar nueva solicitud', // Etiqueta que describe el proceso
         icon: 'mat_outline:add_circle_outline', // Icono asociado al proceso (utiliza Material Icons)
         value: OptionsProcess.newRequest, // Valor que representa el proceso (se refiere a la enumeración OptionsProcess)
-        url: 'solicitudes', // URL asociada a este proceso
-        module: "solicitudes", // Módulo al que pertenece este proceso
-        options: [] // Opciones adicionales asociadas al proceso (vacío en este caso)
+        url: 'solicitudes',
+        module: "solicitudes",
+        options: []
     },
     {
         label: 'Mantenimiento de candidatos',
@@ -40,7 +40,7 @@ export const LIST_OF_PROCESSES: ListOfProcesses[] = [
         label: 'Historial de atenciones',
         icon: 'mat_outline:format_list_numbered_rtl',
         value: OptionsProcess.careHistory,
-        url: '', // URL vacía, lo que indica que este proceso no tiene una URL directa asociada
+        url: '', 
         module: 'historial-atenciones',
         options: []
     },
@@ -48,9 +48,8 @@ export const LIST_OF_PROCESSES: ListOfProcesses[] = [
         label: 'Mantenedores del sistema',
         icon: 'mat_outline:settings',
         value: OptionsProcess.systemMaintenance,
-        url: '', // URL vacía para el proceso principal
+        url: '', 
         module: 'mantenimiento-sistemas',
-        // Este proceso tiene opciones adicionales que definen subprocesos
         options: [
             { label: 'Mantenimiento de roles', url: 'mantenedores-sistema/rol' }, // Opción para acceder al mantenimiento de roles
             { label: 'Mantenimiento de ministerios', url: 'mantenedores-sistema/ministerio' }, // Opción para acceder al mantenimiento de ministerios

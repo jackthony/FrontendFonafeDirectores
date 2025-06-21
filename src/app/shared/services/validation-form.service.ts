@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AbstractControl, ValidationErrors } from '@angular/forms';
-
 @Injectable({
     providedIn: 'root',
 })
 export class ValidationFormService {
     constructor() {}
-
     /**
      * Valida el RUC (Registro Único de Contribuyentes) de un usuario.
      * @param control El control del formulario que contiene el RUC
@@ -14,22 +12,17 @@ export class ValidationFormService {
      */
     validarRuc(control: AbstractControl): ValidationErrors | null {
         const ruc = control.value;
-        if (!ruc) return null; // Si no hay valor, no hay error
-
-        // Verifica si el RUC tiene 11 dígitos y si es numérico
+        if (!ruc) return null;
         if (ruc.length !== 11 || isNaN(Number(ruc)) || /[^0-9]/.test(ruc)) {
-            return { customError: 'Debe tener 11 dígitos numéricos' }; // Error si el RUC no tiene 11 dígitos o contiene caracteres no numéricos
+            return { customError: 'Debe tener 11 dígitos numéricos' };
         }
-
-        const tipoContribuyente = ruc.substring(0, 2); // Obtiene los primeros dos dígitos del RUC para validar el tipo de contribuyente
-        const tiposPermitidos = ['20']; // Solo el tipo 20 es válido
+        const tipoContribuyente = ruc.substring(0, 2);
+        const tiposPermitidos = ['20'];
         if (!tiposPermitidos.includes(tipoContribuyente)) {
-            return { customError: 'Tipo de contribuyente inválido' }; // Error si el tipo de contribuyente no es válido
+            return { customError: 'Tipo de contribuyente inválido' };
         }
-
-        return null; // Si todo es correcto, no hay error
+        return null;
     }
-
     /**
      * Valida un número de documento de identidad (DNI).
      * @param control El control del formulario que contiene el documento
@@ -37,14 +30,13 @@ export class ValidationFormService {
      */
     validationDocument(control: AbstractControl): ValidationErrors | null {
         const value = control.value;
-        if (!value) return null; // Si no hay valor, no hay error
-        const regex = /^\d{8,9}[A-Za-z]?$/; // El documento debe ser de 8 o 9 dígitos y puede tener una letra al final
+        if (!value) return null;
+        const regex = /^\d{8,9}[A-Za-z]?$/;
         if (!regex.test(value)) {
-            return { customError: 'Documento inválido' }; // Error si el documento no cumple con el patrón
+            return { customError: 'Documento inválido' };
         }
-        return null; // Si todo es correcto, no hay error
+        return null;
     }
-
     /**
      * Valida una contraseña detallada.
      * @param control El control del formulario que contiene la contraseña
@@ -52,37 +44,27 @@ export class ValidationFormService {
      */
     passwordDetailedValidator(control: AbstractControl): ValidationErrors | null {
         const value = control.value;
-        if (!value) return null; // Si no hay valor, no hay error
-
-        // Verifica que la contraseña contenga al menos una letra mayúscula
+        if (!value) return null;
         if (!/[A-Z]/.test(value)) {
             return {
                 customError: 'Debe contener al menos una letra mayúscula.',
             };
         }
-
-        // Verifica que la contraseña contenga al menos un número
         if (!/\d/.test(value)) {
             return { customError: 'Debe contener al menos un número.' };
         }
-
-        // Verifica que la contraseña contenga al menos un carácter especial
         if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
             return {
                 customError: 'Debe contener al menos un carácter especial.',
             };
         }
-
-        // Verifica que la contraseña tenga al menos 7 caracteres
         if (value.length < 7) {
             return {
                 customError: 'La contraseña debe tener mínimo 7 caracteres.',
             };
         }
-
-        return null; // Si todo es correcto, no hay error
+        return null;
     }
-
     /**
      * Valida un número de teléfono.
      * @param control El control del formulario que contiene el número de teléfono
@@ -90,22 +72,16 @@ export class ValidationFormService {
      */
     validationPhone(control: AbstractControl): ValidationErrors | null {
         const value = control.value;
-        if (!value) return null; // Si no hay valor, no hay error
-        const cleanedValue = value.replace(/\s/g, ''); // Elimina los espacios en blanco
-
-        // Verifica que el número de teléfono tenga 7 o 9 dígitos
+        if (!value) return null;
+        const cleanedValue = value.replace(/\s/g, ''); 
         if (cleanedValue.length !== 7 && cleanedValue.length !== 9) {
-            return { customError: 'Teléfono inválido' }; // Error si el teléfono no tiene 7 o 9 dígitos
+            return { customError: 'Teléfono inválido' };
         }
-
-        // Verifica que el número solo contenga dígitos
         if (!/^\d+$/.test(cleanedValue)) {
-            return { customError: 'Teléfono inválido' }; // Error si el teléfono contiene caracteres no numéricos
+            return { customError: 'Teléfono inválido' };
         }
-
-        return null; // Si todo es correcto, no hay error
+        return null;
     }
-
     /**
      * Valida una dirección de correo electrónico.
      * @param control El control del formulario que contiene el correo
@@ -113,19 +89,15 @@ export class ValidationFormService {
      */
     validationMail(control: AbstractControl): ValidationErrors | null {
         const value = control.value;
-
         if (!value) {
-            return null; // Si no hay valor, no hay error
+            return null;
         }
-
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; // Expresión regular para validar correos electrónicos
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         if (!emailRegex.test(control.value)) {
-            return { customError: 'Correo inválido' }; // Error si el correo no cumple con el patrón
+            return { customError: 'Correo inválido' };
         }
-
-        return null; // Si todo es correcto, no hay error
+        return null;
     }
-
     /**
      * Valida una fecha en formato dd/MM/yyyy.
      * @param control El control del formulario que contiene la fecha
@@ -133,25 +105,20 @@ export class ValidationFormService {
      */
     validationDate(control: AbstractControl): ValidationErrors | null {
         const value = control.value;
-        if (!value) return null; // Si no hay valor, no hay error
-
-        const datePattern = /^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[0-2])\/\d{4}$/; // Expresión regular para validar el formato de fecha dd/MM/yyyy
+        if (!value) return null;
+        const datePattern = /^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[0-2])\/\d{4}$/;
         if (!datePattern.test(value)) {
-            return { customError: 'El formato debe ser dd/MM/yyyy.' }; // Error si la fecha no cumple con el formato
+            return { customError: 'El formato debe ser dd/MM/yyyy.' };
         }
-
         const [day, month, year] = value.split('/').map(Number);
         const date = new Date(year, month - 1, day);
-
-        // Verifica que la fecha sea válida (por ejemplo, 31/02/2020 no es válida)
         if (
             date.getFullYear() !== year ||
             date.getMonth() !== month - 1 ||
             date.getDate() !== day
         ) {
-            return { customError: 'La fecha ingresada no es válida.' }; // Error si la fecha no es válida
+            return { customError: 'La fecha ingresada no es válida.' };
         }
-
-        return null; // Si todo es correcto, no hay error
+        return null;
     }
 }
