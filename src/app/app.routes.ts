@@ -97,7 +97,7 @@ export const appRoutes: Route[] = [
             { path: 'home', loadComponent: () => import('app/modules/admin/home/home.component') },
             { 
                 path: 'gestion-perfiles', 
-                loadComponent: () => import('app/modules/admin/profile-management/profile-management.component'),
+                loadComponent: () => import('app/modules/admin/profile-management/components/profile-management/profile-management.component'),
                 canActivate: [permissionGuard],
                 data: { module: 'gestion-perfiles', action: 'read' }
             },

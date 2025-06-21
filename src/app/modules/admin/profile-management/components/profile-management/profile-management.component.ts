@@ -1,13 +1,10 @@
-import { Component, inject, signal, ViewChild } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogConfirmation } from '@components/fo-dialog-confirmation/models/dialog-confirmation.interface';
-import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { COLUMNS_PROFILE_MANAGEMENT, CONFIG_DELETE_DIALOG_PROFILE, CONST_POSITION_USER, CONST_PROFILE_USER, CONST_STATUS_USER } from 'app/shared/configs/profile-management/profile-management.config';
+import { COLUMNS_PROFILE_MANAGEMENT, CONST_POSITION_USER, CONST_STATUS_USER } from 'app/shared/configs/profile-management/profile-management.config';
 import { PROFILE_MANAGEMENT_IMPORTS } from 'app/shared/imports/components/profile-management.imports';
 import { IconOption } from 'app/shared/interfaces/IGenericIcon';
 import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDefInterface';
-import { DialogConfirmationService } from 'app/shared/services/dialog-confirmation.service';
-import { FormProfileComponent } from './dialog/form-profile/form-profile.component';
+import { FormProfileComponent } from '../form-profile/form-profile.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SegUser } from '@models/seg-users/seg-user.interface';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
@@ -19,11 +16,10 @@ import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { PAGINATOR_PAGE_SIZE } from 'app/core/config/paginator.config';
 import { SegUserService } from '@services/seg-user.service';
 import { ResponseModel } from '@models/IResponseModel';
-import { ChangePasswordAdmComponent } from './dialog/change-password-adm/change-password-adm.component';
+import { ChangePasswordAdmComponent } from '../change-password-adm/change-password-adm.component';
 import { AuthorizationService } from 'app/shared/services/authorization.service';
 import { RoleService } from '@services/role.service';
 import { Role } from '@models/business/role.interface';
-import { FoTableComponent } from '@components/fo-table/fo-table.component';
 
 @Component({
   selector: 'app-profile-management',
