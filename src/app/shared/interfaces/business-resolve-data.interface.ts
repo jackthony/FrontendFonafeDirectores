@@ -6,7 +6,6 @@ import { District } from '@models/business/district.interface';
 import { Province } from '@models/business/province.interface';
 import { ResponseModel } from '@models/IResponseModel';
 import { Ministry } from '@models/system-maintenance/ministry.interface';
-
 export interface BusinessResolveData {
   item: Business | null;
   ministries: ResponseModel<Ministry>;

@@ -9,7 +9,6 @@ import { FoPillComponent } from "@components/fo-pill/fo-pill.component";
 import { BooleanPipe } from "app/core/pipes/boolean.pipe";
 import { EmptyPipe } from "app/core/pipes/empty.pipe";
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-
 export const FO_TABLE_IMPORTS = [
     CommonModule,
     MatButtonModule,
@@ -17,8 +16,6 @@ export const FO_TABLE_IMPORTS = [
     MatTableModule,
     EmptyPipe,
     BooleanPipe,
-    //BuPaginatorTableComponent,
-    //NgxSkeletonLoaderModule,
     MatTooltipModule,
     MatProgressBarModule,
     NgxSkeletonLoaderModule,

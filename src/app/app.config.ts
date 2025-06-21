@@ -18,10 +18,8 @@ import { mockApiServices } from 'app/mock-api';
 import { firstValueFrom } from 'rxjs';
 import { TranslocoHttpLoader } from './core/transloco/transloco.http-loader';
 import { provideToastr } from 'ngx-toastr';
-
 export const appConfig: ApplicationConfig = {
     providers: [
-        /* provideExperimentalZonelessChangeDetection(), */
         provideAnimations(),
         provideHttpClient(),
         provideToastr(),
@@ -30,8 +28,6 @@ export const appConfig: ApplicationConfig = {
             withPreloading(PreloadAllModules),
             withInMemoryScrolling({ scrollPositionRestoration: 'enabled' })
         ),
-
-        // Material Date Adapter
         {
             provide: DateAdapter,
             useClass: LuxonDateAdapter,
@@ -39,7 +35,6 @@ export const appConfig: ApplicationConfig = {
         { provide: MAT_DATE_LOCALE, useValue: "es-ES" },
         {
             provide: MAT_DATE_FORMATS,
-            //useValue: MAT_LUXON_DATE_FORMATS
             useValue: {
                 parse: {
                     dateInput: 'dd/LL/yyyy',
@@ -52,8 +47,6 @@ export const appConfig: ApplicationConfig = {
                   },
             },
         },
-
-        // Transloco Config
         provideTransloco({
             config: {
                 availableLangs: [
@@ -74,19 +67,15 @@ export const appConfig: ApplicationConfig = {
             loader: TranslocoHttpLoader,
         }),
         {
-            // Preload the default language before the app starts to prevent empty/jumping content
             provide: APP_INITIALIZER,
             useFactory: () => {
                 const translocoService = inject(TranslocoService);
                 const defaultLang = translocoService.getDefaultLang();
                 translocoService.setActiveLang(defaultLang);
-
                 return () => firstValueFrom(translocoService.load(defaultLang));
             },
             multi: true,
         },
-
-        // Fuse
         provideAuth(),
         provideIcons(),
         provideFuse({

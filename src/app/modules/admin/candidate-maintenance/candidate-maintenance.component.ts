@@ -83,11 +83,16 @@ export class CandidateMaintenanceComponent {
    * Método para realizar la búsqueda de usuarios
    */
   searchuser(): void {
-    if (this.form?.valid) {
+
+  this._router.navigate(['/mantenimiento-candidatos/registro']); // Redirige a la página de registro de candidatos
+
+
+    
+/*     if (this.form?.valid) {
       this.eventSearch.emit(this.form.value.sNumeroDocumento); // Emite el evento con el número de documento
     } else {
       this.form.markAllAsTouched(); // Marca todos los campos como tocados si el formulario es inválido
-    }
+    } */
   }
 
   /**

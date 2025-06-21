@@ -91,10 +91,10 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
         }
 
         const data = resolved as BusinessResolveData; // Asigna los datos resueltos a la variable `data`
-        this.business.set(data.item); // Establece los datos de la empresa
-        this.ministries.set(data.ministries.lstItem); // Establece la lista de ministerios
-        this.companySection.set(data.constants.lstItem); // Establece las constantes de la empresa
-        this.departments.set(data.departments.lstItem); // Establece la lista de departamentos
+        this.business.set(data?.item); // Establece los datos de la empresa
+        this.ministries.set(data?.ministries.lstItem); // Establece la lista de ministerios
+        this.companySection.set(data?.constants.lstItem); // Establece las constantes de la empresa
+        this.departments.set(data?.departments.lstItem); // Establece la lista de departamentos
         this.provinces.set(data?.provinces?.lstItem ?? []); // Establece la lista de provincias, si existe
         this.districts.set(data?.districts?.lstItem ?? []); // Establece la lista de distritos, si existe
 

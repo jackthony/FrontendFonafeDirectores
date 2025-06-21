@@ -6,7 +6,6 @@ export interface ListOfProcesses {
     module: string;
     options: ListOptionsProcesses[]
 }
-
 export interface ListOptionsProcesses {
     label: string;
     url: string;

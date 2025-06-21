@@ -3,22 +3,18 @@
 /*  @ Styles from this file will override 'vendors.scss' and Fuse's base styles.
 /* ----------------------------------------------------------------------------------------------------- */
 @import 'ngx-toastr/toastr';
-
 @font-face {
     font-family: "Museo Sans";
     src: url("../../public/fonts/museo-sans/MuseoSans.otf");
 }
-
 @font-face {
     font-family: "Museo Sans Bold";
     src: url("../../public/fonts/museo-sans/MuseoSansBold.otf");
 }
-
 @font-face {
     font-family: "Mulish";
     src: url("../../public/fonts/mulish/Mulish.ttf");
 }
-
 @font-face {
     font-family: "Inter";
     src: url("../../public/fonts/inter/Inter-regular.ttf");

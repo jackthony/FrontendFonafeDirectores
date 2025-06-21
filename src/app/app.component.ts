@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-
-import { NgxSpinnerModule, NgxSpinnerService } from "ngx-spinner";
-
+import { NgxSpinnerModule } from "ngx-spinner";
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -11,7 +9,4 @@ import { NgxSpinnerModule, NgxSpinnerService } from "ngx-spinner";
     imports: [RouterOutlet, NgxSpinnerModule],
 })
 export class AppComponent {
-    /**
-     * Constructor
-     */
 }
