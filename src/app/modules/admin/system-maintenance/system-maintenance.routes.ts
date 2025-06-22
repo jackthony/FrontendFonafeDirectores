@@ -7,31 +7,31 @@ export default [
             { path: '', redirectTo: '/error-404', pathMatch: 'full' },
             {
                 path: 'rol',
-                loadComponent: () => import('./maintenance-role/maintenance-role.component'),
+                loadComponent: () => import('./components/maintenance-role/maintenance-role.component'),
             },
             {
                 path: 'ministerio',
-                loadComponent: () => import('./maintenance-ministry/maintenance-ministry.component'),
+                loadComponent: () => import('./components/maintenance-ministry/maintenance-ministry.component'),
             },
             {
                 path: 'sector',
-                loadComponent: () => import('./maintenance-sector/maintenance-sector.component'),
+                loadComponent: () => import('./components/maintenance-sector/maintenance-sector.component'),
             },
             {
                 path: 'rubro',
-                loadComponent: () => import('./maintenance-industry/maintenance-industry.component'),
+                loadComponent: () => import('./components/maintenance-industry/maintenance-industry.component'),
             },
             {
                 path: 'cargo',
-                loadComponent: () => import('./maintenance-position/maintenance-position.component'),
+                loadComponent: () => import('./components/maintenance-position/maintenance-position.component'),
             },
             {
                 path: 'tipo-director',
-                loadComponent: () => import('./maintenance-type-director/maintenance-type-director.component'),
+                loadComponent: () => import('./components/maintenance-type-director/maintenance-type-director.component'),
             },
             {
                 path: 'especialidad',
-                loadComponent: () => import('./maintenance-specialty/maintenance-specialty.component'),
+                loadComponent: () => import('./components/maintenance-specialty/maintenance-specialty.component'),
             }
         ]
     },

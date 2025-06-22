@@ -16,15 +16,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FoButtonDialogComponent } from '@components/fo-button-dialog/fo-button-dialog.component';
 import { ResponseModel } from '@models/IResponseModel';
-import { SegUser } from '@models/seg-users/seg-user.interface';
 import { User } from '@models/user.interface';
-import { SegUserService } from '@services/seg-user.service';
 import { ButtonEnum } from 'app/core/enums/button.enum';
 import { TranslateMessageForm } from 'app/core/pipes/error-message-form.pipe';
 import { UserService } from 'app/core/user/user.service';
 import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { FormInputModule } from 'app/shared/modules/form-input.module';
 import { finalize, Subject, takeUntil } from 'rxjs';
+import { SegUserService } from '../../domain/services/seg-user.service';
+import { SegUserEntity } from '../../domain/entities/seg-user.entity';
 
 @Component({
     selector: 'app-change-password-adm',
@@ -49,7 +49,7 @@ export class ChangePasswordAdmComponent implements OnInit, OnDestroy {
     private _fb = inject(FormBuilder);
 
     // Inyección de los datos del diálogo que se pasan desde el componente que invoca este diálogo
-    public data: { object: SegUser } = inject(MAT_DIALOG_DATA);
+    public data: { object: SegUserEntity } = inject(MAT_DIALOG_DATA);
 
     // Referencia al diálogo para cerrar el diálogo después de una acción
     private readonly dialogRef = inject(MatDialogRef<ChangePasswordAdmComponent>);
@@ -83,7 +83,7 @@ export class ChangePasswordAdmComponent implements OnInit, OnDestroy {
         this.form = this._fb.group({
             user: [this.data.object.nIdUsuario, Validators.required], // Campo de usuario, requerido
             password: ['', [Validators.required, Validators.maxLength(32)]], // Campo de contraseña, requerido y con un límite de 32 caracteres
-            sUsuarioModificacion: [this.user.nombreVisual, Validators.required], // Campo de usuario que realiza la modificación
+            nUsuarioModificacion: [this.user?.usuario, Validators.required], // Campo de usuario que realiza la modificación
         });
     }
 
@@ -94,18 +94,11 @@ export class ChangePasswordAdmComponent implements OnInit, OnDestroy {
             this.form.markAllAsTouched();
             return;
         }
-
         // Marca que el servicio está en proceso de carga
         this.loadingService.set(true);
-
-        // Crea una nueva solicitud con los datos del formulario
-        const request = new RequestOption();
-        request.resource = 'ChangePassAdmin'; // Define el recurso que se utilizará
-        request.request = this.form.value; // Asigna los valores del formulario a la solicitud
-
         // Llama al servicio para cambiar la contraseña y maneja la respuesta
         this._segUserService
-            .create(request) // Llama al servicio para crear la solicitud
+            .updatePassword(this.form.value) // Llama al servicio para crear la solicitud
             .pipe(finalize(() => this.loadingService.set(false))) // Finaliza la operación y desactiva el estado de carga
             .subscribe({
                 next: (response: ResponseModel<boolean>) => {

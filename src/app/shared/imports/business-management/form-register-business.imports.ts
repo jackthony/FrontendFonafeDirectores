@@ -8,7 +8,7 @@ import { FoReturnComponent } from "@components/fo-return/fo-return.component";
 import { FoTitleAreaComponent } from "@components/fo-title-area/fo-title-area.component";
 import { FoTitleModuleComponent } from "@components/fo-title-module/fo-title-module.component";
 import { TranslateMessageForm } from "app/core/pipes/error-message-form.pipe";
-import { DirectoryBusinessComponent } from "app/modules/admin/business-management/business-form/directory-business/directory-business.component";
+import { DirectoryBusinessComponent } from "app/modules/admin/business-management/components/directory-business/directory-business.component";
 import { PermissionButtonDirective } from "app/shared/directives/permission-button.directive";
 import { FormInputModule } from "app/shared/modules/form-input.module";
 import { NgxMaskDirective } from "ngx-mask";

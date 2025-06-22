@@ -8,11 +8,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FoButtonDialogComponent } from '@components/fo-button-dialog/fo-button-dialog.component';
-import { Constant } from '@models/business/constant.interface';
-import { Role } from '@models/business/role.interface';
-import { ResponseModel } from '@models/IResponseModel';
-import { SegUser } from '@models/seg-users/seg-user.interface';
-import { SegUserService } from '@services/seg-user.service';
 import { ButtonEnum } from 'app/core/enums/button.enum';
 import { TranslateMessageForm } from 'app/core/pipes/error-message-form.pipe';
 import { UserService } from 'app/core/user/user.service';
@@ -20,6 +15,11 @@ import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { FormInputModule } from 'app/shared/modules/form-input.module';
 import { ValidationFormService } from 'app/shared/services/validation-form.service';
 import { finalize } from 'rxjs';
+import { SegUserService } from '../../domain/services/seg-user.service';
+import { SegUserEntity } from '../../domain/entities/seg-user.entity';
+import { ConstantEntity } from 'app/modules/admin/shared/domain/entities/constant.entity';
+import { RoleEntity } from 'app/modules/admin/shared/domain/entities/role.entity';
+import { ResponseEntity } from 'app/modules/admin/shared/domain/entities/response.entity';
 
 @Component({
     selector: 'app-form-profile',
@@ -47,7 +47,7 @@ export class FormProfileComponent implements OnInit {
 	private _fb = inject(FormBuilder);
 
 	// Inyección de los datos del diálogo que se pasan desde el componente que invoca este diálogo
-	public data: { object: SegUser, lstStatus: Constant[], lstPosition: Constant[], lstProfile: Role[] } = inject(MAT_DIALOG_DATA);
+	public data: { object: SegUserEntity, lstStatus: ConstantEntity[], lstPosition: ConstantEntity[], lstProfile: RoleEntity[] } = inject(MAT_DIALOG_DATA);
 
 	// Referencia al diálogo para cerrar el diálogo después de una acción
 	private readonly dialogRef = inject(MatDialogRef<FormProfileComponent>);
@@ -78,7 +78,7 @@ export class FormProfileComponent implements OnInit {
 	}
 
 	// Método para inicializar el formulario con valores de datos o vacíos
-	initForm(object: SegUser): void {
+	initForm(object: SegUserEntity): void {
         this.form = this._fb.group({
             nIdUsuario: [{ disabled: !object, value: object?.nIdUsuario }, Validators.required],
             sApellidoPaterno: [ { disabled: object, value: object?  object.sApellidoPaterno : '' }, [Validators.required, Validators.maxLength(50)] ],
@@ -89,8 +89,8 @@ export class FormProfileComponent implements OnInit {
             nEstado: [ object? object.nEstado : 0, [Validators.required, Validators.min(1)] ],
             sCorreoElectronico:  [ { disabled: object, value: object ? object.sCorreoElectronico : '' }, [Validators.required, Validators.maxLength(150), this._validationFormService.validationMail] ],
             sContrasena:  [ { disabled: object, value: object ? '******' : '' } , [Validators.required, Validators.maxLength(32)] ],
-            nUsuarioRegistro: [ { disabled: object, value: this._userService.userLogin().usuario }, Validators.required ],
-            nUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin().usuario },Validators.required ],
+            nUsuarioRegistro: [ { disabled: object, value: this._userService.userLogin()?.usuario }, Validators.required ],
+            nUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin()?.usuario },Validators.required ],
         });
     }
 
@@ -101,12 +101,12 @@ export class FormProfileComponent implements OnInit {
             return;
         }
         this.loadingService.set(true); // Indica que se está procesando la acción
-        if (this.isEdit()) this.updateBusiness(); // Si estamos editando, actualizamos los datos
-        else this.registerBusiness(); // Si estamos creando, registramos los nuevos datos
+        if (this.isEdit()) this.updateProfile(); // Si estamos editando, actualizamos los datos
+        else this.registerProfile(); // Si estamos creando, registramos los nuevos datos
     }
 
 	// Método para registrar un nuevo usuario
-    registerBusiness(): void {
+    registerProfile(): void {
         // Convierte los nombres de los campos a mayúsculas antes de enviar
         const fields = ['sNombres', 'sApellidoPaterno', 'sApellidoMaterno'];
         fields.forEach(field => {
@@ -116,27 +116,23 @@ export class FormProfileComponent implements OnInit {
             }
         });
         // Crea una solicitud con los valores del formulario
-        const request = new RequestOption();
-        request.request = this.form.value;
         this._segUserService
-            .create(request) // Llama al servicio para crear el nuevo usuario
+            .create(this.form.value) // Llama al servicio para crear el nuevo usuario
             .pipe(finalize(() => this.loadingService.set(false))) // Finaliza la operación de carga
             .subscribe({
-                next: (response: ResponseModel<number>) => {
+                next: (response: ResponseEntity<number>) => {
                     if (response.isSuccess) this.dialogRef.close(true); // Si la operación es exitosa, cierra el diálogo
                 },
             });
     }
 
 	// Método para actualizar la información de un usuario existente
-    updateBusiness(): void {
-        const request = new RequestOption();
-        request.request = this.form.value;
+    updateProfile(): void {
         this._segUserService
-            .update(request) // Llama al servicio para actualizar el usuario
+            .update(this.form.value) // Llama al servicio para actualizar el usuario
             .pipe(finalize(() => this.loadingService.set(false))) // Finaliza la operación de carga
             .subscribe({
-                next: (response: ResponseModel<boolean>) => {
+                next: (response: ResponseEntity<boolean>) => {
                     if (response.isSuccess) this.dialogRef.close(true); // Si la operación es exitosa, cierra el diálogo
                 },
             });

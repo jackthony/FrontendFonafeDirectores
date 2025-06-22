@@ -60,8 +60,8 @@ export const appRoutes: Route[] = [
     },
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [SessionGuard],
+        canActivate: [/* AuthGuard */],
+        canActivateChild: [/* SessionGuard */],
         component: LayoutComponent,
         data: {
             layout: 'fonafe'
@@ -75,7 +75,7 @@ export const appRoutes: Route[] = [
             { 
                 path: 'gestion-perfiles', 
                 loadComponent: () => import('app/modules/admin/profile-management/components/profile-management/profile-management.component'),
-                canActivate: [permissionGuard],
+                canActivate: [/* permissionGuard */],
                 data: { module: 'gestion-perfiles', action: 'read' }
             },
             { 
