@@ -3,14 +3,13 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { FoButtonDialogComponent } from '@components/fo-button-dialog/fo-button-dialog.component';
 import { ResponseModel } from '@models/IResponseModel';
 import { ButtonEnum } from 'app/core/enums/button.enum';
 import { TranslateMessageForm } from 'app/core/pipes/error-message-form.pipe';
 import { UserService } from 'app/core/user/user.service';
 import { MinistryEntity } from 'app/modules/admin/business-management/domain/entities/ministry.entity';
+import { FoButtonDialogComponent } from 'app/modules/admin/shared/components/fo-button-dialog/fo-button-dialog.component';
 import { MinistryService } from 'app/modules/admin/shared/domain/services/ministry.service';
-import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { FormInputModule } from 'app/shared/modules/form-input.module';
 import { finalize } from 'rxjs';
 
@@ -62,8 +61,8 @@ export class DialogMinistryFormComponent {
             nIdMinisterio: [{ disabled: !object, value: object?.nIdMinisterio }, Validators.required], // Campo ID del ministerio, requerido
             sNombreMinisterio: [ object?  object.sNombreMinisterio : '', [Validators.required, Validators.maxLength(255)] ], // Campo nombre del ministerio, requerido
             bActivo: [ object? object.bActivo : true, Validators.required ], // Campo para saber si el ministerio está activo, requerido
-            nUsuarioRegistro: [ { disabled: object, value: this._userService.userLogin().usuario }, Validators.required ], // Usuario que registra el ministerio
-            nUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin().usuario },Validators.required ], // Usuario que modifica el ministerio
+            nUsuarioRegistro: [ { disabled: object, value: this._userService.userLogin().usuarioId }, Validators.required ], // Usuario que registra el ministerio
+            nUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin().usuarioId },Validators.required ], // Usuario que modifica el ministerio
         });
     }
 
@@ -104,21 +103,21 @@ export class DialogMinistryFormComponent {
 
 	// Método que restringe la entrada de caracteres no permitidos en el formulario (solo letras y espacios)
 	onKeyPress(event: KeyboardEvent) {
-        const allowedRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]$/; // Expresión regular para permitir solo letras y espacios
+        const allowedRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s-]$/; // Ahora permite guiones
         if (!allowedRegex.test(event.key)) {
           event.preventDefault(); // Previene la entrada si el carácter no es permitido
         }
-    }
-
-	// Método que limpia los caracteres no permitidos en el campo de texto del formulario
+      }
+      
+      // Método que limpia los caracteres no permitidos en el campo de texto del formulario
     onInput(event: Event, nameForm: string) {
         const input = event.target as HTMLInputElement;
-        const validPattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/; // Expresión regular para permitir solo letras y espacios
-    
+        const validPattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s-]*$/; // Ahora permite guiones
+      
         if (!validPattern.test(input.value)) {
-          const cleaned = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, ''); // Elimina los caracteres no permitidos
+          const cleaned = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s-]/g, ''); // Elimina los caracteres no permitidos
           input.value = cleaned;
-          this.form.get(nameForm).setValue(cleaned, { emitEvent: false }); // Actualiza el valor del formulario sin emitir el evento
+          this.form.get(nameForm).setValue(cleaned, { emitEvent: false });
         }
     }
 }

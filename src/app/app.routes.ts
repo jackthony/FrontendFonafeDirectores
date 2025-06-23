@@ -46,7 +46,7 @@ export const appRoutes: Route[] = [
         children: [
         ]
     },
-    {
+    /* {
         path: 'example',
         canActivate: [AuthGuard],
         canActivateChild: [AuthGuard],
@@ -57,10 +57,10 @@ export const appRoutes: Route[] = [
         children: [
             { path: 'home', loadComponent: () => import('app/modules/admin/home/home.component') },
         ]
-    },
+    }, */
     {
         path: '',
-        canActivate: [/* AuthGuard */],
+        canActivate: [AuthGuard],
         canActivateChild: [/* SessionGuard */],
         component: LayoutComponent,
         data: {
@@ -71,11 +71,11 @@ export const appRoutes: Route[] = [
         */
         children: [
             { path: 'reset-password', loadChildren: () => import('app/modules/auth/reset-password/reset-password.routes') },
-            { path: 'home', loadComponent: () => import('app/modules/admin/home/home.component') },
+            { path: 'home', loadComponent: () => import('app/modules/admin/home/components/home/home.component') },
             { 
                 path: 'gestion-perfiles', 
                 loadComponent: () => import('app/modules/admin/profile-management/components/profile-management/profile-management.component'),
-                canActivate: [/* permissionGuard */],
+                canActivate: [permissionGuard],
                 data: { module: 'gestion-perfiles', action: 'read' }
             },
             { 
@@ -99,10 +99,10 @@ export const appRoutes: Route[] = [
             { 
                 path: 'mantenedores-sistema', 
                 loadChildren: () => import('app/modules/admin/system-maintenance/system-maintenance.routes'),
-                canActivate: [permissionGuard],
+                canActivate: [/* permissionGuard */],
                 data: { module: 'mantenimiento-sistemas', action: 'read' }
             },
-            { path: 'error-404', pathMatch: 'full', loadChildren: () => import('app/modules/admin/error/error-404/error-404.routes')},
+            { path: 'error-404', pathMatch: 'full', loadChildren: () => import('app/modules/admin/error/components/error-404/error-404.routes')},
             { path: '**', redirectTo: 'error-404'}
         ]
     }

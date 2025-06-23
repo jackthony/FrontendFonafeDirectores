@@ -33,7 +33,8 @@ export class AuthorizationService {
      */
     canPerform(module: string, action: string): boolean {
         const perms = this.userPermissions.value;
-        const permission = perms.find((p) => p.module === module);
-        return permission ? permission.actions.includes(action) : false;
+        const permission = perms.find((p) => p.nombreModulo === module);
+        //return permission ? permission.actions.includes(action) : false;
+        return permission ? permission.permisos.some(a => a.nombrePermiso === action) : false;
     }
 }

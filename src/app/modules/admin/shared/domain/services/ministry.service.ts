@@ -19,8 +19,8 @@ export class MinistryService {
         return this._ministryInterface.getAll();
     }
 
-    getByPagination(param: string, pageIndex: number, pageSize: number): Observable<ResponseEntity<MinistryEntity>> {
-        return this._ministryInterface.getByPagination(param, pageIndex, pageSize);
+    getByPagination(param: string, pageIndex: number, pageSize: number, filterState: boolean | null): Observable<ResponseEntity<MinistryEntity>> {
+        return this._ministryInterface.getByPagination(param, pageIndex, pageSize, filterState);
     }
 
     create(object: MinistryEntity): Observable<ResponseEntity<number>> {

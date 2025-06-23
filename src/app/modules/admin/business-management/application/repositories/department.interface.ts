@@ -1,6 +1,6 @@
 import { Observable } from "rxjs";
-import { ResponseEntity } from "../../domain/entities/response.entity";
 import { DepartmentEntity } from "../../domain/entities/departament.entity";
+import { ResponseEntity } from "app/modules/admin/shared/domain/entities/response.entity";
 
 export interface DepartmentInterface {
     getByPagination(): Observable<ResponseEntity<DepartmentEntity>>;

@@ -3,11 +3,11 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { FoButtonDialogComponent } from '@components/fo-button-dialog/fo-button-dialog.component';
 import { ResponseModel } from '@models/IResponseModel';
 import { ButtonEnum } from 'app/core/enums/button.enum';
 import { TranslateMessageForm } from 'app/core/pipes/error-message-form.pipe';
 import { UserService } from 'app/core/user/user.service';
+import { FoButtonDialogComponent } from 'app/modules/admin/shared/components/fo-button-dialog/fo-button-dialog.component';
 import { RoleEntity } from 'app/modules/admin/shared/domain/entities/role.entity';
 import { RoleService } from 'app/modules/admin/shared/domain/services/role.service';
 import { RequestOption } from 'app/shared/interfaces/IRequestOption';
@@ -64,8 +64,8 @@ export class DialogMaintenanceRoleFormComponent {
             sNombreRol: [ object?  object.sNombreRol : '', [Validators.required, Validators.maxLength(100)] ], // Campo nombre del rol, requerido
             sDescripcion: [ object?  object.sDescripcion : '', [Validators.required, Validators.maxLength(255)] ], // descripcion nombre del rol, requerido
             bActivo: [ object? object.bActivo : true, Validators.required ], // Campo para saber si el rol está activo, requerido
-            nIdUsuarioCreacion: [ { disabled: object, value: this._userService.userLogin().usuario }, Validators.required ], // Usuario que registra el rol
-            nIdUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin().usuario },Validators.required ], // Usuario que modifica el rol
+            nIdUsuarioCreacion: [ { disabled: object, value: this._userService.userLogin().usuarioId }, Validators.required ], // Usuario que registra el rol
+            nIdUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin().usuarioId },Validators.required ], // Usuario que modifica el rol
             bEliminado: [ object?  object.bEliminado : false, Validators.required ], // Campo eliminado del rol, requerido
         });
     }

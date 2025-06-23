@@ -3,15 +3,13 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { FoButtonDialogComponent } from '@components/fo-button-dialog/fo-button-dialog.component';
 import { ResponseModel } from '@models/IResponseModel';
 import { ButtonEnum } from 'app/core/enums/button.enum';
 import { TranslateMessageForm } from 'app/core/pipes/error-message-form.pipe';
 import { UserService } from 'app/core/user/user.service';
+import { FoButtonDialogComponent } from 'app/modules/admin/shared/components/fo-button-dialog/fo-button-dialog.component';
 import { SectorEntity } from 'app/modules/admin/shared/domain/entities/sector.entity';
 import { SectorService } from 'app/modules/admin/shared/domain/services/sector.service';
-import { MAINTENANCE_GENERAL_IMPORTS } from 'app/shared/imports/system-maintenance/maintenance-ministry.imports';
-import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { FormInputModule } from 'app/shared/modules/form-input.module';
 import { finalize } from 'rxjs';
 
@@ -62,8 +60,8 @@ export class DialogSectorFormComponent {
             nIdSector: [{ disabled: !object, value: object?.nIdSector }, Validators.required], // Campo ID del ministerio, requerido
             sNombreSector: [ object?  object.sNombreSector : '', [Validators.required, Validators.maxLength(255)] ], // Campo nombre del ministerio, requerido
             bActivo: [ object? object.bActivo : true, Validators.required ], // Campo para saber si el ministerio está activo, requerido
-            nUsuarioRegistro: [ { disabled: object, value: this._userService.userLogin().usuario }, Validators.required ], // Usuario que registra el ministerio
-            nUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin().usuario },Validators.required ], // Usuario que modifica el ministerio
+            nUsuarioRegistro: [ { disabled: object, value: this._userService.userLogin().usuarioId }, Validators.required ], // Usuario que registra el ministerio
+            nUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin().usuarioId },Validators.required ], // Usuario que modifica el ministerio
         });
     }
 

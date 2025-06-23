@@ -141,8 +141,8 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
             nNumeroMiembros: [object ? object.nNumeroMiembros : 1, [Validators.required, Validators.min(1), Validators.max(100)]], // Campo de número de miembros
             bRegistradoMercadoValores: [object ? object.bRegistradoMercadoValores : false, [Validators.required]], // Campo de registro en mercado de valores
             bActivo: [object ? object.bActivo : true, [Validators.required]], // Campo de estado de la empresa
-            nUsuarioRegistro: [{ disabled: object, value: this._userService.userLogin().usuario }, Validators.required], // Campo del usuario que registró la empresa
-            nUsuarioModificacion: [{ disabled: !object, value: this._userService.userLogin().usuario }, Validators.required], // Campo del usuario que modificó la empresa
+            nUsuarioRegistro: [{ disabled: object, value: this._userService.userLogin().usuarioId }, Validators.required], // Campo del usuario que registró la empresa
+            nUsuarioModificacion: [{ disabled: !object, value: this._userService.userLogin().usuarioId }, Validators.required], // Campo del usuario que modificó la empresa
         });
     }
 

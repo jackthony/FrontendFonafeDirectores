@@ -5,7 +5,7 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatTableModule } from "@angular/material/table";
 import { MatTooltipModule } from "@angular/material/tooltip";
-import { FoPillComponent } from "@components/fo-pill/fo-pill.component";
+import { FoPillComponent } from "app/modules/admin/shared/components/fo-pill/fo-pill.component";
 import { BooleanPipe } from "app/core/pipes/boolean.pipe";
 import { EmptyPipe } from "app/core/pipes/empty.pipe";
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';

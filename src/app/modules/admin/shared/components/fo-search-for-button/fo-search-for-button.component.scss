@@ -1,0 +1,34 @@
+.btn-funnel {
+    .mat-icon {
+        color: #c51f2a;
+    }
+}
+
+.title-status {
+    font-family: "Museo Sans";
+    display: flex;
+    justify-content: center;
+    padding: 0 16px;
+    border-bottom: 1px solid #DDDDDD;
+    padding-bottom: 5px;
+}
+
+.btn-search {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    .mat-mdc-outlined-button:not(:disabled) {
+        border-color: #CD202C !important;;
+        color: #CD202C;
+    }
+}
+
+.checkbox-filter .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background {
+    border-color: #CD202C !important;
+    background-color: #CD202C !important;
+}
+
+.option-state {
+    font-family: "Roboto regular";
+    font-size: 14px;
+}

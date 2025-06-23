@@ -14,17 +14,16 @@ import {
 } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { FoButtonDialogComponent } from '@components/fo-button-dialog/fo-button-dialog.component';
 import { ResponseModel } from '@models/IResponseModel';
 import { User } from '@models/user.interface';
 import { ButtonEnum } from 'app/core/enums/button.enum';
 import { TranslateMessageForm } from 'app/core/pipes/error-message-form.pipe';
 import { UserService } from 'app/core/user/user.service';
-import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { FormInputModule } from 'app/shared/modules/form-input.module';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { SegUserService } from '../../domain/services/seg-user.service';
 import { SegUserEntity } from '../../domain/entities/seg-user.entity';
+import { FoButtonDialogComponent } from 'app/modules/admin/shared/components/fo-button-dialog/fo-button-dialog.component';
 
 @Component({
     selector: 'app-change-password-adm',
@@ -83,7 +82,7 @@ export class ChangePasswordAdmComponent implements OnInit, OnDestroy {
         this.form = this._fb.group({
             user: [this.data.object.nIdUsuario, Validators.required], // Campo de usuario, requerido
             password: ['', [Validators.required, Validators.maxLength(32)]], // Campo de contraseña, requerido y con un límite de 32 caracteres
-            nUsuarioModificacion: [this.user?.usuario, Validators.required], // Campo de usuario que realiza la modificación
+            nUsuarioModificacion: [this.user?.usuarioId, Validators.required], // Campo de usuario que realiza la modificación
         });
     }
 

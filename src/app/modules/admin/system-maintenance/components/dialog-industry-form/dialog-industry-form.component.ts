@@ -3,13 +3,13 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { FoButtonDialogComponent } from '@components/fo-button-dialog/fo-button-dialog.component';
 import { ResponseModel } from '@models/IResponseModel';
-import { Industry } from '@models/system-maintenance/industry.interface';
-import { IndustryService } from '@services/industry.service';
 import { ButtonEnum } from 'app/core/enums/button.enum';
 import { TranslateMessageForm } from 'app/core/pipes/error-message-form.pipe';
 import { UserService } from 'app/core/user/user.service';
+import { FoButtonDialogComponent } from 'app/modules/admin/shared/components/fo-button-dialog/fo-button-dialog.component';
+import { IndustryEntity } from 'app/modules/admin/shared/domain/entities/industry.entity';
+import { IndustryService } from 'app/modules/admin/shared/domain/services/industry.service';
 import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { FormInputModule } from 'app/shared/modules/form-input.module';
 import { finalize } from 'rxjs';
@@ -36,7 +36,7 @@ export class DialogIndustryFormComponent {
 	private _industryService = inject(IndustryService); // Inyecta el servicio MinistryService para interactuar con los datos del ministerio
 
 	// Datos que se pasan al diálogo, incluyendo la información del ministerio
-	public data: { object: Industry } = inject(MAT_DIALOG_DATA);
+	public data: { object: IndustryEntity } = inject(MAT_DIALOG_DATA);
 
     // Señal reactiva que maneja los tipos de botones a mostrar
     buttonEnum = signal<typeof ButtonEnum>(ButtonEnum);
@@ -57,13 +57,13 @@ export class DialogIndustryFormComponent {
 	}
 
 	// Método para inicializar el formulario con los datos proporcionados (o vacíos si no existe el objeto)
-	initForm(object: Industry): void {
+	initForm(object: IndustryEntity): void {
         this.form = this._fb.group({
             nIdRubro: [{ disabled: !object, value: object?.nIdRubro }, Validators.required], // Campo ID del ministerio, requerido
             sNombreRubro: [ object?  object.sNombreRubro : '', [Validators.required, Validators.maxLength(255)] ], // Campo nombre del ministerio, requerido
             bActivo: [ object? object.bActivo : true, Validators.required ], // Campo para saber si el ministerio está activo, requerido
-            nUsuarioRegistro: [ { disabled: object, value: this._userService.userLogin().usuario }, Validators.required ], // Usuario que registra el ministerio
-            nUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin().usuario },Validators.required ], // Usuario que modifica el ministerio
+            nUsuarioRegistro: [ { disabled: object, value: this._userService.userLogin().usuarioId }, Validators.required ], // Usuario que registra el ministerio
+            nUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin().usuarioId },Validators.required ], // Usuario que modifica el ministerio
         });
     }
 
@@ -80,13 +80,11 @@ export class DialogIndustryFormComponent {
 
 	// Método para registrar un nuevo ministerio
     registerForm(): void {
-        const request = new RequestOption();
-        request.request = this.form.value; // Crea una solicitud con los valores del formulario
         this._industryService
-            .create(request) // Llama al servicio MinistryService para registrar el ministerio
+            .create(this.form.value) // Llama al servicio MinistryService para registrar el ministerio
             .pipe(finalize(() => this.loadingService.set(false))) // Finaliza la operación y desactiva el estado de carga
             .subscribe({
-                next: (response: ResponseModel<Industry>) => {
+                next: (response: ResponseModel<number>) => {
                     if (response.isSuccess) this.dialogRef.close(true); // Cierra el diálogo si la operación es exitosa
                 },
             });
@@ -94,13 +92,11 @@ export class DialogIndustryFormComponent {
 
 	// Método para actualizar un ministerio existente
     updateForm(): void {
-        const request = new RequestOption();
-        request.request = this.form.value; // Crea una solicitud con los valores del formulario
         this._industryService
-            .update(request) // Llama al servicio MinistryService para actualizar el ministerio
+            .update(this.form.value) // Llama al servicio MinistryService para actualizar el ministerio
             .pipe(finalize(() => this.loadingService.set(false))) // Finaliza la operación y desactiva el estado de carga
             .subscribe({
-                next: (response: ResponseModel<Industry>) => {
+                next: (response: ResponseModel<boolean>) => {
                     if (response.isSuccess) this.dialogRef.close(true); // Cierra el diálogo si la operación es exitosa
                 },
             });

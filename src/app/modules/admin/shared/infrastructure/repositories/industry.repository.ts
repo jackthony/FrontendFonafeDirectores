@@ -1,10 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { ResponseEntity } from 'app/modules/admin/shared/domain/entities/response.entity';
 import { IndustryInterface } from '../../application/repositories/industry.interface';
 import { IndustryEntity } from '../../domain/entities/industry.entity';
+import { user } from 'app/mock-api/common/user/data';
 
 @Injectable({
     providedIn: 'root',
@@ -18,9 +19,12 @@ export class IndustryRepository implements IndustryInterface {
     }
 
     getByPagination(userName: string, pageIndex: number, pageSize: number): Observable<ResponseEntity<IndustryEntity>> {
-        return this._http.get<ResponseEntity<IndustryEntity>>(`${this.url}/GetByPagination`, {
-            params: { 'fullName': userName, 'pageIndex': pageIndex, 'pageSize': pageSize }
-        });
+        const params = new HttpParams();
+
+        params.append('pageIndex', pageIndex).append('pageSize', pageSize)
+        if(userName) params.append('fullName', userName)
+
+        return this._http.get<ResponseEntity<IndustryEntity>>(`${this.url}/GetByPagination`, { params });
     }
 
     create(object: IndustryEntity): Observable<ResponseEntity<number>> {

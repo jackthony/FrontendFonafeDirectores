@@ -1,7 +1,7 @@
 import { Permission } from "./permission.interface";
 
 export interface User {
-    usuario: number;
+    usuarioId: number;
     email: string;
     nombreCompleto: string;
     primerNombre: string;

@@ -7,11 +7,9 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { FoButtonDialogComponent } from '@components/fo-button-dialog/fo-button-dialog.component';
 import { ButtonEnum } from 'app/core/enums/button.enum';
 import { TranslateMessageForm } from 'app/core/pipes/error-message-form.pipe';
 import { UserService } from 'app/core/user/user.service';
-import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { FormInputModule } from 'app/shared/modules/form-input.module';
 import { ValidationFormService } from 'app/shared/services/validation-form.service';
 import { finalize } from 'rxjs';
@@ -20,6 +18,7 @@ import { SegUserEntity } from '../../domain/entities/seg-user.entity';
 import { ConstantEntity } from 'app/modules/admin/shared/domain/entities/constant.entity';
 import { RoleEntity } from 'app/modules/admin/shared/domain/entities/role.entity';
 import { ResponseEntity } from 'app/modules/admin/shared/domain/entities/response.entity';
+import { FoButtonDialogComponent } from 'app/modules/admin/shared/components/fo-button-dialog/fo-button-dialog.component';
 
 @Component({
     selector: 'app-form-profile',
@@ -89,8 +88,8 @@ export class FormProfileComponent implements OnInit {
             nEstado: [ object? object.nEstado : 0, [Validators.required, Validators.min(1)] ],
             sCorreoElectronico:  [ { disabled: object, value: object ? object.sCorreoElectronico : '' }, [Validators.required, Validators.maxLength(150), this._validationFormService.validationMail] ],
             sContrasena:  [ { disabled: object, value: object ? '******' : '' } , [Validators.required, Validators.maxLength(32)] ],
-            nUsuarioRegistro: [ { disabled: object, value: this._userService.userLogin()?.usuario }, Validators.required ],
-            nUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin()?.usuario },Validators.required ],
+            nUsuarioRegistro: [ { disabled: object, value: this._userService.userLogin()?.usuarioId }, Validators.required ],
+            nUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin()?.usuarioId },Validators.required ],
         });
     }
 

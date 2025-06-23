@@ -3,9 +3,8 @@ import { Component, EventEmitter, inject, input, OnInit, Output, signal } from '
 
 import { DialogConfirmationService } from 'app/shared/services/dialog-confirmation.service';
 
-import { FoButtonComponent } from '@components/fo-button/fo-button.component';
-import { FoContCardComponent } from '@components/fo-cont-card/fo-cont-card.component';
-import { FoTableComponent } from '@components/fo-table/fo-table.component';
+import { FoButtonComponent } from 'app/modules/admin/shared/components/fo-button/fo-button.component';
+import { FoTableComponent } from 'app/modules/admin/shared/components/fo-table/fo-table.component';
 import { COLUMNS_DIRECTORY_BUSINESS } from 'app/shared/configs/business-management/directory-business.config';
 import { IconOption } from 'app/shared/interfaces/IGenericIcon';
 import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDefInterface';
@@ -21,6 +20,7 @@ import { ConstantEntity } from '../../domain/entities/constant.entity';
 import { DirectorFormService } from '../../domain/services/director-form.service';
 import { DepartmentEntity } from '../../domain/entities/departament.entity';
 import { BusinessEntity } from '../../domain/entities/business.entity';
+import { FoContCardComponent } from 'app/modules/admin/shared/components/fo-cont-card/fo-cont-card.component';
 
 
 @Component({

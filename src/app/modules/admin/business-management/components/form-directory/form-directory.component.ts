@@ -4,11 +4,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatIconModule } from '@angular/material/icon';
-import { FoButtonDialogComponent } from '@components/fo-button-dialog/fo-button-dialog.component';
-import { FoTitleAreaComponent } from '@components/fo-title-area/fo-title-area.component';
+import { FoTitleAreaComponent } from 'app/modules/admin/shared/components/fo-title-area/fo-title-area.component';
 import { CompanyAllowance } from '@models/business/companyAllowance.interface';
 import { ResponseModel } from '@models/IResponseModel';
-import { CompanyAllowanceService } from '@services/company_allowance.service';
 import { FileComponentStateService } from '@services/file-component-state.service';
 import { ButtonEnum } from 'app/core/enums/button.enum';
 import { TranslateMessageForm } from 'app/core/pipes/error-message-form.pipe';
@@ -33,6 +31,8 @@ import { DistrictEntity } from '../../domain/entities/district.entity';
 import { BusinessEntity } from '../../domain/entities/business.entity';
 import { DistrictService } from '../../domain/services/district.service';
 import { ProvinceService } from '../../domain/services/province.service';
+import { FoButtonDialogComponent } from 'app/modules/admin/shared/components/fo-button-dialog/fo-button-dialog.component';
+import { CompanyAllowanceService } from '../../domain/services/company-allowance.service';
 
 @Component({
   selector: 'app-form-directory',
@@ -153,8 +153,8 @@ export class FormDirectoryComponent implements OnInit {
 			dFechaDesignacion: [ this.director() ? this._dateUtilsService.formatDateToString(this.director().dFechaDesignacion) : null, [Validators.required, Validators.maxLength(10)] ],
 			dFechaRenuncia: [ { disabled: true, value: this.director() ? this.director().dFechaRenuncia : null } , Validators.required ],
 			sComentario: [ this.director() ? this.director().sComentario : '', Validators.maxLength(1000) ],
-			nUsuarioRegistro: [ { disabled: this.director(), value: this._userService.userLogin().usuario }, Validators.required ],
-            nUsuarioModificacion: [ { disabled: !this.director(), value: this._userService.userLogin().usuario }, Validators.required ],
+			nUsuarioRegistro: [ { disabled: this.director(), value: this._userService.userLogin().usuarioId }, Validators.required ],
+            nUsuarioModificacion: [ { disabled: !this.director(), value: this._userService.userLogin().usuarioId }, Validators.required ],
 		})
 	}
 
@@ -209,10 +209,7 @@ export class FormDirectoryComponent implements OnInit {
 		.pipe(
 			distinctUntilChanged(),
 			switchMap((value) => {
-				const request = new RequestOption();
-				request.pathVariables = [this.business().sRuc, value]; // Realiza la consulta para obtener la dieta por RUC y cargo
-				request.resource = 'GetByRuc';
-				return this._companyAllowance.get(request).pipe(
+				return this._companyAllowance.getByRuc(this.business().sRuc, value).pipe(
 					map( (res: ResponseModel<CompanyAllowance>) => res.item?.mDieta ?? 0), // Mapea la dieta
 					catchError(() => {
 						return of(0); // En caso de error, devuelve 0

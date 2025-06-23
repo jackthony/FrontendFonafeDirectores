@@ -9,7 +9,7 @@ import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDefInterface';
 import { DialogConfirmationService } from 'app/shared/services/dialog-confirmation.service';
 import { finalize, firstValueFrom, Observable } from 'rxjs';
-import { DialogConfirmation } from '@components/fo-dialog-confirmation/models/dialog-confirmation.interface';
+import { DialogConfirmation } from 'app/modules/admin/shared/components/fo-dialog-confirmation/models/dialog-confirmation.interface';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BusinessService } from '../../domain/services/business.service';

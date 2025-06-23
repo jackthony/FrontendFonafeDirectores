@@ -26,7 +26,7 @@ export const businessResolver: ResolveFn<BusinessResolveResult> = (route: Activa
 
   	const id = route.params['id'];
 
-	const ministries$ = ministryService.getByPagination();
+	const ministries$ = ministryService.getAll();
 	const industry$ = industryService.getAll();
 	const sector$ = sectorService.getAll();
 	const departments$ = departmentService.getByPagination();

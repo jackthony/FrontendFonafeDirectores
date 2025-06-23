@@ -112,7 +112,7 @@ export class AuthSignInComponent implements OnInit {
                     this._activatedRoute.snapshot.queryParamMap.get(
                         'redirectURL'
                     ) || '/signed-in-redirect';
-
+                
                 // Navega a la URL de redirección
                 this._router.navigateByUrl(redirectURL);
             },
@@ -120,7 +120,6 @@ export class AuthSignInComponent implements OnInit {
                 // Vuelve a habilitar el formulario si la autenticación falla
                 this.signInForm.enable();
                 this._ngxToastrService.showError('Credenciales inválidas.'); // Muestra un mensaje de error
-
                 // Establece el mensaje de alerta
                 this.alert = {
                     type: 'error',

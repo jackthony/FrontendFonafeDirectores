@@ -10,25 +10,13 @@ import { ResponseEntity } from 'app/modules/admin/shared/domain/entities/respons
     providedIn: 'root',
 })
 export class BusinessRepository implements BusinessInterface {
-    
-    
-    private url = `${environment.apiUrlBase}/Usuario`;
+    private url = `${environment.apiUrlBase}/Emp_Empresa`;
     private _http = inject(HttpClient);
 
     getByPagination(nameEnterprise: string, pageIndex: number, pageSize: number): Observable<ResponseEntity<BusinessEntity>> {
-        /* return this._http.get(`${this.url}/GetByPagination`, {
+        return this._http.get<ResponseEntity<BusinessEntity>>(`${this.url}/GetByPagination`, {
             params: { 'nameEnterprise': nameEnterprise, 'pageIndex': pageIndex, 'pageSize': pageSize }
-        }); */
-
-        return of({
-            isSuccess: true,
-            lstItem: [
-                {sNombreCompleto: 'Axel'}
-            ],
-            pagination: {
-                totalRows: 2
-            }
-        } as any)
+        });
     }
 
     getById(nIdEmpresa: number): Observable<ResponseEntity<BusinessEntity>> {

@@ -3,8 +3,9 @@ import { SegUserInterface } from '../../application/repositories/seg-user.interf
 import { SegUserFactory } from '../../infrastructure/seg-user.factory';
 import { Observable } from 'rxjs';
 import { SegUserEntity } from '../entities/seg-user.entity';
-import { SegUserChangePasswordEntity } from '../entities/seg-user-change-password.entity';
 import { ResponseEntity } from 'app/modules/admin/shared/domain/entities/response.entity';
+import { SegUserChangePassForceEntity } from '../entities/seg-user-change-pass-force.entity';
+import { SegUserChangePasswordEntity } from '../entities/seg-user-change-password.entity';
 
 @Injectable({
     providedIn: 'root',
@@ -30,5 +31,9 @@ export class SegUserService {
 
     updatePassword(object: SegUserChangePasswordEntity): Observable<ResponseEntity<boolean>> {
         return this._segUserInterface.updatePassword(object);
+    }
+
+    updateForcePassword(object: SegUserChangePassForceEntity): Observable<ResponseEntity<boolean>> {
+        return this._segUserInterface.updateForcePassword(object);
     }
 }

@@ -4,18 +4,17 @@
 }
 .field-captcha {
     width: 300px;
-    background-color: #F9F9F9;
+    background-color: #f1f5f9 !important;
 }
 
+.field-captcha.mat-form-field-appearance-fill .mat-mdc-form-field-subscript-wrapper {
+    background-color: #f1f5f9 !important;
+}
 
 .field-captcha {
-    height: 90px;
+    height: 95px;
 }
 
-.field-captcha.mat-mdc-form-field.mat-form-field-appearance-fill .mat-mdc-text-field-wrapper {
-    background-color: #F9F9F9 !important;
+.back-color {
+    background-color: #f1f5f9 !important;
 }
-
-/* .back-color {
-    background-color: #F9F9F9 !important;
-} */

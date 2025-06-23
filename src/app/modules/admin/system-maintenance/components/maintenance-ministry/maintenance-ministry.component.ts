@@ -49,6 +49,7 @@ export default class MaintenanceMinistryComponent {
 	paramSearchTable = signal<string>('');
 	placeHolderSearch = signal<string>('Busca por nombre');
 	delaySearchTable = signal<number>(400);
+	filterState = signal<boolean | null>(null);
 
 	// Método que se ejecuta cuando el componente es inicializado
 	ngOnInit(): void {
@@ -65,7 +66,7 @@ export default class MaintenanceMinistryComponent {
 	// Método para buscar los ministerios con paginación
 	searchTable(): void {
 		this.loadingTable.set(true); // Activa el estado de carga de la tabla
-		this._ministryService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE).pipe(
+		this._ministryService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState()).pipe(
 			finalize(() => this.loadingTable.set(false)) // Finaliza la carga cuando termina la operación
 		).subscribe({
 			next: ((response: ResponseModel<MinistryEntity>) => {
@@ -161,5 +162,9 @@ export default class MaintenanceMinistryComponent {
 			    else this._ngxToastrService.showSuccess('Ministerio registrado exitosamente', '¡Éxito!'); // Muestra la notificación de éxito
 		    }
 		});
+	}
+
+	setFilterState(event: boolean | null) {
+		this.filterState.set(event);
 	}
 }

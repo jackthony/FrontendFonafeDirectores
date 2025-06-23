@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { environment } from "environments/environment";
 import { Observable } from "rxjs";
@@ -11,17 +11,20 @@ import { ResponseEntity } from "app/modules/admin/shared/domain/entities/respons
 })
 export class MinistryRepository implements MinistryInterface {
     
-    private url = `${environment.apiUrlBase}/Cat_Ministerio`;
+    private url = `${environment.apiUrlBase}/Ministerio`;
     private _http = inject(HttpClient);
 
     getAll(): Observable<ResponseEntity<MinistryEntity>> {
         return this._http.get<ResponseEntity<MinistryEntity>>(`${this.url}/GetByPagination`);
     }
 
-    getByPagination(param: string, pageIndex: number, pageSize: number): Observable<ResponseEntity<MinistryEntity>> {
-        return this._http.get<ResponseEntity<MinistryEntity>>(`${this.url}/GetByPagination`, {
-            params: { 'fullName': param, 'pageIndex': pageIndex, 'pageSize': pageSize }
-        });
+    getByPagination(param: string, pageIndex: number, pageSize: number, filterState: boolean | null): Observable<ResponseEntity<MinistryEntity>> {
+        let params = new HttpParams().append('Page', pageIndex).append('PageSize', pageSize);
+        if(param) {
+            params = params.append('Nombre', param)
+        }
+        if(filterState !== null ) params = params.append('Estado', filterState)
+        return this._http.get<ResponseEntity<MinistryEntity>>(`${this.url}/listar-paginado`, { params });
     }
 
     create(object: MinistryEntity): Observable<ResponseEntity<number>> {

@@ -2,9 +2,9 @@ import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { environment } from "environments/environment";
 import { Observable, of } from "rxjs";
-import { ResponseEntity } from "../../domain/entities/response.entity";
 import { DepartmentInterface } from "../../application/repositories/department.interface";
 import { DepartmentEntity } from "../../domain/entities/departament.entity";
+import { ResponseEntity } from "app/modules/admin/shared/domain/entities/response.entity";
 
 @Injectable({
     providedIn: 'root',
