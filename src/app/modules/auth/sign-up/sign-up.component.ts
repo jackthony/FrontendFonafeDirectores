@@ -54,7 +54,7 @@ export class AuthSignUpComponent implements OnInit {
     signUpForm: UntypedFormGroup;
     showAlert: boolean = false;
     /**
-     * Constructor
+     * Constructor que inyecta servicios esenciales: autenticación, formulario reactivo y enrutamiento.
      */
     constructor(
         private _authService: AuthService,
@@ -62,7 +62,8 @@ export class AuthSignUpComponent implements OnInit {
         private _router: Router
     ) {}
     /**
-     * On init
+     * Hook de inicialización del componente.
+     * Define la estructura del formulario reactivo con sus respectivos validadores.
      */
     ngOnInit(): void {
         this.signUpForm = this._formBuilder.group({
@@ -74,7 +75,10 @@ export class AuthSignUpComponent implements OnInit {
         });
     }
     /**
-     * Sign up
+     * Ejecuta el proceso de registro (Sign Up).
+     * Valida el formulario, realiza la solicitud HTTP mediante el servicio de autenticación
+     * y navega a la pantalla de confirmación si es exitoso.
+     * En caso de error, muestra un mensaje adecuado al usuario.
      */
     signUp(): void {
         if (this.signUpForm.invalid) {

@@ -34,7 +34,9 @@ export class AuthSignOutComponent implements OnInit, OnDestroy {
         private _router: Router
     ) {}
     /**
-     * On init
+     * Hook de inicialización del componente.
+     * Ejecuta el cierre de sesión inmediato y luego inicia un `timer` de 5 segundos
+     * que decrementa cada segundo. Al finalizar, redirige a la vista de inicio de sesión.
      */
     ngOnInit(): void {
         this._authService.signOut();
@@ -49,6 +51,10 @@ export class AuthSignOutComponent implements OnInit, OnDestroy {
             )
             .subscribe();
     }
+        /**
+     * Hook de destrucción del componente.
+     * Libera los recursos y cancela la suscripción al `timer`.
+     */
     ngOnDestroy(): void {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();

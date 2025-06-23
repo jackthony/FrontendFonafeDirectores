@@ -19,6 +19,11 @@ export interface GenericIcon<T> {
     transitionIcon?: GenericIcon<T>;
     executeAction(dato: T): void;
 }
+/**
+ * Clase concreta que implementa `GenericIcon<T>`.
+ * Diseñada para representar un ícono configurable con lógica contextual
+ * (habilitado/deshabilitado, visible/oculto, color dinámico y acción personalizada).
+ */
 export class IconOption<T> implements GenericIcon<T> {
     id: string;
     name: string;

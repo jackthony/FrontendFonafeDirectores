@@ -10,11 +10,9 @@
  *                      administrativos con control de acceso granular.
  *************************************************************************************/
 import { Route } from '@angular/router';
-import { initialDataResolver } from 'app/app.resolvers';
 import { AuthGuard } from 'app/core/auth/guards/auth.guard';
 import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
-import { SessionGuard } from './core/auth/guards/session.guard';
 import { permissionGuard } from './core/auth/guards/permission.guard';
 export const appRoutes: Route[] = [
     {path: '', pathMatch : 'full', redirectTo: 'home'},
@@ -30,7 +28,6 @@ export const appRoutes: Route[] = [
         children: [
             {path: 'confirmation-required', loadChildren: () => import('app/modules/auth/confirmation-required/confirmation-required.routes')},
             {path: 'forgot-password', loadChildren: () => import('app/modules/auth/forgot-password/forgot-password.routes')},
-            //{path: 'reset-password', loadChildren: () => import('app/modules/auth/reset-password/reset-password.routes')},
             {path: 'sign-in', loadChildren: () => import('app/modules/auth/sign-in/sign-in.routes')},
             {path: 'sign-up', loadChildren: () => import('app/modules/auth/sign-up/sign-up.routes')},
         ]
@@ -57,22 +54,10 @@ export const appRoutes: Route[] = [
         children: [
         ]
     },
-    /* {
-        path: 'example',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
-        component: LayoutComponent,
-        resolve: {
-            initialData: initialDataResolver
-        },
-        children: [
-            { path: 'home', loadComponent: () => import('app/modules/admin/home/home.component') },
-        ]
-    }, */
     {
         path: '',
         canActivate: [AuthGuard],
-        canActivateChild: [/* SessionGuard */],
+        canActivateChild: [],
         component: LayoutComponent,
         data: {
             layout: 'fonafe'

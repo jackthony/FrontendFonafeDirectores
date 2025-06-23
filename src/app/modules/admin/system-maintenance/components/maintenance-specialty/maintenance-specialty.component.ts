@@ -12,11 +12,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ResponseModel } from '@models/IResponseModel';
 import { PAGINATOR_PAGE_SIZE } from 'app/core/config/paginator.config';
-import { CONFIG_ACTIVE_DIALOG_SPECIALTY, CONFIG_DELETE_DIALOG_TYPE_SPECIALTY, CONFIG_INACTIVE_DIALOG_SPECIALTY, MAINTENANCE_SPECIALTY_HEADER_TABLE } from 'app/shared/configs/system-maintenance/maintenance-specialty.config';
+import { CONFIG_ACTIVE_DIALOG_SPECIALTY, CONFIG_INACTIVE_DIALOG_SPECIALTY, MAINTENANCE_SPECIALTY_HEADER_TABLE } from 'app/shared/configs/system-maintenance/maintenance-specialty.config';
 import { IconOption } from 'app/shared/interfaces/IGenericIcon';
-import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDefInterface';
-import { AuthorizationService } from 'app/shared/services/authorization.service';
 import { DialogConfirmationService } from 'app/shared/services/dialog-confirmation.service';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -54,14 +52,21 @@ export default class MaintenanceSpecialtyComponent {
 	placeHolderSearch = signal<string>('Busca por nombre');
 	filterState = signal<boolean | null>(true);
 	delaySearchTable = signal<number>(400);
+	/**
+     * Hook de inicialización: carga estructura de tabla, íconos y datos iniciales.
+     */
 	ngOnInit(): void {
 		this.headerTable.set(MAINTENANCE_SPECIALTY_HEADER_TABLE);
 		this.iconsTable.set(this.defineIconsTable());
 		this.searchTable();
 	}
+	/** Redirige al home */
 	returnInit(): void {
 		this._router.navigate(['home']);
 	}
+    /**
+     * Lógica para búsqueda paginada de especialidades según filtros actuales.
+     */
 	searchTable(): void {
 		this.loadingTable.set(true);
 		this._specialtyService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState()).pipe(
@@ -89,6 +94,9 @@ export default class MaintenanceSpecialtyComponent {
 		this.pageIndexTable.set(1);
 		this.searchTable();
 	}
+    /**
+     * Define la lista de íconos con acciones por fila (editar, activar, desactivar).
+     */
 	defineIconsTable(): IconOption<SpecialtyEntity>[] {
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
         const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar");
@@ -106,6 +114,10 @@ export default class MaintenanceSpecialtyComponent {
     	iconActive.isHidden = (data: SpecialtyEntity) => data.bActivo;
         return [iconEdit, iconInactive, iconActive];
     }
+	/**
+     * Activa o desactiva una especialidad según su estado actual.
+     * Confirma con diálogo antes de proceder.
+     */
 	async deleteSpecialty(data: SpecialtyEntity): Promise<void> {
 		const config = data.bActivo ? CONFIG_INACTIVE_DIALOG_SPECIALTY : CONFIG_ACTIVE_DIALOG_SPECIALTY;
 		const dialogRef = await this._dialogConfirmationService.open(config);
@@ -129,6 +141,10 @@ export default class MaintenanceSpecialtyComponent {
 				});
 		}
 	}
+    /**
+     * Abre el diálogo para registrar o actualizar una especialidad.
+     * Recarga la tabla al cierre exitoso.
+     */
 	openFormDialog(element?: SpecialtyEntity | null): void {
 		const respDialogo = this._matDialog.open(DialogMaintenanceSpecialtyFormComponent, {
 			data: { object: element },
@@ -146,6 +162,7 @@ export default class MaintenanceSpecialtyComponent {
 		    }
 		});
 	}
+	/** Aplica filtro de estado (activos, inactivos, todos) */
 	setFilterState(event: boolean | null) {
 		this.filterState.set(event);
 	}

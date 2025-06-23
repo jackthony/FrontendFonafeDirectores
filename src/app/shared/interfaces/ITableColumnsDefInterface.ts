@@ -7,6 +7,13 @@
  * Cambios recientes:    - Inclusión de campos de alineación (`alignTitle`, `alignContent`)
  *                       - Soporte para componentes y customIcon
  *******************************************************************************************************/
+/**
+ * Interfaz que define la estructura esperada para describir columnas
+ * en tablas dinámicas (generalmente usadas con componentes de tipo table).
+ * 
+ * Esta definición permite configurar de forma flexible el contenido, tipo de dato,
+ * formato, estilos visuales, y comportamiento de cada columna renderizada.
+ */
 export interface TableColumnsDefInterface {
     id: number;
     name?: string | "none";

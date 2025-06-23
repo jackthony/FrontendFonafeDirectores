@@ -55,14 +55,23 @@ export default class MaintenanceTypeDirectorComponent {
 	placeHolderSearch = signal<string>('Busca por nombre');
 	filterState = signal<boolean | null>(true);
 	delaySearchTable = signal<number>(400);
+	/**
+     * Hook de inicialización del componente.
+     * Carga encabezados, íconos y ejecuta la búsqueda inicial.
+     */
 	ngOnInit(): void {
 		this.headerTable.set(MAINTENANCE_TYPE_DIRECTOR_HEADER_TABLE);
 		this.iconsTable.set(this.defineIconsTable());
 		this.searchTable();
 	}
+	/** Regresa al home del sistema */
 	returnInit(): void {
 		this._router.navigate(['home']);
 	}
+	/**
+     * Ejecuta la búsqueda de datos con los filtros actuales.
+     * Incluye búsqueda por texto, página actual y filtro de estado.
+     */
 	searchTable(): void {
 		this.loadingTable.set(true);
 		this._sectorService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState()).pipe(
@@ -90,6 +99,9 @@ export default class MaintenanceTypeDirectorComponent {
 		this.pageIndexTable.set(1);
 		this.searchTable();
 	}
+	/**
+     * Define los íconos disponibles por fila, configurando su acción, visibilidad y tooltip.
+     */
 	defineIconsTable(): IconOption<TypeDirectorEntity>[] {
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
         const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar");
@@ -107,6 +119,10 @@ export default class MaintenanceTypeDirectorComponent {
     	iconActive.isHidden = (data: TypeDirectorEntity) => data.bActivo;
         return [iconEdit, iconInactive, iconActive];
     }
+	/**
+     * Ejecuta lógica de activación/desactivación con confirmación.
+     * Abre un diálogo y realiza la acción correspondiente en el backend.
+     */
 	async deleteTypeDirector(data: TypeDirectorEntity): Promise<void> {
 		const config = data.bActivo ? CONFIG_INACTIVE_DIALOG_TYPE_DIRECTOR : CONFIG_ACTIVE_DIALOG_TYPE_DIRECTOR;
 		const dialogRef = await this._dialogConfirmationService.open(config);
@@ -130,6 +146,10 @@ export default class MaintenanceTypeDirectorComponent {
 				});
 		}
 	}
+    /**
+     * Abre el diálogo de formulario para crear o editar un tipo de director.
+     * Recarga la tabla al cerrar el diálogo exitosamente.
+     */
 	openFormDialog(element?: TypeDirectorEntity | null): void {
 		const respDialogo = this._matDialog.open(DialogTypeDirectorFormComponent, {
 			data: { object: element },

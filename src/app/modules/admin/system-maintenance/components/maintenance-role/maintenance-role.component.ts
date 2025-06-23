@@ -12,9 +12,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ResponseModel } from '@models/IResponseModel';
 import { PAGINATOR_PAGE_SIZE } from 'app/core/config/paginator.config';
-import { CONFIG_ACTIVE_DIALOG_ROLE, CONFIG_DELETE_DIALOG_ROLE, CONFIG_INACTIVE_DIALOG_ROLE, MAINTENANCE_ROL_HEADER_TABLE } from 'app/shared/configs/system-maintenance/maintenance-role.config';
+import { CONFIG_ACTIVE_DIALOG_ROLE, CONFIG_INACTIVE_DIALOG_ROLE, MAINTENANCE_ROL_HEADER_TABLE } from 'app/shared/configs/system-maintenance/maintenance-role.config';
 import { IconOption } from 'app/shared/interfaces/IGenericIcon';
-import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDefInterface';
 import { AuthorizationService } from 'app/shared/services/authorization.service';
 import { DialogConfirmationService } from 'app/shared/services/dialog-confirmation.service';
@@ -55,14 +54,21 @@ export default class MaintenanceRoleComponent {
 	placeHolderSearch = signal<string>('Busca por nombre');
 	filterState = signal<boolean | null>(true);
 	delaySearchTable = signal<number>(400);
+	/**
+     * Inicialización del componente: define cabecera e íconos y carga datos iniciales.
+     */
 	ngOnInit(): void {
 		this.headerTable.set(MAINTENANCE_ROL_HEADER_TABLE);
 		this.iconsTable.set(this.defineIconsTable());
 		this.searchTable();
 	}
+	/** Retorna al home */
 	returnInit(): void {
 		this._router.navigate(['home']);
 	}
+    /**
+     * Ejecuta búsqueda de roles paginados, aplicando filtro y estado.
+     */
 	searchTable(): void {
 		this.loadingTable.set(true);
 		this._roleService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState() ).pipe(
@@ -81,15 +87,18 @@ export default class MaintenanceRoleComponent {
 			})
 		})
 	}
+    /** Cambia la página actual del paginador y recarga los datos. */
 	changePageTable(event: number): void {
 		this.pageIndexTable.set(event);
 		this.searchTable();
 	}
+    /** Realiza búsqueda al escribir nuevo término. */
 	searchByItem(event: string): void {
 		this.paramSearchTable.set(event);
 		this.pageIndexTable.set(1);
 		this.searchTable();
 	}
+    /** Define los íconos y acciones de la tabla de roles. */
 	defineIconsTable(): IconOption<RoleEntity>[] {
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
         const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar");
@@ -107,6 +116,10 @@ export default class MaintenanceRoleComponent {
     	iconActive.isHidden = (data: RoleEntity) => data.bActivo;
         return [iconEdit, iconInactive, iconActive];
     }
+    /**
+     * Activa o desactiva un rol con confirmación.
+     * @param data Rol seleccionado
+     */
 	async deleteRole(data: RoleEntity): Promise<void> {
 		const config = data.bActivo ? CONFIG_INACTIVE_DIALOG_ROLE : CONFIG_ACTIVE_DIALOG_ROLE;
 		const dialogRef = await this._dialogConfirmationService.open(config);
@@ -130,6 +143,10 @@ export default class MaintenanceRoleComponent {
 				});
 		}
 	}
+    /**
+     * Abre el formulario de creación o edición de rol.
+     * @param element Rol a editar (si existe)
+     */
 	openFormDialog(element?: RoleEntity | null): void {
 		const respDialogo = this._matDialog.open(DialogMaintenanceRoleFormComponent, {
 			data: { object: element },
@@ -147,6 +164,7 @@ export default class MaintenanceRoleComponent {
 		    }
 		});
 	}
+    /** Establece el filtro de estado: activos, inactivos o todos */
 	setFilterState(event: boolean | null) {
 		this.filterState.set(event);
 	}

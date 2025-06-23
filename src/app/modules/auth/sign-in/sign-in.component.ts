@@ -71,7 +71,8 @@ export class AuthSignInComponent implements OnInit {
         private _ngxToastrService: NgxToastrService
     ) {}
     /**
-     * On init
+     * Hook de inicialización
+     * Define el formulario de login con validadores para email, password y reCAPTCHA.
      */
     ngOnInit(): void {
         this.signInForm = this._formBuilder.group({
@@ -85,7 +86,8 @@ export class AuthSignInComponent implements OnInit {
         });
     }
     /**
-     * Sign in
+     * Ejecuta el inicio de sesión al enviar el formulario.
+     * Valida, desactiva el formulario, consume el `AuthService` y maneja redirección o error.
      */
     signIn(): void {
         if (this.signInForm.invalid) {

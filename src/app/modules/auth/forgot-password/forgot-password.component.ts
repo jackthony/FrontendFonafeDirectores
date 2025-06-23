@@ -58,7 +58,8 @@ export class AuthForgotPasswordComponent implements OnInit {
         private _formBuilder: UntypedFormBuilder
     ) {}
     /**
-     * On init
+     * Hook de inicialización del componente
+     * Se crea el formulario reactivo con sus validaciones.
      */
     ngOnInit(): void {
         // Create the form
@@ -67,7 +68,8 @@ export class AuthForgotPasswordComponent implements OnInit {
         });
     }
     /**
-     * Send the reset link
+     * Ejecuta el flujo de recuperación: envía el enlace de restablecimiento de contraseña
+     * si el correo electrónico ingresado está registrado en el sistema.
      */
     sendResetLink(): void {
         if (this.forgotPasswordForm.invalid) {

@@ -65,7 +65,8 @@ export class AuthUnlockSessionComponent implements OnInit {
         private _userService: UserService
     ) {}
     /**
-     * Inicialización del componente
+     * Hook de inicialización del componente.
+     * Obtiene los datos del usuario actual y configura el formulario reactivo.
      */
     ngOnInit(): void {
         this._userService.user$.subscribe((user) => {
@@ -83,7 +84,8 @@ export class AuthUnlockSessionComponent implements OnInit {
         });
     }
     /**
-     * Lógica para desbloquear la sesión
+     * Ejecuta la lógica de desbloqueo de sesión.
+     * Valida el formulario, consume el servicio de autenticación y redirige o muestra errores según el resultado.
      */
     unlock(): void {
         if (this.unlockSessionForm.invalid) {

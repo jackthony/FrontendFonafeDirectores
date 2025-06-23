@@ -13,6 +13,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+/**
+ * Módulo compartido que agrupa y exporta componentes de Angular Material
+ * y módulos de formularios necesarios para la creación de formularios
+ * reactivos consistentes y reutilizables en la aplicación.
+ */
 @NgModule({
   declarations: [],
   imports: [MatFormFieldModule, MatInputModule, ReactiveFormsModule, MatButtonModule, MatSelectModule],
