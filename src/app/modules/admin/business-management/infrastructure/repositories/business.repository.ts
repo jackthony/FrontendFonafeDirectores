@@ -10,7 +10,7 @@ import { ResponseEntity } from 'app/modules/admin/shared/domain/entities/respons
     providedIn: 'root',
 })
 export class BusinessRepository implements BusinessInterface {
-    private url = `${environment.apiUrlBase}/Emp_Empresa`;
+    private url = `${environment.apiUrlBase}/Empresa`;
     private _http = inject(HttpClient);
 
     getByPagination(nameEnterprise: string, pageIndex: number, pageSize: number): Observable<ResponseEntity<BusinessEntity>> {
@@ -24,15 +24,15 @@ export class BusinessRepository implements BusinessInterface {
     }
 
     create(object: BusinessEntity): Observable<ResponseEntity<number>> {
-        return this._http.post<ResponseEntity<number>>(`${this.url}/Insert`, object);
+        return this._http.post<ResponseEntity<number>>(`${this.url}/crear`, object);
     }
 
     update(object: BusinessEntity): Observable<ResponseEntity<boolean>> {
-        return this._http.post<ResponseEntity<boolean>>(`${this.url}/Update`, object);
+        return this._http.post<ResponseEntity<boolean>>(`${this.url}/actualizar`, object);
     }
 
-    delete(nIdEmpresa: number): Observable<ResponseEntity<boolean>> {
-        return this._http.post<ResponseEntity<boolean>>(`${this.url}/Delete/${nIdEmpresa}`, {});
+    delete(object: BusinessEntity): Observable<ResponseEntity<boolean>> {
+        return this._http.post<ResponseEntity<boolean>>(`${this.url}/eliminar`, object);
     }
 
     exportExcelEnterprise(): Observable<ArrayBuffer> {

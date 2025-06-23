@@ -55,6 +55,7 @@ export default class MaintenanceMinistryComponent {
 	placeHolderSearch = signal<string>('Busca por nombre');
 	delaySearchTable = signal<number>(400);
 	filterState = signal<boolean | null>(true);
+	
 	ngOnInit(): void {
 		this.headerTable.set(MAINTENANCE_MINISTRY_MANAGEMENT);
 		this.iconsTable.set(this.defineIconsTable());

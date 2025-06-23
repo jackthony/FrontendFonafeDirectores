@@ -14,37 +14,37 @@ export const CONST_PROFILE_USER = 12;
 export const COLUMNS_PROFILE_MANAGEMENT: TableColumnsDefInterface[] = [
     {
         id: 0,
-        name: "sNombreCompleto",
+        name: "sApellidosYNombres",
         displayedName: "Apellidos y nombre",
         type: "string"
     },
     {
         id: 1,
-        name: "sCargoDescripcion",
+        name: "sCargo",
         displayedName: "Cargo",
         type: "string"
     },
     {
         id: 2,
-        name: "sPerfilDescripcion",
+        name: "sPerfil",
         displayedName: "Perfil",
         type: "string"
     },
     {
         id: 3,
-        name: "sEstadoDescripcion",
+        name: "qw",
         displayedName: "Estado",
         type: "string"
     },
     {
         id: 4,
-        name: "dtFechaRegistro",
+        name: "dtFechaCreacion",
         displayedName: "Fecha de creación",
         type: "date"
     },
     {
         id: 5,
-        name: "dtFechaModificacion",
+        name: "dtUltimaModificacion",
         displayedName: "Ult. modificación",
         type: "date"
     },

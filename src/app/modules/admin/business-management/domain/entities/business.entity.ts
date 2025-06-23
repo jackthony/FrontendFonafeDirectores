@@ -1,4 +1,4 @@
-export interface BusinessEntity {
+export class BusinessEntity {
     nIdEmpresa: number;
     sNombreEmpresa: string;
     sRuc: string;

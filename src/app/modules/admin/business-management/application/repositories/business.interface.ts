@@ -8,7 +8,7 @@ export interface BusinessInterface {
     create(object: BusinessEntity): Observable<ResponseEntity<number>>;
     update(object: BusinessEntity): Observable<ResponseEntity<boolean>>;
     update(object: BusinessEntity): Observable<ResponseEntity<boolean>>;
-    delete(nIdEmpresa: number): Observable<ResponseEntity<boolean>>;
+    delete(object: BusinessEntity): Observable<ResponseEntity<boolean>>;
     exportExcelEnterprise(): Observable<ArrayBuffer>;
     exportPdfEnterprise(): Observable<ArrayBuffer>;
 }

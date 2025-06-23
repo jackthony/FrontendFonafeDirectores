@@ -14,6 +14,7 @@ import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BusinessService } from '../../domain/services/business.service';
 import { BusinessEntity } from '../../domain/entities/business.entity';
+import { UserService } from 'app/core/user/user.service';
 
 @Component({
   selector: 'app-business-management',
@@ -29,6 +30,7 @@ export class BusinessManagementComponent {
   private _dialogConfirmationService = inject(DialogConfirmationService); // Servicio para diálogos de confirmación
   private _ngxToastrService = inject(NgxToastrService); // Servicio para mostrar notificaciones
   private _spinner = inject(NgxSpinnerService); // Servicio para mostrar un spinner de carga
+  private _userService = inject(UserService)
 
   // Definición de variables reactivas y señales
   placeHolderSearch = signal<string>('Busca por múltiples campos'); // Texto para el campo de búsqueda
@@ -160,8 +162,11 @@ export class BusinessManagementComponent {
     const isValid = await firstValueFrom(dialogRef.afterClosed()); // Espera a que se cierre el diálogo
     if (isValid) {
       this._spinner.show(); // Muestra el spinner de carga
+      const request = new BusinessEntity();
+      request.nIdEmpresa = data.nIdEmpresa;
+      request.nUsuarioModificacion = this._userService.userLogin().usuarioId;
       this._businessService
-        .delete(data.nIdEmpresa)
+        .delete(request)
         .pipe(finalize(() => this._spinner.hide())) // Desactiva el spinner después de completar la solicitud
         .subscribe({
           next: (response: ResponseModel<boolean>) => {

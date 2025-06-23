@@ -119,8 +119,8 @@ export default class ProfileManagementComponent {
         };
 
 		// Deshabilita los iconos si el usuario no tiene permisos
-		iconEdit.isDisabled = (data: SegUserEntity) => !authorization;
-		iconRestore.isDisabled = (data: SegUserEntity) => !authorization;
+		/* iconEdit.isDisabled = (data: SegUserEntity) => !authorization;
+		iconRestore.isDisabled = (data: SegUserEntity) => !authorization; */
 
         return [iconEdit, iconRestore]; // Retorna los iconos de acción
     }

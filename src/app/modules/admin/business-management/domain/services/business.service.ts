@@ -31,8 +31,8 @@ export class BusinessService {
         return this._businessInterface.update(object);
     }
 
-    delete(nIdEmpresa: number): Observable<ResponseEntity<boolean>> {
-        return this._businessInterface.delete(nIdEmpresa);
+    delete(object: BusinessEntity): Observable<ResponseEntity<boolean>> {
+        return this._businessInterface.delete(object);
     }
 
     exportExcelEnterprise(): Observable<ArrayBuffer> {
