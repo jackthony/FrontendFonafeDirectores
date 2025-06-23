@@ -1,3 +1,12 @@
+/*************************************************************************************
+   * Nombre del archivo:  maintenance-sector.component.ts
+   * Descripción:         Componente para la gestión de sectores: búsqueda, paginación,
+   *                      alta/edición, activación y desactivación con confirmación.
+   * Autor:               Daniel Alva
+   * Fecha de creación:   01/06/2025
+   * Última modificación: 23/06/2025 por Daniel Alva
+   * Cambios recientes:   Eliminación de importación no utilizada y verificación de mensajes.
+   **************************************************************************************/
 import { Component, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -17,7 +26,6 @@ import { MAINTENANCE_GENERAL_IMPORTS } from 'app/shared/imports/system-maintenan
 import { SectorService } from 'app/modules/admin/shared/domain/services/sector.service';
 import { SectorEntity } from 'app/modules/admin/shared/domain/entities/sector.entity';
 import { UserService } from 'app/core/user/user.service';
-
 @Component({
   selector: 'app-maintenance-sector',
   standalone: true,
@@ -29,40 +37,31 @@ export default class MaintenanceSectorComponent {
   	private readonly _router = inject(Router);
 	private readonly _route = inject(ActivatedRoute);
 	private _dialogConfirmationService = inject(DialogConfirmationService);
-
 	private _matDialog: MatDialog = inject(MatDialog);
-
 	private _sectorService = inject(SectorService);
-
 	private _ngxToastrService = inject(NgxToastrService);
 	private _spinner = inject(NgxSpinnerService);
-	private _userService = inject(UserService); // Inyecta el servicio UserService para obtener información del usuario
-	
+	private _userService = inject(UserService);
     titleModule = signal<string>('Mantenedor de sectores');
 	headerTable = signal<TableColumnsDefInterface[]>([]);
 	dataTable = signal<SectorEntity[]>([]);
 	iconsTable = signal<IconOption<SectorEntity>[]>([]);
 	nameBtnAdd = signal<string>('Agregar sector');
-	
 	loadingTable = signal<boolean>(false);
 	pageIndexTable = signal<number>(1);
 	totalPagesTable = signal<number>(1);
 	paramSearchTable = signal<string>('');
 	placeHolderSearch = signal<string>('Busca por nombre');
-
 	delaySearchTable = signal<number>(400);
 	filterState = signal<boolean | null>(true);
-
 	ngOnInit(): void {
 		this.headerTable.set(MAINTENANCE_SECTOR_HEADER_TABLE);
 		this.iconsTable.set(this.defineIconsTable());
 		this.searchTable();
 	}
-
 	returnInit(): void {
 		this._router.navigate(['home']);
 	}
-
 	searchTable(): void {
 		this.loadingTable.set(true);
 		this._sectorService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState()).pipe(
@@ -81,43 +80,32 @@ export default class MaintenanceSectorComponent {
 			})
 		})
 	}
-
 	changePageTable(event: number): void {
 		this.pageIndexTable.set(event);
 		this.searchTable();
 	}
-
 	searchByItem(event: string): void {
 		this.paramSearchTable.set(event);
 		this.pageIndexTable.set(1);
 		this.searchTable();
 	}
-
 	defineIconsTable(): IconOption<SectorEntity>[] {
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
-        const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar"); // Icono para desactivar
-    	const iconActive = new IconOption("restart_alt", "mat_outline", "Activar"); // Icono para activar
-
-		// Acción para editar un ministerio
+        const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar");
+    	const iconActive = new IconOption("restart_alt", "mat_outline", "Activar");
 		iconEdit.actionIcono = (data: SectorEntity) => {
             this.openFormDialog(data);
         };
-
-		// Acción para eliminar un ministerio
 		iconInactive.actionIcono = (data: SectorEntity) => {
             this.deleteSector(data);
         };
-
 		iconActive.actionIcono = (data: SectorEntity) => {
             this.deleteSector(data);
         };
-
-		iconInactive.isHidden = (data: SectorEntity) => !data.bActivo; // Oculta el icono de desactivar si la empresa ya está desactivada
-    	iconActive.isHidden = (data: SectorEntity) => data.bActivo; // Oculta el icono de activar si la empresa ya está activa
-
-        return [iconEdit, iconInactive, iconActive]; // Retorna los iconos de acción
+		iconInactive.isHidden = (data: SectorEntity) => !data.bActivo;
+    	iconActive.isHidden = (data: SectorEntity) => data.bActivo;
+        return [iconEdit, iconInactive, iconActive];
     }
-
 	async deleteSector(data: SectorEntity): Promise<void> {
 		const config = data.bActivo ? CONFIG_INACTIVE_DIALOG_SECTOR : CONFIG_ACTIVE_DIALOG_SECTOR;
 		const dialogRef = await this._dialogConfirmationService.open(config);
@@ -133,7 +121,7 @@ export default class MaintenanceSectorComponent {
 				.subscribe({
 					next: (response: ResponseModel<boolean>) => {
 						if (response.isSuccess) {
-							const messageToast = data.bActivo ? 'Sector desactivado exitosamente' : 'Sector activado exitosamente'; // Muestra un mensaje de éxito
+							const messageToast = data.bActivo ? 'Sector desactivado exitosamente' : 'Sector activado exitosamente';
 							this._ngxToastrService.showSuccess(messageToast, '¡Éxito!');
 							this.searchTable();
 						}
@@ -141,7 +129,6 @@ export default class MaintenanceSectorComponent {
 				});
 		}
 	}
-
 	openFormDialog(element?: SectorEntity | null): void {
 		const respDialogo = this._matDialog.open(DialogSectorFormComponent, {
 			data: { object: element },
@@ -159,7 +146,6 @@ export default class MaintenanceSectorComponent {
 		    }
 		});
 	}
-
 	setFilterState(event: boolean | null) {
 		this.filterState.set(event);
 	}

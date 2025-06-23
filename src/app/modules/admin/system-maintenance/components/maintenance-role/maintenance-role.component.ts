@@ -1,3 +1,12 @@
+/*************************************************************************************
+   * Nombre del archivo:  maintenance-role.component.ts
+   * Descripción:         Componente para la gestión de roles: búsqueda, paginación,
+   *                      alta/edición, activación y desactivación con confirmación.
+   * Autor:               Daniel Alva
+   * Fecha de creación:   01/06/2025
+   * Última modificación: 23/06/2025 por Daniel Alva
+   * Cambios recientes:   Limpieza de importación no usada y verificación de mensajes.
+   **************************************************************************************/
 import { Component, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -17,7 +26,6 @@ import { MAINTENANCE_GENERAL_IMPORTS } from 'app/shared/imports/system-maintenan
 import { RoleService } from 'app/modules/admin/shared/domain/services/role.service';
 import { RoleEntity } from 'app/modules/admin/shared/domain/entities/role.entity';
 import { UserService } from 'app/core/user/user.service';
-
 @Component({
   selector: 'app-maintenance-role',
   standalone: true,
@@ -29,42 +37,32 @@ export default class MaintenanceRoleComponent {
     private readonly _router = inject(Router);
 	private readonly _route = inject(ActivatedRoute);
 	private _dialogConfirmationService = inject(DialogConfirmationService);
-
 	private _matDialog: MatDialog = inject(MatDialog);
-
 	private _roleService = inject(RoleService);
 	private _authorizationService = inject(AuthorizationService);
-
 	private _ngxToastrService = inject(NgxToastrService);
 	private _spinner = inject(NgxSpinnerService);
 	private _userService = inject(UserService);
-	
-	
     titleModule = signal<string>('Mantenedor de roles');
 	headerTable = signal<TableColumnsDefInterface[]>([]);
 	dataTable = signal<RoleEntity[]>([]);
 	iconsTable = signal<IconOption<RoleEntity>[]>([]);
 	nameBtnAdd = signal<string>('Agregar rol');
-	
 	loadingTable = signal<boolean>(false);
 	pageIndexTable = signal<number>(1);
 	totalPagesTable = signal<number>(1);
 	paramSearchTable = signal<string>('');
 	placeHolderSearch = signal<string>('Busca por nombre');
 	filterState = signal<boolean | null>(true);
-
 	delaySearchTable = signal<number>(400);
-
 	ngOnInit(): void {
 		this.headerTable.set(MAINTENANCE_ROL_HEADER_TABLE);
 		this.iconsTable.set(this.defineIconsTable());
 		this.searchTable();
 	}
-
 	returnInit(): void {
 		this._router.navigate(['home']);
 	}
-
 	searchTable(): void {
 		this.loadingTable.set(true);
 		this._roleService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState() ).pipe(
@@ -83,42 +81,32 @@ export default class MaintenanceRoleComponent {
 			})
 		})
 	}
-
 	changePageTable(event: number): void {
 		this.pageIndexTable.set(event);
 		this.searchTable();
 	}
-
 	searchByItem(event: string): void {
 		this.paramSearchTable.set(event);
 		this.pageIndexTable.set(1);
 		this.searchTable();
 	}
-
-
 	defineIconsTable(): IconOption<RoleEntity>[] {
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
-        const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar"); // Icono para desactivar
-    	const iconActive = new IconOption("restart_alt", "mat_outline", "Activar"); // Icono para activar
-
+        const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar");
+    	const iconActive = new IconOption("restart_alt", "mat_outline", "Activar");
 		iconEdit.actionIcono = (data: RoleEntity) => {
             this.openFormDialog(data);
         };
-
 		iconInactive.actionIcono = (data: RoleEntity) => {
             this.deleteRole(data);
         };
-
 		iconActive.actionIcono = (data: RoleEntity) => {
             this.deleteRole(data);
         };
-
-		iconInactive.isHidden = (data: RoleEntity) => !data.bActivo; // Oculta el icono de desactivar si la empresa ya está desactivada
-    	iconActive.isHidden = (data: RoleEntity) => data.bActivo; // Oculta el icono de activar si la empresa ya está activa
-
-        return [iconEdit, iconInactive, iconActive]; // Retorna los iconos de acción
+		iconInactive.isHidden = (data: RoleEntity) => !data.bActivo;
+    	iconActive.isHidden = (data: RoleEntity) => data.bActivo;
+        return [iconEdit, iconInactive, iconActive];
     }
-
 	async deleteRole(data: RoleEntity): Promise<void> {
 		const config = data.bActivo ? CONFIG_INACTIVE_DIALOG_ROLE : CONFIG_ACTIVE_DIALOG_ROLE;
 		const dialogRef = await this._dialogConfirmationService.open(config);
@@ -134,7 +122,7 @@ export default class MaintenanceRoleComponent {
 				.subscribe({
 					next: (response: ResponseModel<boolean>) => {
 						if (response.isSuccess) {
-							const messageToast = data.bActivo ? 'Rol desactivado exitosamente' : 'Rol activado exitosamente'; // Muestra un mensaje de éxito
+							const messageToast = data.bActivo ? 'Rol desactivado exitosamente' : 'Rol activado exitosamente';
 							this._ngxToastrService.showSuccess(messageToast, '¡Éxito!');
 							this.searchTable();
 						}
@@ -142,7 +130,6 @@ export default class MaintenanceRoleComponent {
 				});
 		}
 	}
-
 	openFormDialog(element?: RoleEntity | null): void {
 		const respDialogo = this._matDialog.open(DialogMaintenanceRoleFormComponent, {
 			data: { object: element },
@@ -160,7 +147,6 @@ export default class MaintenanceRoleComponent {
 		    }
 		});
 	}
-
 	setFilterState(event: boolean | null) {
 		this.filterState.set(event);
 	}

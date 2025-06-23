@@ -1,13 +1,17 @@
+/*******************************************************************************************************
+ * Nombre del archivo: position-maintenance.config.ts
+ * Descripción:         Configuración de columnas y diálogos de confirmación para mantenimiento de cargos.
+ * Autor:               Daniel Alva
+ * Fecha de creación:   01/06/2025
+ *******************************************************************************************************/
 import { DialogConfirmation } from "app/modules/admin/shared/components/fo-dialog-confirmation/models/dialog-confirmation.interface";
 import { TableColumnsDefInterface } from "../../interfaces/ITableColumnsDefInterface";
-
-// Define la configuración de las columnas de la tabla para la gestión de ministerios
 export const MAINTENANCE_POSITION_HEADER_TABLE: TableColumnsDefInterface[] = [
     {
-        id: 0, // Identificador único para la columna
-        name: "indice", // Nombre interno de la columna
-        displayedName: "Nro", // Nombre que se mostrará en el encabezado de la columna
-        type: "string" // Tipo de datos de la columna (en este caso, cadena de texto)
+        id: 0,
+        name: "indice",
+        displayedName: "Nro",
+        type: "string"
     },
     {
         id: 1,

@@ -9,7 +9,6 @@
             <div class="w-12">
                 <img src="images/logo/logo.svg" />
             </div>
-
             <!-- Title -->
             <div
                 class="mt-8 text-4xl font-extrabold leading-tight tracking-tight"
@@ -24,7 +23,6 @@
                     >Sign in
                 </a>
             </div>
-
             <!-- Alert -->
             @if (showAlert) {
                 <fuse-alert
@@ -37,7 +35,6 @@
                     {{ alert.message }}
                 </fuse-alert>
             }
-
             <!-- Sign Up form -->
             <form class="mt-8" [formGroup]="signUpForm" #signUpNgForm="ngForm">
                 <!-- Name field -->
@@ -48,7 +45,6 @@
                         <mat-error> Full name is required </mat-error>
                     }
                 </mat-form-field>
-
                 <!-- Email field -->
                 <mat-form-field class="w-full">
                     <mat-label>Email address</mat-label>
@@ -62,7 +58,6 @@
                         </mat-error>
                     }
                 </mat-form-field>
-
                 <!-- Password field -->
                 <mat-form-field class="w-full">
                     <mat-label>Password</mat-label>
@@ -98,7 +93,6 @@
                     </button>
                     <mat-error> Password is required </mat-error>
                 </mat-form-field>
-
                 <!-- Company field -->
                 <mat-form-field class="w-full">
                     <mat-label>Company</mat-label>
@@ -108,7 +102,6 @@
                         [formControlName]="'company'"
                     />
                 </mat-form-field>
-
                 <!-- ToS and PP -->
                 <div class="mt-1.5 inline-flex w-full items-end">
                     <mat-checkbox
@@ -130,7 +123,6 @@
                         </a>
                     </mat-checkbox>
                 </div>
-
                 <!-- Submit button -->
                 <button
                     class="fuse-mat-button-large mt-6 w-full"

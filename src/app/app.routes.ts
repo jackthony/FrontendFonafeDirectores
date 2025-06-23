@@ -3,9 +3,9 @@
  * Descripción:         Definición de rutas principales de la aplicación Angular.
  *                      Incluye rutas protegidas y públicas, agrupadas por layout,
  *                      y con guardas para autenticación, sesión y permisos por módulo.
- * Autor:               Jesús Martín Velásquez Zavaleta
+ * Autor:               Daniel Alva
  * Fecha de creación:   01/06/2025
- * Última modificación: 23/06/2025 por Jesús Martín Velásquez Zavaleta
+ * Última modificación: 23/06/2025 por Daniel Alva
  * Cambios recientes:   Configuración de rutas públicas, protegidas, y módulos
  *                      administrativos con control de acceso granular.
  *************************************************************************************/

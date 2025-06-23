@@ -1,14 +1,3 @@
-/*************************************************************************************
- * Nombre del archivo:  tailwind.config.js
- * Descripción:         Configuración avanzada de TailwindCSS para la aplicación.
- *                      Define temas personalizados, fuentes, tipografías, paletas
- *                      de colores, breakpoints y extensiones utilitarias específicas
- *                      utilizadas por Fuse y otros componentes de UI.
- * Autor:               Jesús Martín Velásquez Zavaleta
- * Fecha de creación:   01/06/2025
- * Última modificación: 23/06/2025 por Jesús Martín Velásquez Zavaleta
- * Cambios recientes:   Incorporación de temas personalizados y plugins internos de Fuse.
- *************************************************************************************/
 const path = require('path');
 const colors = require('tailwindcss/colors');
 const defaultTheme = require('tailwindcss/defaultTheme');

@@ -1,13 +1,17 @@
+/*******************************************************************************************************
+ * Nombre del archivo: ministry-management.config.ts
+ * Descripción:         Configuración de columnas y diálogos de confirmación para mantenimiento de ministerios.
+ * Autor:               Daniel Alva
+ * Fecha de creación:   01/06/2025
+ *******************************************************************************************************/
 import { DialogConfirmation } from "app/modules/admin/shared/components/fo-dialog-confirmation/models/dialog-confirmation.interface";
 import { TableColumnsDefInterface } from "../../interfaces/ITableColumnsDefInterface";
-
-// Define la configuración de las columnas de la tabla para la gestión de ministerios
 export const MAINTENANCE_MINISTRY_MANAGEMENT: TableColumnsDefInterface[] = [
     {
-        id: 0, // Identificador único para la columna
-        name: "indice", // Nombre interno de la columna
-        displayedName: "Nro", // Nombre que se mostrará en el encabezado de la columna
-        type: "string" // Tipo de datos de la columna (en este caso, cadena de texto)
+        id: 0,
+        name: "indice",
+        displayedName: "Nro",
+        type: "string"
     },
     {
         id: 1,
@@ -28,15 +32,12 @@ export const MAINTENANCE_MINISTRY_MANAGEMENT: TableColumnsDefInterface[] = [
         type: "acciones"
     }
 ];
-
-// Configuración para el diálogo de confirmación al eliminar un ministerio
 export const CONFIG_DELETE_DIALOG_MINISTRY: DialogConfirmation = {
-    title: "¿Estás seguro de eliminar el ministerio?", // Título del diálogo de confirmación
-    message: "Esta acción es irreversible y los datos no podrán ser recuperados." // Mensaje que se muestra al usuario, alertando de la irreversibilidad de la acción
+    title: "¿Estás seguro de eliminar el ministerio?",
+    message: "Esta acción es irreversible y los datos no podrán ser recuperados."
 };
-
 export const CONFIG_INACTIVE_DIALOG_MINISTRY: DialogConfirmation = {
-    title: "¿Estás seguro de desactivar el ministerio?", // Título del diálogo de confirmación
+    title: "¿Estás seguro de desactivar el ministerio?",
     message: "Recuerda que una vez desactivado el ministerio?, no podrá ser visualizada como activa, pero podrás consultar su información.",
     actions: {
         confirm: {
@@ -45,9 +46,8 @@ export const CONFIG_INACTIVE_DIALOG_MINISTRY: DialogConfirmation = {
         iconClose: false
     }
 };
-
 export const CONFIG_ACTIVE_DIALOG_MINISTRY: DialogConfirmation = {
-    title: "¿Estás seguro de activar el ministerio?", // Título del diálogo de confirmación
+    title: "¿Estás seguro de activar el ministerio?",
     message: "Recuerda que una vez activado el ministerio, será visualizada como activa.",
     actions: {
         confirm: {

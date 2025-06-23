@@ -1,3 +1,13 @@
+/*************************************************************************************
+   * Nombre del archivo:  reset-password.component.ts
+   * Descripción:         Componente para restablecimiento de contraseña. Gestiona el
+   *                      formulario, validaciones, comunicación con el servicio de
+   *                      autenticación y notificaciones al usuario.
+   * Autor:               Daniel Alva
+   * Fecha de creación:   01/06/2025
+   * Última modificación: 23/06/2025 por Daniel Alva
+   * Cambios recientes:   Creación inicial del componente de restablecimiento de contraseña.
+   **************************************************************************************/
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import {
@@ -24,7 +34,6 @@ import { UserService } from 'app/core/user/user.service';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
 import { ValidationFormService } from 'app/shared/services/validation-form.service';
 import { finalize, Subject, takeUntil } from 'rxjs';
-
 @Component({
     selector: 'auth-reset-password',
     templateUrl: './reset-password.component.html',

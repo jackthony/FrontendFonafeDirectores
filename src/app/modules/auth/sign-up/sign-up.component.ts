@@ -1,3 +1,12 @@
+/*************************************************************************************
+   * Nombre del archivo:  sign-up.component.ts
+   * Descripción:         Componente para registro de nuevos usuarios, gestionando el formulario
+   *                      y la comunicación con el servicio de autenticación.
+   * Autor:               Daniel Alva
+   * Fecha de creación:   01/06/2025
+   * Última modificación: 23/06/2025 por Daniel Alva
+   * Cambios recientes:   Creación inicial del componente.
+   **************************************************************************************/
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import {
     FormsModule,
@@ -17,7 +26,6 @@ import { Router, RouterLink } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
-
 @Component({
     selector: 'auth-sign-up',
     templateUrl: './sign-up.component.html',
@@ -39,14 +47,12 @@ import { AuthService } from 'app/core/auth/auth.service';
 })
 export class AuthSignUpComponent implements OnInit {
     @ViewChild('signUpNgForm') signUpNgForm: NgForm;
-
     alert: { type: FuseAlertType; message: string } = {
         type: 'success',
         message: '',
     };
     signUpForm: UntypedFormGroup;
     showAlert: boolean = false;
-
     /**
      * Constructor
      */
@@ -55,16 +61,10 @@ export class AuthSignUpComponent implements OnInit {
         private _formBuilder: UntypedFormBuilder,
         private _router: Router
     ) {}
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
-
     /**
      * On init
      */
     ngOnInit(): void {
-        // Create the form
         this.signUpForm = this._formBuilder.group({
             name: ['', Validators.required],
             email: ['', [Validators.required, Validators.email]],
@@ -73,46 +73,26 @@ export class AuthSignUpComponent implements OnInit {
             agreements: ['', Validators.requiredTrue],
         });
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
     /**
      * Sign up
      */
     signUp(): void {
-        // Do nothing if the form is invalid
         if (this.signUpForm.invalid) {
             return;
         }
-
-        // Disable the form
         this.signUpForm.disable();
-
-        // Hide the alert
         this.showAlert = false;
-
-        // Sign up
         this._authService.signUp(this.signUpForm.value).subscribe(
             (response) => {
-                // Navigate to the confirmation required page
                 this._router.navigateByUrl('/confirmation-required');
             },
             (response) => {
-                // Re-enable the form
                 this.signUpForm.enable();
-
-                // Reset the form
                 this.signUpNgForm.resetForm();
-
-                // Set the alert
                 this.alert = {
                     type: 'error',
                     message: 'Something went wrong, please try again.',
                 };
-
-                // Show the alert
                 this.showAlert = true;
             }
         );

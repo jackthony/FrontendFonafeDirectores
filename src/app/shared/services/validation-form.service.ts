@@ -1,3 +1,13 @@
+/*************************************************************************************
+ * Nombre del archivo:  validation-form.service.ts
+ * Descripción:         Servicio centralizado de validaciones personalizadas para formularios.
+ *                      Incluye validación de RUC, DNI, correo, teléfono, fechas y contraseñas
+ *                      bajo reglas específicas del dominio de negocio.
+ * Autor:               Daniel Alva
+ * Fecha de creación:   01/06/2025
+ * Última modificación: 22/06/2025 por Daniel Alva
+ * Cambios recientes:   Implementación de validadores reutilizables para formularios reactivos.
+ *************************************************************************************/
 import { Injectable } from '@angular/core';
 import { AbstractControl, ValidationErrors } from '@angular/forms';
 @Injectable({

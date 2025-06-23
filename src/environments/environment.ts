@@ -3,9 +3,9 @@
  * Descripción:         Archivo de configuración de entorno para el modo desarrollo.
  *                      Define variables globales como el estado de producción, la
  *                      URL base de la API y claves públicas para servicios externos.
- * Autor:               Jesús Martín Velásquez Zavaleta
- * Fecha de creación:   23/06/2025
- * Última modificación: 23/06/2025 por Jesús Martín Velásquez Zavaleta
+ * Autor:               Daniel Alva
+ * Fecha de creación:   01/06/2025
+ * Última modificación: 23/06/2025 por Daniel Alva
  * Cambios recientes:   Configuración inicial del entorno de desarrollo.
  *************************************************************************************/
 import { Environment } from "./environment.interface";

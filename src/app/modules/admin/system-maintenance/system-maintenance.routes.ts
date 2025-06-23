@@ -1,5 +1,14 @@
+/*************************************************************************************
+   * Nombre del archivo:  system-maintenance.routes.ts
+   * Descripción:         Configuración de rutas para el módulo de mantenimiento de sistemas,
+   *                      incluyendo subrutas para roles, ministerios, sectores, rubros,
+   *                      cargos, tipo-director y especialidades.
+   * Autor:               Daniel Alva
+   * Fecha de creación:   01/06/2025
+   * Última modificación: 23/06/2025 por Daniel Alva
+   * Cambios recientes:   Creación inicial de las rutas de mantenimiento de sistemas.
+   **************************************************************************************/
 import { Routes } from '@angular/router';
-
 export default [
     {
         path: '',

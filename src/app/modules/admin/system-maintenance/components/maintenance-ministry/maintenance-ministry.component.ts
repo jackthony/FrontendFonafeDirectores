@@ -1,3 +1,12 @@
+/*************************************************************************************
+   * Nombre del archivo:  maintenance-ministry.component.ts
+   * Descripción:         Componente para la gestión de ministerios: búsqueda, paginación,
+   *                      alta/edición, activación y desactivación con confirmación.
+   * Autor:               Daniel Alva
+   * Fecha de creación:   01/06/2025
+   * Última modificación: 23/06/2025 por Daniel Alva
+   * Cambios recientes:   Limpieza de imports sin uso y adición de cabecera unificada.
+   **************************************************************************************/
 import { Component, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -17,7 +26,6 @@ import { MAINTENANCE_GENERAL_IMPORTS } from 'app/shared/imports/system-maintenan
 import { MinistryService } from 'app/modules/admin/shared/domain/services/ministry.service';
 import { MinistryEntity } from 'app/modules/admin/business-management/domain/entities/ministry.entity';
 import { UserService } from 'app/core/user/user.service';
-
 @Component({
   selector: 'app-maintenance-ministry',
   standalone: true,
@@ -26,7 +34,6 @@ import { UserService } from 'app/core/user/user.service';
   styleUrl: './maintenance-ministry.component.scss'
 })
 export default class MaintenanceMinistryComponent {
-    // Inyección de dependencias para gestionar rutas, servicios y otros componentes
     private readonly _router = inject(Router);
 	private readonly _route = inject(ActivatedRoute);
 	private _dialogConfirmationService = inject(DialogConfirmationService);
@@ -35,16 +42,12 @@ export default class MaintenanceMinistryComponent {
 	private _authorizationService = inject(AuthorizationService);
 	private _ngxToastrService = inject(NgxToastrService);
 	private _spinner = inject(NgxSpinnerService);
-	private _userService = inject(UserService); // Inyecta el servicio UserService para obtener información del usuario
-	
-    // Señales reactivas para manejar el estado de la tabla y los datos de los ministerios
+	private _userService = inject(UserService);
     titleModule = signal<string>('Mantenedor de ministerios');
-	headerTable = signal<TableColumnsDefInterface[]>([]); // Define las columnas de la tabla
-	dataTable = signal<MinistryEntity[]>([]); // Define los datos que se mostrarán en la tabla
-	iconsTable = signal<IconOption<MinistryEntity>[]>([]); // Define los iconos de las acciones de la tabla
-	nameBtnAdd = signal<string>('Agregar ministerio'); // Define el texto del botón de agregar ministerio
-	
-	// Variables de estado y paginación para la tabla
+	headerTable = signal<TableColumnsDefInterface[]>([]);
+	dataTable = signal<MinistryEntity[]>([]);
+	iconsTable = signal<IconOption<MinistryEntity>[]>([]);
+	nameBtnAdd = signal<string>('Agregar ministerio');
 	loadingTable = signal<boolean>(false);
 	pageIndexTable = signal<number>(1);
 	totalPagesTable = signal<number>(1);
@@ -52,126 +55,99 @@ export default class MaintenanceMinistryComponent {
 	placeHolderSearch = signal<string>('Busca por nombre');
 	delaySearchTable = signal<number>(400);
 	filterState = signal<boolean | null>(true);
-
-	// Método que se ejecuta cuando el componente es inicializado
 	ngOnInit(): void {
-		this.headerTable.set(MAINTENANCE_MINISTRY_MANAGEMENT); // Establece las columnas de la tabla
-		this.iconsTable.set(this.defineIconsTable()); // Define los iconos de la tabla
-		this.searchTable(); // Realiza la búsqueda de los ministerios
+		this.headerTable.set(MAINTENANCE_MINISTRY_MANAGEMENT);
+		this.iconsTable.set(this.defineIconsTable());
+		this.searchTable();
 	}
-
-	// Método para redirigir al usuario a la página de inicio
 	returnInit(): void {
-		this._router.navigate(['home']); // Redirige al usuario a la ruta 'home'
+		this._router.navigate(['home']);
 	}
-
-	// Método para buscar los ministerios con paginación
 	searchTable(): void {
-		this.loadingTable.set(true); // Activa el estado de carga de la tabla
+		this.loadingTable.set(true);
 		this._ministryService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState()).pipe(
-			finalize(() => this.loadingTable.set(false)) // Finaliza la carga cuando termina la operación
+			finalize(() => this.loadingTable.set(false))
 		).subscribe({
 			next: ((response: ResponseModel<MinistryEntity>) => {
 				if(response.isSuccess) {
-					const totalPages = Math.ceil(response.pagination.totalRows / PAGINATOR_PAGE_SIZE); // Calcula el total de páginas
-					this.totalPagesTable.set(totalPages > 0 ? totalPages : 1); // Establece el número total de páginas
-					this.dataTable.set(response.lstItem); // Establece los ministerios en la tabla
+					const totalPages = Math.ceil(response.pagination.totalRows / PAGINATOR_PAGE_SIZE);
+					this.totalPagesTable.set(totalPages > 0 ? totalPages : 1);
+					this.dataTable.set(response.lstItem);
 				} else {
-					this.dataTable.set([]); // Si no hay resultados, vacía la tabla
+					this.dataTable.set([]);
 				}
 			}),
 			error: (() => {
-				this.totalPagesTable.set(1); // En caso de error, establece una sola página
-				this.dataTable.set([]); // Vacía los datos de la tabla
+				this.totalPagesTable.set(1);
+				this.dataTable.set([]);
 			})
 		});
 	}
-
-	// Método para cambiar la página de la tabla
 	changePageTable(event: number): void {
-		this.pageIndexTable.set(event); // Establece la nueva página
-		this.searchTable(); // Realiza la búsqueda con la nueva página
+		this.pageIndexTable.set(event);
+		this.searchTable();
 	}
-
-	// Método para buscar los ministerios por nombre
 	searchByItem(event: string): void {
-		this.paramSearchTable.set(event); // Establece el término de búsqueda
-		this.pageIndexTable.set(1); // Reinicia a la primera página
-		this.searchTable(); // Realiza la búsqueda
+		this.paramSearchTable.set(event);
+		this.pageIndexTable.set(1);
+		this.searchTable();
 	}
-
-	// Método para definir los iconos de acción en la tabla
 	defineIconsTable(): IconOption<MinistryEntity>[] {
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
-        const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar"); // Icono para desactivar
-    	const iconActive = new IconOption("restart_alt", "mat_outline", "Activar"); // Icono para activar
-
-		// Acción para editar un ministerio
+        const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar");
+    	const iconActive = new IconOption("restart_alt", "mat_outline", "Activar");
 		iconEdit.actionIcono = (data: MinistryEntity) => {
             this.openFormDialog(data);
         };
-
-		// Acción para eliminar un ministerio
 		iconInactive.actionIcono = (data: MinistryEntity) => {
             this.deleteMinistry(data);
         };
-
 		iconActive.actionIcono = (data: MinistryEntity) => {
             this.deleteMinistry(data);
         };
-
-		iconInactive.isHidden = (data: MinistryEntity) => !data.bActivo; // Oculta el icono de desactivar si la empresa ya está desactivada
-    	iconActive.isHidden = (data: MinistryEntity) => data.bActivo; // Oculta el icono de activar si la empresa ya está activa
-
-        return [iconEdit, iconInactive, iconActive]; // Retorna los iconos de acción
+		iconInactive.isHidden = (data: MinistryEntity) => !data.bActivo;
+    	iconActive.isHidden = (data: MinistryEntity) => data.bActivo;
+        return [iconEdit, iconInactive, iconActive];
     }
-
-	
-
-	// Método para eliminar un ministerio
 	async deleteMinistry(data: MinistryEntity): Promise<void> {
 		const config = data.bActivo ? CONFIG_INACTIVE_DIALOG_MINISTRY : CONFIG_ACTIVE_DIALOG_MINISTRY;
 		const dialogRef = await this._dialogConfirmationService.open(config);
-        const isValid = await firstValueFrom(dialogRef.afterClosed()); // Espera la respuesta del diálogo de confirmación
+        const isValid = await firstValueFrom(dialogRef.afterClosed());
 		if(isValid) {
 			const request = new MinistryEntity();
 			request.nIdMinisterio = data.nIdMinisterio;
 			request.nUsuarioModificacion =this._userService.userLogin().usuarioId
-			this._spinner.show(); // Muestra el spinner de carga
+			this._spinner.show();
 			this._ministryService
-				.delete(request) // Llama al servicio para eliminar el ministerio
-				.pipe(finalize(() => this._spinner.hide())) // Finaliza la operación y oculta el spinner
+				.delete(request)
+				.pipe(finalize(() => this._spinner.hide()))
 				.subscribe({
 					next: (response: ResponseModel<boolean>) => {
 						if (response.isSuccess) {
-							const messageToast = data.bActivo ? 'Ministerio desactivado exitosamente' : 'Ministerio activado exitosamente'; // Muestra un mensaje de éxito
-							this._ngxToastrService.showSuccess(messageToast, '¡Éxito!'); // Muestra la notificación
-							this.searchTable(); // Realiza la búsqueda de los ministerios nuevamente
+							const messageToast = data.bActivo ? 'Ministerio desactivado exitosamente' : 'Ministerio activado exitosamente';
+							this._ngxToastrService.showSuccess(messageToast, '¡Éxito!');
+							this.searchTable();
 						}
 					},
 				});
 		}
 	}
-
-	// Método para abrir el diálogo de edición o registro de ministerio
 	openFormDialog(element?: MinistryEntity | null): void {
 		const respDialogo = this._matDialog.open(DialogMinistryFormComponent, {
-			data: { object: element }, // Pasa los datos al diálogo
-		    disableClose: true, // Desactiva el cierre del diálogo al hacer clic fuera
-			width: "700px", // Establece el tamaño del diálogo
-		    minWidth: "350px", // Establece el tamaño mínimo del diálogo
-			panelClass: 'mat-dialog-not-padding', // Aplica estilos personalizados al diálogo
+			data: { object: element },
+		    disableClose: true,
+			width: "700px",
+		    minWidth: "350px",
+			panelClass: 'mat-dialog-not-padding',
 		});
-		// Se suscribe al cierre del diálogo y actualiza la tabla si se confirma la acción
 		respDialogo.beforeClosed().subscribe(res => {
 		    if(res){
-				this.searchTable(); // Realiza la búsqueda de ministerios nuevamente
-				if(element) this._ngxToastrService.showSuccess('Ministerio actualizado exitosamente', '¡Éxito!'); // Muestra la notificación de éxito
-			    else this._ngxToastrService.showSuccess('Ministerio registrado exitosamente', '¡Éxito!'); // Muestra la notificación de éxito
+				this.searchTable();
+				if(element) this._ngxToastrService.showSuccess('Ministerio actualizado exitosamente', '¡Éxito!');
+			    else this._ngxToastrService.showSuccess('Ministerio registrado exitosamente', '¡Éxito!');
 		    }
 		});
 	}
-
 	setFilterState(event: boolean | null) {
 		this.filterState.set(event);
 	}

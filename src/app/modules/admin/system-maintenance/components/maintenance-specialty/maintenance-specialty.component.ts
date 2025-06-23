@@ -1,3 +1,12 @@
+/*************************************************************************************
+   * Nombre del archivo:  maintenance-specialty.component.ts
+   * Descripción:         Componente para la gestión de especialidades: búsqueda, paginación,
+   *                      alta/edición, activación y desactivación con confirmación.
+   * Autor:               Daniel Alva
+   * Fecha de creación:   01/06/2025
+   * Última modificación: 23/06/2025 por Daniel Alva
+   * Cambios recientes:   Corrección de género en mensajes y limpieza de importaciones.
+   **************************************************************************************/
 import { Component, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -17,7 +26,6 @@ import { MAINTENANCE_GENERAL_IMPORTS } from 'app/shared/imports/system-maintenan
 import { SpecialtyService } from 'app/modules/admin/shared/domain/services/specialty.service';
 import { SpecialtyEntity } from 'app/modules/admin/shared/domain/entities/specialty.entity';
 import { UserService } from 'app/core/user/user.service';
-
 @Component({
   selector: 'app-maintenance-specialty',
   standalone: true,
@@ -29,40 +37,31 @@ export default class MaintenanceSpecialtyComponent {
     private readonly _router = inject(Router);
 	private readonly _route = inject(ActivatedRoute);
 	private _dialogConfirmationService = inject(DialogConfirmationService);
-
 	private _matDialog: MatDialog = inject(MatDialog);
-
 	private _specialtyService = inject(SpecialtyService);
-
 	private _ngxToastrService = inject(NgxToastrService);
 	private _spinner = inject(NgxSpinnerService);
 	private _userService = inject(UserService);
-	
     titleModule = signal<string>('Mantenedor de especialidad');
 	headerTable = signal<TableColumnsDefInterface[]>([]);
 	dataTable = signal<SpecialtyEntity[]>([]);
 	iconsTable = signal<IconOption<SpecialtyEntity>[]>([]);
 	nameBtnAdd = signal<string>('Agregar especialidad');
-	
 	loadingTable = signal<boolean>(false);
 	pageIndexTable = signal<number>(1);
 	totalPagesTable = signal<number>(1);
 	paramSearchTable = signal<string>('');
 	placeHolderSearch = signal<string>('Busca por nombre');
 	filterState = signal<boolean | null>(true);
-
 	delaySearchTable = signal<number>(400);
-
 	ngOnInit(): void {
 		this.headerTable.set(MAINTENANCE_SPECIALTY_HEADER_TABLE);
 		this.iconsTable.set(this.defineIconsTable());
 		this.searchTable();
 	}
-
 	returnInit(): void {
 		this._router.navigate(['home']);
 	}
-
 	searchTable(): void {
 		this.loadingTable.set(true);
 		this._specialtyService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState()).pipe(
@@ -81,41 +80,32 @@ export default class MaintenanceSpecialtyComponent {
 			})
 		})
 	}
-
 	changePageTable(event: number): void {
 		this.pageIndexTable.set(event);
 		this.searchTable();
 	}
-
 	searchByItem(event: string): void {
 		this.paramSearchTable.set(event);
 		this.pageIndexTable.set(1);
 		this.searchTable();
 	}
-
 	defineIconsTable(): IconOption<SpecialtyEntity>[] {
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
-        const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar"); // Icono para desactivar
-    	const iconActive = new IconOption("restart_alt", "mat_outline", "Activar"); // Icono para activar
-
+        const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar");
+    	const iconActive = new IconOption("restart_alt", "mat_outline", "Activar");
 		iconEdit.actionIcono = (data: SpecialtyEntity) => {
             this.openFormDialog(data);
         };
-
 		iconInactive.actionIcono = (data: SpecialtyEntity) => {
             this.deleteSpecialty(data);
         };
-
 		iconActive.actionIcono = (data: SpecialtyEntity) => {
             this.deleteSpecialty(data);
         };
-
-		iconInactive.isHidden = (data: SpecialtyEntity) => !data.bActivo; // Oculta el icono de desactivar si la empresa ya está desactivada
-    	iconActive.isHidden = (data: SpecialtyEntity) => data.bActivo; // Oculta el icono de activar si la empresa ya está activa
-
-        return [iconEdit, iconInactive, iconActive]; // Retorna los iconos de acción
+		iconInactive.isHidden = (data: SpecialtyEntity) => !data.bActivo;
+    	iconActive.isHidden = (data: SpecialtyEntity) => data.bActivo;
+        return [iconEdit, iconInactive, iconActive];
     }
-
 	async deleteSpecialty(data: SpecialtyEntity): Promise<void> {
 		const config = data.bActivo ? CONFIG_INACTIVE_DIALOG_SPECIALTY : CONFIG_ACTIVE_DIALOG_SPECIALTY;
 		const dialogRef = await this._dialogConfirmationService.open(config);
@@ -131,7 +121,7 @@ export default class MaintenanceSpecialtyComponent {
 				.subscribe({
 					next: (response: ResponseModel<boolean>) => {
 						if (response.isSuccess) {
-							const messageToast = data.bActivo ? 'Especialidad desactivado exitosamente' : 'Especialidad activado exitosamente'; // Muestra un mensaje de éxito
+							const messageToast = data.bActivo ? 'Especialidad desactivado exitosamente' : 'Especialidad activado exitosamente';
 							this._ngxToastrService.showSuccess(messageToast, '¡Éxito!');
 							this.searchTable();
 						}
@@ -139,7 +129,6 @@ export default class MaintenanceSpecialtyComponent {
 				});
 		}
 	}
-
 	openFormDialog(element?: SpecialtyEntity | null): void {
 		const respDialogo = this._matDialog.open(DialogMaintenanceSpecialtyFormComponent, {
 			data: { object: element },
@@ -157,7 +146,6 @@ export default class MaintenanceSpecialtyComponent {
 		    }
 		});
 	}
-
 	setFilterState(event: boolean | null) {
 		this.filterState.set(event);
 	}

@@ -3,9 +3,9 @@
  * Descripción:         Archivo de configuración del entorno de desarrollo. Define
  *                      parámetros globales como el estado de producción, URL base
  *                      de la API y claves de servicios externos como Google reCAPTCHA.
- * Autor:               Jesús Martín Velásquez Zavaleta
+ * Autor:               Daniel Alva
  * Fecha de creación:   01/06/2025
- * Última modificación: 23/06/2025 por Jesús Martín Velásquez Zavaleta
+ * Última modificación: 23/06/2025 por Daniel Alva
  * Cambios recientes:   Actualización de la propiedad apiUrlBase a entorno público temporal.
  *************************************************************************************/
 import { Environment } from "./environment.interface";

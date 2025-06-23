@@ -1,3 +1,15 @@
+/*******************************************************************************************************
+ * Nombre del archivo:  http-generic.service.ts
+ * Descripción:          Servicio genérico para facilitar operaciones CRUD sobre una URL base.
+ *                      Permite realizar solicitudes GET, POST y POST simulando PUT/DELETE, 
+ *                      encapsulando el uso de HttpRequestService con RequestOption.
+ * Autor:                Daniel Alva
+ * Fecha de creación:    01/06/2025
+ * Última modificación:  23/06/2025 por Daniel Alva
+ * Cambios recientes:    - Integración con HttpRequestService.
+ *                       - Abstracción de operaciones CRUD sobre rutas genéricas.
+ *                       - Compatibilidad con recursos RESTful.
+ *******************************************************************************************************/
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpRequestService } from './http-request.service';

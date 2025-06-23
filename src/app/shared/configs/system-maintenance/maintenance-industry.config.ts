@@ -1,13 +1,17 @@
+/*******************************************************************************************************
+ * Nombre del archivo: industry-management.config.ts
+ * Descripción:         Configuración de columnas y diálogos de confirmación para mantenimiento de rubros.
+ * Autor:               Daniel Alva
+ * Fecha de creación:   01/06/2025
+ *******************************************************************************************************/
 import { DialogConfirmation } from "app/modules/admin/shared/components/fo-dialog-confirmation/models/dialog-confirmation.interface";
 import { TableColumnsDefInterface } from "../../interfaces/ITableColumnsDefInterface";
-
-// Define la configuración de las columnas de la tabla para la gestión de ministerios
 export const MAINTENANCE_INDUSTRY_HEADER_TABLE: TableColumnsDefInterface[] = [
     {
-        id: 0, // Identificador único para la columna
-        name: "indice", // Nombre interno de la columna
-        displayedName: "Nro", // Nombre que se mostrará en el encabezado de la columna
-        type: "string" // Tipo de datos de la columna (en este caso, cadena de texto)
+        id: 0,
+        name: "indice",
+        displayedName: "Nro",
+        type: "string"
     },
     {
         id: 1,
@@ -28,15 +32,12 @@ export const MAINTENANCE_INDUSTRY_HEADER_TABLE: TableColumnsDefInterface[] = [
         type: "acciones"
     }
 ];
-
-// Configuración para el diálogo de confirmación al eliminar un ministerio
 export const CONFIG_DELETE_DIALOG_INDUSTRY: DialogConfirmation = {
-    title: "¿Estás seguro de eliminar el rubro?", // Título del diálogo de confirmación
-    message: "Esta acción es irreversible y los datos no podrán ser recuperados." // Mensaje que se muestra al usuario, alertando de la irreversibilidad de la acción
+    title: "¿Estás seguro de eliminar el rubro?",
+    message: "Esta acción es irreversible y los datos no podrán ser recuperados."
 };
-
 export const CONFIG_INACTIVE_DIALOG_INDUSTRY: DialogConfirmation = {
-    title: "¿Estás seguro de desactivar el rubro?", // Título del diálogo de confirmación
+    title: "¿Estás seguro de desactivar el rubro?",
     message: "Recuerda que una vez desactivado el rubro?, no podrá ser visualizada como activa, pero podrás consultar su información.",
     actions: {
         confirm: {
@@ -45,9 +46,8 @@ export const CONFIG_INACTIVE_DIALOG_INDUSTRY: DialogConfirmation = {
         iconClose: false
     }
 };
-
 export const CONFIG_ACTIVE_DIALOG_INDUSTRY: DialogConfirmation = {
-    title: "¿Estás seguro de activar el rubro?", // Título del diálogo de confirmación
+    title: "¿Estás seguro de activar el rubro?",
     message: "Recuerda que una vez activado el rubro, será visualizada como activa.",
     actions: {
         confirm: {

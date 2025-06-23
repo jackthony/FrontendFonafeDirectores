@@ -1,3 +1,10 @@
+/*******************************************************************************************************
+ * Nombre del archivo:  fo-table-imports.ts
+ * Descripción:          Conjunto de módulos, componentes y pipes utilizados en la tabla FoTableComponent.
+ * Autor:                Daniel Alva
+ * Fecha de creación:    01/06/2025
+ * Última modificación:  23/06/2025 por Daniel Alva
+ *******************************************************************************************************/
 import { CommonModule } from "@angular/common";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
