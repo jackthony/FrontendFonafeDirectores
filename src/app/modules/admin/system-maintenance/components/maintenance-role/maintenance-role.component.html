@@ -9,7 +9,10 @@
             [placeTextSearch]="placeHolderSearch()"
             (eventSearch)="searchByItem($event)"
             (eventNewElement)="openFormDialog()"
-            [textBtnSearch]="nameBtnAdd()">
+            [textBtnSearch]="nameBtnAdd()"
+            viewFilterState
+            (eventFilterState)="setFilterState($event)"
+            (eventBtnSearch)="searchTable()">
         </fo-search-for-button>
         <fo-table 
             [loading]="loadingTable()"

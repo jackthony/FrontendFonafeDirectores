@@ -2,7 +2,7 @@
     <div class="header-dialog">
         <div class="header-container gap-3 flex">
             <mat-icon class="icon-size-7" svgIcon="mat_outline:person_outline"></mat-icon>
-            <div class="header-text">Agregar rol</div>
+            <div class="header-text">{{ isEdit() ? 'Editar' : 'Agregar' }} rol</div>
         </div>
     </div>
     <div class="body-dialog">
@@ -21,26 +21,6 @@
                         @if(form.get('sNombreRol').invalid) {
                             <mat-error class="text-red-500">
                                 {{ form.get("sNombreRol") | translateMessageForm }}
-                            </mat-error>
-                        }
-                </mat-form-field>     
-            </div>
-            <div class="col-span-1">
-                <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
-                    <mat-label>Descripción</mat-label>
-                    <textarea
-                        formControlName="sDescripcion"
-                        matInput 
-                        (keypress)="onKeyPress($event)"
-                        (input)="onInput($event, 'sDescripcion')"
-                        placeholder="--"
-                        rows="3"
-                        cols="10"
-                        type="text"
-                        maxlength="255"></textarea>
-                        @if(form.get('sDescripcion').invalid) {
-                            <mat-error class="text-red-500">
-                                {{ form.get("sDescripcion") | translateMessageForm }}
                             </mat-error>
                         }
                 </mat-form-field>     

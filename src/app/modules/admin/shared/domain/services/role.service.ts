@@ -19,8 +19,8 @@ export class RoleService {
         return this._typeDirectorInterface.getAll();
     }
 
-    getByPagination(param: string, pageIndex: number, pageSize: number): Observable<ResponseEntity<RoleEntity>> {
-        return this._typeDirectorInterface.getByPagination(param, pageIndex, pageSize);
+    getByPagination(param: string, pageIndex: number, pageSize: number, filterState: boolean | null): Observable<ResponseEntity<RoleEntity>> {
+        return this._typeDirectorInterface.getByPagination(param, pageIndex, pageSize, filterState);
     }
 
     create(object: RoleEntity): Observable<ResponseEntity<number>> {
@@ -31,7 +31,7 @@ export class RoleService {
         return this._typeDirectorInterface.update(object);
     }
 
-    delete(nId: number): Observable<ResponseEntity<boolean>> {
-        return this._typeDirectorInterface.delete(nId);
+    delete(object: RoleEntity): Observable<ResponseEntity<boolean>> {
+        return this._typeDirectorInterface.delete(object);
     }
 }

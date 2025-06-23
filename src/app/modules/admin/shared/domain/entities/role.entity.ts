@@ -1,11 +1,9 @@
-export interface RoleEntity {
-    nIdRol: number;
+export class RoleEntity {
+    nRolId: number;
     sNombreRol: string;
-    sDescripcion: string;
     bActivo: boolean;
     dtFechaCreacion: string;
     nIdUsuarioCreacion: number;
     dtFechaModificacion: string;
     nIdUsuarioModificacion: number;
-    bEliminado: boolean;
 }

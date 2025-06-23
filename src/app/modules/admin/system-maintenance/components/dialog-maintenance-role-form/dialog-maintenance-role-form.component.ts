@@ -60,13 +60,11 @@ export class DialogMaintenanceRoleFormComponent {
 	// Método para inicializar el formulario con los datos proporcionados (o vacíos si no existe el objeto)
 	initForm(object: RoleEntity): void {
         this.form = this._fb.group({
-            nIdRol: [{ disabled: !object, value: object?.nIdRol }, Validators.required], // Campo ID del rol, requerido
+            nRolId: [{ disabled: !object, value: object?.nRolId }, Validators.required], // Campo ID del rol, requerido
             sNombreRol: [ object?  object.sNombreRol : '', [Validators.required, Validators.maxLength(100)] ], // Campo nombre del rol, requerido
-            sDescripcion: [ object?  object.sDescripcion : '', [Validators.required, Validators.maxLength(255)] ], // descripcion nombre del rol, requerido
             bActivo: [ object? object.bActivo : true, Validators.required ], // Campo para saber si el rol está activo, requerido
             nIdUsuarioCreacion: [ { disabled: object, value: this._userService.userLogin().usuarioId }, Validators.required ], // Usuario que registra el rol
             nIdUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin().usuarioId },Validators.required ], // Usuario que modifica el rol
-            bEliminado: [ object?  object.bEliminado : false, Validators.required ], // Campo eliminado del rol, requerido
         });
     }
 
