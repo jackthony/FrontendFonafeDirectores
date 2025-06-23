@@ -1,25 +1,24 @@
+/*************************************************************************************
+ * Nombre del archivo:  tailwind.config.js
+ * Descripción:         Configuración avanzada de TailwindCSS para la aplicación.
+ *                      Define temas personalizados, fuentes, tipografías, paletas
+ *                      de colores, breakpoints y extensiones utilitarias específicas
+ *                      utilizadas por Fuse y otros componentes de UI.
+ * Autor:               Jesús Martín Velásquez Zavaleta
+ * Fecha de creación:   01/06/2025
+ * Última modificación: 23/06/2025 por Jesús Martín Velásquez Zavaleta
+ * Cambios recientes:   Incorporación de temas personalizados y plugins internos de Fuse.
+ *************************************************************************************/
 const path = require('path');
 const colors = require('tailwindcss/colors');
 const defaultTheme = require('tailwindcss/defaultTheme');
 const generatePalette = require(
     path.resolve(__dirname, 'src/@fuse/tailwind/utils/generate-palette')
 );
-
-/**
- * Custom palettes
- *
- * Uses the generatePalette helper method to generate
- * Tailwind-like color palettes automatically
- */
 const customPalettes = {
     brand: generatePalette('#2196F3'),
 };
-
-/**
- * Themes
- */
 const themes = {
-    // Default theme is required for theming system to work correctly!
     default: {
         primary: {
             ...colors.indigo,
@@ -37,8 +36,6 @@ const themes = {
             500: colors.red['50'],
         },
     },
-    // Rest of the themes will use the 'default' as the base
-    // theme and will extend it with their given configuration.
     brand: {
         primary: customPalettes.brand,
     },
@@ -61,10 +58,6 @@ const themes = {
         primary: colors.amber,
     },
 };
-
-/**
- * Tailwind configuration
- */
 const config = {
     darkMode: 'class',
     content: ['./src/**/*.{html,scss,ts}'],
@@ -145,8 +138,6 @@ const config = {
                 30: '7.5rem',
                 50: '12.5rem',
                 90: '22.5rem',
-
-                // Bigger values
                 100: '25rem',
                 120: '30rem',
                 128: '32rem',
@@ -162,8 +153,6 @@ const config = {
                 360: '90rem',
                 400: '100rem',
                 480: '120rem',
-
-                // Fractional values
                 '1/2': '50%',
                 '1/3': '33.333333%',
                 '2/3': '66.666667%',
@@ -191,8 +180,6 @@ const config = {
             transitionTimingFunction: {
                 drawer: 'cubic-bezier(0.25, 0.8, 0.25, 1)',
             },
-
-            // @tailwindcss/typography
             typography: ({ theme }) => ({
                 DEFAULT: {
                     css: {
@@ -284,7 +271,6 @@ const config = {
         verticalAlign: false,
     },
     plugins: [
-        // Fuse - Tailwind plugins
         require(
             path.resolve(__dirname, 'src/@fuse/tailwind/plugins/utilities')
         ),
@@ -294,8 +280,6 @@ const config = {
         require(path.resolve(__dirname, 'src/@fuse/tailwind/plugins/theming'))({
             themes,
         }),
-
-        // Other third party and/or custom plugins
         require('@tailwindcss/typography')({ modifiers: ['sm', 'lg'] }),
     ],
 };
