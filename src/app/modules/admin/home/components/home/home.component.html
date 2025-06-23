@@ -1,0 +1,20 @@
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-4 w-full">
+    <!-- Sección izquierda: 60% (orden de la tabla en pantallas pequeñas) -->
+    <div class="lg:col-span-2">
+        <app-banner-informative></app-banner-informative>
+        <div class="lg:col-span-1 lg:hidden mt-4">
+            <app-my-processes></app-my-processes>
+        </div>
+        <div class="my-8">
+            <fo-sub-title-card [text]="'Mis actividades'"></fo-sub-title-card>
+        </div>
+        
+        <fo-table [headers]="headerTable()" [data]="dataTableActivities()">
+        </fo-table>
+    </div>
+    
+    <!-- Sección derecha: 40% en pantallas grandes -->
+    <div class="lg:col-span-1 hidden lg:block ">
+        <app-my-processes></app-my-processes>
+    </div>
+</div>

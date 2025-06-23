@@ -1,8 +1,7 @@
-import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
-import { BusinessManagementComponent } from './business-management.component';
-import { BusinessFormComponent } from './business-form/business-form.component';
-import { businessResolver } from 'app/core/resolvers/business.resolver';
+import { BusinessManagementComponent } from './components/business-management/business-management.component';
+import { BusinessFormComponent } from './components/business-form/business-form.component';
+import { businessResolver } from './infrastructure/resolvers/business.resolver';
 
 export default [
     {

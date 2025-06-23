@@ -1,4 +1,4 @@
-import { DialogConfirmation } from "@components/fo-dialog-confirmation/models/dialog-confirmation.interface";
+import { DialogConfirmation } from "app/modules/admin/shared/components/fo-dialog-confirmation/models/dialog-confirmation.interface";
 import { TableColumnsDefInterface } from "../../interfaces/ITableColumnsDefInterface";
 
 // Definición de constantes que representan diferentes tipos de documentos, cargos y género

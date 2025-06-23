@@ -1,7 +1,4 @@
-import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
-import { businessResolver } from 'app/core/resolvers/business.resolver';
-import MaintenanceSectorComponent from './maintenance-sector/maintenance-sector.component';
 
 export default [
     {
@@ -9,14 +6,32 @@ export default [
         children: [
             { path: '', redirectTo: '/error-404', pathMatch: 'full' },
             {
+                path: 'rol',
+                loadComponent: () => import('./components/maintenance-role/maintenance-role.component'),
+            },
+            {
                 path: 'ministerio',
-                //component: MaintenanceSectorComponent
-                loadComponent: () => import('./maintenance-ministry/maintenance-ministry.component'),
+                loadComponent: () => import('./components/maintenance-ministry/maintenance-ministry.component'),
             },
             {
                 path: 'sector',
-                //component: MaintenanceSectorComponent
-                loadComponent: () => import('./maintenance-sector/maintenance-sector.component'),
+                loadComponent: () => import('./components/maintenance-sector/maintenance-sector.component'),
+            },
+            {
+                path: 'rubro',
+                loadComponent: () => import('./components/maintenance-industry/maintenance-industry.component'),
+            },
+            {
+                path: 'cargo',
+                loadComponent: () => import('./components/maintenance-position/maintenance-position.component'),
+            },
+            {
+                path: 'tipo-director',
+                loadComponent: () => import('./components/maintenance-type-director/maintenance-type-director.component'),
+            },
+            {
+                path: 'especialidad',
+                loadComponent: () => import('./components/maintenance-specialty/maintenance-specialty.component'),
             }
         ]
     },

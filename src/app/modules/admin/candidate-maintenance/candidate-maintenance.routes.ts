@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 
-import { CandidateFormComponent } from './candidate-form/candidate-form.component';
-import { CandidateMaintenanceComponent } from './candidate-maintenance.component';
+import { CandidateFormComponent } from './components/candidate-form/candidate-form.component';
+import { CandidateMaintenanceComponent } from './components/candidate-maintenance/candidate-maintenance.component';
 
 export default [
     {
@@ -9,7 +9,7 @@ export default [
         component: CandidateMaintenanceComponent,
     },
     {
-        path     : ':id',
+        path     : 'registro',
         component: CandidateFormComponent,
     },
 

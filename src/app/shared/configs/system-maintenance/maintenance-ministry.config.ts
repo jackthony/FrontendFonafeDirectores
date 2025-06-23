@@ -1,4 +1,4 @@
-import { DialogConfirmation } from "@components/fo-dialog-confirmation/models/dialog-confirmation.interface";
+import { DialogConfirmation } from "app/modules/admin/shared/components/fo-dialog-confirmation/models/dialog-confirmation.interface";
 import { TableColumnsDefInterface } from "../../interfaces/ITableColumnsDefInterface";
 
 // Define la configuración de las columnas de la tabla para la gestión de ministerios
@@ -33,4 +33,26 @@ export const MAINTENANCE_MINISTRY_MANAGEMENT: TableColumnsDefInterface[] = [
 export const CONFIG_DELETE_DIALOG_MINISTRY: DialogConfirmation = {
     title: "¿Estás seguro de eliminar el ministerio?", // Título del diálogo de confirmación
     message: "Esta acción es irreversible y los datos no podrán ser recuperados." // Mensaje que se muestra al usuario, alertando de la irreversibilidad de la acción
+};
+
+export const CONFIG_INACTIVE_DIALOG_MINISTRY: DialogConfirmation = {
+    title: "¿Estás seguro de desactivar el ministerio?", // Título del diálogo de confirmación
+    message: "Recuerda que una vez desactivado el ministerio?, no podrá ser visualizada como activa, pero podrás consultar su información.",
+    actions: {
+        confirm: {
+            label: 'Desactivar'
+        },
+        iconClose: false
+    }
+};
+
+export const CONFIG_ACTIVE_DIALOG_MINISTRY: DialogConfirmation = {
+    title: "¿Estás seguro de activar el ministerio?", // Título del diálogo de confirmación
+    message: "Recuerda que una vez activado el ministerio, será visualizada como activa.",
+    actions: {
+        confirm: {
+            label: 'Activar'
+        },
+        iconClose: false
+    }
 };

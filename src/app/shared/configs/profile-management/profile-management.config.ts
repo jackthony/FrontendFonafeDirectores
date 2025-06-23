@@ -1,4 +1,4 @@
-import { DialogConfirmation } from "@components/fo-dialog-confirmation/models/dialog-confirmation.interface";
+import { DialogConfirmation } from "app/modules/admin/shared/components/fo-dialog-confirmation/models/dialog-confirmation.interface";
 import { TableColumnsDefInterface } from "../../interfaces/ITableColumnsDefInterface";
 
 // Define constantes para el tipo de datos de los usuarios en diferentes contextos

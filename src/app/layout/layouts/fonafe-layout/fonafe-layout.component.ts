@@ -1,5 +1,5 @@
 import { Component, inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { FuseLoadingBarComponent } from '@fuse/components/loading-bar';
 import { User } from '@models/user.interface';
 import { UserService } from 'app/core/user/user.service';
@@ -15,6 +15,9 @@ import { Subject, takeUntil } from 'rxjs';
     imports: [FuseLoadingBarComponent, RouterOutlet, QuitComponent, NotificationsBellComponent],
 })
 export class FonafeComponent implements OnInit, OnDestroy {
+    // Inyección del servicio Router para permitir la navegación entre vistas de la aplicación.
+	private readonly _router = inject(Router);
+
     private _userService = inject(UserService);
 
 	private _unsubscribeAll: Subject<void> = new Subject<void>();
@@ -37,6 +40,10 @@ export class FonafeComponent implements OnInit, OnDestroy {
             .subscribe((user: User) => {
                 this.user = user;
             });
+    }
+
+    redirectToHome(): void {
+        this._router.navigate(['home']);
     }
 
     /**

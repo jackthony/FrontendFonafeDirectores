@@ -3,12 +3,13 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
 import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
-import { User } from '../user/user.types';
-import { SegUserService } from '@services/seg-user.service';
 import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
 import { AuthMockApi } from 'app/mock-api/common/auth/api';
 import { AuthorizationService } from 'app/shared/services/authorization.service';
+import { SegUserService } from 'app/modules/admin/profile-management/domain/services/seg-user.service';
+import { environment } from 'environments/environment';
+import { ResponseLogin } from '@models/responde-login.interface';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -20,6 +21,7 @@ export class AuthService {
     private _segUserService = inject(SegUserService);
     private _userService = inject(UserService);
     private _GenJWT=inject(AuthMockApi);
+    private url = `${environment.apiUrlBase}/Auth`;
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
     // -----------------------------------------------------------------------------------------------------
@@ -55,10 +57,7 @@ export class AuthService {
      */
     resetPassword(credentials: { nIdUsuario: number,nuevaClave: string, repetirClave: string, nUsuarioModificacion: number }): Observable<any> {
         //return this._httpClient.post('api/auth/reset-password', password);
-        const request = new RequestOption();
-        request.resource = "ChangePassword";
-        request.request = credentials;
-        return this._segUserService.update(request)
+        return this._segUserService.updateForcePassword(credentials)
     }
 
     /**
@@ -66,35 +65,34 @@ export class AuthService {
      *
      * @param credentials
      */
-    signIn(credentials: { email: string; password: string }): Observable<any> {
+    signIn(credentials: { email: string; password: string, recaptcha: string }): Observable<ResponseLogin> {
         // Throw error, if the user is already logged in
         if (this._authenticated) {
             return throwError('User is already logged in.');
         }
-
-        const request = new RequestOption();
-        request.request = credentials;
-        request.resource = "Login";
-        return this._segUserService.create(request).pipe(
-            switchMap((response: any) => {
-
-                if(!response || !response.item){
+        return this._httpClient.post(`${this.url}/login`, credentials).pipe(
+            switchMap((response: ResponseLogin) => {
+                /* if(!response || !response.item){
                     this._ngxToastrService.showError('Credenciales inválidas');
                     return throwError(() => new Error('Error validación'))
                 }
-                
+                 */
                 // Store the access token in the local storage
                 //this.accessToken = response.accessToken;
-                this.accessToken =  this._GenJWT._generateJWTToken()
+                this.accessToken =  this._GenJWT._generateJWTToken();
+                //this.accessToken =  this._GenJWT._generateJWTToken();
                 // Set the authenticated flag to true
                 this._authenticated = true;
 
-                this._sessionState.set(response.item.sessionState);
+                //this._sessionState.set(response.item.sessionState);
 
                 // Store the user on the user service
-                this._userService.user = response.item;
-                localStorage.setItem("user", JSON.stringify(response.item));
-                this._authorizationService.setPermissions(response.item.permissions)
+                this._userService.user = response.usuarioResult;
+                localStorage.setItem("user", JSON.stringify(response.usuarioResult));
+
+                localStorage.setItem("permission", JSON.stringify(response.modulos));
+
+                this._authorizationService.setPermissions(response.modulos)
 
                 // Return a new observable with the response
                 return of(response);
@@ -150,8 +148,10 @@ export class AuthService {
                     // Store the user on the user service
                     //this._userService.user = response.user;
                     this._userService.user = JSON.parse(localStorage.getItem("user"));
+
+                    //this._userService.user = 
                     this._sessionState.set(JSON.parse(localStorage.getItem("user")).sessionState);
-                    this._authorizationService.setPermissions(JSON.parse(localStorage.getItem("user")).permissions);
+                    this._authorizationService.setPermissions(JSON.parse(localStorage.getItem("permission")));
 
                     // Return true
                     return of(true);
@@ -211,6 +211,9 @@ export class AuthService {
         if (this._authenticated) {
             return of(true);
         }
+
+        const token = this.accessToken;
+        if(token) this.accessToken = token;
 
         // Check the access token availability
         if (!this.accessToken) {

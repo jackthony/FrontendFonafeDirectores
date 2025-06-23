@@ -1315,6 +1315,10 @@ textarea.mat-mdc-input-element {
     .mdc-notched-outline__notch {
         border-color: red !important;
     }
+
+    textarea {
+        padding-top: 8px;
+    }
 }
 
 .mat-money {

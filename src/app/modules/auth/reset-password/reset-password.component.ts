@@ -118,10 +118,10 @@ export class AuthResetPasswordComponent implements OnInit {
 
         // Send the request to the server
         const body = {
-            nIdUsuario: this.user.usuario,
+            nIdUsuario: this.user.usuarioId,
             nuevaClave: this.resetPasswordForm.get('password').value,
             repetirClave: this.resetPasswordForm.get('passwordConfirm').value,
-            nUsuarioModificacion: this.user.usuario,
+            nUsuarioModificacion: this.user.usuarioId,
         }
         this._authService
             .resetPassword(body)

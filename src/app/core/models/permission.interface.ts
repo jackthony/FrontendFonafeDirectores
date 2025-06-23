@@ -1,4 +1,8 @@
 export interface Permission {
-    module: string;
-    actions: string[];
+    nombreModulo: string;
+    permisos: Actions[];
+}
+
+export interface Actions {
+    nombrePermiso: string;
 }

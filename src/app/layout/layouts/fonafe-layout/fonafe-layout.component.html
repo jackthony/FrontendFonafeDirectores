@@ -8,11 +8,14 @@
     <div
         class="bg-card relative z-49 flex h-24 w-full flex-0 items-center px-4 shadow dark:border-b dark:bg-transparent dark:shadow-none md:px-6 print:hidden sm:px-2 lg:px-15"
     >
-        <div class="w-56">
+        <div class="w-56 hidden sm:block" (click)="redirectToHome()">
             <img  src="images/logo/logo-fonafe-complete.svg" alt="Logo image" />
         </div>
-        <div class="w-px h-13 bg-black mx-8"></div>
-        <div class="flex flex-col justify-center tracking-[0.6px] leading-[18px] text-xl font-museosans font-medium text-gray-600">
+        <div class="block sm:hidden" (click)="redirectToHome()">
+            <img class="w-10 max-w-10"  src="images/logo/logo.svg" alt="Logo image" />
+        </div>
+        <div class="w-px h-13 bg-black mx-2 sm:mx-8"></div>
+        <div class="flex flex-col justify-center tracking-[0.6px] leading-[18px] text-sm sm:text-xl font-museosans font-medium text-gray-600">
             <p>Plataforma de</p>
             <p>Selección de Directores</p>
           </div>
@@ -31,8 +34,8 @@
                  <messages></messages>
                  <notifications></notifications> -->
                  <app-notifications-bell></app-notifications-bell>
-                 <div class="ml-2 mr-8">
-                     <span class="font-semibold text-lg font-museosans text-gray-600 tracking-[0.69px]">
+                 <div class="ml-2 mr-2 sm:mr-5 md:mr-8">
+                     <span class="font-semibold text-sm sm:text-xl font-museosans text-gray-600 tracking-[0.69px]">
                          {{ user.nombreVisual }}
                      </span>
                  </div>

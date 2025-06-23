@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { NewRequestsComponent } from './new-requests.component';
+import NewRequestsComponent from './components/new-requests/new-requests.component';
 
 export default [
     {
