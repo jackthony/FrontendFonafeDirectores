@@ -76,31 +76,31 @@ export const appRoutes: Route[] = [
                 path: 'gestion-perfiles', 
                 loadComponent: () => import('app/modules/admin/profile-management/components/profile-management/profile-management.component'),
                 canActivate: [permissionGuard],
-                data: { module: 'gestion-perfiles', action: 'read' }
+                data: { module: 'gestion-perfiles', action: 'Ver' }
             },
             { 
                 path: 'gestion-empresas', 
                 loadChildren: () => import('app/modules/admin/business-management/business-management.routes'),
                 canActivate: [permissionGuard],
-                data: { module: 'gestion-empresas', action: 'read' }
+                data: { module: 'gestion-empresas', action: 'Ver' }
             },
             { 
                 path: 'solicitudes', 
                 loadChildren: () => import('app/modules/admin/new-requests/new-requests.routes'),
                 canActivate: [permissionGuard],
-                data: { module: 'solicitudes', action: 'read' }
+                data: { module: 'solicitudes', action: 'Ver' }
             },
             { 
                 path: 'mantenimiento-candidatos', 
                 loadChildren: () => import('app/modules/admin/candidate-maintenance/candidate-maintenance.routes'),
                 canActivate: [permissionGuard],
-                data: { module: 'Mantenimiento Candidatos', action: 'read' }
+                data: { module: 'Mantenimiento Candidatos', action: 'Ver' }
             },
             { 
                 path: 'mantenedores-sistema', 
                 loadChildren: () => import('app/modules/admin/system-maintenance/system-maintenance.routes'),
-                canActivate: [/* permissionGuard */],
-                data: { module: 'mantenimiento-sistemas', action: 'read' }
+                canActivate: [permissionGuard],
+                data: { module: 'mantenimiento-sistemas', action: 'Ver' }
             },
             { path: 'error-404', pathMatch: 'full', loadChildren: () => import('app/modules/admin/error/components/error-404/error-404.routes')},
             { path: '**', redirectTo: 'error-404'}

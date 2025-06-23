@@ -19,8 +19,8 @@ export class IndustryService {
         return this._industryInterface.getAll();
     }
 
-    getByPagination(param: string, pageIndex: number, pageSize: number): Observable<ResponseEntity<IndustryEntity>> {
-        return this._industryInterface.getByPagination(param, pageIndex, pageSize);
+    getByPagination(param: string, pageIndex: number, pageSize: number, filterState: boolean | null): Observable<ResponseEntity<IndustryEntity>> {
+        return this._industryInterface.getByPagination(param, pageIndex, pageSize, filterState);
     }
 
     create(object: IndustryEntity): Observable<ResponseEntity<number>> {
@@ -31,7 +31,7 @@ export class IndustryService {
         return this._industryInterface.update(object);
     }
 
-    delete(nId: number): Observable<ResponseEntity<boolean>> {
-        return this._industryInterface.delete(nId);
+    delete(object: IndustryEntity): Observable<ResponseEntity<boolean>> {
+        return this._industryInterface.delete(object);
     }
 }

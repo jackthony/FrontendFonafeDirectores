@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ResponseModel } from '@models/IResponseModel';
 import { PAGINATOR_PAGE_SIZE } from 'app/core/config/paginator.config';
-import { CONFIG_DELETE_DIALOG_INDUSTRY, MAINTENANCE_INDUSTRY_HEADER_TABLE } from 'app/shared/configs/system-maintenance/maintenance-industry.config';
+import { CONFIG_ACTIVE_DIALOG_INDUSTRY, CONFIG_DELETE_DIALOG_INDUSTRY, CONFIG_INACTIVE_DIALOG_INDUSTRY, MAINTENANCE_INDUSTRY_HEADER_TABLE } from 'app/shared/configs/system-maintenance/maintenance-industry.config';
 import { IconOption } from 'app/shared/interfaces/IGenericIcon';
 import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDefInterface';
@@ -16,6 +16,7 @@ import { DialogIndustryFormComponent } from '../dialog-industry-form/dialog-indu
 import { MAINTENANCE_GENERAL_IMPORTS } from 'app/shared/imports/system-maintenance/maintenance-ministry.imports';
 import { IndustryService } from 'app/modules/admin/shared/domain/services/industry.service';
 import { IndustryEntity } from 'app/modules/admin/shared/domain/entities/industry.entity';
+import { UserService } from 'app/core/user/user.service';
 
 @Component({
   selector: 'app-maintenance-industry',
@@ -36,6 +37,7 @@ export default class MaintenanceIndustryComponent {
 
 	private _ngxToastrService = inject(NgxToastrService);
 	private _spinner = inject(NgxSpinnerService);
+	private _userService = inject(UserService);
 	
     titleModule = signal<string>('Mantenedor de rubros');
 	headerTable = signal<TableColumnsDefInterface[]>([]);
@@ -48,6 +50,7 @@ export default class MaintenanceIndustryComponent {
 	totalPagesTable = signal<number>(1);
 	paramSearchTable = signal<string>('');
 	placeHolderSearch = signal<string>('Busca por nombre');
+	filterState = signal<boolean | null>(true);
 
 	delaySearchTable = signal<number>(400);
 
@@ -63,7 +66,7 @@ export default class MaintenanceIndustryComponent {
 
 	searchTable(): void {
 		this.loadingTable.set(true);
-		this._sectorService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE ).pipe(
+		this._sectorService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState()).pipe(
 			finalize(() => this.loadingTable.set(false))
 		).subscribe({
 			next: ((response: ResponseModel<IndustryEntity>) => {
@@ -92,39 +95,45 @@ export default class MaintenanceIndustryComponent {
 	}
 
 
-	defineIconsTable(): IconOption<IndustryEntity>[]{
-		const resolvedModule = this._route.snapshot.data['module'];
-		const authorization = this._authorizationService.canPerform(resolvedModule, 'write');
-
+	defineIconsTable(): IconOption<IndustryEntity>[] {
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
-        const iconDelete = new IconOption("delete", "mat_outline", "Eliminar");
+        const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar"); // Icono para desactivar
+    	const iconActive = new IconOption("restart_alt", "mat_outline", "Activar"); // Icono para activar
 
 		iconEdit.actionIcono = (data: IndustryEntity) => {
             this.openFormDialog(data);
         };
 
-		iconDelete.actionIcono = (data: IndustryEntity) => {
-            this.deleteBussines(data);
+		iconInactive.actionIcono = (data: IndustryEntity) => {
+            this.deleteIndustry(data);
         };
 
-		iconEdit.isDisabled = (data: IndustryEntity) => !authorization;
-		iconDelete.isDisabled = (data: IndustryEntity) => !authorization;
+		iconActive.actionIcono = (data: IndustryEntity) => {
+            this.deleteIndustry(data);
+        };
 
-        return [iconEdit, iconDelete];
+		iconInactive.isHidden = (data: IndustryEntity) => !data.bActivo; // Oculta el icono de desactivar si la empresa ya está desactivada
+    	iconActive.isHidden = (data: IndustryEntity) => data.bActivo; // Oculta el icono de activar si la empresa ya está activa
+
+        return [iconEdit, iconInactive, iconActive]; // Retorna los iconos de acción
     }
 
-	async deleteBussines(data: IndustryEntity): Promise<void> {
-		const dialogRef = await this._dialogConfirmationService.open(CONFIG_DELETE_DIALOG_INDUSTRY);
+	async deleteIndustry(data: IndustryEntity): Promise<void> {
+		const config = data.bActivo ? CONFIG_INACTIVE_DIALOG_INDUSTRY : CONFIG_ACTIVE_DIALOG_INDUSTRY;
+		const dialogRef = await this._dialogConfirmationService.open(config);
         const isValid = await firstValueFrom(dialogRef.afterClosed());
 		if(isValid) {
 			this._spinner.show();
+			const request = new IndustryEntity();
+			request.nIdRubro = data.nIdRubro;
+			request.nUsuarioModificacion = this._userService.userLogin().usuarioId;
 			this._sectorService
-				.delete(data.nIdRubro)
+				.delete(request)
 				.pipe(finalize(() => this._spinner.hide()))
 				.subscribe({
 					next: (response: ResponseModel<boolean>) => {
 						if (response.isSuccess) {
-							const messageToast = 'Rubro eliminado exitosamente';
+							const messageToast = data.bActivo ? 'Rubro desactivado exitosamente' : 'Rubro activado exitosamente'; // Muestra un mensaje de éxito
 							this._ngxToastrService.showSuccess(messageToast, '¡Éxito!');
 							this.searchTable();
 						}
@@ -149,5 +158,9 @@ export default class MaintenanceIndustryComponent {
 				
 		    }
 		});
+	}
+
+	setFilterState(event: boolean | null) {
+		this.filterState.set(event);
 	}
 }

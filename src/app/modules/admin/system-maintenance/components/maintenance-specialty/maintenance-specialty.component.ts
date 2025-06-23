@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ResponseModel } from '@models/IResponseModel';
 import { PAGINATOR_PAGE_SIZE } from 'app/core/config/paginator.config';
-import { CONFIG_DELETE_DIALOG_TYPE_SPECIALTY, MAINTENANCE_SPECIALTY_HEADER_TABLE } from 'app/shared/configs/system-maintenance/maintenance-specialty.config';
+import { CONFIG_ACTIVE_DIALOG_SPECIALTY, CONFIG_DELETE_DIALOG_TYPE_SPECIALTY, CONFIG_INACTIVE_DIALOG_SPECIALTY, MAINTENANCE_SPECIALTY_HEADER_TABLE } from 'app/shared/configs/system-maintenance/maintenance-specialty.config';
 import { IconOption } from 'app/shared/interfaces/IGenericIcon';
 import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDefInterface';
@@ -16,6 +16,7 @@ import { DialogMaintenanceSpecialtyFormComponent } from '../dialog-maintenance-s
 import { MAINTENANCE_GENERAL_IMPORTS } from 'app/shared/imports/system-maintenance/maintenance-ministry.imports';
 import { SpecialtyService } from 'app/modules/admin/shared/domain/services/specialty.service';
 import { SpecialtyEntity } from 'app/modules/admin/shared/domain/entities/specialty.entity';
+import { UserService } from 'app/core/user/user.service';
 
 @Component({
   selector: 'app-maintenance-specialty',
@@ -32,10 +33,10 @@ export default class MaintenanceSpecialtyComponent {
 	private _matDialog: MatDialog = inject(MatDialog);
 
 	private _specialtyService = inject(SpecialtyService);
-	private _authorizationService = inject(AuthorizationService);
 
 	private _ngxToastrService = inject(NgxToastrService);
 	private _spinner = inject(NgxSpinnerService);
+	private _userService = inject(UserService);
 	
     titleModule = signal<string>('Mantenedor de especialidad');
 	headerTable = signal<TableColumnsDefInterface[]>([]);
@@ -48,6 +49,7 @@ export default class MaintenanceSpecialtyComponent {
 	totalPagesTable = signal<number>(1);
 	paramSearchTable = signal<string>('');
 	placeHolderSearch = signal<string>('Busca por nombre');
+	filterState = signal<boolean | null>(true);
 
 	delaySearchTable = signal<number>(400);
 
@@ -63,7 +65,7 @@ export default class MaintenanceSpecialtyComponent {
 
 	searchTable(): void {
 		this.loadingTable.set(true);
-		this._specialtyService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE).pipe(
+		this._specialtyService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState()).pipe(
 			finalize(() => this.loadingTable.set(false))
 		).subscribe({
 			next: ((response: ResponseModel<SpecialtyEntity>) => {
@@ -91,40 +93,45 @@ export default class MaintenanceSpecialtyComponent {
 		this.searchTable();
 	}
 
-
-	defineIconsTable(): IconOption<SpecialtyEntity>[]{
-		const resolvedModule = this._route.snapshot.data['module'];
-		const authorization = this._authorizationService.canPerform(resolvedModule, 'write');
-
+	defineIconsTable(): IconOption<SpecialtyEntity>[] {
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
-        const iconDelete = new IconOption("delete", "mat_outline", "Eliminar");
+        const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar"); // Icono para desactivar
+    	const iconActive = new IconOption("restart_alt", "mat_outline", "Activar"); // Icono para activar
 
 		iconEdit.actionIcono = (data: SpecialtyEntity) => {
             this.openFormDialog(data);
         };
 
-		iconDelete.actionIcono = (data: SpecialtyEntity) => {
-            this.deleteBussines(data);
+		iconInactive.actionIcono = (data: SpecialtyEntity) => {
+            this.deleteSpecialty(data);
         };
 
-		iconEdit.isDisabled = (data: SpecialtyEntity) => !authorization;
-		iconDelete.isDisabled = (data: SpecialtyEntity) => !authorization;
+		iconActive.actionIcono = (data: SpecialtyEntity) => {
+            this.deleteSpecialty(data);
+        };
 
-        return [iconEdit, iconDelete];
+		iconInactive.isHidden = (data: SpecialtyEntity) => !data.bActivo; // Oculta el icono de desactivar si la empresa ya está desactivada
+    	iconActive.isHidden = (data: SpecialtyEntity) => data.bActivo; // Oculta el icono de activar si la empresa ya está activa
+
+        return [iconEdit, iconInactive, iconActive]; // Retorna los iconos de acción
     }
 
-	async deleteBussines(data: SpecialtyEntity): Promise<void> {
-		const dialogRef = await this._dialogConfirmationService.open(CONFIG_DELETE_DIALOG_TYPE_SPECIALTY);
+	async deleteSpecialty(data: SpecialtyEntity): Promise<void> {
+		const config = data.bActivo ? CONFIG_INACTIVE_DIALOG_SPECIALTY : CONFIG_ACTIVE_DIALOG_SPECIALTY;
+		const dialogRef = await this._dialogConfirmationService.open(config);
         const isValid = await firstValueFrom(dialogRef.afterClosed());
 		if(isValid) {
 			this._spinner.show();
+			const request = new SpecialtyEntity();
+			request.nIdEspecialidad = data.nIdEspecialidad;
+			request.nUsuarioModificacion = this._userService.userLogin().usuarioId;
 			this._specialtyService
-				.delete(data.nIdEspecialidad)
+				.delete(request)
 				.pipe(finalize(() => this._spinner.hide()))
 				.subscribe({
 					next: (response: ResponseModel<boolean>) => {
 						if (response.isSuccess) {
-							const messageToast = 'Especialidad eliminado exitosamente';
+							const messageToast = data.bActivo ? 'Especialidad desactivado exitosamente' : 'Especialidad activado exitosamente'; // Muestra un mensaje de éxito
 							this._ngxToastrService.showSuccess(messageToast, '¡Éxito!');
 							this.searchTable();
 						}
@@ -149,5 +156,9 @@ export default class MaintenanceSpecialtyComponent {
 				
 		    }
 		});
+	}
+
+	setFilterState(event: boolean | null) {
+		this.filterState.set(event);
 	}
 }

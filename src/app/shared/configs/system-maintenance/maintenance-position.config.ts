@@ -34,3 +34,25 @@ export const CONFIG_DELETE_DIALOG_POSITION: DialogConfirmation = {
     title: "¿Estás seguro de eliminar el cargo?", // Título del diálogo de confirmación
     message: "Esta acción es irreversible y los datos no podrán ser recuperados." // Mensaje que se muestra al usuario, alertando de la irreversibilidad de la acción
 };
+
+export const CONFIG_INACTIVE_DIALOG_POSITION: DialogConfirmation = {
+    title: "¿Estás seguro de desactivar el cargo?", // Título del diálogo de confirmación
+    message: "Recuerda que una vez desactivado el cargo?, no podrá ser visualizada como activa, pero podrás consultar su información.",
+    actions: {
+        confirm: {
+            label: 'Desactivar'
+        },
+        iconClose: false
+    }
+};
+
+export const CONFIG_ACTIVE_DIALOG_POSITION: DialogConfirmation = {
+    title: "¿Estás seguro de activar el cargo?", // Título del diálogo de confirmación
+    message: "Recuerda que una vez activado el cargo, será visualizada como activa.",
+    actions: {
+        confirm: {
+            label: 'Activar'
+        },
+        iconClose: false
+    }
+};

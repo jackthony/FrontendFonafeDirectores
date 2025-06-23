@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ResponseModel } from '@models/IResponseModel';
 import { PAGINATOR_PAGE_SIZE } from 'app/core/config/paginator.config';
-import { CONFIG_DELETE_DIALOG_TYPE_DIRECTOR, MAINTENANCE_TYPE_DIRECTOR_HEADER_TABLE } from 'app/shared/configs/system-maintenance/maintenance-type-director.config';
+import { CONFIG_ACTIVE_DIALOG_TYPE_DIRECTOR, CONFIG_DELETE_DIALOG_TYPE_DIRECTOR, CONFIG_INACTIVE_DIALOG_TYPE_DIRECTOR, MAINTENANCE_TYPE_DIRECTOR_HEADER_TABLE } from 'app/shared/configs/system-maintenance/maintenance-type-director.config';
 import { IconOption } from 'app/shared/interfaces/IGenericIcon';
 import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDefInterface';
@@ -16,6 +16,7 @@ import { DialogTypeDirectorFormComponent } from '../dialog-type-director-form/di
 import { MAINTENANCE_GENERAL_IMPORTS } from 'app/shared/imports/system-maintenance/maintenance-ministry.imports';
 import { TypeDirectorService } from 'app/modules/admin/shared/domain/services/type-director.service';
 import { TypeDirectorEntity } from 'app/modules/admin/shared/domain/entities/type-director.entity';
+import { UserService } from 'app/core/user/user.service';
 
 @Component({
   selector: 'app-maintenance-type-director',
@@ -36,6 +37,7 @@ export default class MaintenanceTypeDirectorComponent {
 
 	private _ngxToastrService = inject(NgxToastrService);
 	private _spinner = inject(NgxSpinnerService);
+	private _userService = inject(UserService);
 	
     titleModule = signal<string>('Mantenedor Tipo de director');
 	headerTable = signal<TableColumnsDefInterface[]>([]);
@@ -48,6 +50,7 @@ export default class MaintenanceTypeDirectorComponent {
 	totalPagesTable = signal<number>(1);
 	paramSearchTable = signal<string>('');
 	placeHolderSearch = signal<string>('Busca por nombre');
+	filterState = signal<boolean | null>(true);
 
 	delaySearchTable = signal<number>(400);
 
@@ -63,7 +66,7 @@ export default class MaintenanceTypeDirectorComponent {
 
 	searchTable(): void {
 		this.loadingTable.set(true);
-		this._sectorService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE).pipe(
+		this._sectorService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState()).pipe(
 			finalize(() => this.loadingTable.set(false))
 		).subscribe({
 			next: ((response: ResponseModel<TypeDirectorEntity>) => {
@@ -91,40 +94,45 @@ export default class MaintenanceTypeDirectorComponent {
 		this.searchTable();
 	}
 
-
-	defineIconsTable(): IconOption<TypeDirectorEntity>[]{
-		const resolvedModule = this._route.snapshot.data['module'];
-		const authorization = this._authorizationService.canPerform(resolvedModule, 'write');
-
+	defineIconsTable(): IconOption<TypeDirectorEntity>[] {
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
-        const iconDelete = new IconOption("delete", "mat_outline", "Eliminar");
+        const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar"); // Icono para desactivar
+    	const iconActive = new IconOption("restart_alt", "mat_outline", "Activar"); // Icono para activar
 
 		iconEdit.actionIcono = (data: TypeDirectorEntity) => {
             this.openFormDialog(data);
         };
 
-		iconDelete.actionIcono = (data: TypeDirectorEntity) => {
-            this.deleteBussines(data);
+		iconInactive.actionIcono = (data: TypeDirectorEntity) => {
+            this.deleteTypeDirector(data);
         };
 
-		iconEdit.isDisabled = (data: TypeDirectorEntity) => !authorization;
-		iconDelete.isDisabled = (data: TypeDirectorEntity) => !authorization;
+		iconActive.actionIcono = (data: TypeDirectorEntity) => {
+            this.deleteTypeDirector(data);
+        };
 
-        return [iconEdit, iconDelete];
+		iconInactive.isHidden = (data: TypeDirectorEntity) => !data.bActivo; // Oculta el icono de desactivar si la empresa ya está desactivada
+    	iconActive.isHidden = (data: TypeDirectorEntity) => data.bActivo; // Oculta el icono de activar si la empresa ya está activa
+
+        return [iconEdit, iconInactive, iconActive]; // Retorna los iconos de acción
     }
 
-	async deleteBussines(data: TypeDirectorEntity): Promise<void> {
-		const dialogRef = await this._dialogConfirmationService.open(CONFIG_DELETE_DIALOG_TYPE_DIRECTOR);
+	async deleteTypeDirector(data: TypeDirectorEntity): Promise<void> {
+		const config = data.bActivo ? CONFIG_INACTIVE_DIALOG_TYPE_DIRECTOR : CONFIG_ACTIVE_DIALOG_TYPE_DIRECTOR;
+		const dialogRef = await this._dialogConfirmationService.open(config);
         const isValid = await firstValueFrom(dialogRef.afterClosed());
 		if(isValid) {
 			this._spinner.show();
+			const request = new TypeDirectorEntity();
+			request.nIdTipoDirector = data.nIdTipoDirector;
+			request.nUsuarioModificacion = this._userService.userLogin().usuarioId;
 			this._sectorService
-				.delete(data.nIdTipoDirector)
+				.delete(request)
 				.pipe(finalize(() => this._spinner.hide()))
 				.subscribe({
 					next: (response: ResponseModel<boolean>) => {
 						if (response.isSuccess) {
-							const messageToast = 'Tipo de director eliminado exitosamente';
+							const messageToast = data.bActivo ? 'Tipo de director desactivado exitosamente' : 'Tipo de director activado exitosamente'; // Muestra un mensaje de éxito
 							this._ngxToastrService.showSuccess(messageToast, '¡Éxito!');
 							this.searchTable();
 						}
@@ -149,5 +157,9 @@ export default class MaintenanceTypeDirectorComponent {
 				
 		    }
 		});
+	}
+
+	setFilterState(event: boolean | null) {
+		this.filterState.set(event);
 	}
 }

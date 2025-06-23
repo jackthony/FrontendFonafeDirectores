@@ -1,4 +1,4 @@
-export interface TypeDirectorEntity {
+export class TypeDirectorEntity {
     nIdTipoDirector: number;
     sNombreTipoDirector: string;
     bActivo: boolean;

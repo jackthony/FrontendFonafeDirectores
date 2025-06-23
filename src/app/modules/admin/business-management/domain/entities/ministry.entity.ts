@@ -1,4 +1,4 @@
-export interface MinistryEntity {
+export class MinistryEntity {
     nIdMinisterio: number;
     sNombreMinisterio: string;
     bActivo: boolean;

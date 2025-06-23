@@ -7,5 +7,5 @@ export interface MinistryInterface {
     getByPagination(param: string, pageIndex: number, pageSize: number, filterState: boolean | null): Observable<ResponseEntity<MinistryEntity>>;
     create(object: MinistryEntity): Observable<ResponseEntity<number>>;
     update(object: MinistryEntity): Observable<ResponseEntity<boolean>>;
-    delete(nId: number): Observable<ResponseEntity<boolean>>;
+    delete(object: MinistryEntity): Observable<ResponseEntity<boolean>>;
 }

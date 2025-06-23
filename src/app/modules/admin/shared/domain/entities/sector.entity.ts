@@ -1,4 +1,4 @@
-export interface SectorEntity {
+export class SectorEntity {
     nIdSector: number;
     sNombreSector: string;
     bActivo: boolean;

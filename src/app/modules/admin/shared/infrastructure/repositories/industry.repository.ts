@@ -15,28 +15,28 @@ export class IndustryRepository implements IndustryInterface {
     private _http = inject(HttpClient);
 
     getAll(): Observable<ResponseEntity<IndustryEntity>> {
-        return this._http.get<ResponseEntity<IndustryEntity>>(`${this.url}/GetByPagination`);
+        return this._http.get<ResponseEntity<IndustryEntity>>(`${this.url}/listar`);
     }
 
-    getByPagination(userName: string, pageIndex: number, pageSize: number): Observable<ResponseEntity<IndustryEntity>> {
-        const params = new HttpParams();
-
-        params.append('pageIndex', pageIndex).append('pageSize', pageSize)
-        if(userName) params.append('fullName', userName)
-
-        return this._http.get<ResponseEntity<IndustryEntity>>(`${this.url}/GetByPagination`, { params });
+    getByPagination(param: string, pageIndex: number, pageSize: number, filterState: boolean | null): Observable<ResponseEntity<IndustryEntity>> {
+        let params = new HttpParams().append('Page', pageIndex).append('PageSize', pageSize);
+        if(param) {
+            params = params.append('Nombre', param)
+        }
+        if(filterState !== null ) params = params.append('Estado', filterState);
+        return this._http.get<ResponseEntity<IndustryEntity>>(`${this.url}/listar-paginado`, { params });
     }
 
     create(object: IndustryEntity): Observable<ResponseEntity<number>> {
-        return this._http.post<ResponseEntity<number>>(`${this.url}/Insert`, object);
+        return this._http.post<ResponseEntity<number>>(`${this.url}/crear`, object);
     }
 
     update(object: IndustryEntity): Observable<ResponseEntity<boolean>> {
-        return this._http.post<ResponseEntity<boolean>>(`${this.url}/Update`, object);
+        return this._http.post<ResponseEntity<boolean>>(`${this.url}/actualizar`, object);
     }
 
-    delete(nId: number): Observable<ResponseEntity<boolean>> {
-        return this._http.post<ResponseEntity<boolean>>(`${this.url}/Delete/${nId}`, {});
+    delete(object: IndustryEntity): Observable<ResponseEntity<boolean>> {
+        return this._http.post<ResponseEntity<boolean>>(`${this.url}/eliminar`, object);
     }
     
 }

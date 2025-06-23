@@ -19,8 +19,8 @@ export class SectorService {
         return this._sectorInterface.getAll();
     }
 
-    getByPagination(param: string, pageIndex: number, pageSize: number): Observable<ResponseEntity<SectorEntity>> {
-        return this._sectorInterface.getByPagination(param, pageIndex, pageSize);
+    getByPagination(param: string, pageIndex: number, pageSize: number, filterState: boolean | null): Observable<ResponseEntity<SectorEntity>> {
+        return this._sectorInterface.getByPagination(param, pageIndex, pageSize, filterState);
     }
 
     create(object: SectorEntity): Observable<ResponseEntity<number>> {
@@ -31,7 +31,7 @@ export class SectorService {
         return this._sectorInterface.update(object);
     }
 
-    delete(nId: number): Observable<ResponseEntity<boolean>> {
-        return this._sectorInterface.delete(nId);
+    delete(object: SectorEntity): Observable<ResponseEntity<boolean>> {
+        return this._sectorInterface.delete(object);
     }
 }

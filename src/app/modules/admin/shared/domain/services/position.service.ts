@@ -19,8 +19,8 @@ export class PositionService {
         return this._positionInterface.getAll();
     }
 
-    getByPagination(param: string, pageIndex: number, pageSize: number): Observable<ResponseEntity<PositionEntity>> {
-        return this._positionInterface.getByPagination(param, pageIndex, pageSize);
+    getByPagination(param: string, pageIndex: number, pageSize: number, filterState: boolean | null): Observable<ResponseEntity<PositionEntity>> {
+        return this._positionInterface.getByPagination(param, pageIndex, pageSize, filterState);
     }
 
     create(object: PositionEntity): Observable<ResponseEntity<number>> {
@@ -31,7 +31,7 @@ export class PositionService {
         return this._positionInterface.update(object);
     }
 
-    delete(nId: number): Observable<ResponseEntity<boolean>> {
-        return this._positionInterface.delete(nId);
+    delete(object: PositionEntity): Observable<ResponseEntity<boolean>> {
+        return this._positionInterface.delete(object);
     }
 }

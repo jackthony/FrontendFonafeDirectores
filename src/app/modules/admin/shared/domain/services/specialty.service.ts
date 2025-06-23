@@ -19,8 +19,8 @@ export class SpecialtyService {
         return this._specialtyInterface.getAll();
     }
 
-    getByPagination(param: string, pageIndex: number, pageSize: number): Observable<ResponseEntity<SpecialtyEntity>> {
-        return this._specialtyInterface.getByPagination(param, pageIndex, pageSize);
+    getByPagination(param: string, pageIndex: number, pageSize: number, filterState: boolean | null): Observable<ResponseEntity<SpecialtyEntity>> {
+        return this._specialtyInterface.getByPagination(param, pageIndex, pageSize, filterState);
     }
 
     create(object: SpecialtyEntity): Observable<ResponseEntity<number>> {
@@ -31,7 +31,7 @@ export class SpecialtyService {
         return this._specialtyInterface.update(object);
     }
 
-    delete(nId: number): Observable<ResponseEntity<boolean>> {
-        return this._specialtyInterface.delete(nId);
+    delete(object: SpecialtyEntity): Observable<ResponseEntity<boolean>> {
+        return this._specialtyInterface.delete(object);
     }
 }

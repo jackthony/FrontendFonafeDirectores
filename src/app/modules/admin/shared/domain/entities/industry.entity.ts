@@ -1,4 +1,4 @@
-export interface IndustryEntity {
+export class IndustryEntity {
     nIdRubro: number;
     sNombreRubro: string;
     bActivo: boolean;

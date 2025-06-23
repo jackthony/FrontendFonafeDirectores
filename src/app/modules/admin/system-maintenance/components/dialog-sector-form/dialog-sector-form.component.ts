@@ -67,6 +67,7 @@ export class DialogSectorFormComponent {
 
 	// Método para validar el formulario antes de enviarlo
 	validRegisterForm() {
+        if(this.loadingService()) return;
         if (this.form.invalid) {
             this.form.markAllAsTouched(); // Marca todos los campos como tocados para mostrar los errores
             return;

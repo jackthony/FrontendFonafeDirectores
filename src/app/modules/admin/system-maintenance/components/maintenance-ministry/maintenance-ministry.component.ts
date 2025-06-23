@@ -11,11 +11,12 @@ import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { finalize, firstValueFrom } from 'rxjs';
 import { DialogMinistryFormComponent } from '../dialog-ministry-form/dialog-ministry-form.component';
-import { CONFIG_DELETE_DIALOG_MINISTRY, MAINTENANCE_MINISTRY_MANAGEMENT } from 'app/shared/configs/system-maintenance/maintenance-ministry.config';
+import { CONFIG_ACTIVE_DIALOG_MINISTRY, CONFIG_DELETE_DIALOG_MINISTRY, CONFIG_INACTIVE_DIALOG_MINISTRY, MAINTENANCE_MINISTRY_MANAGEMENT } from 'app/shared/configs/system-maintenance/maintenance-ministry.config';
 import { DialogConfirmationService } from 'app/shared/services/dialog-confirmation.service';
 import { MAINTENANCE_GENERAL_IMPORTS } from 'app/shared/imports/system-maintenance/maintenance-ministry.imports';
 import { MinistryService } from 'app/modules/admin/shared/domain/services/ministry.service';
 import { MinistryEntity } from 'app/modules/admin/business-management/domain/entities/ministry.entity';
+import { UserService } from 'app/core/user/user.service';
 
 @Component({
   selector: 'app-maintenance-ministry',
@@ -34,6 +35,7 @@ export default class MaintenanceMinistryComponent {
 	private _authorizationService = inject(AuthorizationService);
 	private _ngxToastrService = inject(NgxToastrService);
 	private _spinner = inject(NgxSpinnerService);
+	private _userService = inject(UserService); // Inyecta el servicio UserService para obtener información del usuario
 	
     // Señales reactivas para manejar el estado de la tabla y los datos de los ministerios
     titleModule = signal<string>('Mantenedor de ministerios');
@@ -49,7 +51,7 @@ export default class MaintenanceMinistryComponent {
 	paramSearchTable = signal<string>('');
 	placeHolderSearch = signal<string>('Busca por nombre');
 	delaySearchTable = signal<number>(400);
-	filterState = signal<boolean | null>(null);
+	filterState = signal<boolean | null>(true);
 
 	// Método que se ejecuta cuando el componente es inicializado
 	ngOnInit(): void {
@@ -100,11 +102,9 @@ export default class MaintenanceMinistryComponent {
 
 	// Método para definir los iconos de acción en la tabla
 	defineIconsTable(): IconOption<MinistryEntity>[] {
-		const resolvedModule = this._route.snapshot.data['module']; // Obtiene el módulo actual desde la ruta
-		const authorization = this._authorizationService.canPerform(resolvedModule, 'write'); // Verifica si el usuario tiene permisos para editar
-
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
-        const iconDelete = new IconOption("delete", "mat_outline", "Eliminar");
+        const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar"); // Icono para desactivar
+    	const iconActive = new IconOption("restart_alt", "mat_outline", "Activar"); // Icono para activar
 
 		// Acción para editar un ministerio
 		iconEdit.actionIcono = (data: MinistryEntity) => {
@@ -112,31 +112,39 @@ export default class MaintenanceMinistryComponent {
         };
 
 		// Acción para eliminar un ministerio
-		iconDelete.actionIcono = (data: MinistryEntity) => {
-            this.deleteBussines(data);
+		iconInactive.actionIcono = (data: MinistryEntity) => {
+            this.deleteMinistry(data);
         };
 
-		// Deshabilita los iconos si el usuario no tiene permisos
-		iconEdit.isDisabled = (data: MinistryEntity) => !authorization;
-		iconDelete.isDisabled = (data: MinistryEntity) => !authorization;
+		iconActive.actionIcono = (data: MinistryEntity) => {
+            this.deleteMinistry(data);
+        };
 
-        return [iconEdit, iconDelete]; // Retorna los iconos de acción
+		iconInactive.isHidden = (data: MinistryEntity) => !data.bActivo; // Oculta el icono de desactivar si la empresa ya está desactivada
+    	iconActive.isHidden = (data: MinistryEntity) => data.bActivo; // Oculta el icono de activar si la empresa ya está activa
+
+        return [iconEdit, iconInactive, iconActive]; // Retorna los iconos de acción
     }
 
+	
+
 	// Método para eliminar un ministerio
-	async deleteBussines(data: MinistryEntity): Promise<void> {
-		// Abre un diálogo de confirmación para la eliminación
-		const dialogRef = await this._dialogConfirmationService.open(CONFIG_DELETE_DIALOG_MINISTRY);
+	async deleteMinistry(data: MinistryEntity): Promise<void> {
+		const config = data.bActivo ? CONFIG_INACTIVE_DIALOG_MINISTRY : CONFIG_ACTIVE_DIALOG_MINISTRY;
+		const dialogRef = await this._dialogConfirmationService.open(config);
         const isValid = await firstValueFrom(dialogRef.afterClosed()); // Espera la respuesta del diálogo de confirmación
 		if(isValid) {
+			const request = new MinistryEntity();
+			request.nIdMinisterio = data.nIdMinisterio;
+			request.nUsuarioModificacion =this._userService.userLogin().usuarioId
 			this._spinner.show(); // Muestra el spinner de carga
 			this._ministryService
-				.delete(data.nIdMinisterio) // Llama al servicio para eliminar el ministerio
+				.delete(request) // Llama al servicio para eliminar el ministerio
 				.pipe(finalize(() => this._spinner.hide())) // Finaliza la operación y oculta el spinner
 				.subscribe({
 					next: (response: ResponseModel<boolean>) => {
 						if (response.isSuccess) {
-							const messageToast = 'Ministerio eliminado exitosamente'; // Muestra un mensaje de éxito
+							const messageToast = data.bActivo ? 'Ministerio desactivado exitosamente' : 'Ministerio activado exitosamente'; // Muestra un mensaje de éxito
 							this._ngxToastrService.showSuccess(messageToast, '¡Éxito!'); // Muestra la notificación
 							this.searchTable(); // Realiza la búsqueda de los ministerios nuevamente
 						}

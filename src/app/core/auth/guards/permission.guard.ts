@@ -10,6 +10,8 @@ export const permissionGuard: CanActivateFn = (route: ActivatedRouteSnapshot, st
 	const action = route.data['action'] as string || 'read';
 
 	const hasPermission = authorizationService.canPerform(module, action);
+	console.log('hasPermission', hasPermission);
+	
 	if(!hasPermission) {
 		router.navigate(['/error-404'])
 		return false;

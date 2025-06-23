@@ -1,4 +1,4 @@
-export interface PositionEntity {
+export class PositionEntity {
     nIdCargo: number;
     sNombreCargo: string;
     bActivo: boolean;

@@ -31,7 +31,7 @@ export class MinistryService {
         return this._ministryInterface.update(object);
     }
 
-    delete(nId: number): Observable<ResponseEntity<boolean>> {
-        return this._ministryInterface.delete(nId);
+    delete(object: MinistryEntity): Observable<ResponseEntity<boolean>> {
+        return this._ministryInterface.delete(object);
     }
 }

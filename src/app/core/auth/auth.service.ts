@@ -89,7 +89,10 @@ export class AuthService {
                 // Store the user on the user service
                 this._userService.user = response.usuarioResult;
                 localStorage.setItem("user", JSON.stringify(response.usuarioResult));
-                //this._authorizationService.setPermissions(response.item.permissions)
+
+                localStorage.setItem("permission", JSON.stringify(response.modulos));
+
+                this._authorizationService.setPermissions(response.modulos)
 
                 // Return a new observable with the response
                 return of(response);
@@ -148,7 +151,7 @@ export class AuthService {
 
                     //this._userService.user = 
                     this._sessionState.set(JSON.parse(localStorage.getItem("user")).sessionState);
-                    this._authorizationService.setPermissions(JSON.parse(localStorage.getItem("user")).permissions);
+                    this._authorizationService.setPermissions(JSON.parse(localStorage.getItem("permission")));
 
                     // Return true
                     return of(true);

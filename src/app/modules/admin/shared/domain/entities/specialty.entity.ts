@@ -1,4 +1,4 @@
-export interface SpecialtyEntity {
+export class SpecialtyEntity {
     nIdEspecialidad: number;
     sNombreEspecialidad: string;
     bActivo: boolean;

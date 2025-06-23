@@ -15,7 +15,7 @@ export class MinistryRepository implements MinistryInterface {
     private _http = inject(HttpClient);
 
     getAll(): Observable<ResponseEntity<MinistryEntity>> {
-        return this._http.get<ResponseEntity<MinistryEntity>>(`${this.url}/GetByPagination`);
+        return this._http.get<ResponseEntity<MinistryEntity>>(`${this.url}/listar`);
     }
 
     getByPagination(param: string, pageIndex: number, pageSize: number, filterState: boolean | null): Observable<ResponseEntity<MinistryEntity>> {
@@ -23,20 +23,20 @@ export class MinistryRepository implements MinistryInterface {
         if(param) {
             params = params.append('Nombre', param)
         }
-        if(filterState !== null ) params = params.append('Estado', filterState)
+        if(filterState !== null ) params = params.append('Estado', filterState);
         return this._http.get<ResponseEntity<MinistryEntity>>(`${this.url}/listar-paginado`, { params });
     }
 
     create(object: MinistryEntity): Observable<ResponseEntity<number>> {
-        return this._http.post<ResponseEntity<number>>(`${this.url}/Insert`, object);
+        return this._http.post<ResponseEntity<number>>(`${this.url}/crear`, object);
     }
 
     update(object: MinistryEntity): Observable<ResponseEntity<boolean>> {
-        return this._http.post<ResponseEntity<boolean>>(`${this.url}/Update`, object);
+        return this._http.post<ResponseEntity<boolean>>(`${this.url}/actualizar`, object);
     }
 
-    delete(nId: number): Observable<ResponseEntity<boolean>> {
-        return this._http.post<ResponseEntity<boolean>>(`${this.url}/Delete/${nId}`, {});
+    delete(object: MinistryEntity): Observable<ResponseEntity<boolean>> {
+        return this._http.post<ResponseEntity<boolean>>(`${this.url}/eliminar`, object);
     }
     
 }
