@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { BusinessInterface } from '../../application/repositories/business.interface';
 import { BusinessEntity } from '../../domain/entities/business.entity';
@@ -13,14 +13,17 @@ export class BusinessRepository implements BusinessInterface {
     private url = `${environment.apiUrlBase}/Empresa`;
     private _http = inject(HttpClient);
 
-    getByPagination(nameEnterprise: string, pageIndex: number, pageSize: number): Observable<ResponseEntity<BusinessEntity>> {
-        return this._http.get<ResponseEntity<BusinessEntity>>(`${this.url}/GetByPagination`, {
-            params: { 'nameEnterprise': nameEnterprise, 'pageIndex': pageIndex, 'pageSize': pageSize }
-        });
+    getByPagination(param: string, pageIndex: number, pageSize: number, filterState: boolean | null): Observable<ResponseEntity<BusinessEntity>> {
+        let params = new HttpParams().append('Page', pageIndex).append('PageSize', pageSize);
+        if(param) {
+            params = params.append('sRazonSocial', param)
+        }
+        if(filterState !== null) params = params.append('bEstado', filterState);
+        return this._http.get<ResponseEntity<BusinessEntity>>(`${this.url}/listar-paginado`, { params });
     }
 
     getById(nIdEmpresa: number): Observable<ResponseEntity<BusinessEntity>> {
-        return this._http.get<ResponseEntity<BusinessEntity>>(`${this.url}/GetById/${nIdEmpresa}`);
+        return this._http.get<ResponseEntity<BusinessEntity>>(`${this.url}/${nIdEmpresa}`);
     }
 
     create(object: BusinessEntity): Observable<ResponseEntity<number>> {

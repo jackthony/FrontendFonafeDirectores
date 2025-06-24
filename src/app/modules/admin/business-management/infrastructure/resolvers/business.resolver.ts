@@ -4,13 +4,11 @@ import { catchError, forkJoin, Observable, of, switchMap } from 'rxjs';
 import { BusinessService } from '../../domain/services/business.service';
 import { BusinessEntity } from '../../domain/entities/business.entity';
 import { MinistryService } from '../../../shared/domain/services/ministry.service';
-import { DepartmentService } from '../../domain/services/department.service';
-import { DistrictService } from '../../domain/services/district.service';
-import { ProvinceService } from '../../domain/services/province.service';
 import { BusinessResolveResult } from '../../domain/entities/business-resolve-data.entity';
 import { ResponseEntity } from 'app/modules/admin/shared/domain/entities/response.entity';
 import { IndustryService } from 'app/modules/admin/shared/domain/services/industry.service';
 import { SectorService } from 'app/modules/admin/shared/domain/services/sector.service';
+import { UbigeoService } from '../../domain/services/ubigeo.service';
 
 export const businessResolver: ResolveFn<BusinessResolveResult> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<BusinessResolveResult> => {
 
@@ -18,23 +16,21 @@ export const businessResolver: ResolveFn<BusinessResolveResult> = (route: Activa
 
 	const businessService = inject(BusinessService);
 	const ministryService = inject(MinistryService);
-	const departmentService = inject(DepartmentService);
-	const provinceService = inject(ProvinceService);
-	const districtService = inject(DistrictService);
+	const ubigeoService = inject(UbigeoService);
 	const industryService = inject(IndustryService);
 	const sectorService = inject(SectorService);
 
   	const id = route.params['id'];
 
-	const ministries$ = ministryService.getAll();
+	//const ministries$ = ministryService.getAll();
 	const industry$ = industryService.getAll();
 	const sector$ = sectorService.getAll();
-	const departments$ = departmentService.getByPagination();
+	const departments$ = ubigeoService.getDepartments();
 
 	if(!id) {
 		return forkJoin({
 			item: of(null),
-			ministries: ministries$,
+			//ministries: ministries$,
 			industry: industry$,
 			sector: sector$,
 			departments: departments$,
@@ -53,12 +49,12 @@ export const businessResolver: ResolveFn<BusinessResolveResult> = (route: Activa
 
 			return forkJoin({
 				item: of(business),
-				ministries: ministries$,
+				//ministries: ministries$,
 				industry: industry$,
 				sector: sector$,
 				departments: departments$,
-				provinces: provinceService.getByPagination(business.sIdDepartamento),
-				districts: districtService.getByPagination(business.sIdProvincia)
+				provinces: ubigeoService.getProvinces(business.sIdDepartamento),
+				districts: ubigeoService.getDistricts(business.sIdProvincia)
 			})
 		})
 	)

@@ -37,7 +37,7 @@ export const COLUMNS_BUSINESS_MANAGEMENT: TableColumnsDefInterface[] = [
     {
         id: 3,
         name: "sNombreMinisterio",
-        displayedName: "Proponente",
+        displayedName: "Sector",
         type: "string"
     },
     {

@@ -3,7 +3,7 @@ export class BusinessEntity {
     sNombreEmpresa: string;
     sRuc: string;
     sRazonSocial: string;
-    nIdProponente: number;
+    nIdSector: number;
     nIdRubroNegocio: number;
     sIdDepartamento: string;
     sIdProvincia: string;

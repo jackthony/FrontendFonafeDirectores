@@ -29,10 +29,9 @@ import { DepartmentEntity } from '../../domain/entities/departament.entity';
 import { ProvinceEntity } from '../../domain/entities/province.entity';
 import { DistrictEntity } from '../../domain/entities/district.entity';
 import { BusinessEntity } from '../../domain/entities/business.entity';
-import { DistrictService } from '../../domain/services/district.service';
-import { ProvinceService } from '../../domain/services/province.service';
 import { FoButtonDialogComponent } from 'app/modules/admin/shared/components/fo-button-dialog/fo-button-dialog.component';
 import { CompanyAllowanceService } from '../../domain/services/company-allowance.service';
+import { UbigeoService } from '../../domain/services/ubigeo.service';
 
 @Component({
   selector: 'app-form-directory',
@@ -50,8 +49,7 @@ export class FormDirectoryComponent implements OnInit {
 	private _ngxToastrService = inject(NgxToastrService); // Para mostrar notificaciones
 	private _directorService = inject(DirectorService); // Servicio para manejar directores
 	private _validationFormService = inject(ValidationFormService); // Servicio para validaciones de formulario
-	private _provinceService = inject(ProvinceService); // Servicio para manejar provincias
-	private _districtService = inject(DistrictService); // Servicio para manejar distritos
+	private _ubigeoService = inject(UbigeoService); // Servicio para manejar provincias
 	private _userService = inject(UserService); // Servicio para obtener datos del usuario
 	private _companyAllowance = inject(CompanyAllowanceService); // Servicio para manejar asignaciones de empresa
 	private _fileComponentStateService = inject(FileComponentStateService); // Servicio para manejar el estado de los archivos
@@ -169,7 +167,7 @@ export class FormDirectoryComponent implements OnInit {
                     this.lstDistricts.set([]); // Limpia la lista de distritos
                 }),
                 switchMap((deptId) =>
-                    deptId ? this._provinceService.getByPagination(deptId)
+                    deptId ? this._ubigeoService.getProvinces(deptId)
                         .pipe( 
 							map((res: ResponseModel<ProvinceEntity>) =>res.lstItem), // Mapea las provincias
 							catchError(() => {
@@ -191,7 +189,7 @@ export class FormDirectoryComponent implements OnInit {
                     this.lstDistricts.set([]); // Limpia la lista de distritos
                 }),
                 switchMap((provId) =>
-					provId ? this._districtService.getByPagination(provId)
+					provId ? this._ubigeoService.getDistricts(provId)
                         .pipe( 
 							map((res: ResponseModel<DistrictEntity>) => res.lstItem ), // Mapea los distritos
 							catchError(() => {
@@ -240,8 +238,8 @@ export class FormDirectoryComponent implements OnInit {
 	loadProvincesDistricts(): void {
 		if(this.director()){
 			forkJoin({ // Realiza múltiples peticiones de forma paralela
-				provinces: this._provinceService.getByPagination(this.director().sDepartamento), // Obtiene las provincias del departamento
-				districts: this._districtService.getByPagination(this.director().sProvincia) // Obtiene los distritos de la provincia
+				provinces: this._ubigeoService.getProvinces(this.director().sDepartamento), // Obtiene las provincias del departamento
+				districts: this._ubigeoService.getDistricts(this.director().sProvincia) // Obtiene los distritos de la provincia
 			}).subscribe({
 				next: (response) => {
 					this.lstProvinces.set(response.provinces.lstItem), // Establece las provincias

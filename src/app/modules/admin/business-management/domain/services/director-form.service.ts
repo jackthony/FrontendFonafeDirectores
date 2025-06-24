@@ -1,12 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable, of, tap } from 'rxjs';
-import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { CONST_CARGO_MANAGER, CONST_GENDER, CONST_TYPE_DIRECTOR, CONST_TYPE_DOCUMENT, CONST_TYPE_SPECIALTY_DIRECTOR } from 'app/shared/configs/business-management/directory-business.config';
 import { ResponseModel } from '@models/IResponseModel';
 import { ConstantService } from 'app/modules/admin/shared/domain/services/constant.service';
-import { DepartmentService } from './department.service';
 import { ConstantEntity } from '../entities/constant.entity';
 import { DepartmentEntity } from '../entities/departament.entity';
+import { UbigeoService } from './ubigeo.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +14,7 @@ export class DirectorFormService {
 
 	private _constantService = inject(ConstantService);
 
-	private _departmentService = inject(DepartmentService);
+	private _ubigeoService = inject(UbigeoService);
 
 	private cacheConstant = new Map<string, ConstantEntity[]>();
 	private cacheDepartment = new Map<string, DepartmentEntity[]>();
@@ -61,7 +60,7 @@ export class DirectorFormService {
 		  return of(this.cacheDepartment.get(key)!);
 		}
 
-		return this._departmentService.getByPagination().pipe(
+		return this._ubigeoService.getDepartments().pipe(
 		  tap((data: ResponseModel<DepartmentEntity>) => this.cacheDepartment.set(key, data.lstItem)),
 		  map((data: ResponseModel<DepartmentEntity>) => data.lstItem)
 		);

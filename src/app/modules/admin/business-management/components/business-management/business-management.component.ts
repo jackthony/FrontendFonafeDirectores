@@ -47,6 +47,7 @@ export class BusinessManagementComponent {
   pageIndexTable = signal<number>(1); // Página actual de la tabla
   totalPagesTable = signal<number>(1); // Total de páginas
   delaySearchBusiness = signal<number>(400); // Retraso en la búsqueda (en milisegundos)
+  filterState = signal<boolean | null>(true);
 
   /**
    * Método de inicialización del componente
@@ -63,7 +64,7 @@ export class BusinessManagementComponent {
   	searchBusiness(): void {
         this.loadingTable.set(true); // Activa el indicador de carga
         // Realiza la solicitud a la API para obtener las empresas
-        this._businessService.getByPagination(this.businessSearch(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE).pipe(
+        this._businessService.getByPagination(this.businessSearch(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState()).pipe(
           finalize(() => this.loadingTable.set(false)) // Desactiva el indicador de carga después de la solicitud
         ).subscribe({
           next: (response: ResponseModel<BusinessEntity>) => {
@@ -215,5 +216,13 @@ export class BusinessManagementComponent {
             })
         })
     };
+	/**
+	 * Método para establecer el estado del filtro de la tabla.
+	 * Permite activar o desactivar el filtro según el parámetro recibido.
+	 * @param event Estado del filtro (true, false o null).
+	 */
+	setFilterState(event: boolean | null) {
+		this.filterState.set(event);
+	}
 
 }

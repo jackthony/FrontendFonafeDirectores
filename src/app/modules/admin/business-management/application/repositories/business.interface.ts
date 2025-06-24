@@ -3,7 +3,7 @@ import { BusinessEntity } from "../../domain/entities/business.entity";
 import { ResponseEntity } from "app/modules/admin/shared/domain/entities/response.entity";
 
 export interface BusinessInterface {
-    getByPagination(nameEnterprise: string, pageIndex: number, pageSize: number): Observable<ResponseEntity<BusinessEntity>>;
+    getByPagination(nameEnterprise: string, pageIndex: number, pageSize: number, filterState: boolean | null): Observable<ResponseEntity<BusinessEntity>>;
     getById(nIdEmpresa: number): Observable<ResponseEntity<BusinessEntity>>;
     create(object: BusinessEntity): Observable<ResponseEntity<number>>;
     update(object: BusinessEntity): Observable<ResponseEntity<boolean>>;

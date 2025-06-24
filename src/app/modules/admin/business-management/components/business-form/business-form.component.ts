@@ -32,9 +32,10 @@ import { DepartmentEntity } from '../../domain/entities/departament.entity';
 import { BusinessEntity } from '../../domain/entities/business.entity';
 import { ProvinceEntity } from '../../domain/entities/province.entity';
 import { DistrictEntity } from '../../domain/entities/district.entity';
-import { ProvinceService } from '../../domain/services/province.service';
-import { DistrictService } from '../../domain/services/district.service';
 import { MinistryEntity } from '../../domain/entities/ministry.entity';
+import { UbigeoService } from '../../domain/services/ubigeo.service';
+import { IndustryEntity } from 'app/modules/admin/shared/domain/entities/industry.entity';
+import { SectorEntity } from 'app/modules/admin/shared/domain/entities/sector.entity';
 
 @Component({
     selector: 'app-business-form',
@@ -56,8 +57,7 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
     private _ngxToastrService = inject(NgxToastrService); // Inyecta el servicio NgxToastrService para mostrar notificaciones
 
     private _businessService = inject(BusinessService); // Inyecta el servicio BusinessService para manejar las empresas
-    private _provinceService = inject(ProvinceService); // Inyecta el servicio ProvinceService para manejar las provincias
-    private _districtService = inject(DistrictService); // Inyecta el servicio DistrictService para manejar los distritos
+    private _ubigeoService = inject(UbigeoService); 
     private _userService = inject(UserService); // Inyecta el servicio UserService para acceder a la información del usuario
 
     private destroy$ = new Subject<void>(); // Subject para manejar la destrucción del componente
@@ -69,8 +69,9 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
     titleBold = signal<boolean>(true); // Variable para manejar el estilo de texto en negrita
     business = signal<BusinessEntity>(null); // Datos de la empresa
 
-    ministries = signal<MinistryEntity[]>([]); // Lista de ministerios
-    companySection = signal<ConstantEntity[]>([]); // Lista de secciones de la empresa
+    //ministries = signal<MinistryEntity[]>([]); // Lista de ministerios
+    lstIndustry = signal<IndustryEntity[]>([]); // Lista de insdustrias de la empresa
+    lstSector = signal<SectorEntity[]>([]); // Lista de secciones de la empresa
     departments = signal<DepartmentEntity[]>([]); // Lista de departamentos
     provinces = signal<ProvinceEntity[]>([]); // Lista de provincias
     districts = signal<DistrictEntity[]>([]); // Lista de distritos
@@ -91,8 +92,12 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
 
         const data = resolved as BusinessResolveDataEntity; // Asigna los datos resueltos a la variable `data`
         this.business.set(data?.item); // Establece los datos de la empresa
-        this.ministries.set(data?.ministries.lstItem); // Establece la lista de ministerios
+        //this.ministries.set(data?.ministries.lstItem); // Establece la lista de ministerios
+        /**/
+
         //this.companySection.set(data?.constants.lstItem); // Establece las constantes de la empresa
+        this.lstSector.set(data?.sector.lstItem);
+        this.lstIndustry.set(data?.industry.lstItem);
         this.departments.set(data?.departments.lstItem); // Establece la lista de departamentos
         this.provinces.set(data?.provinces?.lstItem ?? []); // Establece la lista de provincias, si existe
         this.districts.set(data?.districts?.lstItem ?? []); // Establece la lista de distritos, si existe
@@ -127,12 +132,11 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
             nIdEmpresa: [object ? object.nIdEmpresa : 0, Validators.required], // Campo de ID de la empresa
             sRuc: [object ? { disabled: object, value: object.sRuc } : '', [Validators.required, this._validationFormService.validarRuc, Validators.maxLength(11)]], // Campo de RUC
             sRazonSocial: [object ? { disabled: object, value: object.sRazonSocial } : '', [Validators.required, Validators.maxLength(255)]], // Campo de razón social
-            nIdProponente: [object ? { disabled: object, value: object.nIdProponente } : 0, [Validators.required, Validators.min(1)]], // Campo de proponente
+            nIdSector: [object ? object.nIdSector : 0, [Validators.required, Validators.min(1)]], // Campo de proponente
             sIdDepartamento: [object ? object.sIdDepartamento : 0, [Validators.required, Validators.min(1)]], // Campo de departamento
             sIdProvincia: [object ? object.sIdProvincia : 0, [Validators.required, Validators.min(1)]], // Campo de provincia
             sIdDistrito: [object ? object.sIdDistrito : 0, [Validators.required, Validators.min(1)]], // Campo de distrito
             nIdRubroNegocio: [ object ? object.nIdRubroNegocio : 0, [Validators.required, Validators.min(1)] ], //Campo del rubro
-            /* nIDSector: [ object ? object.nIDSector : 0, [Validators.required, Validators.min(1)] ], */ //Campo del sector
             sDireccion: [object ? object.sDireccion : '', [Validators.required, Validators.maxLength(255)]], // Campo de dirección
             sComentario: [object ? object.sComentario : '', Validators.maxLength(1000)], // Campo de comentario
             mIngresosUltimoAnio: [object ? object.mIngresosUltimoAnio : null, [Validators.required, Validators.min(0), Validators.max(9999999999999999.99)]], // Campo de ingresos del último año
@@ -161,8 +165,8 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
                 }),
                 switchMap((deptId) =>
                     deptId
-                        ? this._provinceService
-                              .getByPagination(deptId)
+                        ? this._ubigeoService
+                              .getProvinces(deptId)
                               .pipe(
                                   map(
                                       (res: ResponseModel<ProvinceEntity>) =>
@@ -185,8 +189,8 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
                 }),
                 switchMap((provId) =>
                     provId
-                        ? this._districtService
-                              .getByPagination(provId)
+                        ? this._ubigeoService
+                              .getDistricts(provId)
                               .pipe(
                                   map(
                                       (res: ResponseModel<DistrictEntity>) =>

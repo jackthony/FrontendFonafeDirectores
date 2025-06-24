@@ -50,51 +50,32 @@
                                             </div>
                                             <div class="col-span-1">
                                             <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
-                                                <mat-label>Proponente</mat-label>
+                                                <mat-label>Sector</mat-label>
                                                 <mat-select
-                                                    formControlName="nIdProponente"
+                                                    formControlName="nIdSector"
                                                     placeholder="--">
-                                                    @for (item of ministries(); track $index) {
-                                                        <mat-option [value]="item.nIdMinisterio">
-                                                            {{ item.sNombreMinisterio }}
+                                                    @for (item of lstSector(); track $index) {
+                                                        <mat-option [value]="item.nIdSector">
+                                                            {{ item.sNombreSector }}
                                                         </mat-option>
                                                     }
                                                 </mat-select>
-                                                @if(form.get('nIdProponente').invalid) {
+                                                @if(form.get('nIdSector').invalid) {
                                                     <mat-error class="text-red-500">
-                                                        {{ form.get("nIdProponente") | translateMessageForm: "select" }}
+                                                        {{ form.get("nIdSector") | translateMessageForm: "select" }}
                                                     </mat-error>
                                                 }
                                             </mat-form-field>
                                             </div>
-                                            <!-- <div class="col-span-1">
-                                                <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
-                                                    <mat-label>Sector del proponente</mat-label>
-                                                    <mat-select
-                                                        formControlName="nIDSector"
-                                                        placeholder="--">
-                                                        @for (item of []; track $index) {
-                                                            <mat-option [value]="item.nConValor">
-                                                                {{ item.sConDescripcion }}
-                                                            </mat-option>
-                                                        }
-                                                    </mat-select>
-                                                    @if(form.get('nIdRubroNegocio').invalid) {
-                                                        <mat-error class="text-red-500">
-                                                            {{ form.get("nIdRubroNegocio") | translateMessageForm: "select" }}
-                                                        </mat-error>
-                                                    }
-                                                </mat-form-field>
-                                            </div> -->
                                             <div class="col-span-1">
                                                 <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
                                                     <mat-label>Rubro del negocio</mat-label>
                                                     <mat-select
                                                         formControlName="nIdRubroNegocio"
                                                         placeholder="--">
-                                                        @for (item of companySection(); track $index) {
-                                                            <mat-option [value]="item.nConValor">
-                                                                {{ item.sConDescripcion }}
+                                                        @for (item of lstIndustry(); track $index) {
+                                                            <mat-option [value]="item.nIdRubro">
+                                                                {{ item.sNombreRubro }}
                                                             </mat-option>
                                                         }
                                                     </mat-select>
@@ -292,7 +273,7 @@
                                                 <span class="label-checkbox">Registrado en el mercado de valores</span>
                                             </mat-checkbox>
                                             </div>
-                                            <div appPermissionButton class="col-span-1 md:col-span-3 btn-options-user md:justify-end">
+                                            <div class="col-span-1 md:col-span-3 btn-options-user md:justify-end">
                                                 <fo-button-dialog
                                                     (click)="registerForm()"
                                                     [textBtn]="business() ? 'Guardar' : 'Crear'">
