@@ -3,7 +3,7 @@ import { CompanyAllowanceRepository } from "./repositories/company-allowance.rep
 import { CompanyAllowanceInterface } from "../application/repositories/company-allowance.interface";
 
 @Injectable({
-    providedIn: 'root',  // Hace que el Factory esté disponible en toda la aplicación
+    providedIn: 'root',  
 })
 export class CompanyAllowanceFactory {
     private _companyAllowanceRepository = inject(CompanyAllowanceRepository);

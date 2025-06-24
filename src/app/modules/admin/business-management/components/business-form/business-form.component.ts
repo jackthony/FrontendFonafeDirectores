@@ -1,3 +1,10 @@
+/*******************************************************************************************************
+ * Nombre del archivo : business-form.component.ts
+ * Descripción         : Componente de formulario para registrar y actualizar la información de una empresa,
+ *                       incluyendo datos generales, ubicación geográfica y estado financiero.
+ * Autor               : Daniel Alva
+ * Fecha de creación   : 23/06/2025
+ *******************************************************************************************************/
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, UrlTree } from '@angular/router';
@@ -14,29 +21,23 @@ import {
     takeUntil,
     tap,
 } from 'rxjs';
-
 import { ResponseModel } from '@models/IResponseModel';
 import { UserService } from 'app/core/user/user.service';
 import { FORM_BUSINESS_IMPORTS } from 'app/shared/imports/business-management/form-register-business.imports';
-import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { ValidationFormService } from 'app/shared/services/validation-form.service';
 import { provideNgxMask } from 'ngx-mask';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
-import { ArchivingProcessService } from '@services/archiving-process.service';
 import { FileComponentStateService } from '@services/file-component-state.service';
 import { BusinessService } from '../../domain/services/business.service';
 import { BusinessResolveDataEntity } from '../../domain/entities/business-resolve-data.entity';
-import { ConstantEntity } from '../../domain/entities/constant.entity';
 import { DepartmentEntity } from '../../domain/entities/departament.entity';
 import { BusinessEntity } from '../../domain/entities/business.entity';
 import { ProvinceEntity } from '../../domain/entities/province.entity';
 import { DistrictEntity } from '../../domain/entities/district.entity';
-import { MinistryEntity } from '../../domain/entities/ministry.entity';
 import { UbigeoService } from '../../domain/services/ubigeo.service';
 import { IndustryEntity } from 'app/modules/admin/shared/domain/entities/industry.entity';
 import { SectorEntity } from 'app/modules/admin/shared/domain/entities/sector.entity';
-
 @Component({
     selector: 'app-business-form',
     standalone: true,
@@ -50,106 +51,89 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
     private readonly _activatedRoute = inject(ActivatedRoute); // Inyecta el servicio ActivatedRoute para acceder a los parámetros de ruta
     private _fb = inject(FormBuilder); // Inyecta el servicio FormBuilder para crear formularios reactivos
     private _fileComponentStateService = inject(FileComponentStateService); // Inyecta el servicio FileComponentStateService para manejar el estado de archivos
-
     private _spinner = inject(NgxSpinnerService); // Inyecta el servicio NgxSpinnerService para mostrar un spinner de carga
-
     private _validationFormService = inject(ValidationFormService); // Inyecta el servicio de validación de formularios
     private _ngxToastrService = inject(NgxToastrService); // Inyecta el servicio NgxToastrService para mostrar notificaciones
-
     private _businessService = inject(BusinessService); // Inyecta el servicio BusinessService para manejar las empresas
     private _ubigeoService = inject(UbigeoService); 
     private _userService = inject(UserService); // Inyecta el servicio UserService para acceder a la información del usuario
-
     private destroy$ = new Subject<void>(); // Subject para manejar la destrucción del componente
-
-    // Variables reactivas para manejar el estado de la UI
-    textReturn = signal<string>('Regresar al buscador'); // Texto para el botón de retorno
-    titleModule = signal<string>('Nombre de la empresa'); // Título de la sección de la empresa
-    titleFinancial = signal<string>('Información financiera'); // Título de la sección de la información financiera
-    titleBold = signal<boolean>(true); // Variable para manejar el estilo de texto en negrita
-    business = signal<BusinessEntity>(null); // Datos de la empresa
-
-    //ministries = signal<MinistryEntity[]>([]); // Lista de ministerios
-    lstIndustry = signal<IndustryEntity[]>([]); // Lista de insdustrias de la empresa
-    lstSector = signal<SectorEntity[]>([]); // Lista de secciones de la empresa
-    departments = signal<DepartmentEntity[]>([]); // Lista de departamentos
-    provinces = signal<ProvinceEntity[]>([]); // Lista de provincias
-    districts = signal<DistrictEntity[]>([]); // Lista de distritos
-
-    totalMembers = signal<number>(0); // Número total de miembros
-
-    form: FormGroup; // Formulario reactivo para la empresa
-
+    textReturn = signal<string>('Regresar al buscador');
+    titleModule = signal<string>('Nombre de la empresa'); 
+    titleFinancial = signal<string>('Información financiera');
+    titleBold = signal<boolean>(true); 
+    business = signal<BusinessEntity>(null); 
+    //ministries = signal<MinistryEntity[]>([]); 
+    lstIndustry = signal<IndustryEntity[]>([]); 
+    lstSector = signal<SectorEntity[]>([]);
+    departments = signal<DepartmentEntity[]>([]);
+    provinces = signal<ProvinceEntity[]>([]);
+    districts = signal<DistrictEntity[]>([]);
+    totalMembers = signal<number>(0);
+    form: FormGroup;
     /**
      * Método de inicialización del componente
      */
     ngOnInit(): void {
-        const resolved = this._activatedRoute.snapshot.data['data']; // Obtiene los datos resueltos desde la ruta activa
+        const resolved = this._activatedRoute.snapshot.data['data'];
         if (resolved instanceof UrlTree) {
-            this._router.navigateByUrl(resolved); // Redirige si los datos son una URL
+            this._router.navigateByUrl(resolved);
             return;
         }
 
-        const data = resolved as BusinessResolveDataEntity; // Asigna los datos resueltos a la variable `data`
-        this.business.set(data?.item); // Establece los datos de la empresa
-        //this.ministries.set(data?.ministries.lstItem); // Establece la lista de ministerios
-        /**/
-
-        //this.companySection.set(data?.constants.lstItem); // Establece las constantes de la empresa
+        const data = resolved as BusinessResolveDataEntity;
+        this.business.set(data?.item);
+        //this.ministries.set(data?.ministries.lstItem);
+        //this.companySection.set(data?.constants.lstItem);
         this.lstSector.set(data?.sector.lstItem);
         this.lstIndustry.set(data?.industry.lstItem);
-        this.departments.set(data?.departments.lstItem); // Establece la lista de departamentos
-        this.provinces.set(data?.provinces?.lstItem ?? []); // Establece la lista de provincias, si existe
-        this.districts.set(data?.districts?.lstItem ?? []); // Establece la lista de distritos, si existe
-
-        this.initForm(this.business()); // Inicializa el formulario con los datos de la empresa
-        this.valueChangesForm(); // Activa la reactividad en el formulario
-
-        // Configura el estado del componente de archivos
+        this.departments.set(data?.departments.lstItem); 
+        this.provinces.set(data?.provinces?.lstItem ?? []); 
+        this.districts.set(data?.districts?.lstItem ?? []);
+        this.initForm(this.business()); 
+        this.valueChangesForm();
         if (this.business()) {
             const fileState = {
                 title: 'Empresa',
                 isDisabled: false,
                 root: `Empresa\\${this.business().sRazonSocial}`,
             };
-            this._fileComponentStateService.setFileComponentState(fileState); // Establece el estado del componente de archivos
-            this.totalMembers.set(this.business().nNumeroMiembros); // Establece el total de miembros de la empresa
+            this._fileComponentStateService.setFileComponentState(fileState);
+            this.totalMembers.set(this.business().nNumeroMiembros);
         } else {
             const fileState = {
                 title: 'Empresa',
                 isDisabled: true,
                 message: '* Debe registrar la empresa, para registrar archivos',
             };
-            this._fileComponentStateService.setFileComponentState(fileState); // Establece el estado del componente de archivos
+            this._fileComponentStateService.setFileComponentState(fileState);
         }
     }
-
     /**
      * Método para inicializar el formulario reactivo
      */
     initForm(object: BusinessEntity): void {
         this.form = this._fb.group({
-            nIdEmpresa: [object ? object.nIdEmpresa : 0, Validators.required], // Campo de ID de la empresa
-            sRuc: [object ? { disabled: object, value: object.sRuc } : '', [Validators.required, this._validationFormService.validarRuc, Validators.maxLength(11)]], // Campo de RUC
-            sRazonSocial: [object ? { disabled: object, value: object.sRazonSocial } : '', [Validators.required, Validators.maxLength(255)]], // Campo de razón social
-            nIdSector: [object ? object.nIdSector : 0, [Validators.required, Validators.min(1)]], // Campo de proponente
-            sIdDepartamento: [object ? object.sIdDepartamento : 0, [Validators.required, Validators.min(1)]], // Campo de departamento
-            sIdProvincia: [object ? object.sIdProvincia : 0, [Validators.required, Validators.min(1)]], // Campo de provincia
-            sIdDistrito: [object ? object.sIdDistrito : 0, [Validators.required, Validators.min(1)]], // Campo de distrito
-            nIdRubroNegocio: [ object ? object.nIdRubroNegocio : 0, [Validators.required, Validators.min(1)] ], //Campo del rubro
-            sDireccion: [object ? object.sDireccion : '', [Validators.required, Validators.maxLength(255)]], // Campo de dirección
-            sComentario: [object ? object.sComentario : '', Validators.maxLength(1000)], // Campo de comentario
-            mIngresosUltimoAnio: [object ? object.mIngresosUltimoAnio : null, [Validators.required, Validators.min(0), Validators.max(9999999999999999.99)]], // Campo de ingresos del último año
-            mUtilidadUltimoAnio: [object ? object.mUtilidadUltimoAnio : null, [Validators.required, Validators.min(0), Validators.max(9999999999999999.99)]], // Campo de utilidad del último año
-            mConformacionCapitalSocial: [object ? object.mConformacionCapitalSocial : null, [Validators.required, Validators.min(0), Validators.max(9999999999999999.99)]], // Campo de capital social
-            nNumeroMiembros: [object ? object.nNumeroMiembros : 1, [Validators.required, Validators.min(1), Validators.max(100)]], // Campo de número de miembros
-            bRegistradoMercadoValores: [object ? object.bRegistradoMercadoValores : false, [Validators.required]], // Campo de registro en mercado de valores
-            bActivo: [object ? object.bActivo : true, [Validators.required]], // Campo de estado de la empresa
-            nUsuarioRegistro: [{ disabled: object, value: this._userService.userLogin().usuarioId }, Validators.required], // Campo del usuario que registró la empresa
-            nUsuarioModificacion: [{ disabled: !object, value: this._userService.userLogin().usuarioId }, Validators.required], // Campo del usuario que modificó la empresa
+            nIdEmpresa: [object ? object.nIdEmpresa : 0, Validators.required],
+            sRuc: [object ? { disabled: object, value: object.sRuc } : '', [Validators.required, this._validationFormService.validarRuc, Validators.maxLength(11)]],
+            sRazonSocial: [object ? { disabled: object, value: object.sRazonSocial } : '', [Validators.required, Validators.maxLength(255)]],
+            nIdSector: [object ? object.nIdSector : 0, [Validators.required, Validators.min(1)]],
+            sIdDepartamento: [object ? object.sIdDepartamento : 0, [Validators.required, Validators.min(1)]],
+            sIdProvincia: [object ? object.sIdProvincia : 0, [Validators.required, Validators.min(1)]],
+            sIdDistrito: [object ? object.sIdDistrito : 0, [Validators.required, Validators.min(1)]],
+            nIdRubroNegocio: [ object ? object.nIdRubroNegocio : 0, [Validators.required, Validators.min(1)] ],
+            sDireccion: [object ? object.sDireccion : '', [Validators.required, Validators.maxLength(255)]],
+            sComentario: [object ? object.sComentario : '', Validators.maxLength(1000)],
+            mIngresosUltimoAnio: [object ? object.mIngresosUltimoAnio : null, [Validators.required, Validators.min(0), Validators.max(9999999999999999.99)]], 
+            mUtilidadUltimoAnio: [object ? object.mUtilidadUltimoAnio : null, [Validators.required, Validators.min(0), Validators.max(9999999999999999.99)]],
+            mConformacionCapitalSocial: [object ? object.mConformacionCapitalSocial : null, [Validators.required, Validators.min(0), Validators.max(9999999999999999.99)]],
+            nNumeroMiembros: [object ? object.nNumeroMiembros : 1, [Validators.required, Validators.min(1), Validators.max(100)]], 
+            bRegistradoMercadoValores: [object ? object.bRegistradoMercadoValores : false, [Validators.required]],
+            bActivo: [object ? object.bActivo : true, [Validators.required]],
+            nUsuarioRegistro: [{ disabled: object, value: this._userService.userLogin().usuarioId }, Validators.required],
+            nUsuarioModificacion: [{ disabled: !object, value: this._userService.userLogin().usuarioId }, Validators.required],
         });
     }
-
     /**
      * Método para manejar los cambios en el formulario
      */
@@ -157,152 +141,139 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
         this.form
             .get('sIdDepartamento')!
             .valueChanges.pipe(
-                distinctUntilChanged(), // Evita emitir valores duplicados
+                distinctUntilChanged(),
                 tap(() => {
-                    this.form.patchValue({ sIdProvincia: 0, sIdDistrito: 0 }); // Resetea los campos de provincia y distrito
-                    this.provinces.set([]); // Limpia las provincias
-                    this.districts.set([]); // Limpia los distritos
+                    this.form.patchValue({ sIdProvincia: 0, sIdDistrito: 0 });
+                    this.provinces.set([]); 
+                    this.districts.set([]);
                 }),
                 switchMap((deptId) =>
                     deptId
                         ? this._ubigeoService
-                              .getProvinces(deptId)
-                              .pipe(
-                                  map(
-                                      (res: ResponseModel<ProvinceEntity>) =>
-                                          res.lstItem
-                                  )
-                              )
-                        : of([]) // Si no hay departamento, retorna un array vacío
+                                .getProvinces(deptId)
+                                .pipe(
+                                    map(
+                                        (res: ResponseModel<ProvinceEntity>) =>
+                                            res.lstItem
+                                    )
+                                )
+                        : of([]) 
                 ),
-                takeUntil(this.destroy$) // Maneja la destrucción del componente
+                takeUntil(this.destroy$) 
             )
-            .subscribe((lstItem) => this.provinces.set(lstItem)); // Actualiza las provincias
-
+            .subscribe((lstItem) => this.provinces.set(lstItem));
         this.form
             .get('sIdProvincia')!
             .valueChanges.pipe(
-                distinctUntilChanged(), // Evita emitir valores duplicados
+                distinctUntilChanged(),
                 tap(() => {
-                    this.form.patchValue({ sIdDistrito: 0 }); // Resetea el campo de distrito
-                    this.districts.set([]); // Limpia los distritos
+                    this.form.patchValue({ sIdDistrito: 0 });
+                    this.districts.set([]);
                 }),
                 switchMap((provId) =>
                     provId
                         ? this._ubigeoService
-                              .getDistricts(provId)
-                              .pipe(
-                                  map(
-                                      (res: ResponseModel<DistrictEntity>) =>
-                                          res.lstItem
-                                  )
-                              )
-                        : of([]) // Si no hay provincia, retorna un array vacío
+                                .getDistricts(provId)
+                                .pipe(
+                                    map(
+                                        (res: ResponseModel<DistrictEntity>) =>
+                                            res.lstItem
+                                    )
+                                )
+                        : of([]) 
                 ),
-                takeUntil(this.destroy$) // Maneja la destrucción del componente
+                takeUntil(this.destroy$) 
             )
-            .subscribe((lstItem) => this.districts.set(lstItem)); // Actualiza los distritos
+            .subscribe((lstItem) => this.districts.set(lstItem)); 
     }
-
     /**
      * Método para regresar a la vista de gestión de empresas
      */
     returnEnterprise(): void {
-        this._router.navigate(['gestion-empresas']); // Redirige a la vista de gestión de empresas
+        this._router.navigate(['gestion-empresas']); 
     }
-
     /**
      * Método para manejar la destrucción del componente
      */
     ngOnDestroy() {
-        this.destroy$.next(); // Señaliza la destrucción del componente
-        this.destroy$.complete(); // Completa el Subject
+        this.destroy$.next(); 
+        this.destroy$.complete();
     }
-
     /**
      * Método para registrar o actualizar la empresa
      */
     registerForm() {
         if (this.form.invalid) {
-            this.form.markAllAsTouched(); // Marca todos los campos como tocados si el formulario es inválido
+            this.form.markAllAsTouched(); 
             return;
         }
-        this._spinner.show(); // Muestra el spinner de carga
-
-        // Formatea los valores monetarios
+        this._spinner.show(); 
         const income = this.form.get('mIngresosUltimoAnio');
         const profits = this.form.get('mUtilidadUltimoAnio');
         const capital = this.form.get('mConformacionCapitalSocial');
-
         if (typeof income.value === 'string') {
             const incomeFormat = income.value.replace(/\s/g, '');
-            income.setValue(parseFloat(incomeFormat)); // Convierte a número el valor de ingresos
+            income.setValue(parseFloat(incomeFormat));
         }
-
         if (typeof profits.value === 'string') {
             const profitsFormat = profits.value.replace(/\s/g, '');
-            profits.setValue(parseFloat(profitsFormat)); // Convierte a número el valor de utilidad
+            profits.setValue(parseFloat(profitsFormat));
         }
-
         if (typeof capital.value === 'string') {
             const capitalFormat = capital.value.replace(/\s/g, '');
-            capital.setValue(parseFloat(capitalFormat)); // Convierte a número el valor de capital social
+            capital.setValue(parseFloat(capitalFormat));
         }
-
-        if (this.business()) this.updateBusiness(); // Si ya hay una empresa, actualiza
-        else this.registerBusiness(); // Si no, registra una nueva empresa
+        if (this.business()) this.updateBusiness();
+        else this.registerBusiness();
     }
-
     /**
      * Método para registrar una nueva empresa
      */
     registerBusiness(): void {
         this._businessService
-            .create(this.form.value) // Realiza la solicitud de creación
-            .pipe(finalize(() => this._spinner.hide())) // Desactiva el spinner después de la solicitud
+            .create(this.form.value)
+            .pipe(finalize(() => this._spinner.hide()))
             .subscribe({
                 next: (response: ResponseModel<number>) => {
                     if (response.isSuccess) {
-                        this._ngxToastrService.showSuccess('Empresa registrada exitosamente', '¡Éxito!'); // Muestra la notificación de éxito
+                        this._ngxToastrService.showSuccess('Empresa registrada exitosamente', '¡Éxito!');
                         this._router.navigate([response.item], {
-                            relativeTo: this._activatedRoute, // Redirige a la página de la empresa recién creada
+                            relativeTo: this._activatedRoute,
                         });
                     }
                 },
             });
     }
-
     /**
      * Método para actualizar una empresa existente
      */
     updateBusiness(): void {
         this._businessService
-            .update(this.form.value) // Realiza la solicitud de actualización
+            .update(this.form.value)
             .pipe(
                 switchMap((response: ResponseModel<boolean>) => {
                     if (response.isSuccess) {
-                        return this._businessService.getById(this.business().nIdEmpresa); // Solicita los datos actualizados de la empresa
+                        return this._businessService.getById(this.business().nIdEmpresa);
                     }
                 }),
                 catchError(() => {
-                    this._router.navigate(['/gestion-empresas']); // Redirige si ocurre un error
+                    this._router.navigate(['/gestion-empresas']);
                     return EMPTY;
                 }),
-                finalize(() => this._spinner.hide()) // Desactiva el spinner después de la solicitud
+                finalize(() => this._spinner.hide())
             )
             .subscribe({
                 next: (response: ResponseModel<BusinessEntity>) => {
-                    this._ngxToastrService.showSuccess('Empresa actualizada exitosamente', '¡Éxito!'); // Muestra la notificación de éxito
-                    this.business.set(response.item); // Actualiza los datos de la empresa
-                    this.initForm(this.business()); // Inicializa el formulario con los datos actualizados
+                    this._ngxToastrService.showSuccess('Empresa actualizada exitosamente', '¡Éxito!');
+                    this.business.set(response.item);
+                    this.initForm(this.business());
                 },
             });
     }
-
     /**
      * Método para establecer el número total de miembros
      */
     setTotalMembers(event: number) {
-        this.totalMembers.set(event); // Establece el número total de miembros
+        this.totalMembers.set(event);
     }
 }

@@ -8,7 +8,6 @@
     justify-content: space-between;
     align-items: center;
 }
-
 .text-card {
     color: #FFFFFF;
     font-family: "Mulish";
@@ -17,14 +16,12 @@
     line-height: 18px;
     letter-spacing: 0.16px;
 }
-
 .icon-enter {
     background-color: white;
     mat-icon {
     color: #CF422F !important;
     }
 }
-
 .option-list {
     width: 100%;
     padding: 0 20px;
@@ -33,7 +30,6 @@
         justify-content: start;
         width: 100%;
         padding: 10px 0;
-        //border-bottom: 1px solid #DDDDDD;
         align-items: center;
         margin-top: 7px;
         border: 2px solid #CD202C;
