@@ -3,10 +3,14 @@
  * Descripción:         Constante que define la lista de procesos disponibles en la aplicación.
  * Autor:               Daniel Alva
  * Fecha de creación:   01/06/2025
+ * Última modificación: 23/06/2025 por Daniel Alva
  * Cambios recientes:   Creación inicial del archivo.
  *******************************************************************************************************/
 import { OptionsProcess } from "app/core/enums/options-process.enum";
 import { ListOfProcesses } from "app/shared/interfaces/IListOfProcesses";
+/**
+ * Lista centralizada de procesos del sistema.
+ */
 export const LIST_OF_PROCESSES: ListOfProcesses[] = [
     {
         label: 'Ingresar nueva solicitud',

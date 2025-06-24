@@ -1,12 +1,12 @@
 /*************************************************************************************
-   * Nombre del archivo:  sign-out.component.ts
-   * Descripción:         Componente que gestiona el cierre de sesión, ejecuta el
-   *                      signOut y muestra un contador antes de redirigir al sign-in.
-   * Autor:               Daniel Alva
-   * Fecha de creación:   01/06/2025
-   * Última modificación: 23/06/2025 por Daniel Alva
-   * Cambios recientes:   Creación inicial del componente de cierre de sesión.
-   **************************************************************************************/
+ * Nombre del archivo:  sign-out.component.ts
+ * Descripción:         Componente que gestiona el cierre de sesión, ejecuta el
+ *                      signOut y muestra un contador antes de redirigir al sign-in.
+ * Autor:               Daniel Alva
+ * Fecha de creación:   01/06/2025
+ * Última modificación: 23/06/2025 por Daniel Alva
+ * Cambios recientes:   Creación inicial del componente de cierre de sesión.
+ *************************************************************************************/
 import { I18nPluralPipe } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
@@ -27,7 +27,7 @@ export class AuthSignOutComponent implements OnInit, OnDestroy {
     };
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     /**
-     * Constructor
+     * Constructor del componente
      */
     constructor(
         private _authService: AuthService,
@@ -35,8 +35,7 @@ export class AuthSignOutComponent implements OnInit, OnDestroy {
     ) {}
     /**
      * Hook de inicialización del componente.
-     * Ejecuta el cierre de sesión inmediato y luego inicia un `timer` de 5 segundos
-     * que decrementa cada segundo. Al finalizar, redirige a la vista de inicio de sesión.
+     * Ejecuta el cierre de sesión e inicia el contador de redirección.
      */
     ngOnInit(): void {
         this._authService.signOut();
@@ -51,9 +50,9 @@ export class AuthSignOutComponent implements OnInit, OnDestroy {
             )
             .subscribe();
     }
-        /**
+    /**
      * Hook de destrucción del componente.
-     * Libera los recursos y cancela la suscripción al `timer`.
+     * Libera recursos y cancela suscripciones activas.
      */
     ngOnDestroy(): void {
         this._unsubscribeAll.next(null);

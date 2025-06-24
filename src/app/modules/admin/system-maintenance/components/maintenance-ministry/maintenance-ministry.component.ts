@@ -1,12 +1,12 @@
 /*************************************************************************************
-   * Nombre del archivo:  maintenance-ministry.component.ts
-   * Descripción:         Componente para la gestión de ministerios: búsqueda, paginación,
-   *                      alta/edición, activación y desactivación con confirmación.
-   * Autor:               Daniel Alva
-   * Fecha de creación:   01/06/2025
-   * Última modificación: 23/06/2025 por Daniel Alva
-   * Cambios recientes:   Limpieza de imports sin uso y adición de cabecera unificada.
-   **************************************************************************************/
+ * Nombre del archivo:  maintenance-ministry.component.ts
+ * Descripción:         Componente para la gestión de ministerios: búsqueda, paginación,
+ *                      registro/edición, activación y desactivación con confirmación.
+ * Autor:               Daniel Alva
+ * Fecha de creación:   01/06/2025
+ * Última modificación: 23/06/2025 por Daniel Alva
+ * Cambios recientes:   Limpieza de imports sin uso y estandarización de cabecera.
+ *************************************************************************************/
 import { Component, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -33,15 +33,15 @@ import { UserService } from 'app/core/user/user.service';
   styleUrl: './maintenance-ministry.component.scss'
 })
 export default class MaintenanceMinistryComponent {
-    private readonly _router = inject(Router);
-	private readonly _route = inject(ActivatedRoute);
-	private _dialogConfirmationService = inject(DialogConfirmationService);
-	private _matDialog: MatDialog = inject(MatDialog);
-	private _ministryService = inject(MinistryService);
-	private _authorizationService = inject(AuthorizationService);
-	private _ngxToastrService = inject(NgxToastrService);
-	private _spinner = inject(NgxSpinnerService);
-	private _userService = inject(UserService);
+    private readonly _router = inject(Router); // Router para navegación
+	private readonly _route = inject(ActivatedRoute); // ActivatedRoute para obtener parámetros de la ruta
+	private _dialogConfirmationService = inject(DialogConfirmationService); // Servicio para diálogos de confirmación
+	private _matDialog: MatDialog = inject(MatDialog); // MatDialog para abrir diálogos
+	private _ministryService = inject(MinistryService); // Servicio para operaciones con ministerios
+	private _authorizationService = inject(AuthorizationService); // Servicio de autorización para verificar permisos
+	private _ngxToastrService = inject(NgxToastrService); // Servicio para mostrar notificaciones
+	private _spinner = inject(NgxSpinnerService); // Servicio para mostrar un spinner de carga
+	private _userService = inject(UserService); // Servicio para obtener información del usuario actual
     titleModule = signal<string>('Mantenedor de ministerios');
 	headerTable = signal<TableColumnsDefInterface[]>([]);
 	dataTable = signal<MinistryEntity[]>([]);
@@ -54,15 +54,26 @@ export default class MaintenanceMinistryComponent {
 	placeHolderSearch = signal<string>('Busca por nombre');
 	delaySearchTable = signal<number>(400);
 	filterState = signal<boolean | null>(true);
-	
+	/**
+	 * Hook de inicialización del componente.
+	 * Inicializa las columnas e íconos de la tabla, y ejecuta la búsqueda inicial de datos.
+	 */
 	ngOnInit(): void {
 		this.headerTable.set(MAINTENANCE_MINISTRY_MANAGEMENT);
 		this.iconsTable.set(this.defineIconsTable());
 		this.searchTable();
 	}
+	/**
+	 * Hook de destrucción del componente.
+	 * Redirige al usuario a la página de inicio al destruir el componente.
+	 */
 	returnInit(): void {
 		this._router.navigate(['home']);
 	}
+	/**
+	 * Realiza la búsqueda de ministerios con paginación y filtrado.
+	 * Utiliza el servicio MinistryService para obtener los datos.
+	 */
 	searchTable(): void {
 		this.loadingTable.set(true);
 		this._ministryService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState()).pipe(
@@ -83,15 +94,27 @@ export default class MaintenanceMinistryComponent {
 			})
 		});
 	}
+	/**
+	 * Cambia la página activa del paginador y recarga la búsqueda.
+	 * @param event Número de página seleccionado.
+	 */
 	changePageTable(event: number): void {
 		this.pageIndexTable.set(event);
 		this.searchTable();
 	}
+	/**
+	 * Aplica un filtro por nombre ingresado, reinicia la paginación y ejecuta búsqueda.
+	 * @param event Texto del campo de búsqueda.
+	 */
 	searchByItem(event: string): void {
 		this.paramSearchTable.set(event);
 		this.pageIndexTable.set(1);
 		this.searchTable();
 	}
+	/**
+	 * Define los íconos de acción para la tabla de ministerios.
+	 * @returns Un arreglo de IconOption que define las acciones disponibles.
+	 */
 	defineIconsTable(): IconOption<MinistryEntity>[] {
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
         const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar");
@@ -109,6 +132,10 @@ export default class MaintenanceMinistryComponent {
     	iconActive.isHidden = (data: MinistryEntity) => data.bActivo;
         return [iconEdit, iconInactive, iconActive];
     }
+	/**
+	 * Activa o desactiva un ministerio seleccionado, solicitando confirmación previa.
+	 * @param data Registro de ministerio sobre el cual aplicar la acción.
+	 */
 	async deleteMinistry(data: MinistryEntity): Promise<void> {
 		const config = data.bActivo ? CONFIG_INACTIVE_DIALOG_MINISTRY : CONFIG_ACTIVE_DIALOG_MINISTRY;
 		const dialogRef = await this._dialogConfirmationService.open(config);
@@ -132,6 +159,11 @@ export default class MaintenanceMinistryComponent {
 				});
 		}
 	}
+	/**
+	 * Abre un diálogo para registrar o editar un ministerio.
+	 * Si se proporciona un elemento, se edita; si no, se crea uno nuevo.
+	 * @param element Objeto de tipo MinistryEntity a editar, o null para crear uno nuevo.
+	 */
 	openFormDialog(element?: MinistryEntity | null): void {
 		const respDialogo = this._matDialog.open(DialogMinistryFormComponent, {
 			data: { object: element },
@@ -148,6 +180,10 @@ export default class MaintenanceMinistryComponent {
 		    }
 		});
 	}
+	/**
+	 * Establece el estado del filtro para mostrar u ocultar los registros inactivos.
+	 * @param event Valor booleano o nulo para activar/desactivar el filtro.
+	 */
 	setFilterState(event: boolean | null) {
 		this.filterState.set(event);
 	}

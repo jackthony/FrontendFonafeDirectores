@@ -3,9 +3,13 @@
  * Descripción:         Definición de columnas para la visualización de actividades en el módulo correspondiente.
  * Autor:               Daniel Alva
  * Fecha de creación:   01/06/2025
- * Cambios recientes:   Creación inicial del archivo.
+ * Última modificación: 23/06/2025 por Daniel Alva
+ * Cambios recientes:   Revisión de nombres y tipos de columnas, ajustes semánticos.
  *******************************************************************************************************/
 import { TableColumnsDefInterface } from "../../interfaces/ITableColumnsDefInterface";
+/**
+ * Columnas para la tabla de gestión de actividades.
+ */
 export const COLUMNS_ACTIVITIES: TableColumnsDefInterface[] = [
     {
         id: 0,

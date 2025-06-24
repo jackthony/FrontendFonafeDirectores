@@ -1,3 +1,15 @@
+/*******************************************************************************************************
+ * Nombre del componente: ChangePasswordAdmComponent
+ * Descripción:           Componente encargado de gestionar el cambio forzado de contraseña de un 
+ *                        usuario desde el módulo de administración. Permite validar y actualizar la 
+ *                        nueva contraseña ingresada, además de controlar la visibilidad del campo.
+ * Autor:                 Daniel Alva
+ * Fecha de creación:     23/06/2025
+ * Última modificación:   23/06/2025 por Daniel Alva
+ * Cambios recientes:     - Implementación del formulario reactivo para cambio de contraseña.
+ *                        - Integración con el servicio SegUserService para actualización segura.
+ *                        - Control del ciclo de vida con Subject para evitar memory leaks.
+ *******************************************************************************************************/
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit, signal, ViewEncapsulation } from '@angular/core';
 import {
@@ -24,7 +36,6 @@ import { finalize, Subject, takeUntil } from 'rxjs';
 import { SegUserService } from '../../domain/services/seg-user.service';
 import { SegUserEntity } from '../../domain/entities/seg-user.entity';
 import { FoButtonDialogComponent } from 'app/modules/admin/shared/components/fo-button-dialog/fo-button-dialog.component';
-
 @Component({
     selector: 'app-change-password-adm',
     standalone: true,
@@ -44,78 +55,60 @@ import { FoButtonDialogComponent } from 'app/modules/admin/shared/components/fo-
 	encapsulation: ViewEncapsulation.None
 })
 export class ChangePasswordAdmComponent implements OnInit, OnDestroy {
-    // Inyección del FormBuilder para crear formularios reactivos de manera más sencilla
-    private _fb = inject(FormBuilder);
-
-    // Inyección de los datos del diálogo que se pasan desde el componente que invoca este diálogo
-    public data: { object: SegUserEntity } = inject(MAT_DIALOG_DATA);
-
-    // Referencia al diálogo para cerrar el diálogo después de una acción
-    private readonly dialogRef = inject(MatDialogRef<ChangePasswordAdmComponent>);
-
-    // Servicios inyectados para obtener y manejar la información del usuario
-    private _userService = inject(UserService);
+    private _fb = inject(FormBuilder); // Inyección del FormBuilder para crear formularios reactivos de manera más sencilla
+    public data: { object: SegUserEntity } = inject(MAT_DIALOG_DATA); // Inyección de los datos del diálogo que se pasan desde el componente que invoca este diálogo
+    private readonly dialogRef = inject(MatDialogRef<ChangePasswordAdmComponent>);// Referencia al diálogo para cerrar el diálogo después de una acción
+    private _userService = inject(UserService);// Servicios inyectados para obtener y manejar la información del usuario
     private _segUserService = inject(SegUserService);
-
-    // Subject para controlar el ciclo de vida de las suscripciones y evitar memory leaks
-    private _unsubscribeAll: Subject<void> = new Subject<void>();
-
-    // Señales reactivas para controlar el estado de carga, botones y tipo de entrada de la contraseña
-    loadingService = signal<boolean>(false);
+    private _unsubscribeAll: Subject<void> = new Subject<void>(); // Subject para controlar el ciclo de vida de las suscripciones y evitar memory leaks
+    loadingService = signal<boolean>(false); 
     buttonEnum = signal<typeof ButtonEnum>(ButtonEnum);
     typeInputPassword = signal<boolean>(false);
-
-    // Variables que almacenan los datos del usuario y el formulario reactivo
     user: User;
     form: FormGroup;
-
-    // Método que se ejecuta cuando el componente se inicializa
     ngOnInit(): void {
-        // Se suscribe al observable 'user$' de UserService para obtener los datos del usuario
         this._userService.user$
-            .pipe(takeUntil(this._unsubscribeAll)) // Usamos 'takeUntil' para cancelar la suscripción cuando el componente se destruya
+            .pipe(takeUntil(this._unsubscribeAll)) 
             .subscribe((user: User) => {
                 this.user = user;
             });
-
-        // Inicializa el formulario reactivo con los valores predeterminados
         this.form = this._fb.group({
-            user: [this.data.object.nIdUsuario, Validators.required], // Campo de usuario, requerido
-            password: ['', [Validators.required, Validators.maxLength(32)]], // Campo de contraseña, requerido y con un límite de 32 caracteres
-            nUsuarioModificacion: [this.user?.usuarioId, Validators.required], // Campo de usuario que realiza la modificación
+            user: [this.data.object.nIdUsuario, Validators.required],
+            password: ['', [Validators.required, Validators.maxLength(32)]],
+            nUsuarioModificacion: [this.user?.usuarioId, Validators.required],
         });
     }
-
-    // Método para cambiar la contraseña
+    /**
+     * Método encargado de enviar la solicitud para cambiar la contraseña del usuario seleccionado.
+     * Realiza validación previa del formulario y usa el servicio SegUserService para ejecutar el cambio.
+     */
     changePassword(): void {
-        // Si el formulario es inválido, marca todos los campos como tocados para mostrar los errores
         if (this.form.invalid) {
             this.form.markAllAsTouched();
             return;
         }
-        // Marca que el servicio está en proceso de carga
         this.loadingService.set(true);
-        // Llama al servicio para cambiar la contraseña y maneja la respuesta
         this._segUserService
-            .updatePassword(this.form.value) // Llama al servicio para crear la solicitud
-            .pipe(finalize(() => this.loadingService.set(false))) // Finaliza la operación y desactiva el estado de carga
+            .updatePassword(this.form.value)
+            .pipe(finalize(() => this.loadingService.set(false))) 
             .subscribe({
                 next: (response: ResponseModel<boolean>) => {
-                    // Si la respuesta es exitosa, cierra el diálogo con un valor verdadero
                     if (response.isSuccess) this.dialogRef.close(true);
                 },
             });
     }
-
-    // Método para alternar la visibilidad de la contraseña
+    /**
+     * Método que alterna la visibilidad del campo de contraseña (mostrar u ocultar).
+     * Ideal para mejorar la experiencia del usuario durante el ingreso de la nueva clave.
+     */
     viewPassword(): void {
-        // Alterna el tipo de entrada para la contraseña (mostrar u ocultar)
         this.typeInputPassword.set(!this.typeInputPassword());
     }
-
-    // Método que se ejecuta cuando el componente es destruido
+    /**
+     * Método que se ejecuta automáticamente al destruir el componente.
+     * Se encarga de cancelar todas las suscripciones activas para prevenir fugas de memoria.
+     */
     ngOnDestroy(): void {
-        // Limpia las suscripciones activas para evitar memory leaks
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }

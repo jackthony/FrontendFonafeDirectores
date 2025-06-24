@@ -1,12 +1,12 @@
 /*************************************************************************************
-   * Nombre del archivo:  maintenance-sector.component.ts
-   * Descripción:         Componente para la gestión de sectores: búsqueda, paginación,
-   *                      alta/edición, activación y desactivación con confirmación.
-   * Autor:               Daniel Alva
-   * Fecha de creación:   01/06/2025
-   * Última modificación: 23/06/2025 por Daniel Alva
-   * Cambios recientes:   Eliminación de importación no utilizada y verificación de mensajes.
-   **************************************************************************************/
+ * Nombre del archivo:  maintenance-sector.component.ts
+ * Descripción:         Componente para la gestión de sectores: búsqueda, paginación,
+ *                      registro, edición, activación y desactivación con confirmación.
+ * Autor:               Daniel Alva
+ * Fecha de creación:   01/06/2025
+ * Última modificación: 23/06/2025 por Daniel Alva
+ * Cambios recientes:   Limpieza de imports no utilizados y validación de textos de UI.
+ *************************************************************************************/
 import { Component, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -53,19 +53,24 @@ export default class MaintenanceSectorComponent {
 	delaySearchTable = signal<number>(400);
 	filterState = signal<boolean | null>(true);
 	/**
-     * Inicializa el componente cargando encabezado e íconos de la tabla y ejecutando búsqueda.
-     */
+	 * Hook de inicialización del componente.
+	 * Carga los encabezados de la tabla, define los íconos disponibles y ejecuta la primera búsqueda.
+	 */
 	ngOnInit(): void {
 		this.headerTable.set(MAINTENANCE_SECTOR_HEADER_TABLE);
 		this.iconsTable.set(this.defineIconsTable());
 		this.searchTable();
 	}
+	/**
+	 * Redirecciona al usuario a la vista principal del sistema (home).
+	 */
 	returnInit(): void {
 		this._router.navigate(['home']);
 	}
-    /**
-     * Ejecuta búsqueda paginada de sectores según filtros aplicados.
-     */
+	/**
+	 * Ejecuta la búsqueda paginada de sectores aplicando los filtros actuales.
+	 * Actualiza los datos y el total de páginas según el resultado recibido.
+	 */
 	searchTable(): void {
 		this.loadingTable.set(true);
 		this._sectorService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState()).pipe(
@@ -84,20 +89,29 @@ export default class MaintenanceSectorComponent {
 			})
 		})
 	}
-    /** Cambia la página del paginador y recarga los datos */
+	/**
+	 * Cambia la página del paginador de la tabla y actualiza los datos mostrados.
+	 * @param event Número de página seleccionado
+	 */
 	changePageTable(event: number): void {
 		this.pageIndexTable.set(event);
 		this.searchTable();
 	}
-    /** Filtra por nombre o término ingresado */
+	/**
+	 * Realiza una búsqueda por texto ingresado (nombre o parte del sector).
+	 * Reinicia la paginación para mostrar los primeros resultados.
+	 * @param event Texto ingresado para búsqueda
+	 */
 	searchByItem(event: string): void {
 		this.paramSearchTable.set(event);
 		this.pageIndexTable.set(1);
 		this.searchTable();
 	}
 	/**
-     * Define los íconos y acciones de la tabla de sectores.
-     */
+	 * Define los íconos de acción disponibles por fila: editar, activar y desactivar.
+	 * La visibilidad de cada ícono depende del estado actual del sector.
+	 * @returns Lista de acciones configuradas para la tabla
+	 */
 	defineIconsTable(): IconOption<SectorEntity>[] {
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
         const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar");
@@ -115,6 +129,11 @@ export default class MaintenanceSectorComponent {
     	iconActive.isHidden = (data: SectorEntity) => data.bActivo;
         return [iconEdit, iconInactive, iconActive];
     }
+	/**
+	 * Activa o desactiva un sector, según su estado actual.
+	 * Solicita confirmación al usuario antes de ejecutar la acción.
+	 * @param data Sector seleccionado para modificar su estado
+	 */
 	async deleteSector(data: SectorEntity): Promise<void> {
 		const config = data.bActivo ? CONFIG_INACTIVE_DIALOG_SECTOR : CONFIG_ACTIVE_DIALOG_SECTOR;
 		const dialogRef = await this._dialogConfirmationService.open(config);
@@ -138,9 +157,11 @@ export default class MaintenanceSectorComponent {
 				});
 		}
 	}
-    /**
-     * Abre diálogo para registrar o actualizar sector.
-     */
+	/**
+	 * Abre el diálogo para registrar un nuevo sector o editar uno existente.
+	 * Si el formulario se completa con éxito, se actualiza la tabla y se muestra una notificación.
+	 * @param element Sector a editar (si se proporciona); si es null, se asume un nuevo registro
+	 */
 	openFormDialog(element?: SectorEntity | null): void {
 		const respDialogo = this._matDialog.open(DialogSectorFormComponent, {
 			data: { object: element },
@@ -158,7 +179,10 @@ export default class MaintenanceSectorComponent {
 		    }
 		});
 	}
-    /** Aplica filtro de estado: activos, inactivos o todos */
+	/**
+	 * Establece el filtro de estado de los sectores: activos, inactivos o todos.
+	 * @param event Estado seleccionado para filtrar la tabla (true, false o null)
+	 */
 	setFilterState(event: boolean | null) {
 		this.filterState.set(event);
 	}

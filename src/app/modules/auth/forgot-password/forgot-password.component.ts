@@ -1,12 +1,12 @@
 /*************************************************************************************
-   * Nombre del archivo:  forgot-password.component.ts
-   * Descripción:         Componente para recuperación de contraseña; envía enlace de
-   *                      restablecimiento al email proporcionado.
-   * Autor:               Daniel Alva
-   * Fecha de creación:   01/06/2025
-   * Última modificación: 23/06/2025 por Daniel Alva
-   * Cambios recientes:   Creación inicial del componente de recuperación de contraseña.
-   **************************************************************************************/
+ * Nombre del archivo:  forgot-password.component.ts
+ * Descripción:         Componente para recuperación de contraseña; envía enlace de
+ *                      restablecimiento al email proporcionado.
+ * Autor:               Daniel Alva
+ * Fecha de creación:   01/06/2025
+ * Última modificación: 23/06/2025 por Daniel Alva
+ * Cambios recientes:   Mejora en el manejo de errores y mensaje internacionalizable.
+ *************************************************************************************/
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import {
     FormsModule,
@@ -58,8 +58,7 @@ export class AuthForgotPasswordComponent implements OnInit {
         private _formBuilder: UntypedFormBuilder
     ) {}
     /**
-     * Hook de inicialización del componente
-     * Se crea el formulario reactivo con sus validaciones.
+     * Inicializa el formulario con validación de email.
      */
     ngOnInit(): void {
         // Create the form
@@ -68,8 +67,7 @@ export class AuthForgotPasswordComponent implements OnInit {
         });
     }
     /**
-     * Ejecuta el flujo de recuperación: envía el enlace de restablecimiento de contraseña
-     * si el correo electrónico ingresado está registrado en el sistema.
+     * Envío del enlace de recuperación si el email es válido.
      */
     sendResetLink(): void {
         if (this.forgotPasswordForm.invalid) {

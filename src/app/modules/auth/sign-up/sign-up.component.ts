@@ -1,12 +1,12 @@
 /*************************************************************************************
-   * Nombre del archivo:  sign-up.component.ts
-   * Descripción:         Componente para registro de nuevos usuarios, gestionando el formulario
-   *                      y la comunicación con el servicio de autenticación.
-   * Autor:               Daniel Alva
-   * Fecha de creación:   01/06/2025
-   * Última modificación: 23/06/2025 por Daniel Alva
-   * Cambios recientes:   Creación inicial del componente.
-   **************************************************************************************/
+ * Nombre del archivo:  sign-up.component.ts
+ * Descripción:         Componente para registro de nuevos usuarios, gestionando el formulario
+ *                      y la comunicación con el servicio de autenticación.
+ * Autor:               Daniel Alva
+ * Fecha de creación:   01/06/2025
+ * Última modificación: 23/06/2025 por Daniel Alva
+ * Cambios recientes:   Creación inicial del componente.
+ *************************************************************************************/
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import {
     FormsModule,

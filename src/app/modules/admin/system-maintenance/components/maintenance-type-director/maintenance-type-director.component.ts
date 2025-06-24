@@ -1,20 +1,19 @@
 /*************************************************************************************
-   * Nombre del archivo:  maintenance-type-director.component.ts
-   * Descripción:         Componente para la gestión de tipos de director, con paginación,
-   *                      búsquedas, acciones de activar/desactivar y diálogos de confirmación.
-   * Autor:               Daniel Alva
-   * Fecha de creación:   01/06/2025
-   * Última modificación: 23/06/2025 por Daniel Alva
-   * Cambios recientes:   Creación inicial del componente de mantenimiento de tipo de director.
-   **************************************************************************************/
+ * Nombre del archivo:  maintenance-type-director.component.ts
+ * Descripción:         Componente para la gestión de tipos de director, con paginación,
+ *                      búsquedas, acciones de activar/desactivar y diálogos de confirmación.
+ * Autor:               Daniel Alva
+ * Fecha de creación:   01/06/2025
+ * Última modificación: 23/06/2025 por Daniel Alva
+ * Cambios recientes:   Creación inicial del componente de mantenimiento de tipo de director.
+ **************************************************************************************/
 import { Component, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ResponseModel } from '@models/IResponseModel';
 import { PAGINATOR_PAGE_SIZE } from 'app/core/config/paginator.config';
-import { CONFIG_ACTIVE_DIALOG_TYPE_DIRECTOR, CONFIG_DELETE_DIALOG_TYPE_DIRECTOR, CONFIG_INACTIVE_DIALOG_TYPE_DIRECTOR, MAINTENANCE_TYPE_DIRECTOR_HEADER_TABLE } from 'app/shared/configs/system-maintenance/maintenance-type-director.config';
+import { CONFIG_ACTIVE_DIALOG_TYPE_DIRECTOR, CONFIG_INACTIVE_DIALOG_TYPE_DIRECTOR, MAINTENANCE_TYPE_DIRECTOR_HEADER_TABLE } from 'app/shared/configs/system-maintenance/maintenance-type-director.config';
 import { IconOption } from 'app/shared/interfaces/IGenericIcon';
-import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDefInterface';
 import { AuthorizationService } from 'app/shared/services/authorization.service';
 import { DialogConfirmationService } from 'app/shared/services/dialog-confirmation.service';
@@ -34,15 +33,15 @@ import { UserService } from 'app/core/user/user.service';
   styleUrl: './maintenance-type-director.component.scss'
 })
 export default class MaintenanceTypeDirectorComponent {
-    private readonly _router = inject(Router);
-	private readonly _route = inject(ActivatedRoute);
-	private _dialogConfirmationService = inject(DialogConfirmationService);
+    private readonly _router = inject(Router); // Servicio de enrutamiento para redirecciones
+	private readonly _route = inject(ActivatedRoute); // Servicio para obtener parámetros de la ruta activa
+	private _dialogConfirmationService = inject(DialogConfirmationService); // Servicio para abrir diálogos de confirmación
 	private _matDialog: MatDialog = inject(MatDialog);
 	private _sectorService = inject(TypeDirectorService);
 	private _authorizationService = inject(AuthorizationService);
-	private _ngxToastrService = inject(NgxToastrService);
+	private _ngxToastrService = inject(NgxToastrService); // Servicio para mostrar notificaciones tipo toast
 	private _spinner = inject(NgxSpinnerService);
-	private _userService = inject(UserService);
+	private _userService = inject(UserService);	// Servicio para obtener información del usuario logueado
     titleModule = signal<string>('Mantenedor Tipo de director');
 	headerTable = signal<TableColumnsDefInterface[]>([]);
 	dataTable = signal<TypeDirectorEntity[]>([]);
@@ -56,15 +55,17 @@ export default class MaintenanceTypeDirectorComponent {
 	filterState = signal<boolean | null>(true);
 	delaySearchTable = signal<number>(400);
 	/**
-     * Hook de inicialización del componente.
-     * Carga encabezados, íconos y ejecuta la búsqueda inicial.
-     */
+	 * Hook de inicialización del componente.
+	 * Inicializa los encabezados de tabla, los íconos de acciones por fila y ejecuta la búsqueda inicial.
+	 */	
 	ngOnInit(): void {
 		this.headerTable.set(MAINTENANCE_TYPE_DIRECTOR_HEADER_TABLE);
 		this.iconsTable.set(this.defineIconsTable());
 		this.searchTable();
 	}
-	/** Regresa al home del sistema */
+	/**
+	 * Redirecciona al usuario a la página de inicio del sistema.
+	 */
 	returnInit(): void {
 		this._router.navigate(['home']);
 	}
@@ -90,18 +91,31 @@ export default class MaintenanceTypeDirectorComponent {
 			})
 		})
 	}
+	/**
+	 * Cambia la página actual de la tabla y ejecuta la búsqueda.
+	 * @param event Número de página seleccionado.
+	 */
 	changePageTable(event: number): void {
 		this.pageIndexTable.set(event);
 		this.searchTable();
 	}
+	/**
+	 * Establece el texto de búsqueda y reinicia la tabla desde la primera página.
+	 * @param event Texto ingresado por el usuario.
+	 */
 	searchByItem(event: string): void {
 		this.paramSearchTable.set(event);
 		this.pageIndexTable.set(1);
 		this.searchTable();
 	}
 	/**
-     * Define los íconos disponibles por fila, configurando su acción, visibilidad y tooltip.
-     */
+	 * Define los íconos de acciones disponibles por cada fila:
+	 * - Editar
+	 * - Activar
+	 * - Desactivar
+	 * Cada ícono contiene la acción a ejecutar y la condición de visibilidad.
+	 * @returns Lista de objetos IconOption configurados.
+	 */
 	defineIconsTable(): IconOption<TypeDirectorEntity>[] {
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
         const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar");
@@ -120,9 +134,10 @@ export default class MaintenanceTypeDirectorComponent {
         return [iconEdit, iconInactive, iconActive];
     }
 	/**
-     * Ejecuta lógica de activación/desactivación con confirmación.
-     * Abre un diálogo y realiza la acción correspondiente en el backend.
-     */
+	 * Ejecuta la lógica de activación o desactivación de un tipo de director.
+	 * Muestra un cuadro de confirmación y, en caso afirmativo, envía la solicitud al backend.
+	 * @param data Entidad `TypeDirectorEntity` que representa el registro a modificar.
+	 */
 	async deleteTypeDirector(data: TypeDirectorEntity): Promise<void> {
 		const config = data.bActivo ? CONFIG_INACTIVE_DIALOG_TYPE_DIRECTOR : CONFIG_ACTIVE_DIALOG_TYPE_DIRECTOR;
 		const dialogRef = await this._dialogConfirmationService.open(config);
@@ -146,10 +161,11 @@ export default class MaintenanceTypeDirectorComponent {
 				});
 		}
 	}
-    /**
-     * Abre el diálogo de formulario para crear o editar un tipo de director.
-     * Recarga la tabla al cerrar el diálogo exitosamente.
-     */
+	/**
+	 * Abre un cuadro de diálogo (modal) con el formulario para crear o editar un tipo de director.
+	 * Al cerrar el diálogo de forma exitosa, se recarga la tabla.
+	 * @param element Entidad existente a editar. Si es null, se abrirá en modo creación.
+	 */
 	openFormDialog(element?: TypeDirectorEntity | null): void {
 		const respDialogo = this._matDialog.open(DialogTypeDirectorFormComponent, {
 			data: { object: element },
@@ -167,6 +183,10 @@ export default class MaintenanceTypeDirectorComponent {
 		    }
 		});
 	}
+	/**
+	 * Establece el filtro de estado (activo/inactivo/todos) para la tabla.
+	 * @param event Valor booleano (true, false) o null para mostrar todos los estados.
+	 */
 	setFilterState(event: boolean | null) {
 		this.filterState.set(event);
 	}

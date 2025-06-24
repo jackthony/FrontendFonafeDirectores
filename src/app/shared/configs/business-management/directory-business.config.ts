@@ -1,6 +1,6 @@
 /*******************************************************************************************************
  * Nombre del archivo:  directory-business-table.config.ts
- * Descripción:         Configuración de constantes para la gestión del directorio empresarial.
+ * Descripción:         Configuración de constantes y columnas para la gestión del directorio empresarial.
  * Autor:               Daniel Alva
  * Fecha de creación:   01/06/2025
  * Última modificación: 23/06/2025 por Daniel Alva
@@ -8,11 +8,17 @@
  *******************************************************************************************************/
 import { DialogConfirmation } from "app/modules/admin/shared/components/fo-dialog-confirmation/models/dialog-confirmation.interface";
 import { TableColumnsDefInterface } from "../../interfaces/ITableColumnsDefInterface";
+/**
+ * Constantes para filtros de catálogo utilizados en el mantenimiento del directorio empresarial.
+ */
 export const CONST_TYPE_DOCUMENT = 1;
 export const CONST_TYPE_DIRECTOR = 3;
 export const CONST_TYPE_SPECIALTY_DIRECTOR = 6;
 export const CONST_GENDER = 4;
 export const CONST_CARGO_MANAGER = 5;
+/**
+ * Columnas para la tabla de gestión del directorio empresarial.
+ */
 export const COLUMNS_DIRECTORY_BUSINESS: TableColumnsDefInterface[] = [
     {
         id: 0,
@@ -51,6 +57,9 @@ export const COLUMNS_DIRECTORY_BUSINESS: TableColumnsDefInterface[] = [
         type: "acciones"
     }
 ];
+/**
+ * Diálogo de confirmación para la eliminación de un director.
+ */
 export const CONFIG_DELETE_DIALOG_DIRECTORY_BUSINESS: DialogConfirmation = {
     title: "¿Estás seguro de eliminar al director?", 
     message: ""

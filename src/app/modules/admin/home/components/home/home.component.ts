@@ -1,8 +1,18 @@
+/*******************************************************************************************************
+ * Nombre del componente: HomeComponent
+ * Descripción:           Componente principal de la vista "Inicio" del sistema. Muestra un resumen de 
+ *                        actividades recientes en una tabla interactiva. Las columnas y los datos son 
+ *                        configurables mediante señales reactivas.
+ * Autor:                 Daniel Alva
+ * Fecha de creación:     23/06/2025
+ * Última modificación:   23/06/2025 por Daniel Alva
+ * Cambios recientes:     - Integración de tabla de actividades con señales reactivas.
+ *                        - Carga inicial de columnas y datos mockeados.
+ *******************************************************************************************************/
 import { Component, OnInit, signal } from '@angular/core';
 import { COLUMNS_ACTIVITIES } from 'app/shared/configs/home/home.config';
 import { HOME_IMPORTS } from 'app/shared/imports/components/home.imports';
 import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDefInterface';
-
 const dataMock = [
 	{
 	  fullName: 'Laura Fernández',
