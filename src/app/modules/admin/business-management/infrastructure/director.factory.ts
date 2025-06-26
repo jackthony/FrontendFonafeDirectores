@@ -3,7 +3,7 @@ import { DirectorRepository } from "./repositories/director.repository";
 import { DirectorInterface } from "../application/repositories/director.interface";
 
 @Injectable({
-    providedIn: 'root',  // Hace que el Factory esté disponible en toda la aplicación
+    providedIn: 'root',
 })
 export class DirectorFactory {
     private _directorRepository = inject(DirectorRepository);

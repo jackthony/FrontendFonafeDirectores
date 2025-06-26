@@ -51,20 +51,14 @@ const dataMock = [
   styleUrl: './home.component.scss'
 })
 export default class HomeComponent implements OnInit {
-
-	// Señal reactiva que almacena las definiciones de las columnas de la tabla.
-	headerTable = signal<TableColumnsDefInterface[]>([]);
-
-	// Señal reactiva que almacena los datos de las actividades que se mostrarán en la tabla.
+	headerTable = signal<TableColumnsDefInterface[]>([]); // Señal que almacena la definición de las columnas de la tabla.
 	dataTableActivities = signal<any[]>([]);
-
-	// Método de inicialización que se ejecuta cuando el componente es cargado.
-	// Asigna las columnas de la tabla y los datos de las actividades al estado reactivo.
+		/**
+	 * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+	 * Asigna los encabezados de la tabla y los datos mockeados.
+	 */
 	ngOnInit(): void {
-		// Se establece la lista de columnas de la tabla desde COLUMNS_ACTIVITIES.
 		this.headerTable.set(COLUMNS_ACTIVITIES);
-
-		// Se establece la lista de datos de actividades desde la constante 'dataMock'.
 		this.dataTableActivities.set(dataMock);
 	}
 }
