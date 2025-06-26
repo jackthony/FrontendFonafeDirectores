@@ -12,7 +12,7 @@
  *******************************************************************************************************/
 import { Component, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { COLUMNS_PROFILE_MANAGEMENT, CONST_POSITION_USER, CONST_STATUS_USER } from 'app/shared/configs/profile-management/profile-management.config';
+import { COLUMNS_PROFILE_MANAGEMENT, CONST_POSITION_USER, CONST_STATUS_USER, CONST_TYPE_PERSONAL } from 'app/shared/configs/profile-management/profile-management.config';
 import { PROFILE_MANAGEMENT_IMPORTS } from 'app/shared/imports/components/profile-management.imports';
 import { IconOption } from 'app/shared/interfaces/IGenericIcon';
 import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDefInterface';
@@ -159,9 +159,9 @@ export default class ProfileManagementComponent {
 	 * @param lstPosition Lista de cargos disponibles.
 	 * @param lstProfile Lista de perfiles disponibles.
 	 */
-	openFormDialog(element: SegUserEntity | null, lstStatus: ConstantEntity[], lstPosition: PositionEntity[], lstProfile: RoleEntity[]): void {
+	openFormDialog(element: SegUserEntity | null, lstStatus: ConstantEntity[], lstPosition: PositionEntity[], lstProfile: RoleEntity[], lstTypePersonal: ConstantEntity[]): void {
 		const respDialogo = this._matDialog.open(FormProfileComponent, {
-			data: { object: element, lstStatus, lstPosition, lstProfile },
+			data: { object: element, lstStatus, lstPosition, lstProfile, lstTypePersonal },
 		    disableClose: true,
 			width: "700px",
 		    minWidth: "350px",
@@ -188,13 +188,14 @@ export default class ProfileManagementComponent {
 		forkJoin({
 			status: this._constantService.getAll(CONST_STATUS_USER),
 			position: this._positionService.getAll(),
-			profile: this._roleService.getAll()
+			profile: this._roleService.getAll(),
+			typePersonal: this._constantService.getAll(CONST_TYPE_PERSONAL)
 		})
 		.pipe(
 			finalize(() => this._spinner.hide()) 
 		)
 		.subscribe(response => {
-			this.openFormDialog(element, response.status.lstItem, response.position.lstItem, response.profile.lstItem);
+			this.openFormDialog(element, response.status.lstItem, response.position.lstItem, response.profile.lstItem, response.typePersonal.lstItem);
 		})
 	}
 }

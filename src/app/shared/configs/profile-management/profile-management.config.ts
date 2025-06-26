@@ -14,6 +14,7 @@ import { TableColumnsDefInterface } from "../../interfaces/ITableColumnsDefInter
 export const CONST_STATUS_USER = 10;
 export const CONST_POSITION_USER = 11;
 export const CONST_PROFILE_USER = 12;
+export const CONST_TYPE_PERSONAL = 13;
 /**
  * Columnas de la tabla de gestión de perfiles de usuario.
  */
@@ -26,45 +27,45 @@ export const COLUMNS_PROFILE_MANAGEMENT: TableColumnsDefInterface[] = [
     },
     {
         id: 1,
-        name: "sCargoDescripcion",
-        displayedName: "Cargo",
-        type: "string"
-    },
-    {
-        id: 2,
-        name: "sPerfilDescripcion",
-        displayedName: "Perfil",
-        type: "string"
-    },
-    {
-        id: 3,
-        name: "sEstadoDescripcion",
-        displayedName: "Estado",
-        type: "string"
-    },
-    {
-        id: 4,
-        name: "dtFechaRegistro",
-        displayedName: "Fecha de creación",
-        type: "date"
-    },
-    {
-        id: 5,
-        name: "dtFechaModificacion",
-        displayedName: "Ult. modificación",
-        type: "date"
-    },
-    {
-        id: 6,
         name: "sCorreoElectronico",
         displayedName: "Correo",
         type: "string"
     },
     {
+        id: 2,
+        name: "sCargoDescripcion",
+        displayedName: "Cargo",
+        type: "string"
+    },
+    {
+        id: 3,
+        name: "sPerfilDescripcion",
+        displayedName: "Perfil",
+        type: "string"
+    },
+    {
+        id: 4,
+        name: "tipoPersonalDescripcion",
+        displayedName: "Tipo de Personal",
+        type: "string"
+    },
+    {
+        id: 5,
+        name: "sEstadoDescripcion",
+        displayedName: "Estado",
+        type: "string"
+    },
+    {
+        id: 6,
+        name: "dtFechaRegistro",
+        displayedName: "Fecha de creación",
+        type: "date"
+    },
+    {
         id: 7,
-        name: "hide",
-        displayedName: "Clave",
-        type: "password"
+        name: "dtFechaModificacion",
+        displayedName: "Ult. modificación",
+        type: "date"
     },
     {
         id: 8,

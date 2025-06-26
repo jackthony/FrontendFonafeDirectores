@@ -28,13 +28,13 @@ export class ArchiveRepository implements ArchiveInterface {
      * @returns Observable con la respuesta que contiene la lista de archivos.
      */
     getReportExcelBussines(): Observable<ArrayBuffer> {
-        const body = { sTipoArchivo: 1 }
+        const body = { nTipoArchivo: 1 }
         return this._http.post(`${this.url}/exportar`, body, {
             responseType: 'arraybuffer'
         });
     }
     getReportPdfBussines(): Observable<ArrayBuffer> {
-        const body = { sTipoArchivo: 2 }
+        const body = { nTipoArchivo: 2 }
         return this._http.post(`${this.url}/exportar`, body, {
             responseType: 'arraybuffer'
         });

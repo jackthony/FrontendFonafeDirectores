@@ -18,6 +18,7 @@ export interface SegUserEntity {
     nEstado: number;
     sCorreoElectronico: string;
     sContrasena: string;
+    nTipoPersonal: number;
     dtFechaRegistro: string;
     nUsuarioRegistro: number;
     dtFechaModificacion: string;

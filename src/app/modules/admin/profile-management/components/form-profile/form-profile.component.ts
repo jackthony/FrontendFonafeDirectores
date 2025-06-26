@@ -54,7 +54,7 @@ import { PositionEntity } from 'app/modules/admin/shared/domain/entities/positio
 })
 export class FormProfileComponent implements OnInit {
 	private _fb = inject(FormBuilder);
-	public data: { object: SegUserEntity, lstStatus: ConstantEntity[], lstPosition: PositionEntity[], lstProfile: RoleEntity[] } = inject(MAT_DIALOG_DATA);// Datos inyectados al componente de diálogo (usuario, estados, cargos y perfiles) desde el componente que lo abrió.
+	public data: { object: SegUserEntity, lstStatus: ConstantEntity[], lstPosition: PositionEntity[], lstProfile: RoleEntity[], lstTypePersonal: ConstantEntity[] } = inject(MAT_DIALOG_DATA);// Datos inyectados al componente de diálogo (usuario, estados, cargos y perfiles) desde el componente que lo abrió.
 	private readonly dialogRef = inject(MatDialogRef<FormProfileComponent>); // Referencia al diálogo actual, usada para cerrarlo y devolver resultados al componente padre.
 	private _userService = inject(UserService); // Servicio personalizado para operaciones generales de usuario.
 	private _segUserService = inject(SegUserService); // Servicio específico para la gestión de seguridad de usuarios.
@@ -85,6 +85,7 @@ export class FormProfileComponent implements OnInit {
             sNombres: [ { disabled: object, value: object?  object.sNombres : '' }, [Validators.required, Validators.maxLength(150)] ],
             nIdCargo: [ object? object.nIdCargo : 0, [Validators.required, Validators.min(1)] ],
             nIdRol: [ object? object.nIdRol : 0, [Validators.required, Validators.min(1)] ],
+            nTipoPersonal: [ object? object.nTipoPersonal : 0, [Validators.required, Validators.min(1)] ],
             nEstado: [ object? object.nEstado : 0, [Validators.required, Validators.min(1)] ],
             sCorreoElectronico:  [ { disabled: object, value: object ? object.sCorreoElectronico : '' }, [Validators.required, Validators.maxLength(150), this._validationFormService.validationMail] ],
             sContrasena:  [ { disabled: object, value: object ? '******' : '' } , [Validators.required, Validators.maxLength(32)] ],
