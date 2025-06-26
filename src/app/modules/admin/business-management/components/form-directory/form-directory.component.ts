@@ -5,7 +5,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatIconModule } from '@angular/material/icon';
 import { FoTitleAreaComponent } from 'app/modules/admin/shared/components/fo-title-area/fo-title-area.component';
-import { CompanyAllowance } from '@models/business/companyAllowance.interface';
 import { ResponseModel } from '@models/IResponseModel';
 import { FileComponentStateService } from '@services/file-component-state.service';
 import { ButtonEnum } from 'app/core/enums/button.enum';
@@ -13,7 +12,6 @@ import { TranslateMessageForm } from 'app/core/pipes/error-message-form.pipe';
 import { UserService } from 'app/core/user/user.service';
 import { PermissionButtonDirective } from 'app/shared/directives/permission-button.directive';
 import { TypeDocument } from 'app/shared/enums/type-document.enum';
-import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { FormInputModule } from 'app/shared/modules/form-input.module';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
 import { ValidationFormService } from 'app/shared/services/validation-form.service';
@@ -32,6 +30,11 @@ import { BusinessEntity } from '../../domain/entities/business.entity';
 import { FoButtonDialogComponent } from 'app/modules/admin/shared/components/fo-button-dialog/fo-button-dialog.component';
 import { CompanyAllowanceService } from '../../domain/services/company-allowance.service';
 import { UbigeoService } from '../../domain/services/ubigeo.service';
+import { PositionEntity } from 'app/modules/admin/shared/domain/entities/position.entity';
+import { TypeDirectorEntity } from 'app/modules/admin/shared/domain/entities/type-director.entity';
+import { SpecialtyEntity } from 'app/modules/admin/shared/domain/entities/specialty.entity';
+import { SectorEntity } from 'app/modules/admin/shared/domain/entities/sector.entity';
+import { CompanyAllowanceEntity } from '../../domain/entities/companyAllowance.entity';
 
 @Component({
   selector: 'app-form-directory',
@@ -73,9 +76,10 @@ export class FormDirectoryComponent implements OnInit {
 	// Listas para las opciones de formulario (tipo de documento, género, cargo, etc.)
 	lstTypedocument = input.required<ConstantEntity[]>();
 	lstGender = input.required<ConstantEntity[]>();
-	lstCargoManager = input.required<ConstantEntity[]>();
-	lstTypeDirector = input.required<ConstantEntity[]>();
-	lstSpecialty = input.required<ConstantEntity[]>();
+	lstCargoManager = input.required<PositionEntity[]>();
+	lstTypeDirector = input.required<TypeDirectorEntity[]>();
+	lstSpecialty = input.required<SpecialtyEntity[]>();
+	lstSector = input.required<SectorEntity[]>();
 
 	// Lista de departamentos
 	lstDepartments = input.required<DepartmentEntity[]>();
@@ -87,15 +91,19 @@ export class FormDirectoryComponent implements OnInit {
 	// Formulario reactivo para el director
 	form: FormGroup;
 	maxDate: Date; // Fecha máxima (18 años para el director)
+	minDate: Date;
+	yearDirector = signal<string>('');
 
 	typeDocument = signal<typeof TypeDocument>(TypeDocument); // Tipo de documento
 
 	// Método que se ejecuta al inicializar el componente
 	ngOnInit(): void {
-		this.maxDate = this.calculateMinDate().toJSDate(); // Calcula la fecha mínima de 18 años
+		this.minDate = this.calculateMaxDate().toJSDate(); // Fecha mínima de 120 años
+		this.maxDate = this.calculateMinDate().toJSDate(); // Fecha máxima de 18 años
 		this.initFormDirector(); // Inicializa el formulario del director
 		this.valueChangesForm(); // Configura los cambios reactivos en el formulario
 		this.loadProvincesDistricts(); // Carga provincias y distritos
+		this.initGenerateYearDirector(); //Generar años al director
 
 		// Si ya hay un director, establece el estado de los archivos asociados
 		if(this.director()) {
@@ -145,6 +153,7 @@ export class FormDirectoryComponent implements OnInit {
 			nCargo: [ this.director() ? this.director().nCargo : 0, [Validators.required, Validators.min(1)] ],
 			nTipoDirector: [ this.director() ? this.director().nTipoDirector : 0, [Validators.required, Validators.min(1)] ],
 			sProfesion: [ this.director() ? this.director().sProfesion : '', [Validators.required, Validators.maxLength(150)] ],
+			nIdSector: [this.director() ? this.director().nIdSector : 0, [Validators.required, Validators.min(1)]], // Campo de proponente
 			mDieta: [ this.director() ? this.director().mDieta : null, [Validators.required, Validators.min(0), Validators.max(999999999999.99)] ],
 			nEspecialidad: [ this.director() ? this.director().nEspecialidad : 0, [Validators.required, Validators.min(1)] ],
 			dFechaNombramiento: [ this.director() ? this._dateUtilsService.formatDateToString(this.director().dFechaNombramiento) : null, [Validators.required,  Validators.maxLength(10)] ],
@@ -208,7 +217,7 @@ export class FormDirectoryComponent implements OnInit {
 			distinctUntilChanged(),
 			switchMap((value) => {
 				return this._companyAllowance.getByRuc(this.business().sRuc, value).pipe(
-					map( (res: ResponseModel<CompanyAllowance>) => res.item?.mDieta ?? 0), // Mapea la dieta
+					map( (res: ResponseModel<CompanyAllowanceEntity>) => res.item?.mDieta ?? 0), // Mapea la dieta
 					catchError(() => {
 						return of(0); // En caso de error, devuelve 0
 					})
@@ -232,7 +241,47 @@ export class FormDirectoryComponent implements OnInit {
 			this.form.get('sNumeroDocumento').setValue(''); // Limpia el valor
 			this.form.get('sNumeroDocumento').markAsUntouched(); // Marca el campo como no tocado
 		})
+		
+		this.form.get('dFechaNacimiento').valueChanges
+		.pipe(
+			distinctUntilChanged(),
+			takeUntil(this.destroy$)
+		).subscribe((value) => {
+			this.generateYearDirector(value);
+		});
+
+		if(this.director()) this.generateYearDirector(this.director().dFechaNacimiento);
     }
+	
+	generateYearDirector(value: string): void {
+		const fechaNacimiento = this.form.get('dFechaNacimiento')?.valid;
+		if (fechaNacimiento) {  // Comprobamos si el campo es 'VALID'
+			console.log('validd');
+			let edad: number = 0;
+			if (value) {
+				const fecha = DateTime.fromISO(value);  // Convierte el valor ISO de la fecha
+				const hoy = DateTime.local();  // Obtiene la fecha actual
+				edad = hoy.year - fecha.year;
+				const year = `${edad} años`
+				this.yearDirector.set(year);
+			} else this.yearDirector.set('');
+		} else {
+			this.yearDirector.set('');
+		}
+	}
+
+	initGenerateYearDirector(): void {
+		const fechaNacimiento = DateTime.fromISO(this.director()?.dFechaNacimiento);  // Convierte el string ISO a DateTime de Luxon
+      	const hoy = DateTime.local();  // Obtiene la fecha actual
+
+      	// Calculamos la edad restando el año de nacimiento al año actual
+      	let edad = hoy.year - fechaNacimiento.year;
+		if(edad) {
+			const year = `${edad} años`
+		  this.yearDirector.set(year);
+		}
+		  
+	}
 
     // Carga provincias y distritos si ya existe un director
 	loadProvincesDistricts(): void {
@@ -321,7 +370,11 @@ export class FormDirectoryComponent implements OnInit {
 
 	// Calcula la fecha mínima (18 años atrás)
 	private calculateMinDate(): DateTime {
-		return DateTime.local().minus({ years: 18 }); // Calcula la fecha mínima para el director (18 años)
+		return DateTime.local().minus({ years: 18 }); // Fecha mínima para persona de 18 años
+	}
+	
+	private calculateMaxDate(): DateTime {
+		return DateTime.local().minus({ years: 120 }); // Fecha máxima para persona de 120 años
 	}
 
 	// Filtra los caracteres permitidos para el nombre

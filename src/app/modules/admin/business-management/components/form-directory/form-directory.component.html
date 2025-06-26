@@ -84,6 +84,7 @@
                     (keypress)="onKeyPressDate($event)"
                     (input)="onInputDate($event, 'dFechaNacimiento')"
                     [max]="maxDate"
+                    [min]="minDate"
                     formControlName="dFechaNacimiento"
                     matInput
                     maxlength="10"
@@ -108,6 +109,17 @@
                     </mat-error>
                 }
             </mat-form-field>
+        </div>
+        <div class="col-span-1">
+            <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Edad</mat-label>
+                <input
+                    readonly
+                    [value]="yearDirector()"
+                    matInput 
+                    placeholder="--"
+                    type="text">
+            </mat-form-field>     
         </div>
         <div class="col-span-1">
             <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
@@ -336,8 +348,8 @@
                     formControlName="nTipoDirector"
                     placeholder="--">
                     @for (item of lstTypeDirector(); track $index) {
-                        <mat-option [value]="item.nConValor">
-                            {{ item.sConDescripcion }}
+                        <mat-option [value]="item.nIdTipoDirector">
+                            {{ item.sNombreTipoDirector }}
                         </mat-option>
                     }
                 </mat-select>
@@ -396,14 +408,33 @@
                     formControlName="nEspecialidad"
                     placeholder="--">
                     @for (item of lstSpecialty(); track $index) {
-                        <mat-option [value]="item.nConValor">
-                            {{ item.sConDescripcion }}
+                        <mat-option [value]="item.nIdEspecialidad">
+                            {{ item.sNombreEspecialidad }}
                         </mat-option>
                     }
                 </mat-select>
                 @if(form.get('nEspecialidad').invalid) {
                     <mat-error class="text-red-500">
                         {{ form.get("nEspecialidad") | translateMessageForm: 'select' }}
+                    </mat-error>
+                }
+            </mat-form-field>
+        </div>
+        <div class="col-span-1">
+            <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Sector</mat-label>
+                <mat-select
+                    formControlName="nIdSector"
+                    placeholder="--">
+                    @for (item of lstSector(); track $index) {
+                        <mat-option [value]="item.nIdSector">
+                            {{ item.sNombreSector }}
+                        </mat-option>
+                    }
+                </mat-select>
+                @if(form.get('nIdSector').invalid) {
+                    <mat-error class="text-red-500">
+                        {{ form.get("nIdSector") | translateMessageForm: "select" }}
                     </mat-error>
                 }
             </mat-form-field>
@@ -527,7 +558,6 @@
                 matDialogClose>
             </fo-button-dialog>
             <fo-button-dialog
-                appPermissionButton
                 (eventActionClick)="registerForm()"
                 [textBtn]="director() ? 'Guardar' : 'Crear'">
             </fo-button-dialog>

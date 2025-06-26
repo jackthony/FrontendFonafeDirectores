@@ -15,6 +15,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { BusinessService } from '../../domain/services/business.service';
 import { BusinessEntity } from '../../domain/entities/business.entity';
 import { UserService } from 'app/core/user/user.service';
+import { ArchiveService } from 'app/modules/admin/shared/domain/services/archive.service';
 
 @Component({
   selector: 'app-business-management',
@@ -27,6 +28,7 @@ export class BusinessManagementComponent {
   // Inyección de dependencias
   private readonly _router = inject(Router); // Servicio de navegación
   private _businessService = inject(BusinessService); // Servicio para la gestión de empresas
+  private _archiveService = inject(ArchiveService); // Servicio para la gestión de empresas
   private _dialogConfirmationService = inject(DialogConfirmationService); // Servicio para diálogos de confirmación
   private _ngxToastrService = inject(NgxToastrService); // Servicio para mostrar notificaciones
   private _spinner = inject(NgxSpinnerService); // Servicio para mostrar un spinner de carga
@@ -189,12 +191,12 @@ export class BusinessManagementComponent {
     }
   
     exportExcel(): void {
-      	const downloadExcel$ = this._businessService.exportExcelEnterprise();
+      	const downloadExcel$ = this._archiveService.getReportExcelBussines();
 		this.downloadFile(downloadExcel$, 'xlsx', 'application/vnd.ms-excel');
     }
   
     exportPdf(): void {
-		const downloadPdf$ = this._businessService.exportPdfEnterprise();
+		const downloadPdf$ = this._archiveService.getReportPdfBussines();
 	  	this.downloadFile(downloadPdf$, 'pdf', 'application/pdf');
     }
 

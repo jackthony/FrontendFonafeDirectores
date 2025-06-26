@@ -25,6 +25,7 @@ import { MAINTENANCE_GENERAL_IMPORTS } from 'app/shared/imports/system-maintenan
 import { RoleService } from 'app/modules/admin/shared/domain/services/role.service';
 import { RoleEntity } from 'app/modules/admin/shared/domain/entities/role.entity';
 import { UserService } from 'app/core/user/user.service';
+import { DialogMaintenanceRoleModulesComponent } from '../dialog-maintenance-role-modules/dialog-maintenance-role-modules.component';
 @Component({
   selector: 'app-maintenance-role',
   standalone: true,
@@ -114,9 +115,13 @@ export default class MaintenanceRoleComponent {
 	 * @returns Lista de íconos con acciones asociadas para la tabla.
 	 */
 	defineIconsTable(): IconOption<RoleEntity>[] {
+        const iconPermission = new IconOption("lock-closed", "mat_outline", "Ver permisos");
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
         const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar");
     	const iconActive = new IconOption("restart_alt", "mat_outline", "Activar");
+		iconPermission.actionIcono = (data: RoleEntity) => {
+            this.openFormDialogModules(data);
+        };
 		iconEdit.actionIcono = (data: RoleEntity) => {
             this.openFormDialog(data);
         };
@@ -143,7 +148,7 @@ export default class MaintenanceRoleComponent {
 			this._spinner.show();
 			const request = new RoleEntity();
 			request.nRolId = data.nRolId;
-			request.nIdUsuarioModificacion = this._userService.userLogin().usuarioId;
+			request.nUsuarioModificacionId = this._userService.userLogin().usuarioId;
 			this._roleService
 				.delete(request)
 				.pipe(finalize(() => this._spinner.hide()))
@@ -177,6 +182,22 @@ export default class MaintenanceRoleComponent {
 				if(element) this._ngxToastrService.showSuccess('Rol actualizado exitosamente', '¡Éxito!');
 			    else this._ngxToastrService.showSuccess('Rol registrado exitosamente', '¡Éxito!');
 				
+		    }
+		});
+	}
+
+	openFormDialogModules(element: RoleEntity): void {
+		const respDialogo = this._matDialog.open(DialogMaintenanceRoleModulesComponent, {
+			data: { object: element },
+		    disableClose: true,
+			width: "700px",
+		    minWidth: "350px",
+			panelClass: 'mat-dialog-not-padding',
+		});
+		respDialogo.beforeClosed().subscribe(res => {
+		    if(res){
+				this.searchTable();
+				this._ngxToastrService.showSuccess('Permisos actualizado exitosamente', '¡Éxito!');
 		    }
 		});
 	}

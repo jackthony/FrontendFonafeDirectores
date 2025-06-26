@@ -21,6 +21,10 @@ import { DirectorFormService } from '../../domain/services/director-form.service
 import { DepartmentEntity } from '../../domain/entities/departament.entity';
 import { BusinessEntity } from '../../domain/entities/business.entity';
 import { FoContCardComponent } from 'app/modules/admin/shared/components/fo-cont-card/fo-cont-card.component';
+import { PositionEntity } from 'app/modules/admin/shared/domain/entities/position.entity';
+import { TypeDirectorEntity } from 'app/modules/admin/shared/domain/entities/type-director.entity';
+import { SpecialtyEntity } from 'app/modules/admin/shared/domain/entities/specialty.entity';
+import { SectorEntity } from 'app/modules/admin/shared/domain/entities/sector.entity';
 
 
 @Component({
@@ -53,9 +57,10 @@ export class DirectoryBusinessComponent implements OnInit { // Define la clase d
     lstTypedocument = signal<ConstantEntity[]>([]); // Lista de tipos de documento
     lstGender = signal<ConstantEntity[]>([]); // Lista de géneros
     lstCargoManager = signal<ConstantEntity[]>([]); // Lista de cargos de gerente
-    lstTypeDirector = signal<ConstantEntity[]>([]); // Lista de tipos de director
-    lstSpecialty = signal<ConstantEntity[]>([]); // Lista de especialidades
+    lstTypeDirector = signal<TypeDirectorEntity[]>([]); // Lista de tipos de director
+    lstSpecialty = signal<SpecialtyEntity[]>([]); // Lista de especialidades
     lstDepartments = signal<DepartmentEntity[]>([]); // Lista de departamentos
+    lstSector = signal<SectorEntity[]>([]); // Lista de sectores
 
 	@Output() eventTotalMembers: EventEmitter<number> = new EventEmitter<number>(); // Evento para emitir el total de miembros
 
@@ -115,7 +120,8 @@ export class DirectoryBusinessComponent implements OnInit { // Define la clase d
 			deparments : this._directorFormService.getDepartments(), // Obtiene los departamentos
 			cargoManager: this._directorFormService.getCargoManager(), // Obtiene los cargos de gerente
 			typeDirector: this._directorFormService.getTypeDirector(), // Obtiene los tipos de director
-			specialty: this._directorFormService.getSpecialty() // Obtiene las especialidades
+			specialty: this._directorFormService.getSpecialty(), // Obtiene las especialidades
+			sector: this._directorFormService.getSector() // Obtiene las especialidades
 		}).subscribe({
 			next: (response => {
 				// Establece los datos en las señales correspondientes
@@ -124,7 +130,8 @@ export class DirectoryBusinessComponent implements OnInit { // Define la clase d
 				this.lstDepartments.set(response.deparments),
 				this.lstCargoManager.set(response.cargoManager),
 				this.lstTypeDirector.set(response.typeDirector),
-				this.lstSpecialty.set(response.specialty)
+				this.lstSpecialty.set(response.specialty),
+				this.lstSector.set(response.sector)
 			})
 		})
 	}

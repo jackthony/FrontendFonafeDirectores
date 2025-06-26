@@ -71,8 +71,8 @@
                             formControlName="nIdCargo"
                             placeholder="--">
                             @for (item of data.lstPosition; track $index) {
-                                <mat-option [value]="item.nConValor">
-                                    {{ item.sConDescripcion }}
+                                <mat-option [value]="item.nIdCargo">
+                                    {{ item.sNombreCargo }}
                                 </mat-option>
                             }
                     </mat-select>
@@ -90,7 +90,7 @@
                         formControlName="nIdRol"
                         placeholder="--">
                         @for (item of data.lstProfile; track $index) {
-                            <mat-option [value]="item.nIdRol">
+                            <mat-option [value]="item.nRolId">
                                 {{ item.sNombreRol }}
                             </mat-option>
                         }

@@ -1,5 +1,5 @@
 export interface CompanyAllowanceEntity {
-    sRUC: string;
+    sruc: string;
     nTipoCargo: number;
     mDieta: string;
 }

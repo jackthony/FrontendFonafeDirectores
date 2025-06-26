@@ -1,11 +1,19 @@
 import { inject, Injectable } from '@angular/core';
-import { catchError, map, Observable, of, tap } from 'rxjs';
-import { CONST_CARGO_MANAGER, CONST_GENDER, CONST_TYPE_DIRECTOR, CONST_TYPE_DOCUMENT, CONST_TYPE_SPECIALTY_DIRECTOR } from 'app/shared/configs/business-management/directory-business.config';
+import { map, Observable, of, tap } from 'rxjs';
+import { CONST_CARGO_DIRECTOR, CONST_GENDER, CONST_TYPE_DOCUMENT } from 'app/shared/configs/business-management/directory-business.config';
 import { ResponseModel } from '@models/IResponseModel';
 import { ConstantService } from 'app/modules/admin/shared/domain/services/constant.service';
 import { ConstantEntity } from '../entities/constant.entity';
 import { DepartmentEntity } from '../entities/departament.entity';
 import { UbigeoService } from './ubigeo.service';
+import { PositionEntity } from 'app/modules/admin/shared/domain/entities/position.entity';
+import { PositionService } from 'app/modules/admin/shared/domain/services/position.service';
+import { TypeDirectorEntity } from 'app/modules/admin/shared/domain/entities/type-director.entity';
+import { TypeDirectorService } from 'app/modules/admin/shared/domain/services/type-director.service';
+import { SpecialtyEntity } from 'app/modules/admin/shared/domain/entities/specialty.entity';
+import { SpecialtyService } from 'app/modules/admin/shared/domain/services/specialty.service';
+import { SectorEntity } from 'app/modules/admin/shared/domain/entities/sector.entity';
+import { SectorService } from 'app/modules/admin/shared/domain/services/sector.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,9 +23,15 @@ export class DirectorFormService {
 	private _constantService = inject(ConstantService);
 
 	private _ubigeoService = inject(UbigeoService);
+	private _typeDirectorService = inject(TypeDirectorService);
+	private _specialtyService = inject(SpecialtyService);
+	private _sectorService = inject(SectorService);
 
 	private cacheConstant = new Map<string, ConstantEntity[]>();
 	private cacheDepartment = new Map<string, DepartmentEntity[]>();
+	private cacheTypeDirector = new Map<string, TypeDirectorEntity[]>();
+	private cacheSpecialty = new Map<string, SpecialtyEntity[]>();
+	private cacheSector = new Map<string, SectorEntity[]>();
 
 	public getTypeDocument(): Observable<ConstantEntity[]> {
 		return this.getCachedTypeDocument('typeDocument', CONST_TYPE_DOCUMENT);
@@ -28,19 +42,23 @@ export class DirectorFormService {
 	}
 	
 	public getCargoManager(): Observable<ConstantEntity[]> {
-		return this.getCachedTypeDocument('cargoManager', CONST_CARGO_MANAGER);
+		return this.getCachedTypeDocument('cargoManager', CONST_CARGO_DIRECTOR);
 	}
 
-	public getTypeDirector(): Observable<ConstantEntity[]> {
-		return this.getCachedTypeDocument('typeDirector', CONST_TYPE_DIRECTOR);
+	public getTypeDirector(): Observable<TypeDirectorEntity[]> {
+		return this.getCachedTypeDirector('typeDirector')
 	}
 
-	public getSpecialty(): Observable<ConstantEntity[]> {
-		return this.getCachedTypeDocument('specialty', CONST_TYPE_SPECIALTY_DIRECTOR);
+	public getSpecialty(): Observable<SpecialtyEntity[]> {
+		return this.getCachedSpecialty('specialty')
 	}
 
 	public getDepartments(): Observable<DepartmentEntity[]> {
 		return this.getCachedDepartments('departments');
+	}
+
+	public getSector(): Observable<SectorEntity[]> {
+		return this.getCachedSector('sector')
 	}
 	
 
@@ -65,6 +83,41 @@ export class DirectorFormService {
 		  map((data: ResponseModel<DepartmentEntity>) => data.lstItem)
 		);
 	}
+	
+	private getCachedTypeDirector(key: string): Observable<TypeDirectorEntity[]> {
+		if (this.cacheTypeDirector.has(key)) {
+		  return of(this.cacheTypeDirector.get(key)!);
+		}
+		
+		return this._typeDirectorService.getAll().pipe(
+		  tap((data: ResponseModel<TypeDirectorEntity>) => this.cacheTypeDirector.set(key, data.lstItem)),
+		  map((data: ResponseModel<TypeDirectorEntity>) => data.lstItem)
+		);
+	}
+
+	private getCachedSpecialty(key: string): Observable<SpecialtyEntity[]> {
+		if (this.cacheSpecialty.has(key)) {
+		  return of(this.cacheSpecialty.get(key)!);
+		}
+		
+		return this._specialtyService.getAll().pipe(
+		  tap((data: ResponseModel<SpecialtyEntity>) => this.cacheSpecialty.set(key, data.lstItem)),
+		  map((data: ResponseModel<SpecialtyEntity>) => data.lstItem)
+		);
+	}
+
+	private getCachedSector(key: string): Observable<SectorEntity[]> {
+		if (this.cacheSector.has(key)) {
+		  return of(this.cacheSector.get(key)!);
+		}
+		
+		return this._sectorService.getAll().pipe(
+		  tap((data: ResponseModel<SectorEntity>) => this.cacheSector.set(key, data.lstItem)),
+		  map((data: ResponseModel<SectorEntity>) => data.lstItem)
+		);
+	}
+
+	
 
 
 

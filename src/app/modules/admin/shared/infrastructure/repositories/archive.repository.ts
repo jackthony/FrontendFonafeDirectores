@@ -13,26 +13,31 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { environment } from "environments/environment";
 import { Observable, of } from "rxjs";
-import { ConstantInterface } from "../../application/repositories/constant.interface";
-import { ConstantEntity } from "../../domain/entities/constant.entity";
-import { ResponseEntity } from "app/modules/admin/shared/domain/entities/response.entity";
+import { ArchiveInterface } from "../../application/repositories/archive.interface";
 @Injectable({
     providedIn: 'root',
 })
-export class ConstantRepository implements ConstantInterface {
-    private url = `${environment.apiUrlBase}/Constante`;// URL base para acceder al controlador Constante
+export class ArchiveRepository implements ArchiveInterface {
+    private url = `${environment.apiUrlBase}/Archivo`;// URL base para acceder al controlador Constante
     private _http = inject(HttpClient); // Cliente HTTP inyectado para consumir los servicios REST
     /**
      * Obtiene todas las constantes asociadas a un código de agrupamiento.
      * Este método se utiliza para obtener catálogos como tipo de documento,
      * tipo de dieta, tipo de cargo, etc.
      * 
-     * @param code Código de agrupamiento (nConCodigo) que identifica el catálogo.
-     * @returns Observable con la respuesta que contiene la lista de constantes.
+     * @returns Observable con la respuesta que contiene la lista de archivos.
      */
-    getAll(code: number): Observable<ResponseEntity<ConstantEntity>> {
-        let params = new HttpParams().append('nConCodigo', code);
-        return this._http.get<ResponseEntity<ConstantEntity>>(`${this.url}/listar`, { params });
+    getReportExcelBussines(): Observable<ArrayBuffer> {
+        const body = { sTipoArchivo: 1 }
+        return this._http.post(`${this.url}/exportar`, body, {
+            responseType: 'arraybuffer'
+        });
     }
-    
+    getReportPdfBussines(): Observable<ArrayBuffer> {
+        const body = { sTipoArchivo: 2 }
+        return this._http.post(`${this.url}/exportar`, body, {
+            responseType: 'arraybuffer'
+        });
+    }
+
 }

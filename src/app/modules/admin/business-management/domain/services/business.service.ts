@@ -34,12 +34,4 @@ export class BusinessService {
     delete(object: BusinessEntity): Observable<ResponseEntity<boolean>> {
         return this._businessInterface.delete(object);
     }
-
-    exportExcelEnterprise(): Observable<ArrayBuffer> {
-        return this._businessInterface.exportExcelEnterprise();
-    }
-    
-    exportPdfEnterprise(): Observable<ArrayBuffer> {
-        return this._businessInterface.exportPdfEnterprise();
-    }
 }

@@ -23,7 +23,6 @@ import { ValidationFormService } from 'app/shared/services/validation-form.servi
 import { provideNgxMask } from 'ngx-mask';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
-import { ArchivingProcessService } from '@services/archiving-process.service';
 import { FileComponentStateService } from '@services/file-component-state.service';
 import { BusinessService } from '../../domain/services/business.service';
 import { BusinessResolveDataEntity } from '../../domain/entities/business-resolve-data.entity';
@@ -257,6 +256,7 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
      * Método para registrar una nueva empresa
      */
     registerBusiness(): void {
+        this._spinner.show();
         this._businessService
             .create(this.form.value) // Realiza la solicitud de creación
             .pipe(finalize(() => this._spinner.hide())) // Desactiva el spinner después de la solicitud
@@ -276,6 +276,7 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
      * Método para actualizar una empresa existente
      */
     updateBusiness(): void {
+        this._spinner.show();
         this._businessService
             .update(this.form.value) // Realiza la solicitud de actualización
             .pipe(

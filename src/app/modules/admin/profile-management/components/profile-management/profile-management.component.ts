@@ -31,6 +31,8 @@ import { RoleService } from 'app/modules/admin/shared/domain/services/role.servi
 import { SegUserEntity } from '../../domain/entities/seg-user.entity';
 import { ConstantEntity } from 'app/modules/admin/shared/domain/entities/constant.entity';
 import { RoleEntity } from 'app/modules/admin/shared/domain/entities/role.entity';
+import { PositionService } from 'app/modules/admin/shared/domain/services/position.service';
+import { PositionEntity } from 'app/modules/admin/shared/domain/entities/position.entity';
 @Component({
   selector: 'app-profile-management',
   standalone: true,
@@ -45,6 +47,7 @@ export default class ProfileManagementComponent {
 	private _segUserService = inject(SegUserService); // Servicio personalizado que gestiona operaciones relacionadas con los usuarios (listar, buscar, editar, etc.).
 	private _authorizationService = inject(AuthorizationService); // Servicio que maneja la lógica de permisos y autorización del usuario en la aplicación.
 	private _constantService = inject(ConstantService); // Servicio que proporciona acceso a catálogos o constantes definidas en el sistema (e.g., tipos de documento).
+	private _positionService = inject(PositionService); // Servicio que proporciona acceso a catálogos o constantes definidas en el sistema (e.g., tipos de documento).
 	private _roleService = inject(RoleService); // Servicio encargado de gestionar los roles de usuario (crear, asignar, listar, etc.).
 	private _ngxToastrService = inject(NgxToastrService); // Servicio de notificaciones tipo toast, usado para mostrar mensajes de éxito, error o información.
 	private _spinner = inject(NgxSpinnerService); // Servicio que permite mostrar y ocultar spinners de carga en la interfaz de usuario.
@@ -119,8 +122,7 @@ export default class ProfileManagementComponent {
 	 * @returns Lista de íconos configurados para editar y restablecer contraseña.
 	 */
 	defineIconsTable(): IconOption<SegUserEntity>[] {
-		const resolvedModule = this._route.snapshot.data['module']; 
-		const authorization = this._authorizationService.canPerform(resolvedModule, 'write');
+		const resolvedModule = this._route.snapshot.data['module'];
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
         const iconRestore = new IconOption("restart_alt", "mat_outline", "Reestablecer contraseña");
 		iconEdit.actionIcono = (data: SegUserEntity) => {
@@ -157,7 +159,7 @@ export default class ProfileManagementComponent {
 	 * @param lstPosition Lista de cargos disponibles.
 	 * @param lstProfile Lista de perfiles disponibles.
 	 */
-	openFormDialog(element: SegUserEntity | null, lstStatus: ConstantEntity[], lstPosition: ConstantEntity[], lstProfile: RoleEntity[]): void {
+	openFormDialog(element: SegUserEntity | null, lstStatus: ConstantEntity[], lstPosition: PositionEntity[], lstProfile: RoleEntity[]): void {
 		const respDialogo = this._matDialog.open(FormProfileComponent, {
 			data: { object: element, lstStatus, lstPosition, lstProfile },
 		    disableClose: true,
@@ -185,7 +187,7 @@ export default class ProfileManagementComponent {
 		this._spinner.show();
 		forkJoin({
 			status: this._constantService.getAll(CONST_STATUS_USER),
-			position: this._constantService.getAll(CONST_POSITION_USER),
+			position: this._positionService.getAll(),
 			profile: this._roleService.getAll()
 		})
 		.pipe(

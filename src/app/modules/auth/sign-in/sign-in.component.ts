@@ -29,7 +29,7 @@ import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
 import { environment } from 'environments/environment';
-import { NgxCaptchaModule } from 'ngx-captcha';
+import { NgxCaptchaModule, ReCaptcha2Component } from 'ngx-captcha';
 @Component({
     selector: 'auth-sign-in',
     templateUrl: './sign-in.component.html',
@@ -53,6 +53,8 @@ import { NgxCaptchaModule } from 'ngx-captcha';
 })
 export class AuthSignInComponent implements OnInit {
     @ViewChild('signInNgForm') signInNgForm: NgForm;
+    //@ViewChild('recaptcha') recaptcha: any;
+    @ViewChild('captchaElem', { static: false }) captchaElem: ReCaptcha2Component;
     alert: { type: FuseAlertType; message: string } = {
         type: 'success',
         message: '',
@@ -104,11 +106,19 @@ export class AuthSignInComponent implements OnInit {
                 this._router.navigateByUrl(redirectURL);
             },
             (response) => {
+                if(response)
+                    if (this.captchaElem) {
+                        this.captchaElem.resetCaptcha();
+                    }
                 this.signInForm.enable();
-                this._ngxToastrService.showError('Credenciales inválidas.');
+                this.signInNgForm.resetForm();
+                
+    
+                //this._ngxToastrService.showError('Credenciales inválidas.');
+                const message = response?.error?.detail || 'Ocurrió un error, intentelo de nuevo';
                 this.alert = {
                     type: 'error',
-                    message: 'Wrong email or password',
+                    message: message,
                 };
                 this.showAlert = true;
             }

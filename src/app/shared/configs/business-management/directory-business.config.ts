@@ -11,11 +11,9 @@ import { TableColumnsDefInterface } from "../../interfaces/ITableColumnsDefInter
 /**
  * Constantes para filtros de catálogo utilizados en el mantenimiento del directorio empresarial.
  */
-export const CONST_TYPE_DOCUMENT = 1;
-export const CONST_TYPE_DIRECTOR = 3;
-export const CONST_TYPE_SPECIALTY_DIRECTOR = 6;
-export const CONST_GENDER = 4;
-export const CONST_CARGO_MANAGER = 5;
+export const CONST_GENDER = 1;
+export const CONST_TYPE_DOCUMENT = 2;
+export const CONST_CARGO_DIRECTOR = 12;
 /**
  * Columnas para la tabla de gestión del directorio empresarial.
  */
@@ -23,7 +21,7 @@ export const COLUMNS_DIRECTORY_BUSINESS: TableColumnsDefInterface[] = [
     {
         id: 0,
         name: "sNombreCompleto",
-        displayedName: "Nombres y apellidos",
+        displayedName: "Apellidos y nombres",
         type: "string"
     },
     {

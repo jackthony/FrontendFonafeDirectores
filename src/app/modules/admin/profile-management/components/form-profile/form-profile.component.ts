@@ -31,6 +31,7 @@ import { ConstantEntity } from 'app/modules/admin/shared/domain/entities/constan
 import { RoleEntity } from 'app/modules/admin/shared/domain/entities/role.entity';
 import { ResponseEntity } from 'app/modules/admin/shared/domain/entities/response.entity';
 import { FoButtonDialogComponent } from 'app/modules/admin/shared/components/fo-button-dialog/fo-button-dialog.component';
+import { PositionEntity } from 'app/modules/admin/shared/domain/entities/position.entity';
 @Component({
     selector: 'app-form-profile',
     standalone: true,
@@ -53,7 +54,7 @@ import { FoButtonDialogComponent } from 'app/modules/admin/shared/components/fo-
 })
 export class FormProfileComponent implements OnInit {
 	private _fb = inject(FormBuilder);
-	public data: { object: SegUserEntity, lstStatus: ConstantEntity[], lstPosition: ConstantEntity[], lstProfile: RoleEntity[] } = inject(MAT_DIALOG_DATA);// Datos inyectados al componente de diálogo (usuario, estados, cargos y perfiles) desde el componente que lo abrió.
+	public data: { object: SegUserEntity, lstStatus: ConstantEntity[], lstPosition: PositionEntity[], lstProfile: RoleEntity[] } = inject(MAT_DIALOG_DATA);// Datos inyectados al componente de diálogo (usuario, estados, cargos y perfiles) desde el componente que lo abrió.
 	private readonly dialogRef = inject(MatDialogRef<FormProfileComponent>); // Referencia al diálogo actual, usada para cerrarlo y devolver resultados al componente padre.
 	private _userService = inject(UserService); // Servicio personalizado para operaciones generales de usuario.
 	private _segUserService = inject(SegUserService); // Servicio específico para la gestión de seguridad de usuarios.

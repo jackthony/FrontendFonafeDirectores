@@ -8,8 +8,8 @@ export class RoleEntity {
     nRolId: number;
     sNombreRol: string;
     bActivo: boolean;
-    dtFechaCreacion: string;
-    nIdUsuarioCreacion: number;
+    dtFechaRegistro: string;
+    nUsuarioRegistroId: number;
     dtFechaModificacion: string;
-    nIdUsuarioModificacion: number;
+    nUsuarioModificacionId: number;
 }
