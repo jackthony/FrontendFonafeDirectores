@@ -26,31 +26,31 @@ export const COLUMNS_PROFILE_MANAGEMENT: TableColumnsDefInterface[] = [
     },
     {
         id: 1,
-        name: "sCargo",
+        name: "sCargoDescripcion",
         displayedName: "Cargo",
         type: "string"
     },
     {
         id: 2,
-        name: "sPerfil",
+        name: "sPerfilDescripcion",
         displayedName: "Perfil",
         type: "string"
     },
     {
         id: 3,
-        name: "qw",
+        name: "sEstadoDescripcion",
         displayedName: "Estado",
         type: "string"
     },
     {
         id: 4,
-        name: "dtFechaCreacion",
+        name: "dtFechaRegistro",
         displayedName: "Fecha de creación",
         type: "date"
     },
     {
         id: 5,
-        name: "dtUltimaModificacion",
+        name: "dtFechaModificacion",
         displayedName: "Ult. modificación",
         type: "date"
     },

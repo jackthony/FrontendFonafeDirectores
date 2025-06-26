@@ -54,7 +54,7 @@ import { FoButtonDialogComponent } from 'app/modules/admin/shared/components/fo-
     styleUrl: './change-password-adm.component.scss',
 	encapsulation: ViewEncapsulation.None
 })
-export class ChangePasswordAdmComponent implements OnInit, OnDestroy {
+export class ChangePasswordAdmComponent implements OnInit {
     private _fb = inject(FormBuilder); // Inyección del FormBuilder para crear formularios reactivos de manera más sencilla
     public data: { object: SegUserEntity } = inject(MAT_DIALOG_DATA); // Inyección de los datos del diálogo que se pasan desde el componente que invoca este diálogo
     private readonly dialogRef = inject(MatDialogRef<ChangePasswordAdmComponent>);// Referencia al diálogo para cerrar el diálogo después de una acción
@@ -64,18 +64,12 @@ export class ChangePasswordAdmComponent implements OnInit, OnDestroy {
     loadingService = signal<boolean>(false); 
     buttonEnum = signal<typeof ButtonEnum>(ButtonEnum);
     typeInputPassword = signal<boolean>(false);
-    user: User;
     form: FormGroup;
     ngOnInit(): void {
-        this._userService.user$
-            .pipe(takeUntil(this._unsubscribeAll)) 
-            .subscribe((user: User) => {
-                this.user = user;
-            });
         this.form = this._fb.group({
             user: [this.data.object.nIdUsuario, Validators.required],
             password: ['', [Validators.required, Validators.maxLength(32)]],
-            nUsuarioModificacion: [this.user?.usuarioId, Validators.required],
+            nUsuarioModificacion: [this._userService.userLogin().usuarioId, Validators.required],
         });
     }
     /**
@@ -103,13 +97,5 @@ export class ChangePasswordAdmComponent implements OnInit, OnDestroy {
      */
     viewPassword(): void {
         this.typeInputPassword.set(!this.typeInputPassword());
-    }
-    /**
-     * Método que se ejecuta automáticamente al destruir el componente.
-     * Se encarga de cancelar todas las suscripciones activas para prevenir fugas de memoria.
-     */
-    ngOnDestroy(): void {
-        this._unsubscribeAll.next(null);
-        this._unsubscribeAll.complete();
     }
 }
