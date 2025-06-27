@@ -26,6 +26,8 @@ import { RoleService } from 'app/modules/admin/shared/domain/services/role.servi
 import { RoleEntity } from 'app/modules/admin/shared/domain/entities/role.entity';
 import { UserService } from 'app/core/user/user.service';
 import { DialogMaintenanceRoleModulesComponent } from '../dialog-maintenance-role-modules/dialog-maintenance-role-modules.component';
+import { ModuleService } from 'app/modules/admin/shared/domain/services/module.service';
+import { ModuleEntity } from 'app/modules/admin/shared/domain/entities/module.entity';
 @Component({
   selector: 'app-maintenance-role',
   standalone: true,
@@ -43,6 +45,7 @@ export default class MaintenanceRoleComponent {
 	private _ngxToastrService = inject(NgxToastrService); // Servicio para mostrar notificaciones tipo toast
 	private _spinner = inject(NgxSpinnerService); // Servicio para mostrar spinner de carga
 	private _userService = inject(UserService); // Servicio para obtener información del usuario logueado
+	private _moduleService = inject(ModuleService); // Servicio para obtener información del usuario logueado
     titleModule = signal<string>('Mantenedor de roles');
 	headerTable = signal<TableColumnsDefInterface[]>([]);
 	dataTable = signal<RoleEntity[]>([]);
@@ -115,12 +118,12 @@ export default class MaintenanceRoleComponent {
 	 * @returns Lista de íconos con acciones asociadas para la tabla.
 	 */
 	defineIconsTable(): IconOption<RoleEntity>[] {
-        const iconPermission = new IconOption("lock-closed", "mat_outline", "Ver permisos");
+        const iconPermission = new IconOption("app_blocking", "mat_outline", "Definición de permisos");
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
         const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar");
     	const iconActive = new IconOption("restart_alt", "mat_outline", "Activar");
 		iconPermission.actionIcono = (data: RoleEntity) => {
-            this.openFormDialogModules(data);
+            this.loadDataModules(data);
         };
 		iconEdit.actionIcono = (data: RoleEntity) => {
             this.openFormDialog(data);
@@ -133,7 +136,7 @@ export default class MaintenanceRoleComponent {
         };
 		iconInactive.isHidden = (data: RoleEntity) => !data.bActivo;
     	iconActive.isHidden = (data: RoleEntity) => data.bActivo;
-        return [iconEdit, iconInactive, iconActive];
+        return [iconPermission, iconEdit, iconInactive, iconActive];
     }
 	/**
 	 * Activa o desactiva un rol, según su estado actual.
@@ -186,9 +189,20 @@ export default class MaintenanceRoleComponent {
 		});
 	}
 
-	openFormDialogModules(element: RoleEntity): void {
+	loadDataModules(element: RoleEntity): void {
+		this._spinner.show();
+		this._moduleService.getAllActionsModules(element.nRolId)
+		.pipe(
+			finalize(() => this._spinner.hide()) 
+		)
+		.subscribe(response => {
+			this.openFormDialogModules(element, response.lstItem);
+		})
+	}
+
+	openFormDialogModules(element: RoleEntity, modules: ModuleEntity[]): void {
 		const respDialogo = this._matDialog.open(DialogMaintenanceRoleModulesComponent, {
-			data: { object: element },
+			data: { object: element, modules },
 		    disableClose: true,
 			width: "700px",
 		    minWidth: "350px",

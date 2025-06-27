@@ -10,6 +10,7 @@ import { AuthorizationService } from 'app/shared/services/authorization.service'
 import { SegUserService } from 'app/modules/admin/profile-management/domain/services/seg-user.service';
 import { environment } from 'environments/environment';
 import { ResponseLogin } from '@models/responde-login.interface';
+import { ResponseModel } from '@models/IResponseModel';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -72,14 +73,9 @@ export class AuthService {
         }
         return this._httpClient.post(`${this.url}/login`, credentials).pipe(
             switchMap((response: ResponseLogin) => {
-                /* if(!response || !response.item){
-                    this._ngxToastrService.showError('Credenciales inválidas');
-                    return throwError(() => new Error('Error validación'))
-                }
-                 */
                 // Store the access token in the local storage
-                //this.accessToken = response.accessToken;
-                this.accessToken =  this._GenJWT._generateJWTToken();
+                this.accessToken = response.accessToken;
+                //this.accessToken =  this._GenJWT._generateJWTToken();
                 //this.accessToken =  this._GenJWT._generateJWTToken();
                 // Set the authenticated flag to true
                 this._authenticated = true;
@@ -115,6 +111,16 @@ export class AuthService {
             })
         ); */
     }
+
+    changePassword(credentials: { usuarioId: number; passwordActual: string, passwordNueva: string, captchaResponse: string, token: string }): Observable<ResponseModel<boolean>> {
+        // Throw error, if the user is already logged in
+        if (!this._authenticated) {
+            return throwError('El usuario aún no ha iniciado sesión');
+        }
+        return this._httpClient.post<ResponseModel<boolean>>(`${this.url}/change-password`, credentials);
+    }
+
+
 
     /**
      * Sign in using the access token

@@ -1,9 +1,15 @@
 <!-- <button mat-button [matMenuTriggerFor]="menu">Menu</button> -->
 <button mat-icon-button [matMenuTriggerFor]="menu" class="btn-quit">
-    <mat-icon [svgIcon]="'mat_solid:logout'"></mat-icon>
+    <mat-icon [svgIcon]="'heroicons_outline:bars-3'"></mat-icon>
 </button>
 <mat-menu #menu="matMenu" class="menu-quit">
+    <button mat-menu-item (click)="changePassword()">
+        <mat-icon [svgIcon]="'heroicons_outline:cog-8-tooth'"></mat-icon>
+        <span class="options-menu"> Cambiar clave </span>
+    </button>
+    <mat-divider class="my-2"></mat-divider>
     <button mat-menu-item (click)="signOut()">
+        <mat-icon [svgIcon]="'heroicons_outline:arrow-right-on-rectangle'"></mat-icon>
         <span class="options-menu"> Cerrar sesión </span>
     </button>
 </mat-menu>

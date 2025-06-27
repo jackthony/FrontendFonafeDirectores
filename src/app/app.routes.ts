@@ -67,6 +67,7 @@ export const appRoutes: Route[] = [
         */
         children: [
             { path: 'reset-password', loadChildren: () => import('app/modules/auth/reset-password/reset-password.routes') },
+            { path: 'change-password', loadChildren: () => import('app/modules/auth/change-password/change-password.routes') },
             { path: 'home', loadComponent: () => import('app/modules/admin/home/components/home/home.component') },
             { 
                 path: 'gestion-perfiles', 

@@ -14,24 +14,25 @@ import { ResponseEntity } from 'app/modules/admin/shared/domain/entities/respons
 import { RoleInterface } from '../../application/repositories/role.interface';
 import { RoleFactory } from '../../infrastructure/role.factory';
 import { RoleEntity } from '../entities/role.entity';
+import { RolePermissionsInsert } from '../entities/role-permission-insert.entity';
 @Injectable({
     providedIn: 'root',
 })
 export class RoleService {
-    private _typeDirectorInterface: RoleInterface;
+    private _roleInterface: RoleInterface;
     /**
      * Constructor que inyecta dinámicamente el repositorio mediante la factoría RoleFactory.
      * @param _roleFactory Instancia de la factoría que provee la implementación de RoleInterface.
      */
     constructor(private _industryFactory : RoleFactory){ 
-        this._typeDirectorInterface = this._industryFactory.injectRepository(); //Inyección del Factory
+        this._roleInterface = this._industryFactory.injectRepository(); //Inyección del Factory
     }
     /**
      * Obtiene todos los roles disponibles en el sistema.
      * @returns Observable con la respuesta que contiene todos los roles.
      */
     getAll(): Observable<ResponseEntity<RoleEntity>> {
-        return this._typeDirectorInterface.getAll();
+        return this._roleInterface.getAll();
     }
     /**
      * Obtiene los roles de forma paginada con filtros.
@@ -42,7 +43,7 @@ export class RoleService {
      * @returns Observable con roles filtrados y paginados.
      */
     getByPagination(param: string, pageIndex: number, pageSize: number, filterState: boolean | null): Observable<ResponseEntity<RoleEntity>> {
-        return this._typeDirectorInterface.getByPagination(param, pageIndex, pageSize, filterState);
+        return this._roleInterface.getByPagination(param, pageIndex, pageSize, filterState);
     }
     /**
      * Registra un nuevo rol en el sistema.
@@ -50,7 +51,7 @@ export class RoleService {
      * @returns Observable con el ID generado.
      */
     create(object: RoleEntity): Observable<ResponseEntity<number>> {
-        return this._typeDirectorInterface.create(object);
+        return this._roleInterface.create(object);
     }
     /**
      * Actualiza la información de un rol existente.
@@ -58,7 +59,7 @@ export class RoleService {
      * @returns Observable indicando el resultado de la operación.
      */
     update(object: RoleEntity): Observable<ResponseEntity<boolean>> {
-        return this._typeDirectorInterface.update(object);
+        return this._roleInterface.update(object);
     }
     /**
      * Elimina un rol existente.
@@ -66,6 +67,14 @@ export class RoleService {
      * @returns Observable con el resultado de la eliminación.
      */
     delete(object: RoleEntity): Observable<ResponseEntity<boolean>> {
-        return this._typeDirectorInterface.delete(object);
+        return this._roleInterface.delete(object);
+    }
+    /**
+     * Registra los permisos a un rol.
+     * @param object Objeto a insertar.
+     * @returns Observable con la respuesta del backend (true si fue exitoso).
+     */
+    insertPermissionRole(object: RolePermissionsInsert): Observable<ResponseEntity<boolean>> {
+        return this._roleInterface.insertPermissionRole(object);
     }
 }

@@ -1,1 +1,51 @@
-<p>dialog-maintenance-role-modules works!</p>
+<form class="w-full" [formGroup]="form">
+    <div class="header-dialog">
+        <div class="header-container gap-3 flex">
+            <mat-icon class="icon-size-7" svgIcon="mat_outline:person_outline"></mat-icon>
+            <div class="header-text">Definición de permisos</div>
+        </div>
+    </div>
+    <div class="body-dialog">
+        <div class="grid grid-cols-1 gap-4">
+            <div class="col-span-1" formArrayName="lstModulos">
+                @for (module of formArrayModules.controls; track module; let i = $index) {
+                    <div class="mb-4 container-modules">
+                        <div [formGroupName]="i" class="bg-white px-6 py-2 rounded-lg shadow-lg border border-gray-300 hover:shadow-xl transition-shadow duration-300">
+                            <!-- Módulo -->
+                            <div class="flex items-center">
+                                <mat-checkbox formControlName="bPermitir" class="checkbox-filter" (change)="onModuleChange(i)">
+                                    <span>{{ module.get('sNombre').value }}</span>
+                                </mat-checkbox>
+                            </div>
+                          
+                            <div formArrayName="lstAcciones" class="ml-8">
+                                @for (action of getFormArrayActions(i).controls; track action; let j = $index) {
+                                    <div class="w-full">
+                                        <div [formGroupName]="j" class="flex items-center">
+                                            <mat-checkbox formControlName="bPermitir" class="checkbox-filter" (change)="onActionChange(i)">
+                                                <span>{{ action.get('sNombre').value }}</span>
+                                            </mat-checkbox>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="btn-options">
+            <fo-button-dialog
+                [textBtn]="'Cancelar'"
+                [typeButton]="buttonEnum().CANCEL"
+                matDialogClose>
+            </fo-button-dialog>
+            <fo-button-dialog
+                [btnDisabled]="loadingService()"
+                [textBtn]="'Guardar'"
+                (eventActionClick)="validRegisterForm()"
+                >
+            </fo-button-dialog>
+        </div>
+    </div>
+</form>
