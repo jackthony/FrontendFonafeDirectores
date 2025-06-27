@@ -54,26 +54,40 @@ export class ValidationFormService {
      */
     passwordDetailedValidator(control: AbstractControl): ValidationErrors | null {
         const value = control.value;
-        if (!value) return null;
-        if (!/[A-Z]/.test(value)) {
-            return {
-                customError: 'Debe contener al menos una letra mayúscula.',
-            };
+        
+        if (!value) return null; // If the value is empty, return no validation errors.
+    
+        // Minimum length validation
+        if (value.length < 8) {
+            return { customError: 'La contraseña debe tener mínimo 8 caracteres.' };
         }
+    
+        // Maximum length validation
+        if (value.length > 12) {
+            return { customError: 'La contraseña no debe exceder los 12 caracteres.' };
+        }
+    
+        // Lowercase letter validation
+        if (!/[a-z]/.test(value)) {
+            return { customError: 'Debe contener al menos una letra minúscula.' };
+        }
+    
+        // Uppercase letter validation
+        if (!/[A-Z]/.test(value)) {
+            return { customError: 'Debe contener al menos una letra mayúscula.' };
+        }
+    
+        // Number validation
         if (!/\d/.test(value)) {
             return { customError: 'Debe contener al menos un número.' };
         }
+    
+        // Special character validation
         if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
-            return {
-                customError: 'Debe contener al menos un carácter especial.',
-            };
+            return { customError: 'Debe contener al menos un carácter especial.' };
         }
-        if (value.length < 7) {
-            return {
-                customError: 'La contraseña debe tener mínimo 7 caracteres.',
-            };
-        }
-        return null;
+    
+        return null; // If all validations pass, return null indicating no errors.
     }
     /**
      * Valida un número de teléfono.

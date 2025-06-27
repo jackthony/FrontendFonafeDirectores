@@ -40,7 +40,7 @@ export const COLUMNS_PROFILE_MANAGEMENT: TableColumnsDefInterface[] = [
     {
         id: 3,
         name: "sPerfilDescripcion",
-        displayedName: "Perfil",
+        displayedName: "Rol",
         type: "string"
     },
     {

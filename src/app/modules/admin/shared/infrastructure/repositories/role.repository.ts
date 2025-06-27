@@ -17,10 +17,11 @@ import { Observable } from 'rxjs';
 import { ResponseEntity } from 'app/modules/admin/shared/domain/entities/response.entity';
 import { RoleInterface } from '../../application/repositories/role.interface';
 import { RoleEntity } from '../../domain/entities/role.entity';
+import { RolePermissionsInsert } from '../../domain/entities/role-permission-insert.entity';
 @Injectable({
     providedIn: 'root',
 })
-export class RoleRepository implements RoleInterface {  
+export class RoleRepository implements RoleInterface {
     private url = `${environment.apiUrlBase}/Rol`;
     private _http = inject(HttpClient);
     /**
@@ -70,4 +71,12 @@ export class RoleRepository implements RoleInterface {
     delete(object: RoleEntity): Observable<ResponseEntity<boolean>> {
         return this._http.post<ResponseEntity<boolean>>(`${this.url}/eliminar`, object);
     }
+    /**
+     * Registra los permisos a un rol.
+     * @param object Objeto a insertar.
+     * @returns Observable con la respuesta del backend (true si fue exitoso).
+     */
+    insertPermissionRole(object: RolePermissionsInsert): Observable<ResponseEntity<boolean>> {
+        return this._http.post<ResponseEntity<boolean>>(`${this.url}/crearPermisosRol`, object);
+    }  
 }
