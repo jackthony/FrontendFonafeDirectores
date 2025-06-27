@@ -74,7 +74,8 @@ export default class MaintenanceMinistryComponent {
 	 * Realiza la búsqueda de ministerios con paginación y filtrado.
 	 * Utiliza el servicio MinistryService para obtener los datos.
 	 */
-	searchTable(): void {
+	searchTable(resetIndexTable?: boolean): void {
+		if(resetIndexTable) this.pageIndexTable.set(1);
 		this.loadingTable.set(true);
 		this._ministryService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState()).pipe(
 			finalize(() => this.loadingTable.set(false))

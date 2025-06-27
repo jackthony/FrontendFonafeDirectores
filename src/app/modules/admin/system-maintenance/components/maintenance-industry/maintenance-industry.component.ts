@@ -75,7 +75,13 @@ export default class MaintenanceIndustryComponent {
 	 * Método para buscar rubros con paginación y filtrado.
 	 * Utiliza el servicio de sector para obtener los datos y actualiza la tabla.
 	 */
-	searchTable(): void {
+	searchFilter(): void {
+		this.pageIndexTable.set(1); 
+		this.searchTable();
+	}
+
+	searchTable(resetIndexTable?: boolean): void {
+		if(resetIndexTable) this.pageIndexTable.set(1);
 		this.loadingTable.set(true);
 		this._sectorService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState()).pipe(
 			finalize(() => this.loadingTable.set(false))

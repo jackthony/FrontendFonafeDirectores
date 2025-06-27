@@ -71,7 +71,8 @@ export default class MaintenanceSectorComponent {
 	 * Ejecuta la búsqueda paginada de sectores aplicando los filtros actuales.
 	 * Actualiza los datos y el total de páginas según el resultado recibido.
 	 */
-	searchTable(): void {
+	searchTable(resetIndexTable?: boolean): void {
+		if(resetIndexTable) this.pageIndexTable.set(1);
 		this.loadingTable.set(true);
 		this._sectorService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState()).pipe(
 			finalize(() => this.loadingTable.set(false))

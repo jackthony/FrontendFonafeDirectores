@@ -37,7 +37,10 @@ export const appConfig: ApplicationConfig = {
     providers: [
         provideAnimations(),
         provideHttpClient(),
-        provideToastr(),
+        provideToastr({
+           positionClass: 'toast-top-full-width',
+           progressBar: true
+        }),
         provideRouter(
             appRoutes,
             withPreloading(PreloadAllModules),

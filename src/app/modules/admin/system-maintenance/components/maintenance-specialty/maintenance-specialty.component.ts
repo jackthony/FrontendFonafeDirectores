@@ -72,7 +72,8 @@ export default class MaintenanceSpecialtyComponent {
 	 * Ejecuta una búsqueda paginada de especialidades utilizando los filtros actuales.
 	 * Aplica estado de carga y actualiza el listado y paginación según la respuesta.
 	 */
-	searchTable(): void {
+	searchTable(resetIndexTable?: boolean): void {
+		if(resetIndexTable) this.pageIndexTable.set(1);
 		this.loadingTable.set(true);
 		this._specialtyService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState()).pipe(
 			finalize(() => this.loadingTable.set(false))

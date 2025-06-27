@@ -59,8 +59,8 @@ export class SegUserRepository implements SegUserInterface {
      * @param object Objeto con los datos necesarios para cambiar la contraseña.
      * @returns Observable con ResponseEntity que indica si la operación fue exitosa.
      */
-    updatePassword(object: SegUserChangePasswordEntity): Observable<ResponseEntity<boolean>> {
-        return this._http.post<ResponseEntity<boolean>>(`${this.url}/ChangePassAdmin`, object);
+    updatePasswordByAdmin(object: SegUserChangePasswordEntity): Observable<ResponseEntity<boolean>> {
+        return this._http.post<ResponseEntity<boolean>>(`${environment.apiUrlBase}/Auth/admin/reset-password`, object);
     }
     /**
      * Fuerza el cambio de contraseña del usuario autenticado.

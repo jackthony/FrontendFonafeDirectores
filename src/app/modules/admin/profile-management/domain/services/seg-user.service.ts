@@ -60,8 +60,8 @@ export class SegUserService {
      * @param object Objeto con los datos para el cambio de contraseña.
      * @returns Observable indicando si el cambio fue exitoso.
      */
-    updatePassword(object: SegUserChangePasswordEntity): Observable<ResponseEntity<boolean>> {
-        return this._segUserInterface.updatePassword(object);
+    updatePasswordByAdmin(object: SegUserChangePasswordEntity): Observable<ResponseEntity<boolean>> {
+        return this._segUserInterface.updatePasswordByAdmin(object);
     }
     /**
      * Obliga al usuario a cambiar su contraseña desde el frontend (ej. primer login).

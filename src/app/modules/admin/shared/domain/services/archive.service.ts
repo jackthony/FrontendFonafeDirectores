@@ -11,6 +11,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ArchiveInterface } from '../../application/repositories/archive.interface';
 import { ArchiveFactory } from '../../infrastructure/archive.factory';
+import { ResponseEntity } from '../entities/response.entity';
 @Injectable({
     providedIn: 'root',
 })
@@ -34,5 +35,9 @@ export class ArchiveService {
      */
     getReportPdfBussines(): Observable<ArrayBuffer> {
         return this._archiveInterface.getReportPdfBussines();
+    }
+
+    importExcelBussines(excel: FormData): Observable<ResponseEntity<boolean>> {
+        return this._archiveInterface.importExcelBussines(excel);
     }
 }

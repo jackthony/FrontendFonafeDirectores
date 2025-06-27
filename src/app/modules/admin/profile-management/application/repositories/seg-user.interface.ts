@@ -18,6 +18,6 @@ export interface SegUserInterface {
     getByPagination(userName: string, pageIndex: number, pageSize: number): Observable<ResponseEntity<SegUserEntity>>;
     create(object: SegUserEntity): Observable<ResponseEntity<number>>;
     update(object: SegUserEntity): Observable<ResponseEntity<boolean>>;
-    updatePassword(object: SegUserChangePasswordEntity): Observable<ResponseEntity<boolean>>;
+    updatePasswordByAdmin(object: SegUserChangePasswordEntity): Observable<ResponseEntity<boolean>>;
     updateForcePassword(object: SegUserChangePassForceEntity): Observable<ResponseEntity<boolean>>;
 }

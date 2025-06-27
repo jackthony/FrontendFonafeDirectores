@@ -22,6 +22,7 @@ import { BusinessService } from '../../domain/services/business.service';
 import { BusinessEntity } from '../../domain/entities/business.entity';
 import { UserService } from 'app/core/user/user.service';
 import { ArchiveService } from 'app/modules/admin/shared/domain/services/archive.service';
+import { ArchivingProcessService } from 'app/modules/admin/shared/domain/services/archiving-process.service';
 
 @Component({
   selector: 'app-business-management',
@@ -37,6 +38,7 @@ export class BusinessManagementComponent {
   private _dialogConfirmationService = inject(DialogConfirmationService); // Servicio para diálogos de confirmación
   private _ngxToastrService = inject(NgxToastrService); // Servicio para mostrar notificaciones
   private _spinner = inject(NgxSpinnerService); // Servicio para mostrar un spinner de carga
+  private _archivingProcessService = inject(ArchivingProcessService); // Servicio para mostrar un spinner de carga
   private _userService = inject(UserService)
   placeHolderSearch = signal<string>('Busca por múltiples campos');
   downloadEnterprise = signal<string>('Agregar empresa');
@@ -62,7 +64,8 @@ export class BusinessManagementComponent {
   /**
    * Método para buscar empresas
    */
-  	searchBusiness(): void {
+  	searchBusiness(resetIndexTable?: boolean): void {
+		if(resetIndexTable) this.pageIndexTable.set(1);
         this.loadingTable.set(true);
         this._businessService.getByPagination(this.businessSearch(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState()).pipe(
           finalize(() => this.loadingTable.set(false))
@@ -79,6 +82,10 @@ export class BusinessManagementComponent {
             this.dataTableBusiness.set([]); 
           }
         });
+  }
+  searchFilter(): void {
+	this.pageIndexTable.set(1); 
+	this.searchBusiness();
   }
   /**
    * Método para cambiar la página de la tabla
@@ -171,6 +178,26 @@ export class BusinessManagementComponent {
     returnInit(): void {
       this._router.navigate(['home']);
     }
+	async importExcel(): Promise<void> {
+		const file = await this._archivingProcessService.uploadFile('.xls,.xlsx');
+        const formData: FormData = new FormData();
+        formData.append('Archivo', file);
+        formData.append('nUsuarioId', this._userService.userLogin().usuarioId.toString());
+		this._spinner.show();
+		this._archiveService.importExcelBussines(formData)
+        .pipe(
+            finalize(() => this._spinner.hide())
+        )
+        .subscribe({
+            next: (response: ResponseModel<boolean>) => {
+                if (response.isSuccess) {
+                    this._ngxToastrService.showSuccess('Documento registrado exitosamente', '¡Éxito!');
+					this.searchBusiness();
+                }
+            },
+        })
+
+	}
     exportExcel(): void {
       	const downloadExcel$ = this._archiveService.getReportExcelBussines();
 		this.downloadFile(downloadExcel$, 'xlsx', 'application/vnd.ms-excel');

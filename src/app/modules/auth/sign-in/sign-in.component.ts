@@ -112,9 +112,7 @@ export class AuthSignInComponent implements OnInit {
                     }
                 this.signInForm.enable();
                 this.signInNgForm.resetForm();
-                
-    
-                //this._ngxToastrService.showError('Credenciales inválidas.');
+
                 const message = response?.error?.detail || 'Ocurrió un error, intentelo de nuevo';
                 this.alert = {
                     type: 'error',

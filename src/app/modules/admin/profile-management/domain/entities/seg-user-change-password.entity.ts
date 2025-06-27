@@ -8,7 +8,7 @@
  * Cambios recientes:    - Creación de estructura para soporte de cambio de contraseña administrativo.
  *******************************************************************************************************/
 export interface SegUserChangePasswordEntity {
-	user: string;
-    password: string;
-    nUsuarioModificacion: number;
+	usuarioId: number;
+    newPassword: string;
+    token: string;
 }

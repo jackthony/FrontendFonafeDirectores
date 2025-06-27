@@ -266,7 +266,7 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
             )
             .subscribe({
                 next: (response: ResponseModel<BusinessEntity>) => {
-                    this._ngxToastrService.showSuccess('Empresa actualizada exitosamente', '¡Éxito!');
+                    this._ngxToastrService.showSuccess('Los campos se guardaron exitosamente', '¡Éxito!');
                     this.business.set(response.item);
                     this.initForm(this.business());
                 },

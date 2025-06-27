@@ -3,7 +3,6 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
 import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
-import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
 import { AuthMockApi } from 'app/mock-api/common/auth/api';
 import { AuthorizationService } from 'app/shared/services/authorization.service';
@@ -75,41 +74,16 @@ export class AuthService {
             switchMap((response: ResponseLogin) => {
                 // Store the access token in the local storage
                 this.accessToken = response.accessToken;
-                //this.accessToken =  this._GenJWT._generateJWTToken();
-                //this.accessToken =  this._GenJWT._generateJWTToken();
                 // Set the authenticated flag to true
                 this._authenticated = true;
-
                 //this._sessionState.set(response.item.sessionState);
 
                 // Store the user on the user service
                 this._userService.user = response.usuarioResult;
-                localStorage.setItem("user", JSON.stringify(response.usuarioResult));
-
-                localStorage.setItem("permission", JSON.stringify(response.modulos));
-
-                this._authorizationService.setPermissions(response.modulos)
-
-                // Return a new observable with the response
+                this._authorizationService.setPermissions(response.modulos);
                 return of(response);
             })
         );
-
-        /* return this._httpClient.post('api/auth/sign-in', credentials).pipe(
-            switchMap((response: any) => {
-                // Store the access token in the local storage
-                this.accessToken = response.accessToken;
-
-                // Set the authenticated flag to true
-                this._authenticated = true;
-
-                // Store the user on the user service
-                this._userService.user = response.user;
-
-                // Return a new observable with the response
-                return of(response);
-            })
-        ); */
     }
 
     changePassword(credentials: { usuarioId: number; passwordActual: string, passwordNueva: string, captchaResponse: string, token: string }): Observable<ResponseModel<boolean>> {
@@ -125,22 +99,23 @@ export class AuthService {
     /**
      * Sign in using the access token
      */
-    signInUsingToken(): Observable<any> {
+    signInUsingToken(): Observable<boolean> {
         // Sign in using the token
         return this._httpClient
-            .post('api/auth/sign-in-with-token', {
-                accessToken: this.accessToken,
+            .post(`${this.url}/verify-token`, {
+                token: this.accessToken,
             })
             .pipe(
                 catchError(() =>
                     // Return false
                     of(false)
                 ),
-                switchMap((response: any) => {
+                switchMap((response: ResponseLogin) => {
+                    //alert('entro')
                     // Replace the access token with the new one if it's available on
                     // the response object.
                     //
-                    // This is an added optional step for better security. Once you sign
+                    // This is an added optional step for better securityd. Once you sign
                     // in using the token, you should generate a new one on the server
                     // side and attach it to the response object. Then the following
                     // piece of code can replace the token with the refreshed one.
@@ -153,11 +128,11 @@ export class AuthService {
 
                     // Store the user on the user service
                     //this._userService.user = response.user;
-                    this._userService.user = JSON.parse(localStorage.getItem("user"));
+                    this._userService.user = response.usuarioResult;
 
                     //this._userService.user = 
-                    this._sessionState.set(JSON.parse(localStorage.getItem("user")).sessionState);
-                    this._authorizationService.setPermissions(JSON.parse(localStorage.getItem("permission")));
+                    //this._sessionState.set(JSON.parse(localStorage.getItem("user")).sessionState);
+                    this._authorizationService.setPermissions(response.modulos);
 
                     // Return true
                     return of(true);
@@ -213,6 +188,7 @@ export class AuthService {
      * Check the authentication status
      */
     check(): Observable<boolean> {
+        //debugger;
         // Check if the user is logged in
         if (this._authenticated) {
             return of(true);
@@ -225,11 +201,11 @@ export class AuthService {
         if (!this.accessToken) {
             return of(false);
         }
-
         // Check the access token expire date
         if (AuthUtils.isTokenExpired(this.accessToken)) {
             return of(false);
         }
+
 
         // If the access token exists, and it didn't expire, sign in using it
         return this.signInUsingToken();
@@ -238,5 +214,6 @@ export class AuthService {
     getSessionState(): 'ACTIVE' | 'FORCE_PASSWORD_UPDATE' | null {
         return this._sessionState();
     }
+
 
 }

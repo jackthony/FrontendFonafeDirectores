@@ -34,7 +34,7 @@ import { UserService } from 'app/core/user/user.service';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
 import { ValidationFormService } from 'app/shared/services/validation-form.service';
 import { environment } from 'environments/environment';
-import { NgxCaptchaModule } from 'ngx-captcha';
+import { NgxCaptchaModule, ReCaptcha2Component } from 'ngx-captcha';
 import { finalize, Subject, takeUntil } from 'rxjs';
 @Component({
     selector: 'change-password',
@@ -60,6 +60,7 @@ import { finalize, Subject, takeUntil } from 'rxjs';
 })
 export class ChangePasswordComponent implements OnInit {
     @ViewChild('resetPasswordNgForm') resetPasswordNgForm: NgForm;
+    @ViewChild('captchaElem', { static: false }) captchaElem: ReCaptcha2Component;
     resetPasswordForm: UntypedFormGroup;
     showAlert: boolean = false;
     errorMessages: { message: string; valid: boolean; key: string }[] = [];
@@ -76,7 +77,7 @@ export class ChangePasswordComponent implements OnInit {
         private _formBuilder: UntypedFormBuilder,
         private _ngxToastrService: NgxToastrService,
         private _router: Router,
-        private _validationFormService: ValidationFormService
+        private _validationFormService: ValidationFormService,
     ) {}
     /**
      * Hook de inicialización.
@@ -88,14 +89,6 @@ export class ChangePasswordComponent implements OnInit {
             .subscribe((user: User) => {
                 this.user = user;
             });
-            /*
-            "usuarioId": 0,
-  "passwordActual": "string",
-  "passwordNueva": "string",
-  "captchaResponse": "string",
-  "token": "string"
-
-            */
         this.resetPasswordForm = this._formBuilder.group(
             {
                 usuarioId: [this.user.usuarioId],
@@ -103,7 +96,7 @@ export class ChangePasswordComponent implements OnInit {
                 passwordNueva: ['', [Validators.required, Validators.maxLength(32), this._validationFormService.passwordDetailedValidator]],
                 passwordConfirm: ['', [Validators.required, Validators.maxLength(32)]],
                 captchaResponse: ['', Validators.required],
-                token: ''
+                token: [this._authService.accessToken]
             },
             {
                 validators: FuseValidators.mustMatch(
@@ -121,10 +114,10 @@ export class ChangePasswordComponent implements OnInit {
 
     validationPassword(password: string, errorMessages:{ message: string; valid: boolean; key: string }[]): { message: string; valid: boolean; key: string }[] {
 
-        const minLengthValid = password.length >= 8;
+        const minLengthValid = password?.length >= 8;
         this.updateErrorMessage("minLength", minLengthValid,errorMessages);
 
-        const maxLengthValid = password.length <= 12;
+        const maxLengthValid = password?.length <= 12;
         this.updateErrorMessage("maxLength", maxLengthValid,errorMessages);
 
         const lowercaseValid = /[a-z]/.test(password);
@@ -201,18 +194,19 @@ export class ChangePasswordComponent implements OnInit {
             .pipe(
                 finalize(() => {
                     this.resetPasswordForm.enable();
-                    this.resetPasswordNgForm.resetForm();
+                    //this.resetPasswordNgForm.resetForm();
                 })
             )
             .subscribe(
                 (response) => {
-
                     this._authService.signOut();
                     this._ngxToastrService.showSuccess('Su contraseña ha sido restablecida.', '¡Éxito!');
                     this._router.navigate(['sign-in']);
                 },
                 (response) => {
-                    console.log('response',response);
+                    if (this.captchaElem) {
+                        this.captchaElem.resetCaptcha();
+                    }
                     
                     this.alert = {
                         type: 'error',

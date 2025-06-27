@@ -14,10 +14,12 @@ import { inject, Injectable } from "@angular/core";
 import { environment } from "environments/environment";
 import { Observable, of } from "rxjs";
 import { ArchiveInterface } from "../../application/repositories/archive.interface";
+import { ResponseEntity } from "../../domain/entities/response.entity";
 @Injectable({
     providedIn: 'root',
 })
 export class ArchiveRepository implements ArchiveInterface {
+    
     private url = `${environment.apiUrlBase}/Archivo`;// URL base para acceder al controlador Constante
     private _http = inject(HttpClient); // Cliente HTTP inyectado para consumir los servicios REST
     /**
@@ -38,6 +40,10 @@ export class ArchiveRepository implements ArchiveInterface {
         return this._http.post(`${this.url}/exportar`, body, {
             responseType: 'arraybuffer'
         });
+    }
+
+    importExcelBussines(excel: FormData): Observable<ResponseEntity<boolean>> {
+        return this._http.post<ResponseEntity<boolean>>(`${this.url}/importar`, excel)
     }
 
 }

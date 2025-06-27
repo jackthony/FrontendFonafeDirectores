@@ -17,18 +17,19 @@
                                     <span>{{ module.get('sNombre').value }}</span>
                                 </mat-checkbox>
                             </div>
-                          
-                            <div formArrayName="lstAcciones" class="ml-8">
+                            <ng-container formArrayName="lstAcciones" >
                                 @for (action of getFormArrayActions(i).controls; track action; let j = $index) {
-                                    <div class="w-full">
-                                        <div [formGroupName]="j" class="flex items-center">
-                                            <mat-checkbox formControlName="bPermitir" class="checkbox-filter" (change)="onActionChange(i)">
-                                                <span>{{ action.get('sNombre').value }}</span>
-                                            </mat-checkbox>
+                                    @if(action.get('sNombre').value !== 'GlobalAccess') {
+                                        <div class="w-full ml-8" >
+                                            <div [formGroupName]="j" class="flex items-center">
+                                                <mat-checkbox formControlName="bPermitir" class="checkbox-filter" (change)="onActionChange(i)">
+                                                    <span>{{ action.get('sNombre').value }}</span>
+                                                </mat-checkbox>
+                                            </div>
                                         </div>
-                                    </div>
+                                    }
                                 }
-                            </div>
+                            </ng-container>
                         </div>
                     </div>
                 }

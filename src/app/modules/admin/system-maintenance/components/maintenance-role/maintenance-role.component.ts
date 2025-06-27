@@ -77,7 +77,8 @@ export default class MaintenanceRoleComponent {
 	 * Ejecuta la búsqueda paginada de roles, aplicando filtros por nombre y estado.
 	 * Actualiza la tabla y el total de páginas según la respuesta del servicio.
 	 */
-	searchTable(): void {
+	searchTable(resetIndexTable?: boolean): void {
+		if(resetIndexTable) this.pageIndexTable.set(1);
 		this.loadingTable.set(true);
 		this._roleService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState() ).pipe(
 			finalize(() => this.loadingTable.set(false))

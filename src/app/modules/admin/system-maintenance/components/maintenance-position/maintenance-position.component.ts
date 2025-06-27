@@ -74,7 +74,8 @@ export default class MaintenancePositionComponent {
 	 * Prepara los parámetros de búsqueda para la tabla.
 	 * @returns Un objeto RequestOption con los parámetros de búsqueda.
 	 */
-	searchTable(): void {
+	searchTable(resetIndexTable?: boolean): void {
+		if(resetIndexTable) this.pageIndexTable.set(1);
 		this.loadingTable.set(true);
 		this._positionService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState()).pipe(
 			finalize(() => this.loadingTable.set(false))

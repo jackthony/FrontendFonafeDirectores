@@ -73,7 +73,8 @@ export default class MaintenanceTypeDirectorComponent {
      * Ejecuta la búsqueda de datos con los filtros actuales.
      * Incluye búsqueda por texto, página actual y filtro de estado.
      */
-	searchTable(): void {
+	searchTable(resetIndexTable?: boolean): void {
+		if(resetIndexTable) this.pageIndexTable.set(1);
 		this.loadingTable.set(true);
 		this._sectorService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState()).pipe(
 			finalize(() => this.loadingTable.set(false))

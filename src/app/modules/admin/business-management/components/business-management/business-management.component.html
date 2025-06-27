@@ -12,7 +12,7 @@
             [textBtnSearch]="addEnterprise()"
             viewFilterState
             (eventFilterState)="setFilterState($event)"
-            (eventBtnSearch)="searchBusiness()"
+            (eventBtnSearch)="searchBusiness(true)"
             >
             <!-- <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
               <mat-icon>more_vert</mat-icon>
@@ -23,7 +23,7 @@
                 [icon]="'file_copy'">
             </fo-button>
             <mat-menu #menu="matMenu">
-              <button class="btn-export" mat-menu-item>
+              <button (click)="importExcel()" class="btn-export" mat-menu-item>
                 <mat-icon>upload</mat-icon>
                 <span>Importar excel</span>
               </button>

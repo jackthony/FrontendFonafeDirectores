@@ -36,6 +36,7 @@ import { finalize, Subject, takeUntil } from 'rxjs';
 import { SegUserService } from '../../domain/services/seg-user.service';
 import { SegUserEntity } from '../../domain/entities/seg-user.entity';
 import { FoButtonDialogComponent } from 'app/modules/admin/shared/components/fo-button-dialog/fo-button-dialog.component';
+import { AuthService } from 'app/core/auth/auth.service';
 @Component({
     selector: 'app-change-password-adm',
     standalone: true,
@@ -60,6 +61,7 @@ export class ChangePasswordAdmComponent implements OnInit {
     private readonly dialogRef = inject(MatDialogRef<ChangePasswordAdmComponent>);// Referencia al diálogo para cerrar el diálogo después de una acción
     private _userService = inject(UserService);// Servicios inyectados para obtener y manejar la información del usuario
     private _segUserService = inject(SegUserService);
+    private _authService = inject(AuthService);
     private _unsubscribeAll: Subject<void> = new Subject<void>(); // Subject para controlar el ciclo de vida de las suscripciones y evitar memory leaks
     loadingService = signal<boolean>(false); 
     buttonEnum = signal<typeof ButtonEnum>(ButtonEnum);
@@ -67,9 +69,9 @@ export class ChangePasswordAdmComponent implements OnInit {
     form: FormGroup;
     ngOnInit(): void {
         this.form = this._fb.group({
-            user: [this.data.object.nIdUsuario, Validators.required],
-            password: ['', [Validators.required, Validators.maxLength(32)]],
-            nUsuarioModificacion: [this._userService.userLogin().usuarioId, Validators.required],
+            usuarioId: [this._userService.userLogin().usuarioId, Validators.required],
+            newPassword: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(12)]],
+            token: [this._authService.accessToken, Validators.required],
         });
     }
     /**
@@ -83,7 +85,7 @@ export class ChangePasswordAdmComponent implements OnInit {
         }
         this.loadingService.set(true);
         this._segUserService
-            .updatePassword(this.form.value)
+            .updatePasswordByAdmin(this.form.value)
             .pipe(finalize(() => this.loadingService.set(false))) 
             .subscribe({
                 next: (response: ResponseModel<boolean>) => {
