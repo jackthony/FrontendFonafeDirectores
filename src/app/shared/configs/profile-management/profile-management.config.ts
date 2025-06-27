@@ -47,7 +47,7 @@ export const COLUMNS_PROFILE_MANAGEMENT: TableColumnsDefInterface[] = [
         id: 4,
         name: "tipoPersonalDescripcion",
         displayedName: "Tipo de Personal",
-        type: "string"
+        type: "fonafe"
     },
     {
         id: 5,
