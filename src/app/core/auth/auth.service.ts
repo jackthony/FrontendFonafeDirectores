@@ -198,8 +198,8 @@ export class AuthService {
             return of(true);
         }
 
-        const token = this.accessToken;
-        if(token) this.accessToken = token;
+        /* const token = this.accessToken;
+        if(token) this.accessToken = token; */
 
         // Check the access token availability
         if (!this.accessToken) {
