@@ -106,10 +106,13 @@ export class AuthService {
                 token: this.accessToken,
             })
             .pipe(
-                catchError(() =>
+                catchError(() =>{
+                    
+                
                     // Return false
-                    of(false)
-                ),
+                    this.signOut()
+                    return of(false)
+                }),
                 switchMap((response: ResponseLogin) => {
                     //alert('entro')
                     // Replace the access token with the new one if it's available on
@@ -152,6 +155,7 @@ export class AuthService {
 
         localStorage.removeItem('user');
         this._userService.user = null;
+        this._authorizationService.setPermissions([]);
         this._sessionState.set(null);
 
         // Return the observable
@@ -205,7 +209,6 @@ export class AuthService {
         if (AuthUtils.isTokenExpired(this.accessToken)) {
             return of(false);
         }
-
 
         // If the access token exists, and it didn't expire, sign in using it
         return this.signInUsingToken();
