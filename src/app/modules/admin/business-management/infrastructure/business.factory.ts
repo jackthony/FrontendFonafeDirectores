@@ -3,7 +3,7 @@ import { BusinessRepository } from "./repositories/business.repository";
 import { BusinessInterface } from "../application/repositories/business.interface";
 
 @Injectable({
-    providedIn: 'root',  // Hace que el Factory esté disponible en toda la aplicación
+    providedIn: 'root',
 })
 export class BusinessFactory {
     private _businessRepository = inject(BusinessRepository);

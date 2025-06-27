@@ -1,8 +1,18 @@
+/*******************************************************************************************************
+ * Nombre del componente: HomeComponent
+ * Descripción:           Componente principal de la vista "Inicio" del sistema. Muestra un resumen de 
+ *                        actividades recientes en una tabla interactiva. Las columnas y los datos son 
+ *                        configurables mediante señales reactivas.
+ * Autor:                 Daniel Alva
+ * Fecha de creación:     23/06/2025
+ * Última modificación:   23/06/2025 por Daniel Alva
+ * Cambios recientes:     - Integración de tabla de actividades con señales reactivas.
+ *                        - Carga inicial de columnas y datos mockeados.
+ *******************************************************************************************************/
 import { Component, OnInit, signal } from '@angular/core';
 import { COLUMNS_ACTIVITIES } from 'app/shared/configs/home/home.config';
 import { HOME_IMPORTS } from 'app/shared/imports/components/home.imports';
 import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDefInterface';
-
 const dataMock = [
 	{
 	  fullName: 'Laura Fernández',
@@ -41,20 +51,14 @@ const dataMock = [
   styleUrl: './home.component.scss'
 })
 export default class HomeComponent implements OnInit {
-
-	// Señal reactiva que almacena las definiciones de las columnas de la tabla.
-	headerTable = signal<TableColumnsDefInterface[]>([]);
-
-	// Señal reactiva que almacena los datos de las actividades que se mostrarán en la tabla.
+	headerTable = signal<TableColumnsDefInterface[]>([]); // Señal que almacena la definición de las columnas de la tabla.
 	dataTableActivities = signal<any[]>([]);
-
-	// Método de inicialización que se ejecuta cuando el componente es cargado.
-	// Asigna las columnas de la tabla y los datos de las actividades al estado reactivo.
+		/**
+	 * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+	 * Asigna los encabezados de la tabla y los datos mockeados.
+	 */
 	ngOnInit(): void {
-		// Se establece la lista de columnas de la tabla desde COLUMNS_ACTIVITIES.
 		this.headerTable.set(COLUMNS_ACTIVITIES);
-
-		// Se establece la lista de datos de actividades desde la constante 'dataMock'.
 		this.dataTableActivities.set(dataMock);
 	}
 }

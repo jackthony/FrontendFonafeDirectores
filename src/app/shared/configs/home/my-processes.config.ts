@@ -1,12 +1,21 @@
+/*******************************************************************************************************
+ * Nombre del archivo:  list-of-processes.const.ts
+ * Descripción:         Constante que define la lista de procesos disponibles en la aplicación.
+ * Autor:               Daniel Alva
+ * Fecha de creación:   01/06/2025
+ * Última modificación: 23/06/2025 por Daniel Alva
+ * Cambios recientes:   Creación inicial del archivo.
+ *******************************************************************************************************/
 import { OptionsProcess } from "app/core/enums/options-process.enum";
 import { ListOfProcesses } from "app/shared/interfaces/IListOfProcesses";
-
-// Define la lista de procesos disponibles en la aplicación
+/**
+ * Lista centralizada de procesos del sistema.
+ */
 export const LIST_OF_PROCESSES: ListOfProcesses[] = [
     {
-        label: 'Ingresar nueva solicitud', // Etiqueta que describe el proceso
-        icon: 'mat_outline:add_circle_outline', // Icono asociado al proceso (utiliza Material Icons)
-        value: OptionsProcess.newRequest, // Valor que representa el proceso (se refiere a la enumeración OptionsProcess)
+        label: 'Ingresar nueva solicitud',
+        icon: 'mat_outline:add_circle_outline',
+        value: OptionsProcess.newRequest,
         url: 'solicitudes',
         module: "solicitudes",
         options: []
@@ -26,7 +35,6 @@ export const LIST_OF_PROCESSES: ListOfProcesses[] = [
         url: 'gestion-perfiles',
         module: "gestion-perfiles",
         options: []
-
     },
     {
         label: 'Gestión de empresas',
@@ -51,13 +59,13 @@ export const LIST_OF_PROCESSES: ListOfProcesses[] = [
         url: '', 
         module: 'mantenimiento-sistemas',
         options: [
-            { label: 'Mantenimiento de roles', url: 'mantenedores-sistema/rol' }, // Opción para acceder al mantenimiento de roles
-            { label: 'Mantenimiento de ministerios', url: 'mantenedores-sistema/ministerio' }, // Opción para acceder al mantenimiento de ministerios
-            { label: 'Mantenimiento de sectores', url: 'mantenedores-sistema/sector' }, // Opción para acceder al mantenimiento de sectores
-            { label: 'Mantenimiento de rubros', url: 'mantenedores-sistema/rubro' }, // Opción para acceder al mantenimiento de rubros
-            { label: 'Mantenimiento de cargos', url: 'mantenedores-sistema/cargo' }, // Opción para acceder al mantenimiento de cargo
-            { label: 'Mantenimiento de tipo de director', url: 'mantenedores-sistema/tipo-director' }, // Opción para acceder al mantenimiento de cargo
-            { label: 'Mantenimiento de especialidad', url: 'mantenedores-sistema/especialidad' }, // Opción para acceder al mantenimiento de cargo
+            { label: 'Mantenimiento de roles', url: 'mantenedores-sistema/rol' },
+            { label: 'Mantenimiento de ministerios', url: 'mantenedores-sistema/ministerio' },
+            { label: 'Mantenimiento de sectores', url: 'mantenedores-sistema/sector' },
+            { label: 'Mantenimiento de rubros', url: 'mantenedores-sistema/rubro' },
+            { label: 'Mantenimiento de cargos', url: 'mantenedores-sistema/cargo' },
+            { label: 'Mantenimiento de tipo de director', url: 'mantenedores-sistema/tipo-director' },
+            { label: 'Mantenimiento de especialidad', url: 'mantenedores-sistema/especialidad' },
         ]
     }
 ]

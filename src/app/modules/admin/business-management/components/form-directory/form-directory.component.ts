@@ -1,3 +1,10 @@
+/*******************************************************************************************************
+ * Nombre del archivo : form-directory.component.ts
+ * Descripción         : Componente de formulario para el registro y edición de directores en una empresa.
+ *                       Incluye validaciones, carga dinámica de ubicaciones, y gestión de dietas según cargo.
+ * Autor               : Daniel Alva
+ * Fecha de creación   : 23/06/2025
+ *******************************************************************************************************/
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, input, OnInit, Output, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -5,7 +12,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatIconModule } from '@angular/material/icon';
 import { FoTitleAreaComponent } from 'app/modules/admin/shared/components/fo-title-area/fo-title-area.component';
-import { CompanyAllowance } from '@models/business/companyAllowance.interface';
 import { ResponseModel } from '@models/IResponseModel';
 import { FileComponentStateService } from '@services/file-component-state.service';
 import { ButtonEnum } from 'app/core/enums/button.enum';
@@ -13,7 +19,6 @@ import { TranslateMessageForm } from 'app/core/pipes/error-message-form.pipe';
 import { UserService } from 'app/core/user/user.service';
 import { PermissionButtonDirective } from 'app/shared/directives/permission-button.directive';
 import { TypeDocument } from 'app/shared/enums/type-document.enum';
-import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { FormInputModule } from 'app/shared/modules/form-input.module';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
 import { ValidationFormService } from 'app/shared/services/validation-form.service';
@@ -29,10 +34,14 @@ import { DepartmentEntity } from '../../domain/entities/departament.entity';
 import { ProvinceEntity } from '../../domain/entities/province.entity';
 import { DistrictEntity } from '../../domain/entities/district.entity';
 import { BusinessEntity } from '../../domain/entities/business.entity';
-import { DistrictService } from '../../domain/services/district.service';
-import { ProvinceService } from '../../domain/services/province.service';
 import { FoButtonDialogComponent } from 'app/modules/admin/shared/components/fo-button-dialog/fo-button-dialog.component';
 import { CompanyAllowanceService } from '../../domain/services/company-allowance.service';
+import { UbigeoService } from '../../domain/services/ubigeo.service';
+import { PositionEntity } from 'app/modules/admin/shared/domain/entities/position.entity';
+import { TypeDirectorEntity } from 'app/modules/admin/shared/domain/entities/type-director.entity';
+import { SpecialtyEntity } from 'app/modules/admin/shared/domain/entities/specialty.entity';
+import { SectorEntity } from 'app/modules/admin/shared/domain/entities/sector.entity';
+import { CompanyAllowanceEntity } from '../../domain/entities/companyAllowance.entity';
 
 @Component({
   selector: 'app-form-directory',
@@ -43,61 +52,50 @@ import { CompanyAllowanceService } from '../../domain/services/company-allowance
   providers: [provideNgxMask()],
 })
 export class FormDirectoryComponent implements OnInit { 
-
-	// Inyección de dependencias
-	private _fb = inject(FormBuilder); // FormBuilder para crear formularios reactivos
-	private _spinner = inject(NgxSpinnerService); // Para manejar el spinner de carga
-	private _ngxToastrService = inject(NgxToastrService); // Para mostrar notificaciones
-	private _directorService = inject(DirectorService); // Servicio para manejar directores
-	private _validationFormService = inject(ValidationFormService); // Servicio para validaciones de formulario
-	private _provinceService = inject(ProvinceService); // Servicio para manejar provincias
-	private _districtService = inject(DistrictService); // Servicio para manejar distritos
-	private _userService = inject(UserService); // Servicio para obtener datos del usuario
-	private _companyAllowance = inject(CompanyAllowanceService); // Servicio para manejar asignaciones de empresa
-	private _fileComponentStateService = inject(FileComponentStateService); // Servicio para manejar el estado de los archivos
-	private _dateUtilsService = inject(DateUtilsService); // Servicio para utilidades de fecha
-
-    // Emite eventos para la cancelación o refresco del directorio
+	private _fb = inject(FormBuilder);
+	private _spinner = inject(NgxSpinnerService);
+	private _ngxToastrService = inject(NgxToastrService);
+	private _directorService = inject(DirectorService);
+	private _validationFormService = inject(ValidationFormService);
+	private _ubigeoService = inject(UbigeoService);
+	private _userService = inject(UserService);
+	private _companyAllowance = inject(CompanyAllowanceService);
+	private _fileComponentStateService = inject(FileComponentStateService);
+	private _dateUtilsService = inject(DateUtilsService)
     @Output() eventCancelDirectory: EventEmitter<void> = new EventEmitter<void>(); 
     @Output() eventRefreshDirectory: EventEmitter<void> = new EventEmitter<void>();
-
-	// Subject para manejar la destrucción del componente
 	private destroy$ = new Subject<void>();
-
-	// Propiedades reactivas del componente
-	business = input.required<BusinessEntity>(); // Empresa asociada
-    titleDirectory = signal<string>('Composición del Directorio'); // Título del directorio
-    titlePersonal = signal<string>('Datos personales'); // Título de los datos personales
-    buttonEnum = signal<typeof ButtonEnum>(ButtonEnum); // Enum para los botones
-
-	director = input.required<DirectorEntity>(); // Director que se edita o registra
-
-	// Listas para las opciones de formulario (tipo de documento, género, cargo, etc.)
+	business = input.required<BusinessEntity>();
+    titleDirectory = signal<string>('Composición del Directorio');
+    titlePersonal = signal<string>('Datos personales');
+    buttonEnum = signal<typeof ButtonEnum>(ButtonEnum);
+	director = input.required<DirectorEntity>();
 	lstTypedocument = input.required<ConstantEntity[]>();
 	lstGender = input.required<ConstantEntity[]>();
-	lstCargoManager = input.required<ConstantEntity[]>();
-	lstTypeDirector = input.required<ConstantEntity[]>();
-	lstSpecialty = input.required<ConstantEntity[]>();
+	lstCargoManager = input.required<PositionEntity[]>();
+	lstTypeDirector = input.required<TypeDirectorEntity[]>();
+	lstSpecialty = input.required<SpecialtyEntity[]>();
+	lstSector = input.required<SectorEntity[]>();
 
 	// Lista de departamentos
 	lstDepartments = input.required<DepartmentEntity[]>();
-
-	// Listas reactivas para provincias y distritos
 	lstProvinces = signal<ProvinceEntity[]>([]);
 	lstDistricts = signal<DistrictEntity[]>([]);
-
-	// Formulario reactivo para el director
 	form: FormGroup;
 	maxDate: Date; // Fecha máxima (18 años para el director)
+	minDate: Date;
+	yearDirector = signal<string>('');
 
 	typeDocument = signal<typeof TypeDocument>(TypeDocument); // Tipo de documento
 
 	// Método que se ejecuta al inicializar el componente
 	ngOnInit(): void {
-		this.maxDate = this.calculateMinDate().toJSDate(); // Calcula la fecha mínima de 18 años
+		this.minDate = this.calculateMaxDate().toJSDate(); // Fecha mínima de 120 años
+		this.maxDate = this.calculateMinDate().toJSDate(); // Fecha máxima de 18 años
 		this.initFormDirector(); // Inicializa el formulario del director
 		this.valueChangesForm(); // Configura los cambios reactivos en el formulario
 		this.loadProvincesDistricts(); // Carga provincias y distritos
+		this.initGenerateYearDirector(); //Generar años al director
 
 		// Si ya hay un director, establece el estado de los archivos asociados
 		if(this.director()) {
@@ -106,26 +104,21 @@ export class FormDirectoryComponent implements OnInit {
                 isDisabled: false,
                 root: `Empresa\\${this.business().sRazonSocial}\\${this.director().sNumeroDocumento}`
             }
-            this._fileComponentStateService.setFileComponentState(fileState); // Activa el estado del archivo
+            this._fileComponentStateService.setFileComponentState(fileState);
         } else {
-            // Si no hay director, deshabilita los archivos
             const fileState = {
                 title: 'Director',
                 isDisabled: true,
                 message: '* Debe registrar al director, para registrar archivos',
             }
-            this._fileComponentStateService.setFileComponentState(fileState); // Establece el estado del archivo
+            this._fileComponentStateService.setFileComponentState(fileState);
         }
 	}
-    
-    // Método que emite el evento para cancelar el directorio
     cancelDirectory(): void {
-      this.eventCancelDirectory.emit(); // Emite el evento de cancelación
+      this.eventCancelDirectory.emit();
     }
-
-    // Inicializa el formulario del director con sus validaciones y valores predeterminados
 	initFormDirector(): void {
-		this.form = this._fb.group({ // Inicializa el formulario con valores predeterminados
+		this.form = this._fb.group({
 			nIdRegistro: [ this.director() ? this.director().nIdRegistro : { disabled: true, value: 0  } ],
 			nIdEmpresa: [ this.business().nIdEmpresa , [Validators.required, Validators.min(1)] ],
 			nTipoDocumento: [ this.director() ? { disabled: true, value: this.director().nTipoDocumento } : 0, [Validators.required, Validators.min(1)] ],
@@ -147,6 +140,7 @@ export class FormDirectoryComponent implements OnInit {
 			nCargo: [ this.director() ? this.director().nCargo : 0, [Validators.required, Validators.min(1)] ],
 			nTipoDirector: [ this.director() ? this.director().nTipoDirector : 0, [Validators.required, Validators.min(1)] ],
 			sProfesion: [ this.director() ? this.director().sProfesion : '', [Validators.required, Validators.maxLength(150)] ],
+			nIdSector: [this.director() ? this.director().nIdSector : 0, [Validators.required, Validators.min(1)]], // Campo de proponente
 			mDieta: [ this.director() ? this.director().mDieta : null, [Validators.required, Validators.min(0), Validators.max(999999999999.99)] ],
 			nEspecialidad: [ this.director() ? this.director().nEspecialidad : 0, [Validators.required, Validators.min(1)] ],
 			dFechaNombramiento: [ this.director() ? this._dateUtilsService.formatDateToString(this.director().dFechaNombramiento) : null, [Validators.required,  Validators.maxLength(10)] ],
@@ -157,225 +151,227 @@ export class FormDirectoryComponent implements OnInit {
             nUsuarioModificacion: [ { disabled: !this.director(), value: this._userService.userLogin().usuarioId }, Validators.required ],
 		})
 	}
-
-	// Detecta los cambios en los campos y actualiza las listas de provincias y distritos
 	valueChangesForm(): void {
         this.form.get('sDepartamento')!.valueChanges
 		.pipe(
-                distinctUntilChanged(), // Solo realiza la acción si el valor cambia
+                distinctUntilChanged(),
                 tap(() => {
-                    this.form.patchValue({ sProvincia: 0, sDistrito: 0 }); // Restablece los valores de provincia y distrito
-                    this.lstProvinces.set([]); // Limpia la lista de provincias
-                    this.lstDistricts.set([]); // Limpia la lista de distritos
+                    this.form.patchValue({ sProvincia: 0, sDistrito: 0 });
+                    this.lstProvinces.set([]); 
+                    this.lstDistricts.set([]); 
                 }),
                 switchMap((deptId) =>
-                    deptId ? this._provinceService.getByPagination(deptId)
+                    deptId ? this._ubigeoService.getProvinces(deptId)
                         .pipe( 
-							map((res: ResponseModel<ProvinceEntity>) =>res.lstItem), // Mapea las provincias
+							map((res: ResponseModel<ProvinceEntity>) =>res.lstItem), 
 							catchError(() => {
-								return of([]); // Devuelve una lista vacía en caso de error
+								return of([]); 
 							})
 						)
-						: of([]) // Si no hay departamento, devuelve una lista vacía
+						: of([]) 
                 ),
-                takeUntil(this.destroy$) // Detiene la operación cuando el componente es destruido
+                takeUntil(this.destroy$) 
             )
-            .subscribe((lstItem) => this.lstProvinces.set(lstItem)); // Actualiza la lista de provincias
-
-        // Similar al cambio de departamento, maneja el cambio de provincia para obtener los distritos
+            .subscribe((lstItem) => this.lstProvinces.set(lstItem));
         this.form.get('sProvincia')!.valueChanges
 		.pipe(
                 distinctUntilChanged(),
                 tap(() => {
-                    this.form.patchValue({ sDistrito: 0 }); // Restablece el valor de distrito
-                    this.lstDistricts.set([]); // Limpia la lista de distritos
+                    this.form.patchValue({ sDistrito: 0 });
+                    this.lstDistricts.set([]);
                 }),
                 switchMap((provId) =>
-					provId ? this._districtService.getByPagination(provId)
+					provId ? this._ubigeoService.getDistricts(provId)
                         .pipe( 
-							map((res: ResponseModel<DistrictEntity>) => res.lstItem ), // Mapea los distritos
+							map((res: ResponseModel<DistrictEntity>) => res.lstItem ),
 							catchError(() => {
-								return of([]); // Devuelve una lista vacía en caso de error
+								return of([]);
 							})
 						)
-                        : of([]) // Si no hay provincia, devuelve una lista vacía
+                        : of([]) 
                 ),
-                takeUntil(this.destroy$) // Detiene la operación cuando el componente es destruido
+                takeUntil(this.destroy$) 
             )
-            .subscribe((lstItem) => this.lstDistricts.set(lstItem)); // Actualiza la lista de distritos
-
-		// Detecta el cambio de cargo para obtener la dieta correspondiente
+            .subscribe((lstItem) => this.lstDistricts.set(lstItem));
 		this.form.get('nCargo').valueChanges
 		.pipe(
 			distinctUntilChanged(),
 			switchMap((value) => {
 				return this._companyAllowance.getByRuc(this.business().sRuc, value).pipe(
-					map( (res: ResponseModel<CompanyAllowance>) => res.item?.mDieta ?? 0), // Mapea la dieta
+					map( (res: ResponseModel<CompanyAllowanceEntity>) => res.item?.mDieta ?? 0), // Mapea la dieta
 					catchError(() => {
-						return of(0); // En caso de error, devuelve 0
+						return of(0);
 					})
 				)
 			}),
-			takeUntil(this.destroy$) // Detiene la operación cuando el componente es destruido
+			takeUntil(this.destroy$) 
 		).subscribe((item) => {
-			this.form.get('mDieta').setValue(item); // Establece el valor de la dieta en el formulario
+			this.form.get('mDieta').setValue(item);
 		})
-
-		// Deshabilita el campo de número de documento si no hay un tipo de documento
 		if(!(this.director()) && !(this.form.get('nTipoDocumento').value)) this.form.get('sNumeroDocumento').disable();
-
-		// Habilita el campo de número de documento si hay un tipo de documento seleccionado
 		this.form.get('nTipoDocumento').valueChanges
 		.pipe(
 			distinctUntilChanged(),
 			takeUntil(this.destroy$)
 		).subscribe((value) => {
-			if(value) this.form.get('sNumeroDocumento').enable(); // Habilita el campo
-			this.form.get('sNumeroDocumento').setValue(''); // Limpia el valor
-			this.form.get('sNumeroDocumento').markAsUntouched(); // Marca el campo como no tocado
+			if(value) this.form.get('sNumeroDocumento').enable();
+			this.form.get('sNumeroDocumento').setValue('');
+			this.form.get('sNumeroDocumento').markAsUntouched();
 		})
+		
+		this.form.get('dFechaNacimiento').valueChanges
+		.pipe(
+			distinctUntilChanged(),
+			takeUntil(this.destroy$)
+		).subscribe((value) => {
+			this.generateYearDirector(value);
+		});
+
+		if(this.director()) this.generateYearDirector(this.director().dFechaNacimiento);
     }
+	
+	generateYearDirector(value: string): void {
+		const fechaNacimiento = this.form.get('dFechaNacimiento')?.valid;
+		if (fechaNacimiento) {  // Comprobamos si el campo es 'VALID'
+			console.log('validd');
+			let edad: number = 0;
+			if (value) {
+				const fecha = DateTime.fromISO(value);  // Convierte el valor ISO de la fecha
+				const hoy = DateTime.local();  // Obtiene la fecha actual
+				edad = hoy.year - fecha.year;
+				const year = `${edad} años`
+				this.yearDirector.set(year);
+			} else this.yearDirector.set('');
+		} else {
+			this.yearDirector.set('');
+		}
+	}
+
+	initGenerateYearDirector(): void {
+		const fechaNacimiento = DateTime.fromISO(this.director()?.dFechaNacimiento);  // Convierte el string ISO a DateTime de Luxon
+      	const hoy = DateTime.local();  // Obtiene la fecha actual
+
+      	// Calculamos la edad restando el año de nacimiento al año actual
+      	let edad = hoy.year - fechaNacimiento.year;
+		if(edad) {
+			const year = `${edad} años`
+		  this.yearDirector.set(year);
+		}
+		  
+	}
 
     // Carga provincias y distritos si ya existe un director
 	loadProvincesDistricts(): void {
 		if(this.director()){
-			forkJoin({ // Realiza múltiples peticiones de forma paralela
-				provinces: this._provinceService.getByPagination(this.director().sDepartamento), // Obtiene las provincias del departamento
-				districts: this._districtService.getByPagination(this.director().sProvincia) // Obtiene los distritos de la provincia
+			forkJoin({ 
+				provinces: this._ubigeoService.getProvinces(this.director().sDepartamento), 
+				districts: this._ubigeoService.getDistricts(this.director().sProvincia) 
 			}).subscribe({
 				next: (response) => {
-					this.lstProvinces.set(response.provinces.lstItem), // Establece las provincias
-					this.lstDistricts.set(response.districts.lstItem) // Establece los distritos
+					this.lstProvinces.set(response.provinces.lstItem), 
+					this.lstDistricts.set(response.districts.lstItem) 
 				},
-				error: (() => this.eventRefreshDirectory.emit()) // Si hay error, emite el evento de refrescar directorio
+				error: (() => this.eventRefreshDirectory.emit())
 			})
 		}
 	}
-
-    // Registra o actualiza el director según el estado del formulario
 	registerForm(): void {
-		console.log('formmm', this.form); // Muestra el formulario en la consola para depuración
-		
-		// Verifica si el formulario es válido
+		console.log('formmm', this.form);
 		if (this.form.invalid) {
-            this.form.markAllAsTouched(); // Marca todos los campos como tocados
+            this.form.markAllAsTouched();
             return;
         }
-        this._spinner.show(); // Muestra el spinner de carga
-        
-
-		// Formatea el número de teléfono para eliminar espacios
+        this._spinner.show();
 		const phone = this.form.get('sTelefono');
 		const formatPhone = phone.value.replace(/\s/g, '');
-		phone.setValue(formatPhone); // Establece el valor formateado
-
-		// Formatea la dieta eliminando espacios y convirtiéndola a número
+		phone.setValue(formatPhone);
 		const diet = this.form.get('mDieta');
         if (typeof diet.value === 'string') {
             const dietFormat = diet.value.replace(/\s/g, '');
-            diet.setValue(parseFloat(dietFormat)); // Establece la dieta formateada
+            diet.setValue(parseFloat(dietFormat));
         }
-
-		// Si ya existe un director, actualiza los datos, sino, registra un nuevo director
 		if (this.director()) this.updateDirector();
         else this.registerDirector();
 	}
-
-	// Registra un nuevo director
 	registerDirector(): void {
-		// Convierte los nombres y apellidos a mayúsculas antes de registrarlos
 		const fields = ['sNombres', 'sApellidos'];
         fields.forEach(field => {
             const control = this.form.get(field);
             if (control && typeof control.value === 'string') {
-                control.setValue(control.value.toUpperCase(), { emitEvent: false }); // Establece el valor en mayúsculas
+                control.setValue(control.value.toUpperCase(), { emitEvent: false });
             }
         });
         this._directorService
-            .create(this.form.value) // Crea el director en el servicio
-            .pipe(finalize(() => this._spinner.hide())) // Finaliza la carga con el spinner
+            .create(this.form.value)
+            .pipe(finalize(() => this._spinner.hide()))
             .subscribe({
                 next: (response: ResponseModel<number>) => {
                     if (response.isSuccess) {
-						// Muestra mensaje de éxito
 						this._ngxToastrService.showSuccess('Director registrado exitosamente', '¡Éxito!');
-                        this.eventRefreshDirectory.emit(); // Emite el evento de refresco del directorio
+                        this.eventRefreshDirectory.emit();
                     }
                 },
             });
     }
-
-    // Actualiza los datos del director
     updateDirector(): void {
         this._directorService
-            .update(this.form.value) // Actualiza los datos del director
-			.pipe(finalize(() => this._spinner.hide())) // Finaliza la carga con el spinner
+            .update(this.form.value)
+			.pipe(finalize(() => this._spinner.hide()))
             .subscribe({
                 next: (response: ResponseModel<boolean>) => {
                     if (response.isSuccess) {
-						// Muestra mensaje de éxito
 						this._ngxToastrService.showSuccess('Director actualizado exitosamente', '¡Éxito!');
-						this.eventRefreshDirectory.emit(); // Emite el evento de refresco del directorio
+						this.eventRefreshDirectory.emit();
                     }
                 },
             });
     }
 
-	// Calcula la fecha mínima (18 años atrás)
 	private calculateMinDate(): DateTime {
-		return DateTime.local().minus({ years: 18 }); // Calcula la fecha mínima para el director (18 años)
+		return DateTime.local().minus({ years: 18 }); // Fecha mínima para persona de 18 años
 	}
-
-	// Filtra los caracteres permitidos para el nombre
+	
+	private calculateMaxDate(): DateTime {
+		return DateTime.local().minus({ years: 120 }); // Fecha máxima para persona de 120 años
+	}
 	onKeyPress(event: KeyboardEvent) {
-        const allowedRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]$/; // Solo permite letras y espacios
+        const allowedRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]$/; 
         if (!allowedRegex.test(event.key)) {
-          event.preventDefault(); // Impide la tecla si no es válida
+          event.preventDefault();
         }
     }
-    
-	// Filtra los caracteres permitidos en los campos de entrada
     onInput(event: Event, nameForm: string) {
         const input = event.target as HTMLInputElement;
-        const validPattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/; // Solo permite letras y espacios
-    
+        const validPattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/;
         if (!validPattern.test(input.value)) {
-          const cleaned = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, ''); // Limpia los caracteres no válidos
-          input.value = cleaned;
-          this.form.get(nameForm).setValue(cleaned, { emitEvent: false }); // Establece el valor limpio
+			const cleaned = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+			input.value = cleaned;
+			this.form.get(nameForm).setValue(cleaned, { emitEvent: false });
         }
     }
-
-	// Limpia las suscripciones al destruir el componente
 	ngOnDestroy() {
-        this.destroy$.next(); // Emite el valor para completar el flujo
-        this.destroy$.complete(); // Completa el Subject
+        this.destroy$.next();
+        this.destroy$.complete();
     }
-
-	// Filtra las teclas permitidas para las fechas
 	onKeyPressDate(event: KeyboardEvent) {
-		const allowedRegex = /[0-9\/]/; // Permite solo números y barra (/)
+		const allowedRegex = /[0-9\/]/;
 		if (!allowedRegex.test(event.key)) {
-		  event.preventDefault(); // Impide la tecla si no es válida
+		  event.preventDefault(); 
 		}
 	}
-
-	// Filtra los caracteres permitidos en el campo de fecha
 	onInputDate(event: Event, nameForm: string) {
 		const input = event.target as HTMLInputElement;
-		const validPattern = /^[0-9\/]*$/; // Permite solo números y barra (/)
+		const validPattern = /^[0-9\/]*$/;
 		if (!validPattern.test(input.value)) {
-		  const cleaned = input.value.replace(/[^0-9\/]/g, ''); // Limpia los caracteres no válidos
+		  const cleaned = input.value.replace(/[^0-9\/]/g, '');
 		  input.value = cleaned;
-		  this.form.get(nameForm)?.setValue(cleaned, { emitEvent: false }); // Establece el valor limpio
+		  this.form.get(nameForm)?.setValue(cleaned, { emitEvent: false });
 		}
 	}
-
-	// Formatea una fecha a formato 'yyyy-MM-dd'
 	formatDate(date: string): string {
-		if(!date) return null; // Si la fecha es nula, devuelve null
-		const dt = DateTime.fromISO(date); // Convierte la fecha en formato ISO
-		const dateFormat = dt.toFormat('yyyy-MM-dd'); // Formatea la fecha
-		return dateFormat; // Devuelve la fecha formateada
+		if(!date) return null;
+		const dt = DateTime.fromISO(date);
+		const dateFormat = dt.toFormat('yyyy-MM-dd');
+		return dateFormat;
 	}
 }

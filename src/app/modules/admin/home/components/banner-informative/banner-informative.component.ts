@@ -1,3 +1,14 @@
+/*******************************************************************************************************
+ * Nombre del componente: BannerInformativeComponent
+ * Descripción:           Componente encargado de mostrar información relevante al usuario autenticado
+ *                        en la parte superior del sistema o módulo actual. Se suscribe a los datos del 
+ *                        usuario mediante el UserService y permite el acceso a dicha información.
+ * Autor:                 Daniel Alva
+ * Fecha de creación:     23/06/2025
+ * Última modificación:   23/06/2025 por Daniel Alva
+ * Cambios recientes:     - Implementación del ciclo de vida completo (OnInit y OnDestroy).
+ *                        - Suscripción segura a user$ con takeUntil para evitar memory leaks.
+ *******************************************************************************************************/
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { User } from '@models/user.interface';
@@ -12,33 +23,18 @@ import { Subject, takeUntil } from 'rxjs';
     styleUrl: './banner-informative.component.scss',
 })
 export class BannerInformativeComponent implements OnInit, OnDestroy {
-
-	// Inyección del servicio UserService que se usará para obtener la información del usuario.
-	private _userService = inject(UserService);
-
-	// Se crea un Subject para controlar las suscripciones y asegurarse de que se limpien correctamente.
-	private _unsubscribeAll: Subject<void> = new Subject<void>();
-
-	// Variable que almacenará los datos del usuario.
+	private _userService = inject(UserService); // Servicio inyectado para obtener información del usuario autenticado
+	private _unsubscribeAll: Subject<void> = new Subject<void>(); // Subject que controla la destrucción de suscripciones activas para evitar memory leaks
 	user: User;
-
-	// Método que se ejecuta cuando el componente es inicializado.
-	// Se suscribe al observable 'user$' de UserService, que emite los datos del usuario.
 	ngOnInit(): void {
-        // Suscripción al observable user$ para recibir los datos del usuario y actualizar la variable 'user'.
         this._userService.user$
-            .pipe(takeUntil(this._unsubscribeAll)) // 'takeUntil' asegura que la suscripción se cancelará cuando _unsubscribeAll emita un valor.
-            .subscribe((user: User) => { // Asigna los datos del usuario a la variable 'user' cada vez que se emite un valor.
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((user: User) => { 
                 this.user = user;
             });
     }
-
-	// Método que se ejecuta cuando el componente es destruido.
-	// Se utiliza para limpiar las suscripciones y evitar memory leaks.
 	ngOnDestroy(): void {
-        // Emite un valor en _unsubscribeAll para cancelar todas las suscripciones activas.
         this._unsubscribeAll.next(null);
-        // Completa el Subject para liberar recursos.
         this._unsubscribeAll.complete();
     }
 }

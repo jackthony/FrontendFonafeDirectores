@@ -1,13 +1,21 @@
+/*******************************************************************************************************
+ * Nombre del archivo:  type-director.constants.ts
+ * Descripción:          Definición de columnas para tabla y configuración de diálogos para acciones
+ *                       (eliminar, activar, desactivar) del módulo de Tipos de Director.
+ * Autor:                Daniel Alva
+ * Última modificación:  23/06/2025
+ *******************************************************************************************************/
 import { DialogConfirmation } from "app/modules/admin/shared/components/fo-dialog-confirmation/models/dialog-confirmation.interface";
 import { TableColumnsDefInterface } from "../../interfaces/ITableColumnsDefInterface";
-
-// Define la configuración de las columnas de la tabla para la gestión de ministerios
+/**
+ * Columnas definidas para la tabla de tipos de director en el mantenimiento.
+ */
 export const MAINTENANCE_TYPE_DIRECTOR_HEADER_TABLE: TableColumnsDefInterface[] = [
     {
-        id: 0, // Identificador único para la columna
-        name: "indice", // Nombre interno de la columna
-        displayedName: "Nro", // Nombre que se mostrará en el encabezado de la columna
-        type: "string" // Tipo de datos de la columna (en este caso, cadena de texto)
+        id: 0,
+        name: "indice",
+        displayedName: "Nro",
+        type: "string"
     },
     {
         id: 1,
@@ -28,16 +36,19 @@ export const MAINTENANCE_TYPE_DIRECTOR_HEADER_TABLE: TableColumnsDefInterface[] 
         type: "acciones"
     }
 ];
-
-// Configuración para el diálogo de confirmación al eliminar un ministerio
+/**
+ * Configuración del diálogo de confirmación para eliminar tipo de director.
+ */
 export const CONFIG_DELETE_DIALOG_TYPE_DIRECTOR: DialogConfirmation = {
-    title: "¿Estás seguro de eliminar el tipo de director?", // Título del diálogo de confirmación
-    message: "Esta acción es irreversible y los datos no podrán ser recuperados." // Mensaje que se muestra al usuario, alertando de la irreversibilidad de la acción
+    title: "¿Estás seguro de eliminar el tipo de director?",
+    message: "Esta acción es irreversible y los datos no podrán ser recuperados."
 };
-
+/**
+ * Configuración del diálogo de confirmación para desactivar tipo de director.
+ */
 export const CONFIG_INACTIVE_DIALOG_TYPE_DIRECTOR: DialogConfirmation = {
-    title: "¿Estás seguro de desactivar tipo de director?", // Título del diálogo de confirmación
-    message: "Recuerda que una vez desactivado tipo de director?, no podrá ser visualizada como activa, pero podrás consultar su información.",
+    title: "¿Estás seguro de desactivar tipo de director?",
+    message: "Recuerda que una vez desactivado tipo de director, no podrá ser visualizada como activa, pero podrás consultar su información.",
     actions: {
         confirm: {
             label: 'Desactivar'
@@ -45,9 +56,11 @@ export const CONFIG_INACTIVE_DIALOG_TYPE_DIRECTOR: DialogConfirmation = {
         iconClose: false
     }
 };
-
+/**
+ * Configuración del diálogo de confirmación para activar tipo de director.
+ */
 export const CONFIG_ACTIVE_DIALOG_TYPE_DIRECTOR: DialogConfirmation = {
-    title: "¿Estás seguro de activar tipo de director?", // Título del diálogo de confirmación
+    title: "¿Estás seguro de activar tipo de director?",
     message: "Recuerda que una vez activado tipo de director, será visualizada como activa.",
     actions: {
         confirm: {

@@ -27,96 +27,106 @@ import { finalize } from 'rxjs';
   styleUrl: './dialog-ministry-form.component.scss'
 })
 export class DialogMinistryFormComponent {
-    // Inyección de dependencias para formularios, diálogos y servicios
     private _fb = inject(FormBuilder); // Inyecta el servicio FormBuilder para crear formularios reactivos
 	private readonly dialogRef = inject(MatDialogRef<DialogMinistryFormComponent>); // Inyecta MatDialogRef para cerrar el diálogo
-
     private _userService = inject(UserService); // Inyecta el servicio UserService para obtener información del usuario
 	private _ministryService = inject(MinistryService); // Inyecta el servicio MinistryService para interactuar con los datos del ministerio
-
-	// Datos que se pasan al diálogo, incluyendo la información del ministerio
 	public data: { object: MinistryEntity } = inject(MAT_DIALOG_DATA);
-
-    // Señal reactiva que maneja los tipos de botones a mostrar
     buttonEnum = signal<typeof ButtonEnum>(ButtonEnum);
-
-	// El formulario reactivo que contiene los controles y validaciones
 	form: FormGroup;
-
-	// Señales reactivas que controlan si estamos editando el ministerio y el estado de carga
 	isEdit = signal<boolean>(false);
 	loadingService = signal<boolean>(false);
-
-	// Método que se ejecuta cuando el componente es inicializado
+    /**
+     * Hook de inicialización del componente.
+     * - Establece el modo (edición o creación) según si existe un objeto Ministry recibido por el diálogo.
+     * - Inicializa el formulario con los valores del objeto o valores por defecto.
+     */
 	ngOnInit(): void {
-		// Verifica si estamos editando un ministerio basado en los datos proporcionados
 		this.isEdit.set(this.data?.object ? true : false);
-		// Inicializa el formulario con los datos del ministerio
 		this.initForm(this.data?.object);
 	}
-
-	// Método para inicializar el formulario con los datos proporcionados (o vacíos si no existe el objeto)
+    /**
+     * Inicializa los controles del formulario.
+     * - Si `object` existe, se trata de una edición y se cargan los valores.
+     * - Si no, se inicializa en modo creación con valores por defecto.
+     *
+     * @param object Objeto con los datos del ministerio a editar.
+     */
 	initForm(object: MinistryEntity): void {
         this.form = this._fb.group({
-            nIdMinisterio: [{ disabled: !object, value: object?.nIdMinisterio }, Validators.required], // Campo ID del ministerio, requerido
-            sNombreMinisterio: [ object?  object.sNombreMinisterio : '', [Validators.required, Validators.maxLength(255)] ], // Campo nombre del ministerio, requerido
-            bActivo: [ object? object.bActivo : true, Validators.required ], // Campo para saber si el ministerio está activo, requerido
-            nUsuarioRegistro: [ { disabled: object, value: this._userService.userLogin().usuarioId }, Validators.required ], // Usuario que registra el ministerio
-            nUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin().usuarioId },Validators.required ], // Usuario que modifica el ministerio
+            nIdMinisterio: [{ disabled: !object, value: object?.nIdMinisterio }, Validators.required],
+            sNombreMinisterio: [ object?  object.sNombreMinisterio : '', [Validators.required, Validators.maxLength(255)] ],
+            bActivo: [ object? object.bActivo : true, Validators.required ],
+            nUsuarioRegistro: [ { disabled: object, value: this._userService.userLogin().usuarioId }, Validators.required ],
+            nUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin().usuarioId },Validators.required ],
         });
     }
-
-	// Método para validar el formulario antes de enviarlo
+    /**
+     * Verifica si el formulario está en modo edición.
+     * @returns true si se está editando un registro, false si es un nuevo registro.
+     */
 	validRegisterForm() {
         if(this.loadingService()) return;
         if (this.form.invalid) {
-            this.form.markAllAsTouched(); // Marca todos los campos como tocados para mostrar los errores
+            this.form.markAllAsTouched();
             return;
         }
-        this.loadingService.set(true); // Activa el estado de carga
-        if (this.isEdit()) this.updateForm(); // Si estamos editando, actualiza el ministerio
-        else this.registerForm(); // Si estamos creando, registra el ministerio
+        this.loadingService.set(true);
+        if (this.isEdit()) this.updateForm();
+        else this.registerForm();
     }
-
-	// Método para registrar un nuevo ministerio
+    /**
+     * Registra un nuevo ministerio o actualiza uno existente.
+     * - Si el formulario es inválido, marca todos los campos como tocados.
+     * - Si es una edición, llama a `updateForm()`.
+     * - Si es un registro nuevo, llama a `registerForm()`.
+     */
     registerForm(): void {
         this._ministryService
-            .create(this.form.value) // Llama al servicio MinistryService para registrar el ministerio
-            .pipe(finalize(() => this.loadingService.set(false))) // Finaliza la operación y desactiva el estado de carga
+            .create(this.form.value)
+            .pipe(finalize(() => this.loadingService.set(false)))
             .subscribe({
                 next: (response: ResponseModel<number>) => {
-                    if (response.isSuccess) this.dialogRef.close(true); // Cierra el diálogo si la operación es exitosa
+                    if (response.isSuccess) this.dialogRef.close(true);
                 },
             });
     }
-
-	// Método para actualizar un ministerio existente
+    /**
+     * Actualiza un ministerio existente.
+     * - Envía los datos del formulario al servicio y cierra el diálogo si la operación es exitosa.
+     */
     updateForm(): void {
         this._ministryService
-            .update(this.form.value) // Llama al servicio MinistryService para actualizar el ministerio
-            .pipe(finalize(() => this.loadingService.set(false))) // Finaliza la operación y desactiva el estado de carga
+            .update(this.form.value)
+            .pipe(finalize(() => this.loadingService.set(false)))
             .subscribe({
                 next: (response: ResponseModel<boolean>) => {
-                    if (response.isSuccess) this.dialogRef.close(true); // Cierra el diálogo si la operación es exitosa
+                    if (response.isSuccess) this.dialogRef.close(true);
                 },
             });
     }
-
-	// Método que restringe la entrada de caracteres no permitidos en el formulario (solo letras y espacios)
+    /**
+     * Maneja el evento de tecla presionada en el campo de entrada.
+     * - Permite solo letras, espacios y guiones.
+     * @param event Evento de teclado.
+     */
 	onKeyPress(event: KeyboardEvent) {
-        const allowedRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s-]$/; // Ahora permite guiones
+        const allowedRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s-]$/;
         if (!allowedRegex.test(event.key)) {
-          event.preventDefault(); // Previene la entrada si el carácter no es permitido
+          event.preventDefault();
         }
       }
-      
-      // Método que limpia los caracteres no permitidos en el campo de texto del formulario
+    /**
+     * Limpia en tiempo real los caracteres no válidos ingresados mediante autocompletado o pegado.
+     * 
+     * @param event Evento de input.
+     * @param nameForm Nombre del control del formulario a actualizar.
+     */
     onInput(event: Event, nameForm: string) {
         const input = event.target as HTMLInputElement;
-        const validPattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s-]*$/; // Ahora permite guiones
-      
+        const validPattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s-]*$/;
         if (!validPattern.test(input.value)) {
-          const cleaned = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s-]/g, ''); // Elimina los caracteres no permitidos
+          const cleaned = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s-]/g, '');
           input.value = cleaned;
           this.form.get(nameForm).setValue(cleaned, { emitEvent: false });
         }

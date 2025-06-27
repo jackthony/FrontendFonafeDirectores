@@ -1,3 +1,12 @@
+/*************************************************************************************
+ * Nombre del archivo:  forgot-password.component.ts
+ * Descripción:         Componente para recuperación de contraseña; envía enlace de
+ *                      restablecimiento al email proporcionado.
+ * Autor:               Daniel Alva
+ * Fecha de creación:   01/06/2025
+ * Última modificación: 23/06/2025 por Daniel Alva
+ * Cambios recientes:   Mejora en el manejo de errores y mensaje internacionalizable.
+ *************************************************************************************/
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import {
     FormsModule,
@@ -16,7 +25,6 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
 import { finalize } from 'rxjs';
-
 @Component({
     selector: 'auth-forgot-password',
     templateUrl: './forgot-password.component.html',
@@ -36,14 +44,12 @@ import { finalize } from 'rxjs';
 })
 export class AuthForgotPasswordComponent implements OnInit {
     @ViewChild('forgotPasswordNgForm') forgotPasswordNgForm: NgForm;
-
     alert: { type: FuseAlertType; message: string } = {
         type: 'success',
         message: '',
     };
     forgotPasswordForm: UntypedFormGroup;
     showAlert: boolean = false;
-
     /**
      * Constructor
      */
@@ -51,13 +57,8 @@ export class AuthForgotPasswordComponent implements OnInit {
         private _authService: AuthService,
         private _formBuilder: UntypedFormBuilder
     ) {}
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
-
     /**
-     * On init
+     * Inicializa el formulario con validación de email.
      */
     ngOnInit(): void {
         // Create the form
@@ -65,44 +66,26 @@ export class AuthForgotPasswordComponent implements OnInit {
             email: ['', [Validators.required, Validators.email]],
         });
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
     /**
-     * Send the reset link
+     * Envío del enlace de recuperación si el email es válido.
      */
     sendResetLink(): void {
-        // Return if the form is invalid
         if (this.forgotPasswordForm.invalid) {
             return;
         }
-
-        // Disable the form
         this.forgotPasswordForm.disable();
-
-        // Hide the alert
         this.showAlert = false;
-
-        // Forgot password
         this._authService
             .forgotPassword(this.forgotPasswordForm.get('email').value)
             .pipe(
                 finalize(() => {
-                    // Re-enable the form
                     this.forgotPasswordForm.enable();
-
-                    // Reset the form
                     this.forgotPasswordNgForm.resetForm();
-
-                    // Show the alert
                     this.showAlert = true;
                 })
             )
             .subscribe(
                 (response) => {
-                    // Set the alert
                     this.alert = {
                         type: 'success',
                         message:
@@ -110,7 +93,6 @@ export class AuthForgotPasswordComponent implements OnInit {
                     };
                 },
                 (response) => {
-                    // Set the alert
                     this.alert = {
                         type: 'error',
                         message:

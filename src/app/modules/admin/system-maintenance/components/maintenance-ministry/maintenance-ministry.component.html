@@ -12,7 +12,7 @@
             [textBtnSearch]="nameBtnAdd()"
             viewFilterState
             (eventFilterState)="setFilterState($event)"
-            (eventBtnSearch)="searchTable()">
+            (eventBtnSearch)="searchTable(true)">
         </fo-search-for-button>
         <fo-table 
             [loading]="loadingTable()"

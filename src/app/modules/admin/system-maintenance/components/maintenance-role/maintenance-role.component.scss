@@ -1,7 +1,6 @@
 .header-dialog {
     border-bottom: 1px solid #EAEAEA;
 }
-
 .header-container {
     padding: 20px;
     align-items: center;
@@ -9,7 +8,6 @@
         color: #CD202C;
     }
 }
-
 .header-text {
     font-family: "Museo Sans";
     font-weight: 600;
@@ -18,14 +16,13 @@
     letter-spacing: 0.6px;
     color: #565A5C;
 }
-
 .body-dialog {
     padding: 40px;
 }
-
 .btn-options {
     margin-top: 20px;
     gap: 10px;
     display: flex;
-    justify-content: end;
+    justify-content: center;
+    flex-wrap: wrap;
 }

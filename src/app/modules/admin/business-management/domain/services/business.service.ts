@@ -15,8 +15,8 @@ export class BusinessService {
         this._businessInterface = this._businessFactory.injectRepository(); //Inyección del Factory
     }
 
-    getByPagination(nameEnterprise: string, pageIndex: number, pageSize: number): Observable<ResponseEntity<BusinessEntity>> {
-        return this._businessInterface.getByPagination(nameEnterprise, pageIndex, pageSize);
+    getByPagination(nameEnterprise: string, pageIndex: number, pageSize: number, filterState: boolean | null): Observable<ResponseEntity<BusinessEntity>> {
+        return this._businessInterface.getByPagination(nameEnterprise, pageIndex, pageSize, filterState);
     }
 
     getById(nIdEmpresa: number): Observable<ResponseEntity<BusinessEntity>> {
@@ -31,15 +31,7 @@ export class BusinessService {
         return this._businessInterface.update(object);
     }
 
-    delete(nIdEmpresa: number): Observable<ResponseEntity<boolean>> {
-        return this._businessInterface.delete(nIdEmpresa);
-    }
-
-    exportExcelEnterprise(): Observable<ArrayBuffer> {
-        return this._businessInterface.exportExcelEnterprise();
-    }
-    
-    exportPdfEnterprise(): Observable<ArrayBuffer> {
-        return this._businessInterface.exportPdfEnterprise();
+    delete(object: BusinessEntity): Observable<ResponseEntity<boolean>> {
+        return this._businessInterface.delete(object);
     }
 }

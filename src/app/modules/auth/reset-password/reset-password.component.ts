@@ -1,3 +1,13 @@
+/*************************************************************************************
+ * Nombre del archivo:  reset-password.component.ts
+ * Descripción:         Componente para restablecimiento de contraseña. Gestiona el
+ *                      formulario, validaciones, comunicación con el servicio de
+ *                      autenticación y notificaciones al usuario.
+ * Autor:               Daniel Alva
+ * Fecha de creación:   01/06/2025
+ * Última modificación: 23/06/2025 por Daniel Alva
+ * Cambios recientes:   Establece validación robusta y flujos de redirección tras éxito.
+ *************************************************************************************/
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import {
@@ -24,7 +34,6 @@ import { UserService } from 'app/core/user/user.service';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
 import { ValidationFormService } from 'app/shared/services/validation-form.service';
 import { finalize, Subject, takeUntil } from 'rxjs';
-
 @Component({
     selector: 'auth-reset-password',
     templateUrl: './reset-password.component.html',
@@ -47,20 +56,14 @@ import { finalize, Subject, takeUntil } from 'rxjs';
 })
 export class AuthResetPasswordComponent implements OnInit {
     @ViewChild('resetPasswordNgForm') resetPasswordNgForm: NgForm;
-
+    resetPasswordForm: UntypedFormGroup;
+    showAlert: boolean = false;
+    user: User;
     private _unsubscribeAll: Subject<void> = new Subject<void>();
-
     alert: { type: FuseAlertType; message: string } = {
         type: 'success',
         message: '',
     };
-    resetPasswordForm: UntypedFormGroup;
-    showAlert: boolean = false;
-    user: User;
-
-    /**
-     * Constructor
-     */
     constructor(
         private _userService: UserService,
         private _authService: AuthService,
@@ -69,20 +72,15 @@ export class AuthResetPasswordComponent implements OnInit {
         private _router: Router,
         private _validationFormService: ValidationFormService
     ) {}
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
-
     /**
-     * On init
+     * Hook de inicialización.
+     * Suscribe al usuario actual e inicializa formulario con validadores personalizados.
      */
     ngOnInit(): void {
         this._userService.user$
             .subscribe((user: User) => {
                 this.user = user;
             });
-        // Create the form
         this.resetPasswordForm = this._formBuilder.group(
             {
                 password: ['', [Validators.required, Validators.maxLength(32), this._validationFormService.passwordDetailedValidator]],
@@ -96,27 +94,15 @@ export class AuthResetPasswordComponent implements OnInit {
             }
         );
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
     /**
-     * Reset password
+     * Envía el formulario de restablecimiento de contraseña al backend.
      */
     resetPassword(): void {
-        // Return if the form is invalid
         if (this.resetPasswordForm.invalid) {
             return;
         }
-
-        // Disable the form
         this.resetPasswordForm.disable();
-
-        // Hide the alert
         this.showAlert = false;
-
-        // Send the request to the server
         const body = {
             nIdUsuario: this.user.usuarioId,
             nuevaClave: this.resetPasswordForm.get('password').value,
@@ -127,14 +113,8 @@ export class AuthResetPasswordComponent implements OnInit {
             .resetPassword(body)
             .pipe(
                 finalize(() => {
-                    // Re-enable the form
                     this.resetPasswordForm.enable();
-
-                    // Reset the form
                     this.resetPasswordNgForm.resetForm();
-
-                    // Show the alert
-                    //this.showAlert = true;
                 })
             )
             .subscribe(
@@ -143,15 +123,8 @@ export class AuthResetPasswordComponent implements OnInit {
                     this._authService.signOut();
                     this._ngxToastrService.showSuccess('Su contraseña ha sido restablecida.', '¡Éxito!');
                     this._router.navigate(['sign-in']);
-
-                    // Set the alert
-                    /* this.alert = {
-                        type: 'success',
-                        message: 'Su contraseña ha sido restablecida.',
-                    }; */
                 },
                 (response) => {
-                    // Set the alert
                     this.alert = {
                         type: 'error',
                         message: 'Algo salió mal, por favor inténtalo de nuevo.',
@@ -160,7 +133,9 @@ export class AuthResetPasswordComponent implements OnInit {
                 }
             );
     }
-
+    /**
+     * Hook de destrucción: limpia suscripciones.
+     */
     ngOnDestroy(): void {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();

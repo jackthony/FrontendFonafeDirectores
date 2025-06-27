@@ -1,3 +1,16 @@
+/*******************************************************************************************************
+ * Nombre del componente: CandidateMaintenanceComponent
+ * Descripción:           Componente encargado de gestionar el mantenimiento de candidatos, incluyendo
+ *                        búsqueda, filtrado por documento y visualización de resultados en tabla.
+ *                        Se encarga de inicializar el formulario reactivo, manejar eventos de búsqueda,
+ *                        navegación y validar el input del usuario.
+ * Autor:                 Daniel Alva
+ * Fecha de creación:     23/06/2025
+ * Última modificación:   23/06/2025 por Daniel Alva
+ * Cambios recientes:     - Implementación del formulario de búsqueda reactivo.
+ *                        - Integración con servicios de validación y navegación.
+ *                        - Configuración dinámica de tabla y eventos de paginación.
+ *******************************************************************************************************/
 import { booleanAttribute, Component, EventEmitter, inject, input, Output, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -10,7 +23,6 @@ import { IconOption } from 'app/shared/interfaces/IGenericIcon';
 import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDefInterface';
 import { ValidationFormService } from 'app/shared/services/validation-form.service';
 import { distinctUntilChanged } from 'rxjs';
-
 @Component({
   selector: 'app-candidate-maintenance',
   standalone: true,
@@ -19,130 +31,100 @@ import { distinctUntilChanged } from 'rxjs';
   styleUrl: './candidate-maintenance.component.scss'
 })
 export class CandidateMaintenanceComponent {
-
-  // Inyección de dependencias
   private readonly _router = inject(Router); // Servicio para la navegación
   private _fb = inject(FormBuilder); // Servicio para crear formularios reactivos
   private _validationFormService = inject(ValidationFormService); // Servicio de validación de formularios
-
-  // Definición de variables reactivas
-  textBtnSearch = input<string>('Buscar'); // Texto para el botón de búsqueda
-  iconBtnSearch = input<string>('mat_outline:search'); // Icono para el botón de búsqueda
-  disableDirective = input(false, { transform: booleanAttribute }); // Controla si se desactiva la directiva
-  loadingTable = signal<boolean>(false); // Indica si la tabla está cargando
-  pageIndexTable = signal<number>(1); // Página actual de la tabla
-  totalPagesTable = signal<number>(1); // Número total de páginas
-  headerTable = signal<TableColumnsDefInterface[]>([]); // Definición de las columnas de la tabla
-  dataTableActivities = signal<SegUserEntity[]>([]); // Datos de la tabla relacionados con los usuarios
-  iconsTable = signal<IconOption<SegUserEntity>[]>([]); // Iconos personalizados para la tabla de usuarios
-  lstTypedocument = input<ConstantEntity[]>([]); // Lista de tipos de documentos
-  
-  ministries = signal<MinistryEntity[]>([]); // Lista de ministerios disponibles
-  form: FormGroup; // Formulario reactivo
-
-  // Eventos de salida
-  @Output() eventNewElement: EventEmitter<void> = new EventEmitter<void>(); // Evento para agregar un nuevo elemento
-  @Output() eventSearch: EventEmitter<string> = new EventEmitter<string>(); // Evento para realizar la búsqueda
-
+  textBtnSearch = input<string>('Buscar');
+  iconBtnSearch = input<string>('mat_outline:search');
+  disableDirective = input(false, { transform: booleanAttribute });
+  loadingTable = signal<boolean>(false);
+  pageIndexTable = signal<number>(1);
+  totalPagesTable = signal<number>(1);
+  headerTable = signal<TableColumnsDefInterface[]>([]);
+  dataTableActivities = signal<SegUserEntity[]>([]);
+  iconsTable = signal<IconOption<SegUserEntity>[]>([]);
+  lstTypedocument = input<ConstantEntity[]>([]);
+  ministries = signal<MinistryEntity[]>([]); 
+  form: FormGroup;
+  @Output() eventNewElement: EventEmitter<void> = new EventEmitter<void>(); 
+  @Output() eventSearch: EventEmitter<string> = new EventEmitter<string>(); 
   /**
    * Método de inicialización del componente
    */
   ngOnInit(): void {
-    this.initForm(); // Inicializa el formulario
-    this.headerTable.set(COLUMNS_PROFILE_MANAGEMENT); // Establece las columnas de la tabla
-    this.valueChangesForm(); // Activa las reacciones del formulario
+    this.initForm();
+    this.headerTable.set(COLUMNS_PROFILE_MANAGEMENT);
+    this.valueChangesForm();
   }
-
   /**
    * Método para gestionar las reacciones en el formulario
    */
   valueChangesForm(): void {
-    const tipoDocControl = this.form.get('nTipoDocumento'); // Control para el tipo de documento
-    const numDocControl = this.form.get('sNumeroDocumento'); // Control para el número de documento
-
-    // Estado inicial: deshabilita el campo de número de documento si no hay tipo de documento
+    const tipoDocControl = this.form.get('nTipoDocumento');
+    const numDocControl = this.form.get('sNumeroDocumento');
     if (!tipoDocControl?.value) {
       numDocControl?.disable();
     }
-
-    // Reactividad: habilita o deshabilita el campo de número de documento según el tipo de documento seleccionado
     tipoDocControl?.valueChanges
-      .pipe(distinctUntilChanged()) // Asegura que solo se emitan valores distintos
+      .pipe(distinctUntilChanged())
       .subscribe((value) => {
         if (value) {
-          numDocControl?.enable(); // Habilita el campo de número de documento
+          numDocControl?.enable();
         } else {
-          numDocControl?.reset(); // Resetea el campo de número de documento
-          numDocControl?.disable(); // Deshabilita el campo de número de documento
+          numDocControl?.reset();
+          numDocControl?.disable();
         }
-        numDocControl?.markAsUntouched(); // Marca el campo como no tocado
+        numDocControl?.markAsUntouched();
       });
   }
-
   /**
    * Método para realizar la búsqueda de usuarios
    */
   searchuser(): void {
-
-  this._router.navigate(['/mantenimiento-candidatos/registro']); // Redirige a la página de registro de candidatos
-
-
-    
-/*     if (this.form?.valid) {
-      this.eventSearch.emit(this.form.value.sNumeroDocumento); // Emite el evento con el número de documento
-    } else {
-      this.form.markAllAsTouched(); // Marca todos los campos como tocados si el formulario es inválido
-    } */
+  this._router.navigate(['/mantenimiento-candidatos/registro']);
   }
-
   /**
    * Método para inicializar el formulario
    */
   initForm(data?: Partial<{ nTipoDocumento: number; sNumeroDocumento: string; sApellidosNombres: string }>): void {
     this.form = this._fb.group({
-      nTipoDocumento: [data?.nTipoDocumento ?? null, Validators.required], // Campo para el tipo de documento
-      sNumeroDocumento: [data?.sNumeroDocumento ?? '', [Validators.required, Validators.maxLength(9)]], // Campo para el número de documento
-      sApellidosNombres: [data?.sApellidosNombres ?? '', Validators.required], // Campo para los apellidos y nombres
+      nTipoDocumento: [data?.nTipoDocumento ?? null, Validators.required],
+      sNumeroDocumento: [data?.sNumeroDocumento ?? '', [Validators.required, Validators.maxLength(9)]],
+      sApellidosNombres: [data?.sApellidosNombres ?? '', Validators.required],
     });
   }
-
   /**
    * Método para redirigir a la página de inicio
    */
   returnInit(): void {
-    this._router.navigate(['home']); // Redirige a la página de inicio
+    this._router.navigate(['home']);
   }
-
   /**
    * Método para filtrar las teclas permitidas (solo letras y espacios)
    */
   onKeyPress(event: KeyboardEvent) {
-    const allowedRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]$/; // Expresión regular que permite solo letras y espacios
+    const allowedRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]$/;
     if (!allowedRegex.test(event.key)) {
-      event.preventDefault(); // Previene el ingreso de caracteres no permitidos
+      event.preventDefault();
     }
   }
-
   /**
    * Método para cambiar la página de la tabla
    */
   changePageTable(event: number): void {
-    this.pageIndexTable.set(event); // Establece la página actual
-    this.searchuser(); // Realiza la búsqueda con la nueva página
+    this.pageIndexTable.set(event);
+    this.searchuser();
   }
-
   /**
    * Método para limpiar y filtrar los valores de entrada
    */
   onInput(event: Event, nameForm: string) {
-    const input = event.target as HTMLInputElement; // Obtiene el valor del campo de entrada
-    const validPattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/; // Expresión regular que permite solo letras y espacios
-
-    // Si el valor no coincide con el patrón permitido, lo limpia
+    const input = event.target as HTMLInputElement;
+    const validPattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/;
     if (!validPattern.test(input.value)) {
-      const cleaned = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, ''); // Elimina caracteres no permitidos
-      input.value = cleaned; // Establece el valor limpio
-      this.form.get(nameForm).setValue(cleaned, { emitEvent: false }); // Actualiza el valor del formulario sin emitir el evento
+      const cleaned = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+      input.value = cleaned;
+      this.form.get(nameForm).setValue(cleaned, { emitEvent: false });
     }
   }
 }

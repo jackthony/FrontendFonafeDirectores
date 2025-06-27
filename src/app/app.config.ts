@@ -1,3 +1,14 @@
+/*************************************************************************************
+ * Nombre del archivo:  app.config.ts
+ * Descripción:         Configuración global de la aplicación Angular. Define los
+ *                      proveedores para enrutamiento, internacionalización (i18n),
+ *                      temas (Fuse), API mock, adaptación de fechas, animaciones,
+ *                      y servicios de autenticación e íconos.
+ * Autor:               Daniel Alva
+ * Fecha de creación:   01/06/2025
+ * Última modificación: 22/06/2025 por Daniel Alva
+ * Cambios recientes:   Configuración inicial de `ApplicationConfig`
+ *************************************************************************************/
 import { provideHttpClient } from '@angular/common/http';
 import { APP_INITIALIZER, ApplicationConfig, inject } from '@angular/core';
 import { LuxonDateAdapter, MAT_LUXON_DATE_FORMATS } from '@angular/material-luxon-adapter';
@@ -18,11 +29,18 @@ import { mockApiServices } from 'app/mock-api';
 import { firstValueFrom } from 'rxjs';
 import { TranslocoHttpLoader } from './core/transloco/transloco.http-loader';
 import { provideToastr } from 'ngx-toastr';
+/**
+ * Configuración principal de la aplicación Angular mediante el objeto `ApplicationConfig`.
+ * Incluye la inyección de servicios globales, rutas, internacionalización, temas y mock APIs.
+ */
 export const appConfig: ApplicationConfig = {
     providers: [
         provideAnimations(),
         provideHttpClient(),
-        provideToastr(),
+        provideToastr({
+           positionClass: 'toast-top-full-width',
+           progressBar: true
+        }),
         provideRouter(
             appRoutes,
             withPreloading(PreloadAllModules),

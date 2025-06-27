@@ -1,3 +1,14 @@
+/*******************************************************************************************************
+ * Nombre del componente: MyProcessesComponent
+ * Descripción:           Componente que muestra la sección "Mis procesos", permitiendo al usuario
+ *                        visualizar y acceder a los distintos módulos disponibles según su perfil.
+ * Autor:                 Daniel Alva
+ * Fecha de creación:     23/06/2025
+ * Última modificación:   23/06/2025 por Daniel Alva
+ * Cambios recientes:     - Implementación inicial del componente.
+ *                        - Integración de señales reactivas y navegación programática.
+ *                        - Carga dinámica de la lista de procesos desde archivo de configuración.
+ *******************************************************************************************************/
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { CardProcessComponent } from '../card-process/card-process.component';
@@ -6,10 +17,6 @@ import { ListOfProcesses } from 'app/shared/interfaces/IListOfProcesses';
 import { Router } from '@angular/router';
 import { PermissionButtonDirective } from 'app/shared/directives/permission-button.directive';
 import { FoContCardComponent } from '../../../shared/components/fo-cont-card/fo-cont-card.component';
-
-
-
-
 @Component({
   selector: 'app-my-processes',
   standalone: true,
@@ -18,21 +25,11 @@ import { FoContCardComponent } from '../../../shared/components/fo-cont-card/fo-
   styleUrl: './my-processes.component.scss'
 })
 export class MyProcessesComponent {
-    // Signal reactivo que almacena el título de la sección
-    titleProcess = signal<string>('Mis procesos');
-    
-    // Inyección del servicio Router para manejar la navegación entre vistas
-    private readonly _router = inject(Router);
-
-    // Signal reactivo que almacena la lista de procesos, inicializado con los valores de LIST_OF_PROCESSES
-    lstProcess = signal<ListOfProcesses[]>(LIST_OF_PROCESSES);
-
-    // Método que maneja la acción de entrar a una opción de proceso. Navega a la ruta correspondiente.
+    titleProcess = signal<string>('Mis procesos');// Signal reactivo que almacena el título de la sección
+    private readonly _router = inject(Router); // Inyección del servicio Router para manejar la navegación entre vistas    
+    lstProcess = signal<ListOfProcesses[]>(LIST_OF_PROCESSES); // Signal reactivo que almacena la lista de procesos, inicializado con los valores de LIST_OF_PROCESSES
     enterOption(event: string): void {
-        // Si el evento es vacío, no hacer nada
         if(!event) return;
-        
-        // Navegar a la ruta indicada en el evento (probablemente una ruta definida en el sistema de rutas de Angular)
         this._router.navigate([event]);
     }
 }

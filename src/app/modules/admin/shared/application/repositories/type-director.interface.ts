@@ -1,3 +1,9 @@
+/*******************************************************************************************************
+ * Nombre de interfaz:    TypeDirectorInterface
+ * Descripción:           Define los métodos de acceso y manipulación para la entidad Tipo Director.
+ * Autor:                 Daniel Alva
+ * Fecha de creación:     23/06/2025
+ *******************************************************************************************************/
 import { Observable } from "rxjs";
 import { ResponseEntity } from "../../domain/entities/response.entity";
 import { TypeDirectorEntity } from "../../domain/entities/type-director.entity";

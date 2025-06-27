@@ -1,3 +1,12 @@
+/*************************************************************************************
+ * Nombre del archivo:  maintenance-position.component.ts
+ * Descripción:         Componente para la gestión de cargos: búsqueda, paginación,
+ *                      registro/edición, activación y desactivación con confirmación.
+ * Autor:               Daniel Alva
+ * Fecha de creación:   01/06/2025
+ * Última modificación: 23/06/2025 por Daniel Alva
+ * Cambios recientes:   Eliminación de importaciones no utilizadas y validación de mensajes.
+ *************************************************************************************/
 import { Component, inject, signal } from '@angular/core';
 import { ResponseModel } from '@models/IResponseModel';
 import { IconOption } from 'app/shared/interfaces/IGenericIcon';
@@ -12,12 +21,11 @@ import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDefInterface';
 import { PAGINATOR_PAGE_SIZE } from 'app/core/config/paginator.config';
-import { CONFIG_ACTIVE_DIALOG_POSITION, CONFIG_DELETE_DIALOG_POSITION, CONFIG_INACTIVE_DIALOG_POSITION, MAINTENANCE_POSITION_HEADER_TABLE } from 'app/shared/configs/system-maintenance/maintenance-position.config';
+import { CONFIG_ACTIVE_DIALOG_POSITION, CONFIG_INACTIVE_DIALOG_POSITION, MAINTENANCE_POSITION_HEADER_TABLE } from 'app/shared/configs/system-maintenance/maintenance-position.config';
 import { MAINTENANCE_GENERAL_IMPORTS } from 'app/shared/imports/system-maintenance/maintenance-ministry.imports';
 import { PositionService } from 'app/modules/admin/shared/domain/services/position.service';
 import { PositionEntity } from 'app/modules/admin/shared/domain/entities/position.entity';
 import { UserService } from 'app/core/user/user.service';
-
 @Component({
   selector: 'app-maintenance-position',
   standalone: true,
@@ -29,43 +37,45 @@ export default class MaintenancePositionComponent {
     private readonly _router = inject(Router);
 	private readonly _route = inject(ActivatedRoute);
 	private _dialogConfirmationService = inject(DialogConfirmationService);
-
 	private _matDialog: MatDialog = inject(MatDialog);
-
 	private _positionService = inject(PositionService);
 	private _authorizationService = inject(AuthorizationService);
-
 	private _ngxToastrService = inject(NgxToastrService);
 	private _spinner = inject(NgxSpinnerService);
 	private _userService = inject(UserService);
-	
-	
     titleModule = signal<string>('Mantenedor de cargos');
 	headerTable = signal<TableColumnsDefInterface[]>([]);
 	dataTable = signal<PositionEntity[]>([]);
 	iconsTable = signal<IconOption<PositionEntity>[]>([]);
 	nameBtnAdd = signal<string>('Agregar cargo');
-	
 	loadingTable = signal<boolean>(false);
 	pageIndexTable = signal<number>(1);
 	totalPagesTable = signal<number>(1);
 	paramSearchTable = signal<string>('');
 	placeHolderSearch = signal<string>('Busca por nombre');
 	filterState = signal<boolean | null>(true);
-
 	delaySearchTable = signal<number>(400);
-
+	/**
+	 * Hook de inicialización del componente.
+	 * Inicializa las columnas e íconos de la tabla, y ejecuta la búsqueda inicial de datos.
+	 */
 	ngOnInit(): void {
 		this.headerTable.set(MAINTENANCE_POSITION_HEADER_TABLE);
 		this.iconsTable.set(this.defineIconsTable());
 		this.searchTable();
 	}
-
+	/**
+	 * Redirecciona al usuario a la página principal del sistema.
+	 */
 	returnInit(): void {
 		this._router.navigate(['home']);
 	}
-
-	searchTable(): void {
+	/**
+	 * Prepara los parámetros de búsqueda para la tabla.
+	 * @returns Un objeto RequestOption con los parámetros de búsqueda.
+	 */
+	searchTable(resetIndexTable?: boolean): void {
+		if(resetIndexTable) this.pageIndexTable.set(1);
 		this.loadingTable.set(true);
 		this._positionService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState()).pipe(
 			finalize(() => this.loadingTable.set(false))
@@ -83,41 +93,50 @@ export default class MaintenancePositionComponent {
 			})
 		})
 	}
-
+	/**
+	 * Cambia la página actual de la tabla y ejecuta una nueva búsqueda.
+	 * @param event El índice de la página seleccionada.
+	 */
 	changePageTable(event: number): void {
 		this.pageIndexTable.set(event);
 		this.searchTable();
 	}
-
+	/**
+	 * Realiza una búsqueda en la tabla utilizando el texto ingresado.
+	 * Actualiza el índice de la página a 1 y ejecuta la búsqueda.
+	 * @param event El texto de búsqueda ingresado por el usuario.
+	 */
 	searchByItem(event: string): void {
 		this.paramSearchTable.set(event);
 		this.pageIndexTable.set(1);
 		this.searchTable();
 	}
-
+	/**
+	 * Define los íconos de acción para la tabla de cargos.
+	 * @returns Un arreglo de IconOption que define las acciones disponibles.
+	 */
 	defineIconsTable(): IconOption<PositionEntity>[] {
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
-        const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar"); // Icono para desactivar
-    	const iconActive = new IconOption("restart_alt", "mat_outline", "Activar"); // Icono para activar
-
+        const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar");
+    	const iconActive = new IconOption("restart_alt", "mat_outline", "Activar");
 		iconEdit.actionIcono = (data: PositionEntity) => {
             this.openFormDialog(data);
         };
-
 		iconInactive.actionIcono = (data: PositionEntity) => {
             this.deletePosition(data);
         };
-
 		iconActive.actionIcono = (data: PositionEntity) => {
             this.deletePosition(data);
         };
-
-		iconInactive.isHidden = (data: PositionEntity) => !data.bActivo; // Oculta el icono de desactivar si la empresa ya está desactivada
-    	iconActive.isHidden = (data: PositionEntity) => data.bActivo; // Oculta el icono de activar si la empresa ya está activa
-
-        return [iconEdit, iconInactive, iconActive]; // Retorna los iconos de acción
+		iconInactive.isHidden = (data: PositionEntity) => !data.bActivo;
+    	iconActive.isHidden = (data: PositionEntity) => data.bActivo;
+        return [iconEdit, iconInactive, iconActive];
     }
-
+	/**
+	 * Activa o desactiva un cargo según su estado actual.
+	 * Solicita confirmación previa al usuario antes de aplicar el cambio.
+	 * @param data Cargo seleccionado.
+	 */
 	async deletePosition(data: PositionEntity): Promise<void> {
 		const config = data.bActivo ? CONFIG_INACTIVE_DIALOG_POSITION : CONFIG_ACTIVE_DIALOG_POSITION;
 		const dialogRef = await this._dialogConfirmationService.open(config);
@@ -133,7 +152,7 @@ export default class MaintenancePositionComponent {
 				.subscribe({
 					next: (response: ResponseModel<boolean>) => {
 						if (response.isSuccess) {
-							const messageToast = data.bActivo ? 'Cargo desactivado exitosamente' : 'Cargo activado exitosamente'; // Muestra un mensaje de éxito
+							const messageToast = data.bActivo ? 'Cargo desactivado exitosamente' : 'Cargo activado exitosamente';
 							this._ngxToastrService.showSuccess(messageToast, '¡Éxito!');
 							this.searchTable();
 						}
@@ -141,7 +160,11 @@ export default class MaintenancePositionComponent {
 				});
 		}
 	}
-
+	/**
+	 * Abre el formulario de registro o edición de un cargo.
+	 * Al cerrar exitosamente, actualiza la tabla y muestra un mensaje.
+	 * @param element Cargo a editar (opcional).
+	 */
 	openFormDialog(element?: PositionEntity | null): void {
 		const respDialogo = this._matDialog.open(DialogPositionFormComponent, {
 			data: { object: element },
@@ -159,7 +182,10 @@ export default class MaintenancePositionComponent {
 		    }
 		});
 	}
-
+	/**
+	 * Establece el estado del filtro para mostrar u ocultar elementos inactivos.
+	 * @param event Estado del filtro (true, false o null).
+	 */
 	setFilterState(event: boolean | null) {
 		this.filterState.set(event);
 	}

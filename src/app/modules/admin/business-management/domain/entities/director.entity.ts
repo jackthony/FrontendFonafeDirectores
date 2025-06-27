@@ -19,6 +19,7 @@ export interface DirectorEntity {
     sCorreoTerciario: string;
     nCargo: number;
     nTipoDirector: number;
+    nIdSector: number;
     sProfesion: string;
     mDieta: number;
     nEspecialidad: number;

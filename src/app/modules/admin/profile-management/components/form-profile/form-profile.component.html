@@ -71,8 +71,8 @@
                             formControlName="nIdCargo"
                             placeholder="--">
                             @for (item of data.lstPosition; track $index) {
-                                <mat-option [value]="item.nConValor">
-                                    {{ item.sConDescripcion }}
+                                <mat-option [value]="item.nIdCargo">
+                                    {{ item.sNombreCargo }}
                                 </mat-option>
                             }
                     </mat-select>
@@ -85,12 +85,12 @@
             </div>
             <div class="col-span-1">
                 <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
-                    <mat-label>Pefil</mat-label>
+                    <mat-label>Rol</mat-label>
                     <mat-select
                         formControlName="nIdRol"
                         placeholder="--">
                         @for (item of data.lstProfile; track $index) {
-                            <mat-option [value]="item.nIdRol">
+                            <mat-option [value]="item.nRolId">
                                 {{ item.sNombreRol }}
                             </mat-option>
                         }
@@ -163,6 +163,25 @@
                             </mat-icon>
                         </button>
                 </mat-form-field>     
+            </div>
+            <div class="col-span-1">
+                <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                    <mat-label>Tipo de personal</mat-label>
+                    <mat-select
+                        formControlName="nTipoPersonal"
+                        placeholder="--">
+                        @for (item of data.lstTypePersonal; track $index) {
+                            <mat-option [value]="item.nConValor">
+                                {{ item.sConDescripcion }}
+                            </mat-option>
+                        }
+                    </mat-select>
+                    @if(form.get('nTipoPersonal').invalid) {
+                        <mat-error class="text-red-500">
+                            {{ form.get("nTipoPersonal") | translateMessageForm: "select" }}
+                        </mat-error>
+                    }
+                </mat-form-field>
             </div>
         </div>
         <div class="btn-options-user justify-center  md:justify-end">

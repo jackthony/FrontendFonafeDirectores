@@ -1,3 +1,13 @@
+/*******************************************************************************************************
+ * Nombre del archivo:  authorization.service.ts
+ * Descripción:          Servicio que administra los permisos del usuario para autorizar acciones por módulo.
+ *                      Utiliza BehaviorSubject para almacenamiento reactivo de permisos.
+ * Autor:                Daniel Alva
+ * Fecha de creación:    01/06/2025
+ * Última modificación:  23/06/2025 por Daniel Alva
+ * Cambios recientes:    - Adaptación del modelo de permisos a estructura con permisos anidados por módulo.
+ *                       - Método canPerform actualizado para trabajar con lista de objetos tipo Permission.
+ *******************************************************************************************************/
 import { Injectable } from '@angular/core';
 import { Permission } from '@models/permission.interface';
 import { BehaviorSubject } from 'rxjs';
@@ -34,7 +44,6 @@ export class AuthorizationService {
     canPerform(module: string, action: string): boolean {
         const perms = this.userPermissions.value;
         const permission = perms.find((p) => p.nombreModulo === module);
-        //return permission ? permission.actions.includes(action) : false;
-        return permission ? permission.permisos.some(a => a.nombrePermiso === action) : false;
+        return permission ? permission.permisos.some(a => a.nombrePermiso === action || a.nombrePermiso === 'GlobalAccess') : false;
     }
 }

@@ -1,16 +1,26 @@
+/*******************************************************************************************************
+ * Nombre del archivo:  business-management-table.config.ts
+ * Descripción:         Configuración de columnas y diálogo de confirmación para la gestión de empresas.
+ * Autor:               Daniel Alva
+ * Fecha de creación:   01/06/2025
+ * Última modificación: 23/06/2025 por Daniel Alva
+ * Cambios recientes:   Corrección de redacción en el mensaje de diálogo y alineación estructural del archivo.
+ *******************************************************************************************************/
 import { DialogConfirmation } from "app/modules/admin/shared/components/fo-dialog-confirmation/models/dialog-confirmation.interface";
 import { TableColumnsDefInterface } from "../../interfaces/ITableColumnsDefInterface";
-
-// Define una constante para la sección de la empresa
-export const CONST_COMPANY_SECTION = 1024; // Identificador único para la sección de la empresa
-
-// Define la configuración de las columnas para la tabla de gestión de empresas
+/**
+ * Constante para identificación de sección de empresas (catálogo o filtro relacionado).
+ */
+export const CONST_COMPANY_SECTION = 1024;
+/**
+ * Columnas para la tabla de gestión de empresas.
+ */
 export const COLUMNS_BUSINESS_MANAGEMENT: TableColumnsDefInterface[] = [
     {
-        id: 0, // Identificador único de la columna
-        name: "indice", // Nombre interno de la columna (representa el índice de la fila)
-        displayedName: "Nro", // Nombre que se mostrará en el encabezado de la columna
-        type: "string" // Tipo de dato de la columna (cadena de texto)
+        id: 0,
+        name: "indice",
+        displayedName: "Nro",
+        type: "string"
     },
     {
         id: 1,
@@ -27,7 +37,7 @@ export const COLUMNS_BUSINESS_MANAGEMENT: TableColumnsDefInterface[] = [
     {
         id: 3,
         name: "sNombreMinisterio",
-        displayedName: "Proponente",
+        displayedName: "Sector",
         type: "string"
     },
     {
@@ -54,10 +64,11 @@ export const COLUMNS_BUSINESS_MANAGEMENT: TableColumnsDefInterface[] = [
         displayedName: "",
         type: "acciones"
     }
-];
-
-// Configuración para el diálogo de confirmación al eliminar una empresa
+]
+/**
+ * Diálogo de confirmación para la eliminación de una empresa.
+ */
 export const CONFIG_DELETE_DIALOG_BUSINESS: DialogConfirmation = {
-    title: "¿Estás seguro de eliminar a la empresa?", // Título del diálogo de confirmación
-    message: "Recuerda que una vez se haya eliminado al a la empresa no podrás visualizar su información, ni de la sus directores." // Mensaje que se muestra en el diálogo, informando sobre la irreversibilidad de la eliminación
+    title: "¿Estás seguro de eliminar a la empresa?",
+    message: "Recuerda que una vez se haya eliminado al a la empresa no podrás visualizar su información, ni de la sus directores."
 };

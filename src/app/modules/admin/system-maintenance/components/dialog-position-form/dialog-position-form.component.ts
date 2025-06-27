@@ -1,3 +1,12 @@
+/*******************************************************************************************************
+ * Nombre del archivo:  dialog-position-form.component.ts
+ * Descripción:          Componente modal para registrar o editar cargos en el sistema.
+ *                       Permite gestionar la entidad Position (Cargo) a través de un formulario reactivo.
+ * Autor:                Daniel Alva
+ * Fecha de creación:    01/06/2025
+ * Última modificación:  23/06/2025 por Daniel Alva
+ * Cambios recientes:    Versión inicial del formulario con soporte para edición y creación.
+ *******************************************************************************************************/
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -10,10 +19,8 @@ import { UserService } from 'app/core/user/user.service';
 import { FoButtonDialogComponent } from 'app/modules/admin/shared/components/fo-button-dialog/fo-button-dialog.component';
 import { PositionEntity } from 'app/modules/admin/shared/domain/entities/position.entity';
 import { PositionService } from 'app/modules/admin/shared/domain/services/position.service';
-import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { FormInputModule } from 'app/shared/modules/form-input.module';
 import { finalize } from 'rxjs';
-
 @Component({
   selector: 'app-dialog-position-form',
   standalone: true,
@@ -29,97 +36,105 @@ import { finalize } from 'rxjs';
   styleUrl: './dialog-position-form.component.scss'
 })
 export class DialogPositionFormComponent {
-	// Inyección de dependencias para formularios, diálogos y servicios
-    private _fb = inject(FormBuilder); // Inyecta el servicio FormBuilder para crear formularios reactivos
-	private readonly dialogRef = inject(MatDialogRef<DialogPositionFormComponent>); // Inyecta MatDialogRef para cerrar el diálogo
-
-    private _userService = inject(UserService); // Inyecta el servicio UserService para obtener información del usuario
-	private _sectorService = inject(PositionService); // Inyecta el servicio MinistryService para interactuar con los datos del ministerio
-
-	// Datos que se pasan al diálogo, incluyendo la información del ministerio
-	public data: { object: PositionEntity } = inject(MAT_DIALOG_DATA);
-
-    // Señal reactiva que maneja los tipos de botones a mostrar
+    private _fb = inject(FormBuilder); // FormBuilder para crear formularios reactivos
+	private readonly dialogRef = inject(MatDialogRef<DialogPositionFormComponent>); // Referencia al diálogo para cerrarlo
+    private _userService = inject(UserService); // Servicio de usuario para obtener información del usuario logueado
+	private _sectorService = inject(PositionService); // Servicio de sector para manejar operaciones CRUD de la entidad Position
+	public data: { object: PositionEntity } = inject(MAT_DIALOG_DATA); // Datos inyectados en el diálogo, contiene el objeto PositionEntity si se está editando
     buttonEnum = signal<typeof ButtonEnum>(ButtonEnum);
-
-	// El formulario reactivo que contiene los controles y validaciones
 	form: FormGroup;
-
-	// Señales reactivas que controlan si estamos editando el ministerio y el estado de carga
 	isEdit = signal<boolean>(false);
 	loadingService = signal<boolean>(false);
-
-	// Método que se ejecuta cuando el componente es inicializado
+    /**
+     * Hook de ciclo de vida del componente.
+     * - Establece el modo (edición o creación) según si existe un objeto Position recibido por el diálogo.
+     * - Inicializa el formulario con los valores del objeto o valores por defecto.
+     */
 	ngOnInit(): void {
-		// Verifica si estamos editando un ministerio basado en los datos proporcionados
 		this.isEdit.set(this.data?.object ? true : false);
-		// Inicializa el formulario con los datos del ministerio
 		this.initForm(this.data?.object);
 	}
-
-	// Método para inicializar el formulario con los datos proporcionados (o vacíos si no existe el objeto)
+    /**
+     * Inicializa el formulario reactivo con los controles necesarios.
+     * - Si se está editando, carga los valores del objeto PositionEntity.
+     * - Si no, establece valores por defecto.
+     * @param object Objeto PositionEntity con los datos a editar o null si es un nuevo registro.
+     */
 	initForm(object: PositionEntity): void {
         this.form = this._fb.group({
-            nIdCargo: [{ disabled: !object, value: object?.nIdCargo }, Validators.required], // Campo ID del ministerio, requerido
-            sNombreCargo: [ object?  object.sNombreCargo : '', [Validators.required, Validators.maxLength(255)] ], // Campo nombre del ministerio, requerido
-            bActivo: [ object? object.bActivo : true, Validators.required ], // Campo para saber si el ministerio está activo, requerido
-            nUsuarioRegistro: [ { disabled: object, value: this._userService.userLogin().usuarioId }, Validators.required ], // Usuario que registra el ministerio
-            nUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin().usuarioId },Validators.required ], // Usuario que modifica el ministerio
+            nIdCargo: [{ disabled: !object, value: object?.nIdCargo }, Validators.required],
+            sNombreCargo: [ object?  object.sNombreCargo : '', [Validators.required, Validators.maxLength(255)] ],
+            bActivo: [ object? object.bActivo : true, Validators.required ],
+            nUsuarioRegistro: [ { disabled: object, value: this._userService.userLogin().usuarioId }, Validators.required ],
+            nUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin().usuarioId },Validators.required ],
         });
     }
-
-	// Método para validar el formulario antes de enviarlo
+    /**
+     * Valida el formulario y realiza la acción correspondiente (crear o actualizar).
+     * - Si el formulario es inválido, marca todos los campos como tocados.
+     * - Si es válido, llama al servicio correspondiente para crear o actualizar el registro.
+     */
 	validRegisterForm() {
         if (this.form.invalid) {
-            this.form.markAllAsTouched(); // Marca todos los campos como tocados para mostrar los errores
+            this.form.markAllAsTouched();
             return;
         }
-        this.loadingService.set(true); // Activa el estado de carga
-        if (this.isEdit()) this.updateForm(); // Si estamos editando, actualiza el ministerio
-        else this.registerForm(); // Si estamos creando, registra el ministerio
+        this.loadingService.set(true);
+        if (this.isEdit()) this.updateForm(); 
+        else this.registerForm();
     }
-
-	// Método para registrar un nuevo ministerio
+    /**
+     * Registra un nuevo cargo utilizando el servicio de sector.
+     * - Envía los datos del formulario al servicio y cierra el diálogo si la operación es exitosa.
+     */
     registerForm(): void {
         this._sectorService
-            .create(this.form.value) // Llama al servicio MinistryService para registrar el ministerio
-            .pipe(finalize(() => this.loadingService.set(false))) // Finaliza la operación y desactiva el estado de carga
+            .create(this.form.value)
+            .pipe(finalize(() => this.loadingService.set(false)))
             .subscribe({
                 next: (response: ResponseModel<number>) => {
-                    if (response.isSuccess) this.dialogRef.close(true); // Cierra el diálogo si la operación es exitosa
+                    if (response.isSuccess) this.dialogRef.close(true);
                 },
             });
     }
-
-	// Método para actualizar un ministerio existente
+    /**
+     * Actualiza un cargo existente utilizando el servicio de sector.
+     * - Envía los datos del formulario al servicio y cierra el diálogo si la operación es exitosa.
+     */
     updateForm(): void {
         this._sectorService
-            .update(this.form.value) // Llama al servicio MinistryService para actualizar el ministerio
-            .pipe(finalize(() => this.loadingService.set(false))) // Finaliza la operación y desactiva el estado de carga
+            .update(this.form.value)
+            .pipe(finalize(() => this.loadingService.set(false)))
             .subscribe({
                 next: (response: ResponseModel<boolean>) => {
-                    if (response.isSuccess) this.dialogRef.close(true); // Cierra el diálogo si la operación es exitosa
+                    if (response.isSuccess) this.dialogRef.close(true);
                 },
             });
     }
-
-	// Método que restringe la entrada de caracteres no permitidos en el formulario (solo letras y espacios)
+    /**
+     * Maneja el evento de tecla presionada en el campo de entrada.
+     * - Permite solo letras y espacios, bloqueando cualquier otro carácter.
+     * @param event Evento de teclado.
+     */
 	onKeyPress(event: KeyboardEvent) {
-        const allowedRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]$/; // Expresión regular para permitir solo letras y espacios
+        const allowedRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]$/;
         if (!allowedRegex.test(event.key)) {
-          event.preventDefault(); // Previene la entrada si el carácter no es permitido
+          event.preventDefault();
         }
     }
-
-	// Método que limpia los caracteres no permitidos en el campo de texto del formulario
+    /**
+     * Maneja el evento de entrada en el campo de texto.
+     * - Limpia cualquier carácter no permitido (no letras ni espacios) del valor del campo.
+     * @param event Evento de entrada.
+     * @param nameForm Nombre del campo del formulario a limpiar.
+     */
     onInput(event: Event, nameForm: string) {
         const input = event.target as HTMLInputElement;
-        const validPattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/; // Expresión regular para permitir solo letras y espacios
-    
+        const validPattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/;
         if (!validPattern.test(input.value)) {
-          const cleaned = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, ''); // Elimina los caracteres no permitidos
+          const cleaned = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
           input.value = cleaned;
-          this.form.get(nameForm).setValue(cleaned, { emitEvent: false }); // Actualiza el valor del formulario sin emitir el evento
+          this.form.get(nameForm).setValue(cleaned, { emitEvent: false });
         }
     }
 }

@@ -1,12 +1,21 @@
+/*******************************************************************************************************
+ * Nombre del archivo:  activity-management.columns.ts
+ * Descripción:         Definición de columnas para la visualización de actividades en el módulo correspondiente.
+ * Autor:               Daniel Alva
+ * Fecha de creación:   01/06/2025
+ * Última modificación: 23/06/2025 por Daniel Alva
+ * Cambios recientes:   Revisión de nombres y tipos de columnas, ajustes semánticos.
+ *******************************************************************************************************/
 import { TableColumnsDefInterface } from "../../interfaces/ITableColumnsDefInterface";
-
-// Define la configuración de las columnas para la tabla de actividades
+/**
+ * Columnas para la tabla de gestión de actividades.
+ */
 export const COLUMNS_ACTIVITIES: TableColumnsDefInterface[] = [
     {
-        id: 0, // Identificador único de la columna
-        name: "fullName", // Nombre interno de la columna, representando el nombre completo del usuario
-        displayedName: "Nombre y Apellido", // Nombre que se mostrará en el encabezado de la columna
-        type: "string" // Tipo de dato de la columna (cadena de texto)
+        id: 0,
+        name: "fullName",
+        displayedName: "Nombre y Apellido",
+        type: "string"
     },
     {
         id: 1,

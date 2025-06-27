@@ -6,7 +6,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ResponseModel } from '@models/IResponseModel';
-import { ArchivingProcessService } from '@services/archiving-process.service';
 import { FileComponentStateService } from '@services/file-component-state.service';
 import { UserService } from 'app/core/user/user.service';
 import { FileComponentState } from 'app/shared/interfaces/file-component-state.interface';
@@ -14,6 +13,7 @@ import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { finalize, Subject, takeUntil } from 'rxjs';
+import { ArchivingProcessService } from '../../domain/services/archiving-process.service';
 
 @Component({
     selector: 'app-fo-file-url-upload',

@@ -1,3 +1,13 @@
+/*******************************************************************************************************
+ * Nombre del archivo:  dialog-confirmation.service.ts
+ * Descripción:          Servicio para abrir diálogos de confirmación reutilizables en toda la aplicación.
+ *                      Utiliza el componente FoDialogConfirmationComponent y permite pasar una configuración personalizada.
+ * Autor:                Daniel Alva
+ * Fecha de creación:    01/06/2025
+ * Última modificación:  23/06/2025 por Daniel Alva
+ * Cambios recientes:    - Implementación de merge para unir configuración por defecto con personalizada.
+ *                       - Integración con MatDialog y tipado fuerte con interfaz DialogConfirmation.
+ *******************************************************************************************************/
 import { inject, Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FoDialogConfirmationComponent } from 'app/modules/admin/shared/components/fo-dialog-confirmation/fo-dialog-confirmation.component';

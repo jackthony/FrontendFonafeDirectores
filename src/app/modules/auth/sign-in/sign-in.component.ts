@@ -1,3 +1,13 @@
+/*************************************************************************************
+   * Nombre del archivo:  sign-in.component.ts
+   * Descripción:         Componente para el inicio de sesión de usuarios, gestionando  
+   *                      el formulario, validaciones, reCAPTCHA y la comunicación   
+   *                      con el servicio de autenticación.                            
+   * Autor:               Daniel Alva                                                
+   * Fecha de creación:   01/06/2025                                                  
+   * Última modificación: 23/06/2025 por Daniel Alva                                   
+   * Cambios recientes:   Creación inicial del componente con integración de reCAPTCHA.
+   **************************************************************************************/
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import {
     FormsModule,
@@ -19,8 +29,7 @@ import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
 import { environment } from 'environments/environment';
-import { NgxCaptchaModule } from 'ngx-captcha';
-
+import { NgxCaptchaModule, ReCaptcha2Component } from 'ngx-captcha';
 @Component({
     selector: 'auth-sign-in',
     templateUrl: './sign-in.component.html',
@@ -43,90 +52,72 @@ import { NgxCaptchaModule } from 'ngx-captcha';
     ],
 })
 export class AuthSignInComponent implements OnInit {
-    // Inyecta los servicios y módulos necesarios
-    @ViewChild('signInNgForm') signInNgForm: NgForm; // Referencia al formulario de inicio de sesión
-
-    alert: { type: FuseAlertType; message: string } = { // Configura el tipo y mensaje de alerta
+    @ViewChild('signInNgForm') signInNgForm: NgForm;
+    //@ViewChild('recaptcha') recaptcha: any;
+    @ViewChild('captchaElem', { static: false }) captchaElem: ReCaptcha2Component;
+    alert: { type: FuseAlertType; message: string } = {
         type: 'success',
         message: '',
     };
-    signInForm: UntypedFormGroup; // Define el formulario reactivo para el inicio de sesión
-    showAlert: boolean = false; // Controla la visibilidad de la alerta
-    keyCaptcha = `${environment.siteKeyCaptcha}`; // Captcha para la verificación de usuario, obtiene la clave desde el entorno
-
+    signInForm: UntypedFormGroup;
+    showAlert: boolean = false;
+    keyCaptcha = `${environment.siteKeyCaptcha}`;
     /**
      * Constructor
      */
     constructor(
-        private _activatedRoute: ActivatedRoute, // Servicio para obtener parámetros de la ruta activada
-        private _authService: AuthService, // Servicio de autenticación para gestionar el inicio de sesión
-        private _formBuilder: UntypedFormBuilder, // Servicio para crear formularios reactivos
-        private _router: Router, // Servicio para la navegación de rutas
-        private _ngxToastrService: NgxToastrService // Servicio para mostrar notificaciones
+        private _activatedRoute: ActivatedRoute,
+        private _authService: AuthService,
+        private _formBuilder: UntypedFormBuilder,
+        private _router: Router,
+        private _ngxToastrService: NgxToastrService
     ) {}
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
-
     /**
-     * On init
+     * Hook de inicialización
+     * Define el formulario de login con validadores para email, password y reCAPTCHA.
      */
     ngOnInit(): void {
-        // Crea el formulario de inicio de sesión
         this.signInForm = this._formBuilder.group({
             email: [
-                'rodrigo@fonafe.pe', // Valor predeterminado del correo
-                [Validators.required, Validators.email], // Validadores para asegurarse de que sea un correo válido
+                'rodrigo@fonafe.pe',
+                [Validators.required, Validators.email],
             ],
-            password: ['123456', Validators.required], // Valor predeterminado de la contraseña
-            recaptcha: ['', Validators.required], // Campo de captcha obligatorio
-            rememberMe: [''], // Campo para recordar la sesión (checkbox)
+            password: ['123456', Validators.required],
+            recaptcha: ['', Validators.required],
+            rememberMe: [''],
         });
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
     /**
-     * Sign in
+     * Ejecuta el inicio de sesión al enviar el formulario.
+     * Valida, desactiva el formulario, consume el `AuthService` y maneja redirección o error.
      */
     signIn(): void {
-        // Si el formulario es inválido, retorna y no realiza la autenticación
         if (this.signInForm.invalid) {
             return;
         }
-
-        // Deshabilita el formulario mientras se realiza la autenticación
         this.signInForm.disable();
-
-        // Oculta la alerta
         this.showAlert = false;
-
-        // Realiza la autenticación
         this._authService.signIn(this.signInForm.value).subscribe(
             (res) => {
-                // Obtiene la URL de redirección desde los parámetros de la ruta
                 const redirectURL =
                     this._activatedRoute.snapshot.queryParamMap.get(
                         'redirectURL'
                     ) || '/signed-in-redirect';
-                
-                // Navega a la URL de redirección
                 this._router.navigateByUrl(redirectURL);
             },
             (response) => {
-                // Vuelve a habilitar el formulario si la autenticación falla
+                if(response)
+                    if (this.captchaElem) {
+                        this.captchaElem.resetCaptcha();
+                    }
                 this.signInForm.enable();
-                this._ngxToastrService.showError('Credenciales inválidas.'); // Muestra un mensaje de error
-                // Establece el mensaje de alerta
+                this.signInNgForm.resetForm();
+
+                const message = response?.error?.detail || 'Ocurrió un error, intentelo de nuevo';
                 this.alert = {
                     type: 'error',
-                    message: 'Wrong email or password', // Mensaje de error para las credenciales incorrectas
+                    message: message,
                 };
-
-                // Muestra la alerta
                 this.showAlert = true;
             }
         );

@@ -1,13 +1,22 @@
+/*******************************************************************************************************
+ * Nombre del archivo: role-maintenance.config.ts
+ * Descripción:         Configuración de columnas y diálogos de confirmación para mantenimiento de roles.
+ * Autor:               Daniel Alva
+ * Fecha de creación:   01/06/2025
+ * Última modificación: 23/06/2025 por Daniel Alva
+ * Cambios recientes:   Revisión ortográfica y uniformidad en los mensajes de diálogo.
+ *******************************************************************************************************/
 import { DialogConfirmation } from "app/modules/admin/shared/components/fo-dialog-confirmation/models/dialog-confirmation.interface";
 import { TableColumnsDefInterface } from "../../interfaces/ITableColumnsDefInterface";
-
-// Define la configuración de las columnas de la tabla para la gestión de ministerios
+/**
+ * Columnas de la tabla para mantenimiento de roles.
+ */
 export const MAINTENANCE_ROL_HEADER_TABLE: TableColumnsDefInterface[] = [
     {
-        id: 0, // Identificador único para la columna
-        name: "indice", // Nombre interno de la columna
-        displayedName: "Nro", // Nombre que se mostrará en el encabezado de la columna
-        type: "string" // Tipo de datos de la columna (en este caso, cadena de texto)
+        id: 0,
+        name: "indice",
+        displayedName: "Nro",
+        type: "string"
     },
     {
         id: 1,
@@ -28,15 +37,18 @@ export const MAINTENANCE_ROL_HEADER_TABLE: TableColumnsDefInterface[] = [
         type: "acciones"
     }
 ];
-
-// Configuración para el diálogo de confirmación al eliminar un ministerio
+/**
+ * Configuración del diálogo de eliminación de rol.
+ */
 export const CONFIG_DELETE_DIALOG_ROLE: DialogConfirmation = {
-    title: "¿Estás seguro de eliminar el rol?", // Título del diálogo de confirmación
-    message: "Esta acción es irreversible y los datos no podrán ser recuperados." // Mensaje que se muestra al usuario, alertando de la irreversibilidad de la acción
+    title: "¿Estás seguro de eliminar el rol?",
+    message: "Esta acción es irreversible y los datos no podrán ser recuperados." 
 };
-
+/**
+ * Configuración del diálogo de desactivación de rol.
+ */
 export const CONFIG_INACTIVE_DIALOG_ROLE: DialogConfirmation = {
-    title: "¿Estás seguro de desactivar el rol?", // Título del diálogo de confirmación
+    title: "¿Estás seguro de desactivar el rol?",
     message: "Recuerda que una vez desactivado el rol?, no podrá ser visualizada como activa, pero podrás consultar su información.",
     actions: {
         confirm: {
@@ -45,9 +57,11 @@ export const CONFIG_INACTIVE_DIALOG_ROLE: DialogConfirmation = {
         iconClose: false
     }
 };
-
+/**
+ * Configuración del diálogo de activación de rol.
+ */
 export const CONFIG_ACTIVE_DIALOG_ROLE: DialogConfirmation = {
-    title: "¿Estás seguro de activar el rol?", // Título del diálogo de confirmación
+    title: "¿Estás seguro de activar el rol?",
     message: "Recuerda que una vez activado el rol, será visualizada como activa.",
     actions: {
         confirm: {

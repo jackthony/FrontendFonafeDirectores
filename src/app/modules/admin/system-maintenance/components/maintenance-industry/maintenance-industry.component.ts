@@ -1,11 +1,19 @@
+/*************************************************************************************
+ * Nombre del archivo:  maintenance-industry.component.ts
+ * Descripción:         Componente para la gestión de rubros: búsqueda, paginación,
+ *                      alta/edición, activación y desactivación con confirmación.
+ * Autor:               Daniel Alva
+ * Fecha de creación:   01/06/2025
+ * Última modificación: 23/06/2025 por Daniel Alva
+ * Cambios recientes:   Adaptación completa siguiendo patrón general de mantenedores.
+ *************************************************************************************/
 import { Component, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ResponseModel } from '@models/IResponseModel';
 import { PAGINATOR_PAGE_SIZE } from 'app/core/config/paginator.config';
-import { CONFIG_ACTIVE_DIALOG_INDUSTRY, CONFIG_DELETE_DIALOG_INDUSTRY, CONFIG_INACTIVE_DIALOG_INDUSTRY, MAINTENANCE_INDUSTRY_HEADER_TABLE } from 'app/shared/configs/system-maintenance/maintenance-industry.config';
+import { CONFIG_ACTIVE_DIALOG_INDUSTRY, CONFIG_INACTIVE_DIALOG_INDUSTRY, MAINTENANCE_INDUSTRY_HEADER_TABLE } from 'app/shared/configs/system-maintenance/maintenance-industry.config';
 import { IconOption } from 'app/shared/interfaces/IGenericIcon';
-import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDefInterface';
 import { AuthorizationService } from 'app/shared/services/authorization.service';
 import { DialogConfirmationService } from 'app/shared/services/dialog-confirmation.service';
@@ -17,7 +25,6 @@ import { MAINTENANCE_GENERAL_IMPORTS } from 'app/shared/imports/system-maintenan
 import { IndustryService } from 'app/modules/admin/shared/domain/services/industry.service';
 import { IndustryEntity } from 'app/modules/admin/shared/domain/entities/industry.entity';
 import { UserService } from 'app/core/user/user.service';
-
 @Component({
   selector: 'app-maintenance-industry',
   standalone: true,
@@ -26,45 +33,55 @@ import { UserService } from 'app/core/user/user.service';
   styleUrl: './maintenance-industry.component.scss'
 })
 export default class MaintenanceIndustryComponent {
-    private readonly _router = inject(Router);
-	private readonly _route = inject(ActivatedRoute);
-	private _dialogConfirmationService = inject(DialogConfirmationService);
-
-	private _matDialog: MatDialog = inject(MatDialog);
-
-	private _sectorService = inject(IndustryService);
-	private _authorizationService = inject(AuthorizationService);
-
-	private _ngxToastrService = inject(NgxToastrService);
-	private _spinner = inject(NgxSpinnerService);
-	private _userService = inject(UserService);
-	
+    private readonly _router = inject(Router); // Router para navegación
+	private readonly _route = inject(ActivatedRoute); // ActivatedRoute para obtener parámetros de la ruta
+	private _dialogConfirmationService = inject(DialogConfirmationService); // Servicio para diálogos de confirmación
+	private _matDialog: MatDialog = inject(MatDialog); // MatDialog para abrir diálogos
+	private _sectorService = inject(IndustryService); // Servicio para operaciones con rubros
+	private _authorizationService = inject(AuthorizationService); // Servicio de autorización para verificar permisos
+	private _ngxToastrService = inject(NgxToastrService); // Servicio para mostrar notificaciones tipo toast
+	private _spinner = inject(NgxSpinnerService); // Servicio para mostrar spinner de carga
+	private _userService = inject(UserService); // Servicio para obtener información del usuario logueado
     titleModule = signal<string>('Mantenedor de rubros');
 	headerTable = signal<TableColumnsDefInterface[]>([]);
 	dataTable = signal<IndustryEntity[]>([]);
 	iconsTable = signal<IconOption<IndustryEntity>[]>([]);
 	nameBtnAdd = signal<string>('Agregar rubro');
-	
 	loadingTable = signal<boolean>(false);
 	pageIndexTable = signal<number>(1);
 	totalPagesTable = signal<number>(1);
 	paramSearchTable = signal<string>('');
 	placeHolderSearch = signal<string>('Busca por nombre');
 	filterState = signal<boolean | null>(true);
-
 	delaySearchTable = signal<number>(400);
-
+	/**
+	 * Hook de ciclo de vida que se ejecuta al inicializar el componente.
+	 * - Carga las cabeceras e íconos de la tabla desde configuración.
+	 * - Ejecuta la búsqueda inicial de rubros.
+	 */
 	ngOnInit(): void {
 		this.headerTable.set(MAINTENANCE_INDUSTRY_HEADER_TABLE);
 		this.iconsTable.set(this.defineIconsTable());
 		this.searchTable();
 	}
-
+	/**
+	 * Redirige al usuario a la vista principal del sistema ('home').
+	 * Puede utilizarse como acción de salida del mantenedor.
+	 */
 	returnInit(): void {
 		this._router.navigate(['home']);
 	}
+	/**
+	 * Método para buscar rubros con paginación y filtrado.
+	 * Utiliza el servicio de sector para obtener los datos y actualiza la tabla.
+	 */
+	searchFilter(): void {
+		this.pageIndexTable.set(1); 
+		this.searchTable();
+	}
 
-	searchTable(): void {
+	searchTable(resetIndexTable?: boolean): void {
+		if(resetIndexTable) this.pageIndexTable.set(1);
 		this.loadingTable.set(true);
 		this._sectorService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState()).pipe(
 			finalize(() => this.loadingTable.set(false))
@@ -82,42 +99,51 @@ export default class MaintenanceIndustryComponent {
 			})
 		})
 	}
-
+	/**
+	 * Método para cambiar la página de la tabla.
+	 * Actualiza el índice de la página y realiza una nueva búsqueda.
+	 * @param event Número de página seleccionado.
+	 */
 	changePageTable(event: number): void {
 		this.pageIndexTable.set(event);
 		this.searchTable();
 	}
-
+	/**
+	 * Método para buscar rubros por el texto ingresado en el campo de búsqueda.
+	 * Reinicia la paginación y realiza una nueva búsqueda.
+	 * @param event Texto del campo de búsqueda.
+	 */
 	searchByItem(event: string): void {
 		this.paramSearchTable.set(event);
 		this.pageIndexTable.set(1);
 		this.searchTable();
 	}
-
-
+	/**
+	 * Método para definir los iconos de acción de la tabla.
+	 * Incluye iconos para editar, desactivar y activar rubros.
+	 * @returns Array de IconOption con los iconos definidos.
+	 */
 	defineIconsTable(): IconOption<IndustryEntity>[] {
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
-        const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar"); // Icono para desactivar
-    	const iconActive = new IconOption("restart_alt", "mat_outline", "Activar"); // Icono para activar
-
+        const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar");
+    	const iconActive = new IconOption("restart_alt", "mat_outline", "Activar");
 		iconEdit.actionIcono = (data: IndustryEntity) => {
             this.openFormDialog(data);
         };
-
 		iconInactive.actionIcono = (data: IndustryEntity) => {
             this.deleteIndustry(data);
         };
-
 		iconActive.actionIcono = (data: IndustryEntity) => {
             this.deleteIndustry(data);
         };
-
-		iconInactive.isHidden = (data: IndustryEntity) => !data.bActivo; // Oculta el icono de desactivar si la empresa ya está desactivada
-    	iconActive.isHidden = (data: IndustryEntity) => data.bActivo; // Oculta el icono de activar si la empresa ya está activa
-
-        return [iconEdit, iconInactive, iconActive]; // Retorna los iconos de acción
+		iconInactive.isHidden = (data: IndustryEntity) => !data.bActivo;
+    	iconActive.isHidden = (data: IndustryEntity) => data.bActivo;
+        return [iconEdit, iconInactive, iconActive];
     }
-
+		/**
+	 * Activa o desactiva un ministerio seleccionado, solicitando confirmación previa.
+	 * @param data Registro de IndustryEntity sobre el cual aplicar la acción.
+	 */
 	async deleteIndustry(data: IndustryEntity): Promise<void> {
 		const config = data.bActivo ? CONFIG_INACTIVE_DIALOG_INDUSTRY : CONFIG_ACTIVE_DIALOG_INDUSTRY;
 		const dialogRef = await this._dialogConfirmationService.open(config);
@@ -141,7 +167,11 @@ export default class MaintenanceIndustryComponent {
 				});
 		}
 	}
-
+	/**
+	 * Abre un diálogo para agregar o editar un rubro.
+	 * Si se proporciona un elemento, se abre en modo edición; de lo contrario, en modo creación.
+	 * @param element Objeto de tipo IndustryEntity a editar, o null para crear uno nuevo.
+	 */
 	openFormDialog(element?: IndustryEntity | null): void {
 		const respDialogo = this._matDialog.open(DialogIndustryFormComponent, {
 			data: { object: element },
@@ -159,7 +189,11 @@ export default class MaintenanceIndustryComponent {
 		    }
 		});
 	}
-
+	/**
+	 * Método para establecer el estado del filtro de la tabla.
+	 * Permite activar o desactivar el filtro según el parámetro recibido.
+	 * @param event Estado del filtro (true, false o null).
+	 */
 	setFilterState(event: boolean | null) {
 		this.filterState.set(event);
 	}

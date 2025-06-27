@@ -1,3 +1,12 @@
+/*******************************************************************************************************
+ * Nombre del archivo:  unlock-session.component.ts
+ * Descripción:         Componente encargado del desbloqueo de sesión por medio de contraseña,
+ *                      permitiendo que el usuario continúe su navegación de forma segura.
+ * Autor:               Daniel Alva
+ * Fecha de creación:   01/06/2025
+ * Última modificación: 23/06/2025 por Daniel Alva
+ * Cambios recientes:   Incorporación de encabezado técnico estandarizado para trazabilidad del código.
+ *******************************************************************************************************/
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import {
     FormsModule,
@@ -17,7 +26,6 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
 import { UserService } from 'app/core/user/user.service';
-
 @Component({
     selector: 'auth-unlock-session',
     templateUrl: './unlock-session.component.html',
@@ -38,7 +46,6 @@ import { UserService } from 'app/core/user/user.service';
 })
 export class AuthUnlockSessionComponent implements OnInit {
     @ViewChild('unlockSessionNgForm') unlockSessionNgForm: NgForm;
-
     alert: { type: FuseAlertType; message: string } = {
         type: 'success',
         message: '',
@@ -47,9 +54,8 @@ export class AuthUnlockSessionComponent implements OnInit {
     showAlert: boolean = false;
     unlockSessionForm: UntypedFormGroup;
     private _email: string;
-
     /**
-     * Constructor
+     * Constructor del componente
      */
     constructor(
         private _activatedRoute: ActivatedRoute,
@@ -58,22 +64,15 @@ export class AuthUnlockSessionComponent implements OnInit {
         private _router: Router,
         private _userService: UserService
     ) {}
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
-
     /**
-     * On init
+     * Hook de inicialización del componente.
+     * Obtiene los datos del usuario actual y configura el formulario reactivo.
      */
     ngOnInit(): void {
-        // Get the user's name
         this._userService.user$.subscribe((user) => {
             this.name = user.name;
             this._email = user.email;
         });
-
-        // Create the form
         this.unlockSessionForm = this._formBuilder.group({
             name: [
                 {
@@ -84,26 +83,16 @@ export class AuthUnlockSessionComponent implements OnInit {
             password: ['', Validators.required],
         });
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
     /**
-     * Unlock
+     * Ejecuta la lógica de desbloqueo de sesión.
+     * Valida el formulario, consume el servicio de autenticación y redirige o muestra errores según el resultado.
      */
     unlock(): void {
-        // Return if the form is invalid
         if (this.unlockSessionForm.invalid) {
             return;
         }
-
-        // Disable the form
         this.unlockSessionForm.disable();
-
-        // Hide the alert
         this.showAlert = false;
-
         this._authService
             .unlockSession({
                 email: this._email ?? '',
@@ -111,37 +100,24 @@ export class AuthUnlockSessionComponent implements OnInit {
             })
             .subscribe(
                 () => {
-                    // Set the redirect url.
-                    // The '/signed-in-redirect' is a dummy url to catch the request and redirect the user
-                    // to the correct page after a successful sign in. This way, that url can be set via
-                    // routing file and we don't have to touch here.
                     const redirectURL =
                         this._activatedRoute.snapshot.queryParamMap.get(
                             'redirectURL'
                         ) || '/signed-in-redirect';
-
-                    // Navigate to the redirect url
                     this._router.navigateByUrl(redirectURL);
                 },
                 (response) => {
-                    // Re-enable the form
                     this.unlockSessionForm.enable();
-
-                    // Reset the form
                     this.unlockSessionNgForm.resetForm({
                         name: {
                             value: this.name,
                             disabled: true,
                         },
                     });
-
-                    // Set the alert
                     this.alert = {
                         type: 'error',
                         message: 'Invalid password',
                     };
-
-                    // Show the alert
                     this.showAlert = true;
                 }
             );

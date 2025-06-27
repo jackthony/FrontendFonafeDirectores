@@ -10,12 +10,12 @@ export class ArchivingProcessService<T> extends HttpGenericService<T> {
         super(`${environment.apiUrlBase}/ArchivoProceso`);
     }
 
-    uploadFile(): Promise<File> {
+    uploadFile(type?: string): Promise<File> {
         return new Promise((resolve, reject) => {
             try {
                 const inputFile = document.createElement('input');
                 inputFile.type = 'file';
-                inputFile.accept = '*/*'; 
+                inputFile.accept = type ?? '*/*'; 
                 inputFile.style.display = 'none';
     
                 inputFile.addEventListener('change', async (event: Event) => {

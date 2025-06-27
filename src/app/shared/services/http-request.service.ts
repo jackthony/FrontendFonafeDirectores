@@ -1,3 +1,15 @@
+/*******************************************************************************************************
+ * Nombre del archivo:  http-request.service.ts
+ * Descripción:          Servicio genérico para encapsular las solicitudes HTTP usando HttpClient de Angular.
+ *                      Permite centralizar y tipar peticiones HTTP como GET, POST, PUT, DELETE, con soporte
+ *                      para parámetros de query, path y descargas tipo BLOB.
+ * Autor:                Daniel Alva
+ * Fecha de creación:    01/06/2025
+ * Última modificación:  23/06/2025 por Daniel Alva
+ * Cambios recientes:    - Incorporación de soporte para blobs.
+ *                       - Tipado genérico de respuestas.
+ *                       - Consolidación de lógica común de parámetros en métodos privados.
+ *******************************************************************************************************/
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';

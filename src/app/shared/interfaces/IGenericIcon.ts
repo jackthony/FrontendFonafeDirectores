@@ -1,3 +1,16 @@
+/*******************************************************************************************************
+ * Nombre del archivo:  icon-option.model.ts
+ * Descripción:          Definición de interfaces y clases para representar íconos interactivos
+ *                       utilizados en tablas, botones o menús contextuales del sistema.
+ * Autor:                Daniel Alva
+ * Fecha de creación:    01/06/2025
+ * Última modificación:  23/06/2025 por Daniel Alva
+ * Cambios recientes:    - Documentación y estandarización de atributos
+ *                       - Ajustes en valores por defecto y funciones fallback
+ *******************************************************************************************************/
+/**
+ * Representa un ícono genérico que ejecuta una acción sobre un dato de tipo `T`.
+ */
 export interface GenericIcon<T> {
     id: string;
     name: string;
@@ -6,6 +19,11 @@ export interface GenericIcon<T> {
     transitionIcon?: GenericIcon<T>;
     executeAction(dato: T): void;
 }
+/**
+ * Clase concreta que implementa `GenericIcon<T>`.
+ * Diseñada para representar un ícono configurable con lógica contextual
+ * (habilitado/deshabilitado, visible/oculto, color dinámico y acción personalizada).
+ */
 export class IconOption<T> implements GenericIcon<T> {
     id: string;
     name: string;

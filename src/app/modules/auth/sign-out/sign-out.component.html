@@ -7,7 +7,6 @@
             <div class="mx-auto w-56">
                 <img  src="images/logo/logo-fonafe-complete.svg" alt="Logo image" />
             </div>
-
             <!-- Title -->
             <div
                 class="mt-8 text-center text-4xl font-extrabold leading-tight tracking-tight"
@@ -20,13 +19,11 @@
                     Redireccionando en
                     {{ countdown | i18nPlural: countdownMapping }}
                 }
-
                 <!-- Redirect message -->
                 @if (countdown === 0) {
                     ¡Ahora estás siendo redirigido!
                 }
             </div>
-
             <!-- Form footer -->
             <div class="text-secondary mt-8 text-center text-md font-medium">
                 <span>Ir a </span>
