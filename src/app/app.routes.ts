@@ -47,15 +47,6 @@ export const appRoutes: Route[] = [
     },
     {
         path: '',
-        component: LayoutComponent,
-        data: {
-            layout: 'empty'
-        },
-        children: [
-        ]
-    },
-    {
-        path: '',
         canActivate: [AuthGuard],
         canActivateChild: [AuthGuard],
         component: LayoutComponent,
