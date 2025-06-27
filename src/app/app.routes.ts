@@ -85,13 +85,13 @@ export const appRoutes: Route[] = [
                 path: 'solicitudes', 
                 loadChildren: () => import('app/modules/admin/new-requests/new-requests.routes'),
                 canActivate: [permissionGuard],
-                data: { module: 'solicitudes', action: 'Ver' }
+                data: { module: 'nuevas-solicitudes', action: 'Ver' }
             },
             { 
                 path: 'mantenimiento-candidatos', 
                 loadChildren: () => import('app/modules/admin/candidate-maintenance/candidate-maintenance.routes'),
                 canActivate: [permissionGuard],
-                data: { module: 'Mantenimiento Candidatos', action: 'Ver' }
+                data: { module: 'mantenimiento-candidatos', action: 'Ver' }
             },
             { 
                 path: 'mantenedores-sistema', 

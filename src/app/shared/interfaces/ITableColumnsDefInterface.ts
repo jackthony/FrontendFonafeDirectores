@@ -43,6 +43,7 @@ export interface TableColumnsDefInterface {
         | "photo"
         | "detail"
         | "enter"
+        | "fonafe"
         | "password";
     format?: "fullDate" | "shortTime" | "shortTimeHour";
     customIcon?: string[][];

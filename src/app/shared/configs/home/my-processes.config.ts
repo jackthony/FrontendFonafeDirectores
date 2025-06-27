@@ -17,7 +17,7 @@ export const LIST_OF_PROCESSES: ListOfProcesses[] = [
         icon: 'mat_outline:add_circle_outline',
         value: OptionsProcess.newRequest,
         url: 'solicitudes',
-        module: "solicitudes",
+        module: "nuevas-solicitudes",
         options: []
     },
     {
@@ -25,7 +25,7 @@ export const LIST_OF_PROCESSES: ListOfProcesses[] = [
         icon: 'mat_outline:event_available',
         value: OptionsProcess.candidateMaintenance,
         url: 'mantenimiento-candidatos',
-        module: "Mantenimiento Candidatos",
+        module: "mantenimiento-candidatos",
         options: []
     },
     {
