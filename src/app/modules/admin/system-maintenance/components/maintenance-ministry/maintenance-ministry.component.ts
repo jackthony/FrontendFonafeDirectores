@@ -168,7 +168,7 @@ export default class MaintenanceMinistryComponent {
 		const respDialogo = this._matDialog.open(DialogMinistryFormComponent, {
 			data: { object: element },
 		    disableClose: true,
-			width: "700px",
+			width: "600px",
 		    minWidth: "350px",
 			panelClass: 'mat-dialog-not-padding',
 		});

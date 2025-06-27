@@ -1,8 +1,17 @@
+@media (max-width: 480px) {
+    .size-buttons{
+        width: 120px;
+    } 
+}
+.size-buttons {
+    width: 159px;
+}
+
 .btn-default-dialog {
     border-radius: 8px !important;
     gap: 10px;
     height: 47px;
-    width: 159px;
+    //width: 159px;
     max-height: 48px !important;
 }
 
