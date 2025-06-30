@@ -24,12 +24,15 @@ import { RouterLink } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
+import { environment } from 'environments/environment';
+import { NgxCaptchaModule, ReCaptcha2Component } from 'ngx-captcha';
 import { finalize } from 'rxjs';
 @Component({
     selector: 'auth-forgot-password',
     templateUrl: './forgot-password.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations,
+    styleUrls: ['./forgot-password.scss'],
     standalone: true,
     imports: [
         FuseAlertComponent,
@@ -40,10 +43,13 @@ import { finalize } from 'rxjs';
         MatButtonModule,
         MatProgressSpinnerModule,
         RouterLink,
+        NgxCaptchaModule
     ],
 })
 export class AuthForgotPasswordComponent implements OnInit {
     @ViewChild('forgotPasswordNgForm') forgotPasswordNgForm: NgForm;
+    @ViewChild('captchaElem', { static: false }) captchaElem: ReCaptcha2Component;
+    keyCaptcha = `${environment.siteKeyCaptcha}`;
     alert: { type: FuseAlertType; message: string } = {
         type: 'success',
         message: '',
@@ -64,6 +70,7 @@ export class AuthForgotPasswordComponent implements OnInit {
         // Create the form
         this.forgotPasswordForm = this._formBuilder.group({
             email: ['', [Validators.required, Validators.email]],
+            captchaResponse: ['', Validators.required],
         });
     }
     /**
@@ -73,30 +80,36 @@ export class AuthForgotPasswordComponent implements OnInit {
         if (this.forgotPasswordForm.invalid) {
             return;
         }
+        console.log(this.forgotPasswordForm.value);
         this.forgotPasswordForm.disable();
         this.showAlert = false;
         this._authService
-            .forgotPassword(this.forgotPasswordForm.get('email').value)
+            .forgotPassword(this.forgotPasswordForm.value)
             .pipe(
                 finalize(() => {
                     this.forgotPasswordForm.enable();
-                    this.forgotPasswordNgForm.resetForm();
+                    //this.forgotPasswordNgForm.resetForm();
+                    if (this.captchaElem) {
+                        this.captchaElem.resetCaptcha();
+                    }
                     this.showAlert = true;
                 })
             )
             .subscribe(
                 (response) => {
+                    this.forgotPasswordForm.get('email').setValue('');
+                    this.forgotPasswordForm.get('email').markAsUntouched();
                     this.alert = {
                         type: 'success',
                         message:
-                            "Password reset sent! You'll receive an email if you are registered on our system.",
+                            "¡Se ha enviado el restablecimiento de contraseña! Recibirás un correo electrónico si estás registrado en nuestro sistema.",
                     };
                 },
                 (response) => {
                     this.alert = {
                         type: 'error',
                         message:
-                            'Email does not found! Are you sure you are already a member?',
+                            '¡No se encontró tu correo electrónico! ¿Seguro que ya eres miembro?',
                     };
                 }
             );

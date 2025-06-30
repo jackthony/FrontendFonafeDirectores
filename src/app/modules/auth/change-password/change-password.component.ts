@@ -28,9 +28,11 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { FuseValidators } from '@fuse/validators';
 import { User } from '@models/user.interface';
+import { PasswordValidationService } from '@services/password-validation.service';
 import { AuthService } from 'app/core/auth/auth.service';
 import { TranslateMessageForm } from 'app/core/pipes/error-message-form.pipe';
 import { UserService } from 'app/core/user/user.service';
+import { ErrorMessagesPassword } from 'app/shared/interfaces/error-messages.interface';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
 import { ValidationFormService } from 'app/shared/services/validation-form.service';
 import { environment } from 'environments/environment';
@@ -63,7 +65,7 @@ export class ChangePasswordComponent implements OnInit {
     @ViewChild('captchaElem', { static: false }) captchaElem: ReCaptcha2Component;
     resetPasswordForm: UntypedFormGroup;
     showAlert: boolean = false;
-    errorMessages: { message: string; valid: boolean; key: string }[] = [];
+    errorMessages: ErrorMessagesPassword[] = [];
     user: User;
     keyCaptcha = `${environment.siteKeyCaptcha}`;
     private _unsubscribeAll: Subject<void> = new Subject<void>();
@@ -78,13 +80,14 @@ export class ChangePasswordComponent implements OnInit {
         private _ngxToastrService: NgxToastrService,
         private _router: Router,
         private _validationFormService: ValidationFormService,
+        private _passwordValidationService: PasswordValidationService
     ) {}
     /**
      * Hook de inicialización.
      * Suscribe al usuario actual e inicializa formulario con validadores personalizados.
      */
     ngOnInit(): void {
-        this.errorMessages = this.generateErrorMessages();
+        this.errorMessages = this._passwordValidationService.getDefaultErrors();
         this._userService.user$
             .subscribe((user: User) => {
                 this.user = user;
@@ -93,8 +96,8 @@ export class ChangePasswordComponent implements OnInit {
             {
                 usuarioId: [this.user.usuarioId],
                 passwordActual: ['', [Validators.required]],
-                passwordNueva: ['', [Validators.required, Validators.maxLength(32), this._validationFormService.passwordDetailedValidator]],
-                passwordConfirm: ['', [Validators.required, Validators.maxLength(32)]],
+                passwordNueva: ['', [Validators.required, this._validationFormService.passwordDetailedValidator]],
+                passwordConfirm: ['', [Validators.required, Validators.maxLength(12)]],
                 captchaResponse: ['', Validators.required],
                 token: [this._authService.accessToken]
             },
@@ -107,77 +110,10 @@ export class ChangePasswordComponent implements OnInit {
         );
 
         this.resetPasswordForm.get('passwordNueva').valueChanges.subscribe(value => {
-            this.validationPassword(value, this.errorMessages);
+            this.errorMessages = this._passwordValidationService.validatePassword(value);
+
         })
         
-    }
-
-    validationPassword(password: string, errorMessages:{ message: string; valid: boolean; key: string }[]): { message: string; valid: boolean; key: string }[] {
-
-        const minLengthValid = password?.length >= 8;
-        this.updateErrorMessage("minLength", minLengthValid,errorMessages);
-
-        const maxLengthValid = password?.length <= 12;
-        this.updateErrorMessage("maxLength", maxLengthValid,errorMessages);
-
-        const lowercaseValid = /[a-z]/.test(password);
-        this.updateErrorMessage("lowercase", lowercaseValid,errorMessages);
-
-        const uppercaseValid = /[A-Z]/.test(password);
-        this.updateErrorMessage("uppercase", uppercaseValid,errorMessages);
-
-        const numberValid = /[0-9]/.test(password);
-        this.updateErrorMessage("number", numberValid,errorMessages);
-
-        const specialCharValid = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-        this.updateErrorMessage("specialChar", specialCharValid,errorMessages);
-
-        //this.allValid = !errorMessages.every(error => !error.valid);
-
-        return errorMessages;
-    }
-
-    generateErrorMessages(): { message: string; valid: boolean; key: string }[] {
-        const errorMessages: { message: string; valid: boolean; key: string }[] = [];
-        errorMessages.push({
-            message: `Requiere al menos 8 caracteres.`,
-            valid: true,
-            key: 'minLength'
-        });
-        errorMessages.push({
-            message: `Requiere como máximo 12 caracteres.`,
-            valid: true,
-            key: 'maxLength'
-        });
-        errorMessages.push({
-            message: "Debe incluir una minúscula.",
-            valid: true,
-            key: 'lowercase'
-        });
-        errorMessages.push({
-            message: "Debe incluir una mayúscula.",
-            valid: true,
-            key: 'uppercase'
-        });
-        errorMessages.push({
-            message: "Debe incluir un número.",
-            valid: true,
-            key: 'number'
-        });
-        errorMessages.push({
-            message: "Debe incluir un carácter especial.",
-            valid: true,
-            key: 'specialChar'
-        });
-        return errorMessages;
-    }
-
-    private updateErrorMessage(key: string, valid: boolean, errorMessages:{ message: string; valid: boolean; key: string }[]): void {
-        // Encuentra el error correspondiente y actualiza su estado 'valid' según el key
-        const error = errorMessages.find(error => error.key === key);
-        if (error) {
-            error.valid = !valid;
-        }
     }
 
     /**

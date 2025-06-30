@@ -23,22 +23,27 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { FuseValidators } from '@fuse/validators';
 import { User } from '@models/user.interface';
+import { PasswordValidationService } from '@services/password-validation.service';
 import { AuthService } from 'app/core/auth/auth.service';
 import { TranslateMessageForm } from 'app/core/pipes/error-message-form.pipe';
 import { UserService } from 'app/core/user/user.service';
+import { ErrorMessagesPassword } from 'app/shared/interfaces/error-messages.interface';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
 import { ValidationFormService } from 'app/shared/services/validation-form.service';
+import { environment } from 'environments/environment';
+import { NgxCaptchaModule } from 'ngx-captcha';
 import { finalize, Subject, takeUntil } from 'rxjs';
 @Component({
     selector: 'auth-reset-password',
     templateUrl: './reset-password.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations,
+    styleUrls: ['./reset-password.scss'],
     standalone: true,
     imports: [
         CommonModule,
@@ -51,7 +56,8 @@ import { finalize, Subject, takeUntil } from 'rxjs';
         MatIconModule,
         MatProgressSpinnerModule,
         RouterLink,
-        TranslateMessageForm
+        TranslateMessageForm,
+        NgxCaptchaModule
     ],
 })
 export class AuthResetPasswordComponent implements OnInit {
@@ -59,32 +65,42 @@ export class AuthResetPasswordComponent implements OnInit {
     resetPasswordForm: UntypedFormGroup;
     showAlert: boolean = false;
     user: User;
+    errorMessages: ErrorMessagesPassword[] = [];
     private _unsubscribeAll: Subject<void> = new Subject<void>();
     alert: { type: FuseAlertType; message: string } = {
         type: 'success',
         message: '',
     };
+    keyCaptcha = `${environment.siteKeyCaptcha}`;
+    token: string = '';
+
     constructor(
         private _userService: UserService,
         private _authService: AuthService,
         private _formBuilder: UntypedFormBuilder,
         private _ngxToastrService: NgxToastrService,
         private _router: Router,
-        private _validationFormService: ValidationFormService
+        private _route: ActivatedRoute,
+        private _validationFormService: ValidationFormService,
+        private _passwordValidationService: PasswordValidationService
     ) {}
     /**
      * Hook de inicialización.
      * Suscribe al usuario actual e inicializa formulario con validadores personalizados.
      */
     ngOnInit(): void {
+        this.token = this._route.snapshot.queryParamMap.get('token') || '';
+        this.errorMessages = this._passwordValidationService.getDefaultErrors();
         this._userService.user$
             .subscribe((user: User) => {
                 this.user = user;
             });
         this.resetPasswordForm = this._formBuilder.group(
             {
-                password: ['', [Validators.required, Validators.maxLength(32), this._validationFormService.passwordDetailedValidator]],
-                passwordConfirm: ['', [Validators.required, Validators.maxLength(32)]],
+                token: [this.token, Validators.required],
+                newPassword: ['', [Validators.required, this._validationFormService.passwordDetailedValidator]],
+                passwordConfirm: ['', [Validators.required, Validators.maxLength(12)]],
+                captchaResponse: ['', Validators.required],
             },
             {
                 validators: FuseValidators.mustMatch(
@@ -93,6 +109,10 @@ export class AuthResetPasswordComponent implements OnInit {
                 ),
             }
         );
+
+        this.resetPasswordForm.get('newPassword').valueChanges.subscribe(value => {
+            this.errorMessages = this._passwordValidationService.validatePassword(value);
+        })
     }
     /**
      * Envía el formulario de restablecimiento de contraseña al backend.
@@ -103,14 +123,8 @@ export class AuthResetPasswordComponent implements OnInit {
         }
         this.resetPasswordForm.disable();
         this.showAlert = false;
-        const body = {
-            nIdUsuario: this.user.usuarioId,
-            nuevaClave: this.resetPasswordForm.get('password').value,
-            repetirClave: this.resetPasswordForm.get('passwordConfirm').value,
-            nUsuarioModificacion: this.user.usuarioId,
-        }
         this._authService
-            .resetPassword(body)
+            .resetPassword(this.resetPasswordForm.value)
             .pipe(
                 finalize(() => {
                     this.resetPasswordForm.enable();
@@ -121,13 +135,13 @@ export class AuthResetPasswordComponent implements OnInit {
                 (response) => {
 
                     this._authService.signOut();
-                    this._ngxToastrService.showSuccess('Su contraseña ha sido restablecida.', '¡Éxito!');
+                    this._ngxToastrService.showSuccess('Su contraseña ha sido actualizada.', '¡Éxito!');
                     this._router.navigate(['sign-in']);
                 },
                 (response) => {
                     this.alert = {
                         type: 'error',
-                        message: 'Algo salió mal, por favor inténtalo de nuevo.',
+                        message: response?.error?.detail ||' Algo salió mal, por favor inténtalo de nuevo.',
                     };
                     this.showAlert = true;
                 }

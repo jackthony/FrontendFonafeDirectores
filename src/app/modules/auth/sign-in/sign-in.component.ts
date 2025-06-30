@@ -83,7 +83,7 @@ export class AuthSignInComponent implements OnInit {
                 [Validators.required, Validators.email],
             ],
             password: ['12345678', Validators.required],
-            recaptcha: ['', Validators.required],
+            captchaResponse: ['', Validators.required],
             rememberMe: [''],
         });
     }
