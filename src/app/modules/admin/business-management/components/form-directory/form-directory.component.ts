@@ -232,13 +232,15 @@ export class FormDirectoryComponent implements OnInit {
 	
 	generateYearDirector(value: string): void {
 		const fechaNacimiento = this.form.get('dFechaNacimiento')?.valid;
-		if (fechaNacimiento) {  // Comprobamos si el campo es 'VALID'
-			console.log('validd');
+		if (fechaNacimiento) {  
 			let edad: number = 0;
 			if (value) {
 				const fecha = DateTime.fromISO(value);  // Convierte el valor ISO de la fecha
 				const hoy = DateTime.local();  // Obtiene la fecha actual
 				edad = hoy.year - fecha.year;
+				if (hoy.month < fecha.month || (hoy.month === fecha.month && hoy.day < fecha.day)) {
+					edad--;
+				}
 				const year = `${edad} años`
 				this.yearDirector.set(year);
 			} else this.yearDirector.set('');
@@ -334,6 +336,7 @@ export class FormDirectoryComponent implements OnInit {
 	private calculateMaxDate(): DateTime {
 		return DateTime.local().minus({ years: 120 }); // Fecha máxima para persona de 120 años
 	}
+
 	onKeyPress(event: KeyboardEvent) {
         const allowedRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]$/; 
         if (!allowedRegex.test(event.key)) {
