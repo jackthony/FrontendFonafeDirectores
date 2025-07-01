@@ -14,9 +14,6 @@
             (eventFilterState)="setFilterState($event)"
             (eventBtnSearch)="searchBusiness(true)"
             >
-            <!-- <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-              <mat-icon>more_vert</mat-icon>
-            </button> -->
             <fo-button
                 [matMenuTriggerFor]="menu"
                 [text]="'Importar/Exportar'" 
@@ -36,16 +33,6 @@
                 <span>Exportar PDF</span>
               </button>
             </mat-menu>
-            <!-- <fo-button
-                (eventAction)="uploadExcel()"
-                [text]="'Subir Excel'" 
-                [icon]="'upload'">
-            </fo-button>
-            <fo-button
-                (eventAction)="downloadExcel()"
-                [text]="'Descargar Excel'" 
-                [icon]="'download'">
-            </fo-button> -->
         </fo-search-for-button>
         <fo-table 
             [currentPage]="pageIndexTable()"

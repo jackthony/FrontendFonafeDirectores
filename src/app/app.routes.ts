@@ -96,8 +96,6 @@ export const appRoutes: Route[] = [
     
     {
         path: '',
-        canActivate: [ResetPasswordTokenGuard],
-        canActivateChild: [ResetPasswordTokenGuard],
         component: LayoutComponent,
         data: {
             layout: 'fonafe'
@@ -105,7 +103,7 @@ export const appRoutes: Route[] = [
         children: [
             {
                 path: 'reset-password', 
-                canActivate: [],
+                canActivate: [ResetPasswordTokenGuard],
                 loadChildren: () => import('app/modules/auth/reset-password/reset-password.routes')
             }
         ]

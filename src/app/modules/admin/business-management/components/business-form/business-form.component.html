@@ -54,9 +54,9 @@
                                                 <mat-select
                                                     formControlName="nIdSector"
                                                     placeholder="--">
-                                                    @for (item of lstSector(); track $index) {
-                                                        <mat-option [value]="item.nIdSector">
-                                                            {{ item.sNombreSector }}
+                                                    @for (item of ministries(); track $index) {
+                                                        <mat-option [value]="item.nIdMinisterio">
+                                                            {{ item.sNombreMinisterio }}
                                                         </mat-option>
                                                     }
                                                 </mat-select>
@@ -256,7 +256,10 @@
                                                     formControlName="nNumeroMiembros"
                                                     matInput
                                                     placeholder="--"
-                                                    type="number">
+                                                    type="number"
+                                                    (keydown)="blockNegativeSign($event)"
+                                                    min="1"
+                                                    max="100">
                                                     @if(form.get('nNumeroMiembros').invalid) {
                                                         <mat-error class="text-red-500">
                                                             {{ form.get("nNumeroMiembros") | translateMessageForm }}

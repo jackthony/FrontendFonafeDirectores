@@ -22,7 +22,7 @@ export const COLUMNS_DIRECTORY_BUSINESS: TableColumnsDefInterface[] = [
         id: 0,
         name: "sNombreCompleto",
         displayedName: "Apellidos y nombres",
-        type: "string"
+        type: "vacant"
     },
     {
         id: 1,

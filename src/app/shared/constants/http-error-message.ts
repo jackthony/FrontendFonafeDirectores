@@ -6,6 +6,7 @@
  * Fecha de creación:    01/06/2025
  * Última modificación:  23/06/2025 por Daniel Alva
  *******************************************************************************************************/
+export const showError0 = (): string => `No se pudo establecer una conexión con el servidor. Verifica tu conexión a internet.`;
 export const showError400 = (): string => `Solicitud Incorrecta`;
 export const showError401 = (): string => `No tiene autorización para ejecutar la solicitud`;
 export const showError403 = (): string => `Se ha denegado el acceso a la acción que se solicita`;

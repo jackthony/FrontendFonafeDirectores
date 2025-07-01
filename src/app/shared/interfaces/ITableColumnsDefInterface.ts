@@ -44,6 +44,7 @@ export interface TableColumnsDefInterface {
         | "detail"
         | "enter"
         | "fonafe"
+        | "vacant"
         | "password";
     format?: "fullDate" | "shortTime" | "shortTimeHour";
     customIcon?: string[][];

@@ -92,6 +92,7 @@ export class AuthForgotPasswordComponent implements OnInit {
                     if (this.captchaElem) {
                         this.captchaElem.resetCaptcha();
                     }
+                    this.forgotPasswordForm.get('captchaResponse').markAsUntouched();
                     this.showAlert = true;
                 })
             )

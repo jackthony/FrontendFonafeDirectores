@@ -113,6 +113,24 @@ export class AuthService {
         return this._httpClient.post<ResponseModel<boolean>>(`${this.url}/change-password`, credentials);
     }
 
+    verifyToken(accessToken: string): Observable<boolean> {
+        return this._httpClient
+        .post(`${this.url}/verify-token`, {
+            token: accessToken,
+        })
+        .pipe(
+            catchError((error) => {
+                return of(false)
+            }),
+            switchMap((response: ResponseLogin | boolean) => {
+                console.log('response', response);
+                
+                if(!response) return of(false);
+                return of(true);
+            })
+        )
+    }
+
 
 
     /**

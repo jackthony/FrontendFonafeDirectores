@@ -4,7 +4,7 @@ import { catchError, throwError } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
 import { HttpStatusCodes } from 'app/shared/constants/http-status-codes';
-import { showError400, showError403, showError404, showError500 } from 'app/shared/constants/http-error-message';
+import { showError0, showError400, showError403, showError404, showError500 } from 'app/shared/constants/http-error-message';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 	const authService = inject(AuthService);
@@ -16,11 +16,13 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
             if (error.error instanceof ErrorEvent) {
                 errorMessage = `Error: ${error.error.message}`;
             } else {
-				errorMessage = error.message;
+				errorMessage = error;
+				console.log('errorrr',error);
+				
 				if (error.status === HttpStatusCodes.BAD_REQUEST && error?.error.status === HttpStatusCodes.BAD_REQUEST) {
 					// Mostrar un toast por cada error
 					if (error.error.detail && error.error?.showToast) {
-						toastr.showError(error.error.detail, 'Acceso denegado');	
+						toastr.showError(error.error.detail, 'Accion denegada');	
 					}
 				  }
 				else if(error.status === HttpStatusCodes.UNAUTHORIZED){
@@ -29,6 +31,8 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
 					// Reload the app
 					location.reload();
+				} else if (error.status === HttpStatusCodes.CONNECTION){
+					toastr.showError(showError0(), 'Error');
 				} else if (error.status === HttpStatusCodes.BAD_REQUEST){
 					toastr.showError(showError400(), 'Error');
 				} else if (error.status === HttpStatusCodes.FORBIDDEN){

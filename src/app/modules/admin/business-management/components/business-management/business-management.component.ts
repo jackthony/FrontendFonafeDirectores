@@ -5,7 +5,7 @@
  * Autor               : Daniel Alva
  * Fecha de creación   : 23/06/2025
  *******************************************************************************************************/
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { ResponseModel } from '@models/IResponseModel';
 import { PAGINATOR_PAGE_SIZE } from 'app/core/config/paginator.config';
@@ -31,7 +31,7 @@ import { ArchivingProcessService } from 'app/modules/admin/shared/domain/service
   templateUrl: './business-management.component.html',
   styleUrl: './business-management.component.scss'
 })
-export class BusinessManagementComponent {
+export class BusinessManagementComponent implements OnInit {
   private readonly _router = inject(Router); // Servicio de navegación
   private _businessService = inject(BusinessService); // Servicio para la gestión de empresas
   private _archiveService = inject(ArchiveService); // Servicio para la gestión de empresas
@@ -53,6 +53,7 @@ export class BusinessManagementComponent {
   totalPagesTable = signal<number>(1);
   delaySearchBusiness = signal<number>(400);
   filterState = signal<boolean | null>(true);
+  
   /**
    * Método de inicialización del componente
    */
@@ -61,6 +62,7 @@ export class BusinessManagementComponent {
     this.iconsTable.set(this.defineIconsTable());
     this.searchBusiness();
   }
+  
   /**
    * Método para buscar empresas
    */

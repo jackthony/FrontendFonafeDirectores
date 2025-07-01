@@ -12,6 +12,7 @@
  * Útil para el manejo de errores y respuestas exitosas en servicios HTTP.
  */
 export const HttpStatusCodes = {
+    CONNECTION: 0,
     OK: 200,
     BAD_REQUEST: 400,
     UNAUTHORIZED: 401,

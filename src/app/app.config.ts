@@ -39,7 +39,6 @@ export const appConfig: ApplicationConfig = {
         provideAnimations(),
         provideHttpClient(),
         provideToastr({
-           positionClass: 'toast-top-full-width',
            progressBar: true
         }),
         provideError(),

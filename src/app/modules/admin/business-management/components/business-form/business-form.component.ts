@@ -5,7 +5,7 @@
  * Autor               : Daniel Alva
  * Fecha de creación   : 23/06/2025
  *******************************************************************************************************/
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, UrlTree } from '@angular/router';
 import {
@@ -38,6 +38,8 @@ import { DistrictEntity } from '../../domain/entities/district.entity';
 import { UbigeoService } from '../../domain/services/ubigeo.service';
 import { IndustryEntity } from 'app/modules/admin/shared/domain/entities/industry.entity';
 import { SectorEntity } from 'app/modules/admin/shared/domain/entities/sector.entity';
+import { MinistryEntity } from '../../domain/entities/ministry.entity';
+import { DirectoryBusinessComponent } from '../directory-business/directory-business.component';
 @Component({
     selector: 'app-business-form',
     standalone: true,
@@ -47,6 +49,7 @@ import { SectorEntity } from 'app/modules/admin/shared/domain/entities/sector.en
     providers: [provideNgxMask()],
 })
 export class BusinessFormComponent implements OnInit, OnDestroy {
+    @ViewChild(DirectoryBusinessComponent) directoryBusinessComponent: DirectoryBusinessComponent;
     private readonly _router = inject(Router); // Inyecta el servicio Router para navegación
     private readonly _activatedRoute = inject(ActivatedRoute); // Inyecta el servicio ActivatedRoute para acceder a los parámetros de ruta
     private _fb = inject(FormBuilder); // Inyecta el servicio FormBuilder para crear formularios reactivos
@@ -63,9 +66,9 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
     titleFinancial = signal<string>('Información financiera');
     titleBold = signal<boolean>(true); 
     business = signal<BusinessEntity>(null); 
-    //ministries = signal<MinistryEntity[]>([]); 
+    ministries = signal<MinistryEntity[]>([]); 
     lstIndustry = signal<IndustryEntity[]>([]); 
-    lstSector = signal<SectorEntity[]>([]);
+    //lstSector = signal<SectorEntity[]>([]);
     departments = signal<DepartmentEntity[]>([]);
     provinces = signal<ProvinceEntity[]>([]);
     districts = signal<DistrictEntity[]>([]);
@@ -83,9 +86,9 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
 
         const data = resolved as BusinessResolveDataEntity;
         this.business.set(data?.item);
-        //this.ministries.set(data?.ministries.lstItem);
+        this.ministries.set(data?.ministries.lstItem);
         //this.companySection.set(data?.constants.lstItem);
-        this.lstSector.set(data?.sector.lstItem);
+        //this.lstSector.set(data?.sector.lstItem);
         this.lstIndustry.set(data?.industry.lstItem);
         this.departments.set(data?.departments.lstItem); 
         this.provinces.set(data?.provinces?.lstItem ?? []); 
@@ -255,18 +258,18 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
             .pipe(
                 switchMap((response: ResponseModel<boolean>) => {
                     if (response.isSuccess) {
+                        if(this.directoryBusinessComponent) this.directoryBusinessComponent.searchDirectors(true);
                         return this._businessService.getById(this.business().nIdEmpresa);
                     }
                 }),
                 catchError(() => {
-                    this._router.navigate(['/gestion-empresas']);
                     return EMPTY;
                 }),
                 finalize(() => this._spinner.hide())
             )
             .subscribe({
                 next: (response: ResponseModel<BusinessEntity>) => {
-                    this._ngxToastrService.showSuccess('Los campos se guardaron exitosamente', '¡Éxito!');
+                    this._ngxToastrService.showSuccess('Los campos del formulario se guardaron exitosamente', '¡Éxito!');
                     this.business.set(response.item);
                     this.initForm(this.business());
                 },
@@ -278,4 +281,23 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
     setTotalMembers(event: number) {
         this.totalMembers.set(event);
     }
+
+    blockNegativeSign(event: KeyboardEvent): void {
+        // Bloquear el guion (-) en la entrada
+        if (event.key === '-' || event.key === 'e') {
+          event.preventDefault();  // Prevenir la entrada del guion o la letra 'e' (que aparece para exponentes en números)
+        }
+      }
+
+      validateNumber(event: Event): void {
+        const inputElement = event.target as HTMLInputElement;
+        const value = parseInt(inputElement.value, 10);
+    
+        // Verifica si el valor está fuera del rango permitido y lo corrige
+        if (value < 1) {
+          inputElement.value = '1';
+        } else if (value > 100) {
+          inputElement.value = '100';
+        }
+      }
 }
