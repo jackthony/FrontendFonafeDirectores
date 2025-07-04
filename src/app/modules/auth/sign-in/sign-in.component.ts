@@ -8,6 +8,7 @@
    * Última modificación: 23/06/2025 por Daniel Alva                                   
    * Cambios recientes:   Creación inicial del componente con integración de reCAPTCHA.
    **************************************************************************************/
+import { HttpErrorResponse, HttpResponseBase } from '@angular/common/http';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import {
     FormsModule,
@@ -83,7 +84,7 @@ export class AuthSignInComponent implements OnInit {
                 [Validators.required, Validators.email],
             ],
             password: ['12345678', Validators.required],
-            recaptcha: ['', Validators.required],
+            captchaResponse: ['', Validators.required],
             rememberMe: [''],
         });
     }
@@ -105,15 +106,14 @@ export class AuthSignInComponent implements OnInit {
                     ) || '/signed-in-redirect';
                 this._router.navigateByUrl(redirectURL);
             },
-            (response) => {
-                if(response)
+            (response: HttpErrorResponse) => {
                     if (this.captchaElem) {
                         this.captchaElem.resetCaptcha();
                     }
                 this.signInForm.enable();
                 this.signInNgForm.resetForm();
 
-                const message = response?.error?.detail || 'Ocurrió un error, intentelo de nuevo';
+                const message = response?.error?.detail;// || 'Ocurrió un error, intentelo de nuevo';
                 this.alert = {
                     type: 'error',
                     message: message,

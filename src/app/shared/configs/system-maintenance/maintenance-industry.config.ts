@@ -48,11 +48,11 @@ export const CONFIG_DELETE_DIALOG_INDUSTRY: DialogConfirmation = {
  * Configuración del diálogo de confirmación para desactivar rubro.
  */
 export const CONFIG_INACTIVE_DIALOG_INDUSTRY: DialogConfirmation = {
-    title: "¿Estás seguro de desactivar el rubro?",
-    message: "Recuerda que una vez desactivado el rubro?, no podrá ser visualizada como activa, pero podrás consultar su información.",
+    title: "¿Estás seguro de eliminar el rubro?",
+    message: "Recuerda que una vez eliminado el rubro, no podrá ser visualizada como activa, pero podrás consultar su información.",
     actions: {
         confirm: {
-            label: 'Desactivar'
+            label: 'Eliminar'
         },
         iconClose: false
     }

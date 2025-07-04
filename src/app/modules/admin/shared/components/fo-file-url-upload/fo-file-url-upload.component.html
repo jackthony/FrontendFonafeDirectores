@@ -10,7 +10,7 @@
                 />
             </div>
             <div class="grid gap-4 justify-items-end">
-                <button [disabled]="fileComponent().isDisabled" (click)="uploadFile()" class="btn-upload-file" type="button" mat-button>
+                <button [disabled]="fileComponent().isDisabled" (click)="uploadFile(); clickUpload()" class="btn-upload-file" type="button" mat-button>
                     <div class="flex items-center gap-1">
                         <span> Subir </span>
                         <mat-icon
@@ -42,5 +42,6 @@
                 </mat-form-field>   -->
             }
         </div>
+        <ng-content></ng-content>
     </mat-card>
 </div>

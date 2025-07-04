@@ -1,0 +1,27 @@
+ <div class="session-box">
+    <div class="session-header">
+      <span class="w-full">Finalización de sesión por inactividad</span>
+    </div>
+  
+    <div class="py-4 px-6 text-center text-gray-800">
+      <div class="session-subtitle">
+       <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:clock'"></mat-icon>
+        <span>Su sesión en línea expirará en</span>
+      </div>
+  
+      <div class="text-3xl font-bold my-2">
+        {{ timeLeft / 1000 | number: '1.0-0' }} segundos
+      </div>
+  
+      <p class="text-sm mb-4">Haga clic en “Continuar” para seguir trabajando <br> o en “Cerrar sesión” para finalizar su sesión ahora.</p>
+  
+      <div class="flex justify-center gap-4">
+        <button (click)="stay()" class="btn-continue">
+          Continuar
+        </button>
+        <button (click)="logOut()" class="btn-logout">
+          Cerrar sesión
+        </button>
+      </div>
+    </div>
+  </div>

@@ -27,18 +27,19 @@ export const businessResolver: ResolveFn<BusinessResolveResult> = (route: Activa
 	const ministryService = inject(MinistryService);
 	const ubigeoService = inject(UbigeoService);
 	const industryService = inject(IndustryService);
-	const sectorService = inject(SectorService);
+	//const sectorService = inject(SectorService);
   	const id = route.params['id'];
 	const industry$ = industryService.getAll();
-	const sector$ = sectorService.getAll();
+	const ministries$ = ministryService.getAll();
+	//const sector$ = sectorService.getAll();
 	const departments$ = ubigeoService.getDepartments();
 
 	if(!id) {
 		return forkJoin({
 			item: of(null),
-			//ministries: ministries$,
+			ministries: ministries$,
 			industry: industry$,
-			sector: sector$,
+			//sector: sector$,
 			departments: departments$,
 			provinces: of(null),
 			districts: of(null)
@@ -56,7 +57,8 @@ export const businessResolver: ResolveFn<BusinessResolveResult> = (route: Activa
 			return forkJoin({
 				item: of(business),
 				industry: industry$,
-				sector: sector$,
+				ministries: ministries$,
+				//sector: sector$,
 				departments: departments$,
 				provinces: ubigeoService.getProvinces(business.sIdDepartamento),
 				districts: ubigeoService.getDistricts(business.sIdProvincia)

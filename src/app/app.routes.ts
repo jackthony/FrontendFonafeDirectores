@@ -14,6 +14,7 @@ import { AuthGuard } from 'app/core/auth/guards/auth.guard';
 import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
 import { permissionGuard } from './core/auth/guards/permission.guard';
+import { ResetPasswordTokenGuard } from './core/auth/guards/reset-password-token.guard';
 export const appRoutes: Route[] = [
     {path: '', pathMatch : 'full', redirectTo: 'home'},
     {path: 'signed-in-redirect', pathMatch : 'full', redirectTo: 'home'},
@@ -57,7 +58,6 @@ export const appRoutes: Route[] = [
         Cargar rutas hijas
         */
         children: [
-            { path: 'reset-password', loadChildren: () => import('app/modules/auth/reset-password/reset-password.routes') },
             { path: 'change-password', loadChildren: () => import('app/modules/auth/change-password/change-password.routes') },
             { path: 'home', loadComponent: () => import('app/modules/admin/home/components/home/home.component') },
             { 
@@ -90,8 +90,29 @@ export const appRoutes: Route[] = [
                 canActivate: [permissionGuard],
                 data: { module: 'mantenimiento-sistemas', action: 'Ver' }
             },
-            { path: 'error-404', pathMatch: 'full', loadChildren: () => import('app/modules/admin/error/components/error-404/error-404.routes')},
-            { path: '**', redirectTo: 'error-404'}
+            { 
+                path: 'logs-trazabilidad', 
+                loadChildren: () => import('app/modules/admin/traceability-system/traceability-system.routes'),
+                canActivate: [/* permissionGuard */],
+                data: { module: 'logs-trazabilidad', action: 'Ver' }
+            },
         ]
-    }
+    },
+    {
+        path: '',
+        component: LayoutComponent,
+        data: {
+            layout: 'fonafe'
+        },
+        children: [
+            {
+                path: 'reset-password', 
+                canActivate: [ResetPasswordTokenGuard],
+                loadChildren: () => import('app/modules/auth/reset-password/reset-password.routes')
+            }
+        ]
+         
+    },
+    { path: 'error-404', pathMatch: 'full', loadChildren: () => import('app/modules/admin/error/components/error-404/error-404.routes')},
+    { path: '**', redirectTo: 'error-404'}
 ];

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { FileComponentState } from 'app/shared/interfaces/file-component-state.interface';
-import { HttpGenericService } from 'app/shared/services/http-generic.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({

@@ -29,6 +29,7 @@ import { mockApiServices } from 'app/mock-api';
 import { firstValueFrom } from 'rxjs';
 import { TranslocoHttpLoader } from './core/transloco/transloco.http-loader';
 import { provideToastr } from 'ngx-toastr';
+import { provideError } from './core/interceptors/providers/error.provider';
 /**
  * Configuración principal de la aplicación Angular mediante el objeto `ApplicationConfig`.
  * Incluye la inyección de servicios globales, rutas, internacionalización, temas y mock APIs.
@@ -38,9 +39,10 @@ export const appConfig: ApplicationConfig = {
         provideAnimations(),
         provideHttpClient(),
         provideToastr({
-           positionClass: 'toast-top-full-width',
+            positionClass: 'toast-top-full-width',
            progressBar: true
         }),
+        provideError(),
         provideRouter(
             appRoutes,
             withPreloading(PreloadAllModules),

@@ -4,13 +4,12 @@ import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { ResponseModel } from '@models/IResponseModel';
 import { ButtonEnum } from 'app/core/enums/button.enum';
-import { TranslateMessageForm } from 'app/core/pipes/error-message-form.pipe';
 import { UserService } from 'app/core/user/user.service';
 import { FoButtonDialogComponent } from 'app/modules/admin/shared/components/fo-button-dialog/fo-button-dialog.component';
 import { ModuleActionEntity } from 'app/modules/admin/shared/domain/entities/module-action.entity';
 import { ModuleEntity } from 'app/modules/admin/shared/domain/entities/module.entity';
+import { ResponseEntity } from 'app/modules/admin/shared/domain/entities/response.entity';
 import { RoleEntity } from 'app/modules/admin/shared/domain/entities/role.entity';
 import { RoleService } from 'app/modules/admin/shared/domain/services/role.service';
 import { FormInputModule } from 'app/shared/modules/form-input.module';
@@ -67,7 +66,7 @@ export class DialogMaintenanceRoleModulesComponent implements OnInit {
             .insertPermissionRole(this.form.value)
             .pipe(finalize(() => this.loadingService.set(false)))
             .subscribe({
-                next: (response: ResponseModel<boolean>) => {
+                next: (response: ResponseEntity<boolean>) => {
                     if (response.isSuccess) this.dialogRef.close(true);
                 },
             });

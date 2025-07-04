@@ -12,7 +12,7 @@ export const AuthGuard: CanActivateFn | CanActivateChildFn = (route, state) => {
         .check()
         .pipe(
             switchMap((authenticated) => {
-                console.log('entroo', authenticated);
+                console.log('PRIMERO ES AUTHGUARD' + 'AUTENTICADO: ' + authenticated );
                 
                 // If the user is not authenticated...
                 if (!authenticated) {

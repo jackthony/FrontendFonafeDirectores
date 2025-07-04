@@ -74,6 +74,11 @@
                                         {{ element[item.name] | empty }}
                                     </span>
                                 }
+                                @case ("vacant") {
+                                    <span class="lg:text-justify text-right pl-4 lg:pl-0 md:pl-2" [ngClass]="{'font-bold color-vacant font-sans': element[item.name] == 'VACANTE DISPONIBLE'}">
+                                        {{ element[item.name] | empty }}
+                                    </span>
+                                }
                                 @case ("decimal") {
                                     <span>
                                         {{ element[item.name] | number : "1." + item.minMaxDecimal[0] + "-" + item.minMaxDecimal[1] }}

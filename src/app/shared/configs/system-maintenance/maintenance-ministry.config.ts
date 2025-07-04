@@ -48,11 +48,11 @@ export const CONFIG_DELETE_DIALOG_MINISTRY: DialogConfirmation = {
  * Configuración del diálogo de confirmación para desactivar ministerio.
  */
 export const CONFIG_INACTIVE_DIALOG_MINISTRY: DialogConfirmation = {
-    title: "¿Estás seguro de desactivar el ministerio?",
-    message: "Recuerda que una vez desactivado el ministerio?, no podrá ser visualizada como activa, pero podrás consultar su información.",
+    title: "¿Estás seguro de eliminar el ministerio?",
+    message: "Recuerda que una vez eliminado el ministerio, no podrá ser visualizada como activa, pero podrás consultar su información.",
     actions: {
         confirm: {
-            label: 'Desactivar'
+            label: 'Eliminar'
         },
         iconClose: false
     }

@@ -15,11 +15,12 @@ import { environment } from "environments/environment";
 import { Observable, of } from "rxjs";
 import { ArchiveInterface } from "../../application/repositories/archive.interface";
 import { ResponseEntity } from "../../domain/entities/response.entity";
+import { MatTreeOptionsNode } from "../../components/bu-mat-tree-flat/models/mat-tree-options-node";
+import { FileData } from "../../domain/entities/archive-tree.entity";
 @Injectable({
     providedIn: 'root',
 })
 export class ArchiveRepository implements ArchiveInterface {
-    
     private url = `${environment.apiUrlBase}/Archivo`;// URL base para acceder al controlador Constante
     private _http = inject(HttpClient); // Cliente HTTP inyectado para consumir los servicios REST
     /**
@@ -44,6 +45,23 @@ export class ArchiveRepository implements ArchiveInterface {
 
     importExcelBussines(excel: FormData): Observable<ResponseEntity<boolean>> {
         return this._http.post<ResponseEntity<boolean>>(`${this.url}/importar`, excel)
+    }
+
+    importFileBussines(data: FormData): Observable<ResponseEntity<boolean>> {
+        return this._http.post<ResponseEntity<boolean>>(`${this.url}/crear`, data)
+    }
+
+    listTreeBussiness(nIdEmpresa: number): Observable<ResponseEntity<MatTreeOptionsNode<FileData>>> {
+        let params = new HttpParams().append('nIdEmpresa', nIdEmpresa);
+        return this._http.get<ResponseEntity<MatTreeOptionsNode<FileData>>>(`${this.url}/listar`, { params })
+    }
+
+    downloadFileBussiness(url: string): Observable<ArrayBuffer> {
+        let params = new HttpParams().append('url', url);
+        return this._http.get(`${this.url}/descargar`, {
+            params,
+            responseType: 'arraybuffer'
+        });
     }
 
 }

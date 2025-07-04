@@ -17,12 +17,16 @@
     } @else {
         <div class="p-6">
             <div class="w-full text-end mb-8">
-                <fo-button
-                    [text]="textButtonNew()"
-                    [icon]="iconButtonNew()"
-                    (eventAction)="openRegisterDirectory()"
-                    >
-                </fo-button>
+                @if (!blockCreateDirectory()) {
+                    <fo-button
+                            [disabledBtn]="loadingTable()"
+                            [text]="textButtonNew()"
+                            [icon]="iconButtonNew()"
+                            (eventAction)="openRegisterDirectory()"
+                            >
+                        </fo-button>
+                }
+                    
             </div>
                 <fo-table 
                     [currentPage]="pageIndexTable()"

@@ -23,7 +23,7 @@
                     class="mt-8"
                     [appearance]="'outline'"
                     [showIcon]="false"
-                    [type]="alert.type"
+                    [type]="alert.type"captchaResponse
                     [@shake]="alert.type === 'error'"
                 >
                     {{ alert.message }}
@@ -89,7 +89,7 @@
                         <a
                         class="text-md font-medium hover:underline"
                         style="color: #CD202C"
-                        [routerLink]="['/reset-password']"
+                        [routerLink]="['/forgot-password']"
                         >
                         Recuperar contraseña
                         </a>
@@ -99,10 +99,10 @@
                         <input
                             class="hidden"
                             matInput
-                            [formControlName]="'recaptcha'"
+                            [formControlName]="'captchaResponse'"
                         />
-                        <ngx-recaptcha2 formControlName="recaptcha" #captchaElem [siteKey]="keyCaptcha"></ngx-recaptcha2>
-                        @if (signInForm.get('recaptcha').hasError('required')) {
+                        <ngx-recaptcha2 formControlName="captchaResponse" #captchaElem [siteKey]="keyCaptcha"></ngx-recaptcha2>
+                        @if (signInForm.get('captchaResponse').hasError('required')) {
                             <mat-error class="back-color">
                                 Verificar captcha
                             </mat-error>

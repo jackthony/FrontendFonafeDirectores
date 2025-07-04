@@ -48,11 +48,11 @@ export const CONFIG_DELETE_DIALOG_POSITION: DialogConfirmation = {
  * Configuración del diálogo de desactivación de cargo.
  */
 export const CONFIG_INACTIVE_DIALOG_POSITION: DialogConfirmation = {
-    title: "¿Estás seguro de desactivar el cargo?", 
-    message: "Recuerda que una vez desactivado el cargo?, no podrá ser visualizada como activa, pero podrás consultar su información.",
+    title: "¿Estás seguro de eliminar el cargo?", 
+    message: "Recuerda que una vez eliminada el cargo, no podrá ser visualizada como activa, pero podrás consultar su información.",
     actions: {
         confirm: {
-            label: 'Desactivar'
+            label: 'Eliminar'
         },
         iconClose: false
     }

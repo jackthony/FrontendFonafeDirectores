@@ -29,10 +29,8 @@ export class PermissionButtonDirective {
   ngOnInit(): void {
     if(this.disableDirective) return;
     const resolvedModule = this.module ?? this.route.snapshot.data['module'];
-    console.warn('resolverModule', resolvedModule);
     
     if (!resolvedModule) {
-      console.warn('[PermissionButtonDirective] No se encontró módulo.');
       this.applyMode(false); // No tiene acceso, oculta el elemento
       return;
     }

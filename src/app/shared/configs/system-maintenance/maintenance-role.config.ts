@@ -48,11 +48,11 @@ export const CONFIG_DELETE_DIALOG_ROLE: DialogConfirmation = {
  * Configuración del diálogo de desactivación de rol.
  */
 export const CONFIG_INACTIVE_DIALOG_ROLE: DialogConfirmation = {
-    title: "¿Estás seguro de desactivar el rol?",
-    message: "Recuerda que una vez desactivado el rol?, no podrá ser visualizada como activa, pero podrás consultar su información.",
+    title: "¿Estás seguro de eliminar el rol?",
+    message: "Recuerda que una vez eliminado el rol, no podrá ser visualizada como activa, pero podrás consultar su información.",
     actions: {
         confirm: {
-            label: 'Desactivar'
+            label: 'Eliminar'
         },
         iconClose: false
     }

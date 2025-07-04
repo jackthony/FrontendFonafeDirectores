@@ -21,7 +21,7 @@ export class FoPillComponent {
 	defineTextPill(value: number | boolean | string): string {
         const val = typeof value === "boolean" ? +value : value;
         const map = {
-            0: "Inactivo",
+            0: "Eliminado",
             1: "Activo"
         };
 

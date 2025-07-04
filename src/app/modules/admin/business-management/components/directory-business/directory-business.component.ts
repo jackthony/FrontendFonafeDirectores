@@ -6,7 +6,7 @@
  * Fecha de creación   : 23/06/2025
  *******************************************************************************************************/
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, input, OnInit, Output, signal } from '@angular/core';
+import { Component, EventEmitter, inject, input, OnChanges, OnInit, Output, signal, SimpleChanges } from '@angular/core';
 import { DialogConfirmationService } from 'app/shared/services/dialog-confirmation.service';
 import { FoButtonComponent } from 'app/modules/admin/shared/components/fo-button/fo-button.component';
 import { FoTableComponent } from 'app/modules/admin/shared/components/fo-table/fo-table.component';
@@ -16,7 +16,6 @@ import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDef
 import { FormDirectoryComponent } from '../form-directory/form-directory.component';
 import { PAGINATOR_PAGE_SIZE } from 'app/core/config/paginator.config';
 import { finalize, forkJoin } from 'rxjs';
-import { ResponseModel } from '@models/IResponseModel';
 import { PermissionButtonDirective } from 'app/shared/directives/permission-button.directive';
 import { FileComponentStateService } from '@services/file-component-state.service';
 import { DirectorService } from '../../domain/services/director.service';
@@ -30,6 +29,7 @@ import { PositionEntity } from 'app/modules/admin/shared/domain/entities/positio
 import { TypeDirectorEntity } from 'app/modules/admin/shared/domain/entities/type-director.entity';
 import { SpecialtyEntity } from 'app/modules/admin/shared/domain/entities/specialty.entity';
 import { SectorEntity } from 'app/modules/admin/shared/domain/entities/sector.entity';
+import { ResponseEntity } from 'app/modules/admin/shared/domain/entities/response.entity';
 
 
 @Component({
@@ -39,7 +39,8 @@ import { SectorEntity } from 'app/modules/admin/shared/domain/entities/sector.en
   templateUrl: './directory-business.component.html',
   styleUrl: './directory-business.component.scss'
 })
-export class DirectoryBusinessComponent implements OnInit { 
+export class DirectoryBusinessComponent implements OnInit, OnChanges {
+	
 	private _dialogConfirmationService = inject(DialogConfirmationService); // Servicio para mostrar diálogos de confirmación
 	private _directorService = inject(DirectorService); // Servicio para interactuar con los directores
 	private _directorFormService = inject(DirectorFormService); // Servicio para interactuar con los formularios de los directores
@@ -64,8 +65,20 @@ export class DirectoryBusinessComponent implements OnInit {
     lstSpecialty = signal<SpecialtyEntity[]>([]); // Lista de especialidades
     lstDepartments = signal<DepartmentEntity[]>([]); // Lista de departamentos
     lstSector = signal<SectorEntity[]>([]); // Lista de sectores
+	blockCreateDirectory = signal<boolean>(false);
 
 	@Output() eventTotalMembers: EventEmitter<number> = new EventEmitter<number>(); // Evento para emitir el total de miembros
+
+	ngOnChanges(changes: SimpleChanges): void {
+		if(changes.business) {
+			this.verifiyBlockCreate();
+		}
+	} 
+
+	verifiyBlockCreate(): void {
+		const block = this.business().nNumeroMiembros <= (this.dataTableDirectory().filter(data => !!data.nIdRegistro).length);
+		this.blockCreateDirectory.set(block);
+	}
 
 	/**
 	 * Método que se ejecuta al inicializar el componente
@@ -79,26 +92,30 @@ export class DirectoryBusinessComponent implements OnInit {
     /**
      * Método para buscar los directores
      */
-    searchDirectors(): void {
+    searchDirectors(resetPage?: boolean): void {
+		if(resetPage) this.pageIndexTable.set(1);
 		this.loadingTable.set(true);
 		this._directorService.getByPagination(this.business().nIdEmpresa, this.pageIndexTable(), PAGINATOR_PAGE_SIZE).pipe(
 			finalize(() => this.loadingTable.set(false))
 		).subscribe({
-			next: ((response: ResponseModel<DirectorEntity>) => {
+			next: ((response: ResponseEntity<DirectorEntity>) => {
 				if(response.isSuccess){
 					const totalPages = Math.ceil(response.pagination.totalRows/PAGINATOR_PAGE_SIZE);
 					this.totalPagesTable.set(totalPages > 0 ? totalPages : 1);
 					this.dataTableDirectory.set(response.lstItem); 
 					this.eventTotalMembers.emit(response?.pagination?.totalRows || 0);
+					this.verifiyBlockCreate();
 				} else { 
 					this.dataTableDirectory.set([]); 
 					this.eventTotalMembers.emit(0);
-				} 
+					this.blockCreateDirectory.set(true);
+				}
 			}),
 			error:(() => { 
 				this.totalPagesTable.set(1); 
 				this.dataTableDirectory.set([]); 
 				this.eventTotalMembers.emit(0); 
+				this.blockCreateDirectory.set(true);
 			})
 		})
 	}
@@ -141,6 +158,8 @@ export class DirectoryBusinessComponent implements OnInit {
 		iconEdit.actionIcono = (data: DirectorEntity) => {
             this.editDirector(data); 
         };
+
+		iconEdit.isHidden = (data: DirectorEntity) => !data.nIdRegistro;
         return [iconEdit]; 
     }
 	/**

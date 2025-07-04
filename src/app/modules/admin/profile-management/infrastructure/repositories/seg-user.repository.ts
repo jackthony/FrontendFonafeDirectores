@@ -34,7 +34,7 @@ export class SegUserRepository implements SegUserInterface {
     getByPagination(param: string, pageIndex: number, pageSize: number): Observable<ResponseEntity<SegUserEntity>> {
         let params = new HttpParams().append('Page', pageIndex).append('PageSize', pageSize);
         if(param) {
-            params = params.append('Nombre', param)
+            params = params.append('sNombreCompleto', param)
         }
         return this._http.get<ResponseEntity<SegUserEntity>>(`${this.url}/listar-paginado`, { params }); 
     }

@@ -11,7 +11,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ResponseModel } from '@models/IResponseModel';
 import { PAGINATOR_PAGE_SIZE } from 'app/core/config/paginator.config';
 import { CONFIG_ACTIVE_DIALOG_SPECIALTY, CONFIG_INACTIVE_DIALOG_SPECIALTY, MAINTENANCE_SPECIALTY_HEADER_TABLE } from 'app/shared/configs/system-maintenance/maintenance-specialty.config';
 import { IconOption } from 'app/shared/interfaces/IGenericIcon';
@@ -25,6 +24,7 @@ import { MAINTENANCE_GENERAL_IMPORTS } from 'app/shared/imports/system-maintenan
 import { SpecialtyService } from 'app/modules/admin/shared/domain/services/specialty.service';
 import { SpecialtyEntity } from 'app/modules/admin/shared/domain/entities/specialty.entity';
 import { UserService } from 'app/core/user/user.service';
+import { ResponseEntity } from 'app/modules/admin/shared/domain/entities/response.entity';
 @Component({
   selector: 'app-maintenance-specialty',
   standalone: true,
@@ -78,7 +78,7 @@ export default class MaintenanceSpecialtyComponent {
 		this._specialtyService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState()).pipe(
 			finalize(() => this.loadingTable.set(false))
 		).subscribe({
-			next: ((response: ResponseModel<SpecialtyEntity>) => {
+			next: ((response: ResponseEntity<SpecialtyEntity>) => {
 				if(response.isSuccess){
 					const totalPages = Math.ceil(response.pagination.totalRows/PAGINATOR_PAGE_SIZE);
 					this.totalPagesTable.set(totalPages > 0 ? totalPages : 1);
@@ -116,8 +116,8 @@ export default class MaintenanceSpecialtyComponent {
 	 */
 	defineIconsTable(): IconOption<SpecialtyEntity>[] {
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
-        const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar");
-    	const iconActive = new IconOption("restart_alt", "mat_outline", "Activar");
+        const iconInactive = new IconOption("trash", "heroicons_outline", "Eliminar");
+    	const iconActive = new IconOption("settings_backup_restore", "mat_outline", "Activar");
 		iconEdit.actionIcono = (data: SpecialtyEntity) => {
             this.openFormDialog(data);
         };
@@ -149,9 +149,9 @@ export default class MaintenanceSpecialtyComponent {
 				.delete(request)
 				.pipe(finalize(() => this._spinner.hide()))
 				.subscribe({
-					next: (response: ResponseModel<boolean>) => {
+					next: (response: ResponseEntity<boolean>) => {
 						if (response.isSuccess) {
-							const messageToast = data.bActivo ? 'Especialidad desactivado exitosamente' : 'Especialidad activado exitosamente';
+							const messageToast = data.bActivo ? 'Especialidad eliminada exitosamente' : 'Especialidad activado exitosamente';
 							this._ngxToastrService.showSuccess(messageToast, '¡Éxito!');
 							this.searchTable();
 						}
