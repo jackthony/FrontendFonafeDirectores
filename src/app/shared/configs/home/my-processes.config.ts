@@ -67,5 +67,13 @@ export const LIST_OF_PROCESSES: ListOfProcesses[] = [
             { label: 'Mantenimiento de tipo de director', url: 'mantenedores-sistema/tipo-director' },
             { label: 'Mantenimiento de especialidad', url: 'mantenedores-sistema/especialidad' },
         ]
-    }
+    },
+    {
+        label: 'Logs de trazabilidad',
+        icon: 'mat_outline:save_alt',
+        value: OptionsProcess.traceabilitySystem,
+        url: 'logs-trazabilidad',
+        module: "logs-trazabilidad",
+        options: []
+    },
 ]

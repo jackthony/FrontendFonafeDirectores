@@ -90,10 +90,14 @@ export const appRoutes: Route[] = [
                 canActivate: [permissionGuard],
                 data: { module: 'mantenimiento-sistemas', action: 'Ver' }
             },
+            { 
+                path: 'logs-trazabilidad', 
+                loadChildren: () => import('app/modules/admin/traceability-system/traceability-system.routes'),
+                canActivate: [/* permissionGuard */],
+                data: { module: 'logs-trazabilidad', action: 'Ver' }
+            },
         ]
     },
-    
-    
     {
         path: '',
         component: LayoutComponent,

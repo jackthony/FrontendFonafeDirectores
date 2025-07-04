@@ -6,4 +6,5 @@ export enum OptionsProcess {
     businessManagement,
     careHistory,
     systemMaintenance,
+    traceabilitySystem,
 }
