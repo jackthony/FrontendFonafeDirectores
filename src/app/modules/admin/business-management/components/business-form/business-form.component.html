@@ -297,9 +297,9 @@
                     </mat-tab-group>
             </div>
             <div class="col-span-1 lg:col-span-1 my-5 lg:my-10 flex gap-4 flex-col">
+                <app-archives-bussiness [business]="business()">
+                </app-archives-bussiness>
                 @if(business()){
-                    <app-archives-bussiness [business]="business()">
-                    </app-archives-bussiness>
                 }
                 <!-- <app-fo-file-url-upload (eventAction)="uploadFileBussines()">
                 </app-fo-file-url-upload> -->

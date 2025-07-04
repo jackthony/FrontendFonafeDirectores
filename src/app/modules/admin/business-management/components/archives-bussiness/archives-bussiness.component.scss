@@ -11,10 +11,12 @@
     border: 1px solid #DDDDDD;
     border-radius: 10px;
     padding: 10px 10px;
+    max-height: 622px;
+    overflow: auto;
 }
 
 .btn-folder {
-    background-color: #1F487D;
+    background-color: #1F487D !important;
     display: flex;
     gap: 8px;
     align-items: center;
@@ -43,4 +45,12 @@
 
     }
 
+    
+}
+.text-link-block {
+    font-family: 'Inter var';
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 18px;
+    color: #d70a18;
 }

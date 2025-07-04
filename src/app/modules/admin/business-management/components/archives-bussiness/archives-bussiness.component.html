@@ -3,7 +3,7 @@
         <div class="title-dialog-upload">Lista de archivos</div>
         <div class="flex">
             <button [disabled]="!business()" (click)="setViewFolder()" mat-flat-button class="btn-folder">
-                <span>Ver archivos</span>
+                <span>{{ openFolder() ? 'Ocultar archivos' : 'Ver archivos' }} </span>
                 <mat-icon [svgIcon]="'heroicons_solid:folder-open'"></mat-icon>
             </button>
         </div>
@@ -21,9 +21,9 @@
         } @else {
                 @defer (when !loadingFolder()) {
                     <fo-mat-tree-flat (eventUploadFile)="uploadFile($event)" [data]="dataTree()"></fo-mat-tree-flat>
+
                 } @placeholder {
                     <div class="space-y-4">
-                        <!-- Skeleton for file section -->
                         <div class="items-center flex flex-col gap-2">
                           <div class="w-full h-6 bg-gray-200 animate-pulse rounded-md"></div>
                           <div class="w-full h-6 bg-gray-200 animate-pulse rounded-md"></div>
@@ -31,6 +31,11 @@
                         </div>
                       </div>
                 }
+            
+
         }
     </div>
+    @if (!business()) {
+        <p class="text-link-block mt-4">* Debe registrar la empresa, para registrar archivos</p>
+    }
 </fo-cont-card>
