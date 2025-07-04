@@ -255,6 +255,9 @@ export class FormDirectoryComponent implements OnInit {
 
       	// Calculamos la edad restando el año de nacimiento al año actual
       	let edad = hoy.year - fechaNacimiento.year;
+		  if (hoy.month < fechaNacimiento.month || (hoy.month === fechaNacimiento.month && hoy.day < fechaNacimiento.day)) {
+			edad--;
+		}
 		if(edad) {
 			const year = `${edad} años`
 		  this.yearDirector.set(year);
