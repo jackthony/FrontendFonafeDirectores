@@ -10,7 +10,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ResponseModel } from '@models/IResponseModel';
 import { PAGINATOR_PAGE_SIZE } from 'app/core/config/paginator.config';
 import { CONFIG_ACTIVE_DIALOG_ROLE, CONFIG_INACTIVE_DIALOG_ROLE, MAINTENANCE_ROL_HEADER_TABLE } from 'app/shared/configs/system-maintenance/maintenance-role.config';
 import { IconOption } from 'app/shared/interfaces/IGenericIcon';
@@ -28,6 +27,7 @@ import { UserService } from 'app/core/user/user.service';
 import { DialogMaintenanceRoleModulesComponent } from '../dialog-maintenance-role-modules/dialog-maintenance-role-modules.component';
 import { ModuleService } from 'app/modules/admin/shared/domain/services/module.service';
 import { ModuleEntity } from 'app/modules/admin/shared/domain/entities/module.entity';
+import { ResponseEntity } from 'app/modules/admin/shared/domain/entities/response.entity';
 @Component({
   selector: 'app-maintenance-role',
   standalone: true,
@@ -83,7 +83,7 @@ export default class MaintenanceRoleComponent {
 		this._roleService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState() ).pipe(
 			finalize(() => this.loadingTable.set(false))
 		).subscribe({
-			next: ((response: ResponseModel<RoleEntity>) => {
+			next: ((response: ResponseEntity<RoleEntity>) => {
 				if(response.isSuccess){
 					const totalPages = Math.ceil(response.pagination.totalRows/PAGINATOR_PAGE_SIZE);
 					this.totalPagesTable.set(totalPages > 0 ? totalPages : 1);
@@ -121,8 +121,8 @@ export default class MaintenanceRoleComponent {
 	defineIconsTable(): IconOption<RoleEntity>[] {
         const iconPermission = new IconOption("app_blocking", "mat_outline", "Definición de permisos");
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
-        const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar");
-    	const iconActive = new IconOption("restart_alt", "mat_outline", "Activar");
+        const iconInactive = new IconOption("trash", "heroicons_outline", "Eliminar");
+   		const iconActive = new IconOption("settings_backup_restore", "mat_outline", "Activar");
 		iconPermission.actionIcono = (data: RoleEntity) => {
             this.loadDataModules(data);
         };
@@ -157,9 +157,9 @@ export default class MaintenanceRoleComponent {
 				.delete(request)
 				.pipe(finalize(() => this._spinner.hide()))
 				.subscribe({
-					next: (response: ResponseModel<boolean>) => {
+					next: (response: ResponseEntity<boolean>) => {
 						if (response.isSuccess) {
-							const messageToast = data.bActivo ? 'Rol desactivado exitosamente' : 'Rol activado exitosamente';
+							const messageToast = data.bActivo ? 'Rol eliminado exitosamente' : 'Rol activado exitosamente';
 							this._ngxToastrService.showSuccess(messageToast, '¡Éxito!');
 							this.searchTable();
 						}

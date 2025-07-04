@@ -22,7 +22,6 @@ import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
 import { finalize, forkJoin } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PAGINATOR_PAGE_SIZE } from 'app/core/config/paginator.config';
-import { ResponseModel } from '@models/IResponseModel';
 import { ChangePasswordAdmComponent } from '../change-password-adm/change-password-adm.component';
 import { AuthorizationService } from 'app/shared/services/authorization.service';
 import { SegUserService } from '../../domain/services/seg-user.service';
@@ -33,6 +32,7 @@ import { ConstantEntity } from 'app/modules/admin/shared/domain/entities/constan
 import { RoleEntity } from 'app/modules/admin/shared/domain/entities/role.entity';
 import { PositionService } from 'app/modules/admin/shared/domain/services/position.service';
 import { PositionEntity } from 'app/modules/admin/shared/domain/entities/position.entity';
+import { ResponseEntity } from 'app/modules/admin/shared/domain/entities/response.entity';
 @Component({
   selector: 'app-profile-management',
   standalone: true,
@@ -85,7 +85,7 @@ export default class ProfileManagementComponent {
 		.pipe(
 			finalize(() => this.loadingTable.set(false))
 		).subscribe({
-			next: ((response: ResponseModel<SegUserEntity>) => {
+			next: ((response: ResponseEntity<SegUserEntity>) => {
 				if(response.isSuccess) {
 					const totalPages = Math.ceil(response.pagination.totalRows / PAGINATOR_PAGE_SIZE);
 					this.totalPagesTable.set(totalPages > 0 ? totalPages : 1);

@@ -9,7 +9,7 @@ import { AuthorizationService } from 'app/shared/services/authorization.service'
 import { SegUserService } from 'app/modules/admin/profile-management/domain/services/seg-user.service';
 import { environment } from 'environments/environment';
 import { ResponseLogin } from '@models/responde-login.interface';
-import { ResponseModel } from '@models/IResponseModel';
+import { ResponseEntity } from 'app/modules/admin/shared/domain/entities/response.entity';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -105,12 +105,12 @@ export class AuthService {
         );
     }
 
-    changePassword(credentials: { usuarioId: number; passwordActual: string, passwordNueva: string, captchaResponse: string, token: string }): Observable<ResponseModel<boolean>> {
+    changePassword(credentials: { usuarioId: number; passwordActual: string, passwordNueva: string, captchaResponse: string, token: string }): Observable<ResponseEntity<boolean>> {
         // Throw error, if the user is already logged in
         if (!this._authenticated) {
             return throwError('El usuario aún no ha iniciado sesión');
         }
-        return this._httpClient.post<ResponseModel<boolean>>(`${this.url}/change-password`, credentials);
+        return this._httpClient.post<ResponseEntity<boolean>>(`${this.url}/change-password`, credentials);
     }
 
     verifyToken(accessToken: string): Observable<boolean> {

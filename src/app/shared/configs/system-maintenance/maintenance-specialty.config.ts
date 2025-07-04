@@ -49,11 +49,11 @@ export const CONFIG_DELETE_DIALOG_TYPE_SPECIALTY: DialogConfirmation = {
  * Diálogo de confirmación para desactivación de especialidad.
  */
 export const CONFIG_INACTIVE_DIALOG_SPECIALTY: DialogConfirmation = {
-    title: "¿Estás seguro de desactivar la especialidad?",
-    message: "Recuerda que una vez desactivado la especialidad?, no podrá ser visualizada como activa, pero podrás consultar su información.",
+    title: "¿Estás seguro de eliminar la especialidad?",
+    message: "Recuerda que una vez eliminado la especialidad, no podrá ser visualizada como activa, pero podrás consultar su información.",
     actions: {
         confirm: {
-            label: 'Desactivar'
+            label: 'Eliminar'
         },
         iconClose: false
     }

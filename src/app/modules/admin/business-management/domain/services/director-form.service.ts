@@ -1,19 +1,17 @@
 import { inject, Injectable } from '@angular/core';
 import { map, Observable, of, tap } from 'rxjs';
 import { CONST_CARGO_DIRECTOR, CONST_GENDER, CONST_TYPE_DOCUMENT } from 'app/shared/configs/business-management/directory-business.config';
-import { ResponseModel } from '@models/IResponseModel';
 import { ConstantService } from 'app/modules/admin/shared/domain/services/constant.service';
 import { ConstantEntity } from '../entities/constant.entity';
 import { DepartmentEntity } from '../entities/departament.entity';
 import { UbigeoService } from './ubigeo.service';
-import { PositionEntity } from 'app/modules/admin/shared/domain/entities/position.entity';
-import { PositionService } from 'app/modules/admin/shared/domain/services/position.service';
 import { TypeDirectorEntity } from 'app/modules/admin/shared/domain/entities/type-director.entity';
 import { TypeDirectorService } from 'app/modules/admin/shared/domain/services/type-director.service';
 import { SpecialtyEntity } from 'app/modules/admin/shared/domain/entities/specialty.entity';
 import { SpecialtyService } from 'app/modules/admin/shared/domain/services/specialty.service';
 import { SectorEntity } from 'app/modules/admin/shared/domain/entities/sector.entity';
 import { SectorService } from 'app/modules/admin/shared/domain/services/sector.service';
+import { ResponseEntity } from 'app/modules/admin/shared/domain/entities/response.entity';
 
 @Injectable({
   providedIn: 'root'
@@ -68,8 +66,8 @@ export class DirectorFormService {
 		}
 	
 		return this._constantService.getAll(nConValor).pipe(
-		  tap((data: ResponseModel<ConstantEntity>) => this.cacheConstant.set(key, data.lstItem)),
-		  map((data: ResponseModel<ConstantEntity>) => data.lstItem)
+		  tap((data: ResponseEntity<ConstantEntity>) => this.cacheConstant.set(key, data.lstItem)),
+		  map((data: ResponseEntity<ConstantEntity>) => data.lstItem)
 		);
 	}
 
@@ -79,8 +77,8 @@ export class DirectorFormService {
 		}
 
 		return this._ubigeoService.getDepartments().pipe(
-		  tap((data: ResponseModel<DepartmentEntity>) => this.cacheDepartment.set(key, data.lstItem)),
-		  map((data: ResponseModel<DepartmentEntity>) => data.lstItem)
+		  tap((data: ResponseEntity<DepartmentEntity>) => this.cacheDepartment.set(key, data.lstItem)),
+		  map((data: ResponseEntity<DepartmentEntity>) => data.lstItem)
 		);
 	}
 	
@@ -90,8 +88,8 @@ export class DirectorFormService {
 		}
 		
 		return this._typeDirectorService.getAll().pipe(
-		  tap((data: ResponseModel<TypeDirectorEntity>) => this.cacheTypeDirector.set(key, data.lstItem)),
-		  map((data: ResponseModel<TypeDirectorEntity>) => data.lstItem)
+		  tap((data: ResponseEntity<TypeDirectorEntity>) => this.cacheTypeDirector.set(key, data.lstItem)),
+		  map((data: ResponseEntity<TypeDirectorEntity>) => data.lstItem)
 		);
 	}
 
@@ -101,8 +99,8 @@ export class DirectorFormService {
 		}
 		
 		return this._specialtyService.getAll().pipe(
-		  tap((data: ResponseModel<SpecialtyEntity>) => this.cacheSpecialty.set(key, data.lstItem)),
-		  map((data: ResponseModel<SpecialtyEntity>) => data.lstItem)
+		  tap((data: ResponseEntity<SpecialtyEntity>) => this.cacheSpecialty.set(key, data.lstItem)),
+		  map((data: ResponseEntity<SpecialtyEntity>) => data.lstItem)
 		);
 	}
 
@@ -112,8 +110,8 @@ export class DirectorFormService {
 		}
 		
 		return this._sectorService.getAll().pipe(
-		  tap((data: ResponseModel<SectorEntity>) => this.cacheSector.set(key, data.lstItem)),
-		  map((data: ResponseModel<SectorEntity>) => data.lstItem)
+		  tap((data: ResponseEntity<SectorEntity>) => this.cacheSector.set(key, data.lstItem)),
+		  map((data: ResponseEntity<SectorEntity>) => data.lstItem)
 		);
 	}
 

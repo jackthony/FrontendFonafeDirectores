@@ -8,9 +8,7 @@
  * Cambios recientes:   Eliminación de importaciones no utilizadas y validación de mensajes.
  *************************************************************************************/
 import { Component, inject, signal } from '@angular/core';
-import { ResponseModel } from '@models/IResponseModel';
 import { IconOption } from 'app/shared/interfaces/IGenericIcon';
-import { RequestOption } from 'app/shared/interfaces/IRequestOption';
 import { finalize, firstValueFrom } from 'rxjs';
 import { DialogPositionFormComponent } from '../dialog-position-form/dialog-position-form.component';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -26,6 +24,7 @@ import { MAINTENANCE_GENERAL_IMPORTS } from 'app/shared/imports/system-maintenan
 import { PositionService } from 'app/modules/admin/shared/domain/services/position.service';
 import { PositionEntity } from 'app/modules/admin/shared/domain/entities/position.entity';
 import { UserService } from 'app/core/user/user.service';
+import { ResponseEntity } from 'app/modules/admin/shared/domain/entities/response.entity';
 @Component({
   selector: 'app-maintenance-position',
   standalone: true,
@@ -80,7 +79,7 @@ export default class MaintenancePositionComponent {
 		this._positionService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState()).pipe(
 			finalize(() => this.loadingTable.set(false))
 		).subscribe({
-			next: ((response: ResponseModel<PositionEntity>) => {
+			next: ((response: ResponseEntity<PositionEntity>) => {
 				if(response.isSuccess){
 					const totalPages = Math.ceil(response.pagination.totalRows/PAGINATOR_PAGE_SIZE);
 					this.totalPagesTable.set(totalPages > 0 ? totalPages : 1);
@@ -117,8 +116,8 @@ export default class MaintenancePositionComponent {
 	 */
 	defineIconsTable(): IconOption<PositionEntity>[] {
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
-        const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar");
-    	const iconActive = new IconOption("restart_alt", "mat_outline", "Activar");
+        const iconInactive = new IconOption("trash", "heroicons_outline", "Eliminar");
+    	const iconActive = new IconOption("settings_backup_restore", "mat_outline", "Activar");
 		iconEdit.actionIcono = (data: PositionEntity) => {
             this.openFormDialog(data);
         };
@@ -150,7 +149,7 @@ export default class MaintenancePositionComponent {
 				.delete(request)
 				.pipe(finalize(() => this._spinner.hide()))
 				.subscribe({
-					next: (response: ResponseModel<boolean>) => {
+					next: (response: ResponseEntity<boolean>) => {
 						if (response.isSuccess) {
 							const messageToast = data.bActivo ? 'Cargo desactivado exitosamente' : 'Cargo activado exitosamente';
 							this._ngxToastrService.showSuccess(messageToast, '¡Éxito!');

@@ -26,17 +26,16 @@ import {
 } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ResponseModel } from '@models/IResponseModel';
-import { User } from '@models/user.interface';
 import { ButtonEnum } from 'app/core/enums/button.enum';
 import { TranslateMessageForm } from 'app/core/pipes/error-message-form.pipe';
 import { UserService } from 'app/core/user/user.service';
 import { FormInputModule } from 'app/shared/modules/form-input.module';
-import { finalize, Subject, takeUntil } from 'rxjs';
+import { finalize, Subject } from 'rxjs';
 import { SegUserService } from '../../domain/services/seg-user.service';
 import { SegUserEntity } from '../../domain/entities/seg-user.entity';
 import { FoButtonDialogComponent } from 'app/modules/admin/shared/components/fo-button-dialog/fo-button-dialog.component';
 import { AuthService } from 'app/core/auth/auth.service';
+import { ResponseEntity } from 'app/modules/admin/shared/domain/entities/response.entity';
 @Component({
     selector: 'app-change-password-adm',
     standalone: true,
@@ -89,7 +88,7 @@ export class ChangePasswordAdmComponent implements OnInit {
             .updatePasswordByAdmin(this.form.value)
             .pipe(finalize(() => this.loadingService.set(false))) 
             .subscribe({
-                next: (response: ResponseModel<boolean>) => {
+                next: (response: ResponseEntity<boolean>) => {
                     if (response.isSuccess) this.dialogRef.close(true);
                 },
             });

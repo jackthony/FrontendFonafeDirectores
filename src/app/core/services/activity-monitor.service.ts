@@ -10,7 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class ActivityMonitorService {
   private router = inject(Router);
-	private _maxIdleTime: number = ACTIVITY_MONITOR_CONFIG.IDLE_TIMEOUT;//20 * 60 * 1000; // 20 minutos
+	private _maxIdleTime: number = ACTIVITY_MONITOR_CONFIG.IDLE_TIMEOUT;
 	private currentIntervalMs = ACTIVITY_MONITOR_CONFIG.LOW_FREQ_INTERVAL;
 
 	private _idleSubject = new BehaviorSubject<boolean>(false);

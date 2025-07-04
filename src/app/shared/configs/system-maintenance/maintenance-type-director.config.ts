@@ -47,11 +47,11 @@ export const CONFIG_DELETE_DIALOG_TYPE_DIRECTOR: DialogConfirmation = {
  * Configuración del diálogo de confirmación para desactivar tipo de director.
  */
 export const CONFIG_INACTIVE_DIALOG_TYPE_DIRECTOR: DialogConfirmation = {
-    title: "¿Estás seguro de desactivar tipo de director?",
-    message: "Recuerda que una vez desactivado tipo de director, no podrá ser visualizada como activa, pero podrás consultar su información.",
+    title: "¿Estás seguro de eliminar tipo de director?",
+    message: "Recuerda que una vez eliminado tipo de director, no podrá ser visualizada como activa, pero podrás consultar su información.",
     actions: {
         confirm: {
-            label: 'Desactivar'
+            label: 'Eliminar'
         },
         iconClose: false
     }

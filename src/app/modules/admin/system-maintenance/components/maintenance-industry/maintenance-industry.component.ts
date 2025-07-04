@@ -10,7 +10,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ResponseModel } from '@models/IResponseModel';
 import { PAGINATOR_PAGE_SIZE } from 'app/core/config/paginator.config';
 import { CONFIG_ACTIVE_DIALOG_INDUSTRY, CONFIG_INACTIVE_DIALOG_INDUSTRY, MAINTENANCE_INDUSTRY_HEADER_TABLE } from 'app/shared/configs/system-maintenance/maintenance-industry.config';
 import { IconOption } from 'app/shared/interfaces/IGenericIcon';
@@ -25,6 +24,7 @@ import { MAINTENANCE_GENERAL_IMPORTS } from 'app/shared/imports/system-maintenan
 import { IndustryService } from 'app/modules/admin/shared/domain/services/industry.service';
 import { IndustryEntity } from 'app/modules/admin/shared/domain/entities/industry.entity';
 import { UserService } from 'app/core/user/user.service';
+import { ResponseEntity } from 'app/modules/admin/shared/domain/entities/response.entity';
 @Component({
   selector: 'app-maintenance-industry',
   standalone: true,
@@ -86,7 +86,7 @@ export default class MaintenanceIndustryComponent {
 		this._sectorService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState()).pipe(
 			finalize(() => this.loadingTable.set(false))
 		).subscribe({
-			next: ((response: ResponseModel<IndustryEntity>) => {
+			next: ((response: ResponseEntity<IndustryEntity>) => {
 				if(response.isSuccess){
 					const totalPages = Math.ceil(response.pagination.totalRows/PAGINATOR_PAGE_SIZE);
 					this.totalPagesTable.set(totalPages > 0 ? totalPages : 1);
@@ -125,8 +125,8 @@ export default class MaintenanceIndustryComponent {
 	 */
 	defineIconsTable(): IconOption<IndustryEntity>[] {
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
-        const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar");
-    	const iconActive = new IconOption("restart_alt", "mat_outline", "Activar");
+        const iconInactive = new IconOption("trash", "heroicons_outline", "Eliminar");
+    	const iconActive = new IconOption("settings_backup_restore", "mat_outline", "Activar");
 		iconEdit.actionIcono = (data: IndustryEntity) => {
             this.openFormDialog(data);
         };
@@ -157,9 +157,9 @@ export default class MaintenanceIndustryComponent {
 				.delete(request)
 				.pipe(finalize(() => this._spinner.hide()))
 				.subscribe({
-					next: (response: ResponseModel<boolean>) => {
+					next: (response: ResponseEntity<boolean>) => {
 						if (response.isSuccess) {
-							const messageToast = data.bActivo ? 'Rubro desactivado exitosamente' : 'Rubro activado exitosamente'; // Muestra un mensaje de éxito
+							const messageToast = data.bActivo ? 'Rubro eliminado exitosamente' : 'Rubro activado exitosamente'; // Muestra un mensaje de éxito
 							this._ngxToastrService.showSuccess(messageToast, '¡Éxito!');
 							this.searchTable();
 						}

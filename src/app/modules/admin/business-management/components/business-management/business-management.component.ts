@@ -7,15 +7,13 @@
  *******************************************************************************************************/
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { ResponseModel } from '@models/IResponseModel';
 import { PAGINATOR_PAGE_SIZE } from 'app/core/config/paginator.config';
-import { COLUMNS_BUSINESS_MANAGEMENT } from 'app/shared/configs/business-management/business-management.config';
+import { COLUMNS_BUSINESS_MANAGEMENT, CONFIG_ACTIVE_DIALOG_BUSINESS, CONFIG_INACTIVE_DIALOG_BUSINESS } from 'app/shared/configs/business-management/business-management.config';
 import { BUSINESS_MANAGEMENT_IMPORTS } from 'app/shared/imports/business-management/business-management.imports';
 import { IconOption } from 'app/shared/interfaces/IGenericIcon';
 import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDefInterface';
 import { DialogConfirmationService } from 'app/shared/services/dialog-confirmation.service';
 import { finalize, firstValueFrom, Observable } from 'rxjs';
-import { DialogConfirmation } from 'app/modules/admin/shared/components/fo-dialog-confirmation/models/dialog-confirmation.interface';
 import { NgxToastrService } from 'app/shared/services/ngx-toastr.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BusinessService } from '../../domain/services/business.service';
@@ -23,6 +21,7 @@ import { BusinessEntity } from '../../domain/entities/business.entity';
 import { UserService } from 'app/core/user/user.service';
 import { ArchiveService } from 'app/modules/admin/shared/domain/services/archive.service';
 import { ArchivingProcessService } from 'app/modules/admin/shared/domain/services/archiving-process.service';
+import { ResponseEntity } from 'app/modules/admin/shared/domain/entities/response.entity';
 
 @Component({
   selector: 'app-business-management',
@@ -72,7 +71,7 @@ export class BusinessManagementComponent implements OnInit {
         this._businessService.getByPagination(this.businessSearch(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState()).pipe(
           finalize(() => this.loadingTable.set(false))
         ).subscribe({
-          next: (response: ResponseModel<BusinessEntity>) => {
+          next: (response: ResponseEntity<BusinessEntity>) => {
             if (response.isSuccess) {
               const totalPages = Math.ceil(response.pagination.totalRows / PAGINATOR_PAGE_SIZE);
               this.totalPagesTable.set(totalPages > 0 ? totalPages : 1);
@@ -115,8 +114,8 @@ export class BusinessManagementComponent implements OnInit {
    */
   defineIconsTable(): IconOption<BusinessEntity>[] {
     const iconEdit = new IconOption("create", "mat_outline", "Editar");
-    const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar");
-    const iconActive = new IconOption("restart_alt", "mat_outline", "Activar");
+    const iconInactive = new IconOption("trash", "heroicons_outline", "Eliminar");
+    const iconActive = new IconOption("settings_backup_restore", "mat_outline", "Activar");
     iconEdit.actionIcono = (data: BusinessEntity) => {
       this.editBussines(data);
     };
@@ -140,19 +139,7 @@ export class BusinessManagementComponent implements OnInit {
    * Método para desactivar o activar una empresa
    */
   async deleteBussines(data: BusinessEntity): Promise<void> {
-    const title = data.bActivo ? '¿Estás seguro de desactivar la empresa?' : '¿Estás seguro de activar la empresa?';
-    const message = data.bActivo 
-      ? 'Recuerda que una vez desactivada la empresa, no podrá ser visualizada como activa, pero podrás consultar su información.'
-      : 'Recuerda que una vez activada la empresa, será visualizada como activa';
-    const button = data.bActivo ? 'Desactivar' : "Activar";
-    const config: DialogConfirmation = {
-      title: title,
-      message: message,
-      actions: {
-        confirm: { label: button },
-        iconClose: false
-      },
-    };
+    const config = data.bActivo ? CONFIG_INACTIVE_DIALOG_BUSINESS : CONFIG_ACTIVE_DIALOG_BUSINESS;
     const dialogRef = await this._dialogConfirmationService.open(config);
     const isValid = await firstValueFrom(dialogRef.afterClosed());
     if (isValid) {
@@ -164,11 +151,11 @@ export class BusinessManagementComponent implements OnInit {
         .delete(request)
         .pipe(finalize(() => this._spinner.hide()))
         .subscribe({
-          next: (response: ResponseModel<boolean>) => {
+          next: (response: ResponseEntity<boolean>) => {
             if (response.isSuccess) {
-              const messageToast = data.bActivo ? 'Empresa desactivada exitosamente' : 'Empresa activada exitosamente';
+              const messageToast = data.bActivo ? 'Empresa eliminada exitosamente' : 'Empresa activada exitosamente';
               this._ngxToastrService.showSuccess(messageToast, '¡Éxito!');
-              this.searchBusiness(); 
+              this.searchBusiness(true); 
             }
           },
         });
@@ -191,10 +178,10 @@ export class BusinessManagementComponent implements OnInit {
             finalize(() => this._spinner.hide())
         )
         .subscribe({
-            next: (response: ResponseModel<boolean>) => {
+            next: (response: ResponseEntity<boolean>) => {
                 if (response.isSuccess) {
                     this._ngxToastrService.showSuccess('Documento registrado exitosamente', '¡Éxito!');
-					this.searchBusiness();
+					          this.searchBusiness();
                 }
             },
         })
@@ -202,11 +189,11 @@ export class BusinessManagementComponent implements OnInit {
 	}
     exportExcel(): void {
       	const downloadExcel$ = this._archiveService.getReportExcelBussines();
-		this.downloadFile(downloadExcel$, 'xlsx', 'application/vnd.ms-excel');
+		this.downloadFile(downloadExcel$, 'reporte_empresas.xlsx', 'application/vnd.ms-excel');
     }
     exportPdf(): void {
 		const downloadPdf$ = this._archiveService.getReportPdfBussines();
-	  	this.downloadFile(downloadPdf$, 'pdf', 'application/pdf');
+	  	this.downloadFile(downloadPdf$, 'reporte_empresas.pdf', 'application/pdf');
     }
 	downloadFile(observable: Observable<ArrayBuffer>, type: string, mimeType: string) {
         this._spinner.show();

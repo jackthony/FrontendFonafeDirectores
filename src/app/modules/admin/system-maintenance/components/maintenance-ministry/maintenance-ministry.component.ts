@@ -10,7 +10,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ResponseModel } from '@models/IResponseModel';
 import { PAGINATOR_PAGE_SIZE } from 'app/core/config/paginator.config';
 import { IconOption } from 'app/shared/interfaces/IGenericIcon';
 import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDefInterface';
@@ -25,6 +24,7 @@ import { MAINTENANCE_GENERAL_IMPORTS } from 'app/shared/imports/system-maintenan
 import { MinistryService } from 'app/modules/admin/shared/domain/services/ministry.service';
 import { MinistryEntity } from 'app/modules/admin/business-management/domain/entities/ministry.entity';
 import { UserService } from 'app/core/user/user.service';
+import { ResponseEntity } from 'app/modules/admin/shared/domain/entities/response.entity';
 @Component({
   selector: 'app-maintenance-ministry',
   standalone: true,
@@ -80,7 +80,7 @@ export default class MaintenanceMinistryComponent {
 		this._ministryService.getByPagination(this.paramSearchTable(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState()).pipe(
 			finalize(() => this.loadingTable.set(false))
 		).subscribe({
-			next: ((response: ResponseModel<MinistryEntity>) => {
+			next: ((response: ResponseEntity<MinistryEntity>) => {
 				if(response.isSuccess) {
 					const totalPages = Math.ceil(response.pagination.totalRows / PAGINATOR_PAGE_SIZE);
 					this.totalPagesTable.set(totalPages > 0 ? totalPages : 1);
@@ -118,8 +118,8 @@ export default class MaintenanceMinistryComponent {
 	 */
 	defineIconsTable(): IconOption<MinistryEntity>[] {
         const iconEdit = new IconOption("create", "mat_outline", "Editar");
-        const iconInactive = new IconOption("remove_circle_outline", "mat_outline", "Desactivar");
-    	const iconActive = new IconOption("restart_alt", "mat_outline", "Activar");
+        const iconInactive = new IconOption("trash", "heroicons_outline", "Eliminar");
+    	const iconActive = new IconOption("settings_backup_restore", "mat_outline", "Activar");
 		iconEdit.actionIcono = (data: MinistryEntity) => {
             this.openFormDialog(data);
         };
@@ -150,9 +150,9 @@ export default class MaintenanceMinistryComponent {
 				.delete(request)
 				.pipe(finalize(() => this._spinner.hide()))
 				.subscribe({
-					next: (response: ResponseModel<boolean>) => {
+					next: (response: ResponseEntity<boolean>) => {
 						if (response.isSuccess) {
-							const messageToast = data.bActivo ? 'Ministerio desactivado exitosamente' : 'Ministerio activado exitosamente';
+							const messageToast = data.bActivo ? 'Ministerio eliminado exitosamente' : 'Ministerio activado exitosamente';
 							this._ngxToastrService.showSuccess(messageToast, '¡Éxito!');
 							this.searchTable();
 						}

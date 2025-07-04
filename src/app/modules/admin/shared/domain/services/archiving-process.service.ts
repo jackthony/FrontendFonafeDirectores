@@ -1,14 +1,12 @@
-import { Injectable } from '@angular/core';
-import { environment } from 'environments/environment';
-import { HttpGenericService } from 'app/shared/services/http-generic.service';
+import { inject, Injectable } from '@angular/core';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { finalize, Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
-export class ArchivingProcessService<T> extends HttpGenericService<T> {
-    constructor() {
-        super(`${environment.apiUrlBase}/ArchivoProceso`);
-    }
+export class ArchivingProcessService {
+    private _spinner = inject(NgxSpinnerService); // Inyecta el servicio NgxSpinnerService para mostrar un spinner de carga
 
     uploadFile(type?: string): Promise<File> {
         return new Promise((resolve, reject) => {
@@ -39,6 +37,25 @@ export class ArchivingProcessService<T> extends HttpGenericService<T> {
                 reject(error);
             }
         });
-        
     }
+
+    downloadFile(observable: Observable<ArrayBuffer>, name: string, mimeType: string) {
+        this._spinner.show();
+        observable
+        .pipe( finalize(() => this._spinner.hide()))
+        .subscribe({
+            next: ((response: ArrayBuffer) => {
+                const blob = new Blob([response], { type: mimeType });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                document.body.appendChild(a);
+                a.setAttribute("style", "display: none");
+                a.href = url;
+                a.download = `${name}`;
+                a.click();
+                window.URL.revokeObjectURL(url);
+                a.remove();
+            })
+        })
+    };
 }

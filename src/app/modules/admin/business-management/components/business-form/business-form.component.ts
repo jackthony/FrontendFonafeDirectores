@@ -21,7 +21,6 @@ import {
     takeUntil,
     tap,
 } from 'rxjs';
-import { ResponseModel } from '@models/IResponseModel';
 import { UserService } from 'app/core/user/user.service';
 import { FORM_BUSINESS_IMPORTS } from 'app/shared/imports/business-management/form-register-business.imports';
 import { ValidationFormService } from 'app/shared/services/validation-form.service';
@@ -40,6 +39,9 @@ import { IndustryEntity } from 'app/modules/admin/shared/domain/entities/industr
 import { SectorEntity } from 'app/modules/admin/shared/domain/entities/sector.entity';
 import { MinistryEntity } from '../../domain/entities/ministry.entity';
 import { DirectoryBusinessComponent } from '../directory-business/directory-business.component';
+import { ArchivingProcessService } from 'app/modules/admin/shared/domain/services/archiving-process.service';
+import { ArchiveService } from 'app/modules/admin/shared/domain/services/archive.service';
+import { ResponseEntity } from 'app/modules/admin/shared/domain/entities/response.entity';
 @Component({
     selector: 'app-business-form',
     standalone: true,
@@ -60,6 +62,8 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
     private _businessService = inject(BusinessService); // Inyecta el servicio BusinessService para manejar las empresas
     private _ubigeoService = inject(UbigeoService); 
     private _userService = inject(UserService); // Inyecta el servicio UserService para acceder a la información del usuario
+    private _archivingProcessService = inject(ArchivingProcessService); // Inyecta el servicio para seleccionar el archivo
+    private _archiveService = inject(ArchiveService); // Inyecta el servicio para acceder insertar y descargar archivos
     private destroy$ = new Subject<void>(); // Subject para manejar la destrucción del componente
     textReturn = signal<string>('Regresar al buscador');
     titleModule = signal<string>('Nombre de la empresa'); 
@@ -67,8 +71,7 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
     titleBold = signal<boolean>(true); 
     business = signal<BusinessEntity>(null); 
     ministries = signal<MinistryEntity[]>([]); 
-    lstIndustry = signal<IndustryEntity[]>([]); 
-    //lstSector = signal<SectorEntity[]>([]);
+    lstIndustry = signal<IndustryEntity[]>([]);
     departments = signal<DepartmentEntity[]>([]);
     provinces = signal<ProvinceEntity[]>([]);
     districts = signal<DistrictEntity[]>([]);
@@ -156,7 +159,7 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
                                 .getProvinces(deptId)
                                 .pipe(
                                     map(
-                                        (res: ResponseModel<ProvinceEntity>) =>
+                                        (res: ResponseEntity<ProvinceEntity>) =>
                                             res.lstItem
                                     )
                                 )
@@ -179,7 +182,7 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
                                 .getDistricts(provId)
                                 .pipe(
                                     map(
-                                        (res: ResponseModel<DistrictEntity>) =>
+                                        (res: ResponseEntity<DistrictEntity>) =>
                                             res.lstItem
                                     )
                                 )
@@ -238,7 +241,7 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
             .create(this.form.value)
             .pipe(finalize(() => this._spinner.hide()))
             .subscribe({
-                next: (response: ResponseModel<number>) => {
+                next: (response: ResponseEntity<number>) => {
                     if (response.isSuccess) {
                         this._ngxToastrService.showSuccess('Empresa registrada exitosamente', '¡Éxito!');
                         this._router.navigate([response.item], {
@@ -256,7 +259,7 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
         this._businessService
             .update(this.form.value)
             .pipe(
-                switchMap((response: ResponseModel<boolean>) => {
+                switchMap((response: ResponseEntity<boolean>) => {
                     if (response.isSuccess) {
                         if(this.directoryBusinessComponent) this.directoryBusinessComponent.searchDirectors(true);
                         return this._businessService.getById(this.business().nIdEmpresa);
@@ -268,7 +271,7 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
                 finalize(() => this._spinner.hide())
             )
             .subscribe({
-                next: (response: ResponseModel<BusinessEntity>) => {
+                next: (response: ResponseEntity<BusinessEntity>) => {
                     this._ngxToastrService.showSuccess('Los campos del formulario se guardaron exitosamente', '¡Éxito!');
                     this.business.set(response.item);
                     this.initForm(this.business());
@@ -299,5 +302,27 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
         } else if (value > 100) {
           inputElement.value = '100';
         }
-      }
+    }
+
+    async uploadFileBussines(): Promise<void> {
+        const file = await this._archivingProcessService.uploadFile();
+        const formData: FormData = new FormData();
+        formData.append('IsDocumento', 'true');
+        formData.append('Archivo', file),
+        formData.append('EmpresaId', this.business().nIdEmpresa.toString()),
+        formData.append('CarpetaPadreId', '');
+        formData.append('UsuarioRegistroId', this._userService.userLogin().usuarioId.toString() );
+        this._spinner.show();
+        this._archiveService.importFileBussines(formData)
+        .pipe(
+            finalize(() => this._spinner.hide())
+        )
+        .subscribe({
+            next: (response: ResponseEntity<boolean>) => {
+                if (response.isSuccess) {
+                    this._ngxToastrService.showSuccess('Documento registrado exitosamente', '¡Éxito!');
+                }
+            },
+        })
+    }
 }

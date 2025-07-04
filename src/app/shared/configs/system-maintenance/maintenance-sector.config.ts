@@ -48,11 +48,11 @@ export const CONFIG_DELETE_DIALOG_SECTOR: DialogConfirmation = {
  * Configuración del diálogo de desactivación de sector.
  */
 export const CONFIG_INACTIVE_DIALOG_SECTOR: DialogConfirmation = {
-    title: "¿Estás seguro de desactivar el sector?",
-    message: "Recuerda que una vez desactivado el sector?, no podrá ser visualizada como activa, pero podrás consultar su información.",
+    title: "¿Estás seguro de eliminar el sector?",
+    message: "Recuerda que una vez eliminado el sector, no podrá ser visualizada como activa, pero podrás consultar su información.",
     actions: {
         confirm: {
-            label: 'Desactivar'
+            label: 'Eliminar'
         },
         iconClose: false
     }

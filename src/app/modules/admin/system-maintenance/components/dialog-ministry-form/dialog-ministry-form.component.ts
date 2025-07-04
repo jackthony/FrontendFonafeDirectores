@@ -3,12 +3,12 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { ResponseModel } from '@models/IResponseModel';
 import { ButtonEnum } from 'app/core/enums/button.enum';
 import { TranslateMessageForm } from 'app/core/pipes/error-message-form.pipe';
 import { UserService } from 'app/core/user/user.service';
 import { MinistryEntity } from 'app/modules/admin/business-management/domain/entities/ministry.entity';
 import { FoButtonDialogComponent } from 'app/modules/admin/shared/components/fo-button-dialog/fo-button-dialog.component';
+import { ResponseEntity } from 'app/modules/admin/shared/domain/entities/response.entity';
 import { MinistryService } from 'app/modules/admin/shared/domain/services/ministry.service';
 import { FormInputModule } from 'app/shared/modules/form-input.module';
 import { finalize } from 'rxjs';
@@ -86,7 +86,7 @@ export class DialogMinistryFormComponent {
             .create(this.form.value)
             .pipe(finalize(() => this.loadingService.set(false)))
             .subscribe({
-                next: (response: ResponseModel<number>) => {
+                next: (response: ResponseEntity<number>) => {
                     if (response.isSuccess) this.dialogRef.close(true);
                 },
             });
@@ -100,7 +100,7 @@ export class DialogMinistryFormComponent {
             .update(this.form.value)
             .pipe(finalize(() => this.loadingService.set(false)))
             .subscribe({
-                next: (response: ResponseModel<boolean>) => {
+                next: (response: ResponseEntity<boolean>) => {
                     if (response.isSuccess) this.dialogRef.close(true);
                 },
             });

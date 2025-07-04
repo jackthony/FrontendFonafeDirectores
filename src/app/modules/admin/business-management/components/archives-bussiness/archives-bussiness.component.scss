@@ -1,0 +1,46 @@
+.title-dialog-upload {
+    font-family: 'Inter';
+    font-weight: 700;
+    font-size: 20px;
+    color: #39549b;
+    display: flex;
+    justify-content: start;
+}
+
+.content-tree {
+    border: 1px solid #DDDDDD;
+    border-radius: 10px;
+    padding: 10px 10px;
+}
+
+.btn-folder {
+    background-color: #1F487D;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-direction: row-reverse;
+    font-family: "Museo Sans";
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 1px;
+    .mat-icon {
+        color: #FBB241;
+    }
+}
+
+.btn-folder:not(:disabled) {
+    color: white !important;
+}
+
+.img-container-file {
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+    margin: 10px 0;
+    img {
+        width: 170px;
+        height: 100px;
+
+    }
+
+}

@@ -12,7 +12,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatIconModule } from '@angular/material/icon';
 import { FoTitleAreaComponent } from 'app/modules/admin/shared/components/fo-title-area/fo-title-area.component';
-import { ResponseModel } from '@models/IResponseModel';
 import { FileComponentStateService } from '@services/file-component-state.service';
 import { ButtonEnum } from 'app/core/enums/button.enum';
 import { TranslateMessageForm } from 'app/core/pipes/error-message-form.pipe';
@@ -42,6 +41,7 @@ import { TypeDirectorEntity } from 'app/modules/admin/shared/domain/entities/typ
 import { SpecialtyEntity } from 'app/modules/admin/shared/domain/entities/specialty.entity';
 import { SectorEntity } from 'app/modules/admin/shared/domain/entities/sector.entity';
 import { CompanyAllowanceEntity } from '../../domain/entities/companyAllowance.entity';
+import { ResponseEntity } from 'app/modules/admin/shared/domain/entities/response.entity';
 
 @Component({
   selector: 'app-form-directory',
@@ -145,7 +145,7 @@ export class FormDirectoryComponent implements OnInit {
 			nEspecialidad: [ this.director() ? this.director().nEspecialidad : 0, [Validators.required, Validators.min(1)] ],
 			dFechaNombramiento: [ this.director() ? this._dateUtilsService.formatDateToString(this.director().dFechaNombramiento) : null, [Validators.required,  Validators.maxLength(10)] ],
 			dFechaDesignacion: [ this.director() ? this._dateUtilsService.formatDateToString(this.director().dFechaDesignacion) : null, [Validators.required, Validators.maxLength(10)] ],
-			dFechaRenuncia: [ { disabled: true, value: this.director() ? this.director().dFechaRenuncia : null } , Validators.required ],
+			dFechaRenuncia: [ this.director() ? this.director().dFechaRenuncia : null , Validators.required ],
 			sComentario: [ this.director() ? this.director().sComentario : '', Validators.maxLength(1000) ],
 			nUsuarioRegistro: [ { disabled: this.director(), value: this._userService.userLogin().usuarioId }, Validators.required ],
             nUsuarioModificacion: [ { disabled: !this.director(), value: this._userService.userLogin().usuarioId }, Validators.required ],
@@ -163,7 +163,7 @@ export class FormDirectoryComponent implements OnInit {
                 switchMap((deptId) =>
                     deptId ? this._ubigeoService.getProvinces(deptId)
                         .pipe( 
-							map((res: ResponseModel<ProvinceEntity>) =>res.lstItem), 
+							map((res: ResponseEntity<ProvinceEntity>) =>res.lstItem), 
 							catchError(() => {
 								return of([]); 
 							})
@@ -183,7 +183,7 @@ export class FormDirectoryComponent implements OnInit {
                 switchMap((provId) =>
 					provId ? this._ubigeoService.getDistricts(provId)
                         .pipe( 
-							map((res: ResponseModel<DistrictEntity>) => res.lstItem ),
+							map((res: ResponseEntity<DistrictEntity>) => res.lstItem ),
 							catchError(() => {
 								return of([]);
 							})
@@ -198,7 +198,7 @@ export class FormDirectoryComponent implements OnInit {
 			distinctUntilChanged(),
 			switchMap((value) => {
 				return this._companyAllowance.getByRuc(this.business().sRuc, value).pipe(
-					map( (res: ResponseModel<CompanyAllowanceEntity>) => res.item?.mDieta ?? 0), // Mapea la dieta
+					map( (res: ResponseEntity<CompanyAllowanceEntity>) => res.item?.mDieta ?? 0), // Mapea la dieta
 					catchError(() => {
 						return of(0);
 					})
@@ -307,7 +307,7 @@ export class FormDirectoryComponent implements OnInit {
             .create(this.form.value)
             .pipe(finalize(() => this._spinner.hide()))
             .subscribe({
-                next: (response: ResponseModel<number>) => {
+                next: (response: ResponseEntity<number>) => {
                     if (response.isSuccess) {
 						this._ngxToastrService.showSuccess('Director registrado exitosamente', '¡Éxito!');
                         this.eventRefreshDirectory.emit();
@@ -320,7 +320,7 @@ export class FormDirectoryComponent implements OnInit {
             .update(this.form.value)
 			.pipe(finalize(() => this._spinner.hide()))
             .subscribe({
-                next: (response: ResponseModel<boolean>) => {
+                next: (response: ResponseEntity<boolean>) => {
                     if (response.isSuccess) {
 						this._ngxToastrService.showSuccess('Director actualizado exitosamente', '¡Éxito!');
 						this.eventRefreshDirectory.emit();

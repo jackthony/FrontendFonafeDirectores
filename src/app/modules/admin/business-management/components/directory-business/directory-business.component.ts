@@ -16,7 +16,6 @@ import { TableColumnsDefInterface } from 'app/shared/interfaces/ITableColumnsDef
 import { FormDirectoryComponent } from '../form-directory/form-directory.component';
 import { PAGINATOR_PAGE_SIZE } from 'app/core/config/paginator.config';
 import { finalize, forkJoin } from 'rxjs';
-import { ResponseModel } from '@models/IResponseModel';
 import { PermissionButtonDirective } from 'app/shared/directives/permission-button.directive';
 import { FileComponentStateService } from '@services/file-component-state.service';
 import { DirectorService } from '../../domain/services/director.service';
@@ -30,6 +29,7 @@ import { PositionEntity } from 'app/modules/admin/shared/domain/entities/positio
 import { TypeDirectorEntity } from 'app/modules/admin/shared/domain/entities/type-director.entity';
 import { SpecialtyEntity } from 'app/modules/admin/shared/domain/entities/specialty.entity';
 import { SectorEntity } from 'app/modules/admin/shared/domain/entities/sector.entity';
+import { ResponseEntity } from 'app/modules/admin/shared/domain/entities/response.entity';
 
 
 @Component({
@@ -98,7 +98,7 @@ export class DirectoryBusinessComponent implements OnInit, OnChanges {
 		this._directorService.getByPagination(this.business().nIdEmpresa, this.pageIndexTable(), PAGINATOR_PAGE_SIZE).pipe(
 			finalize(() => this.loadingTable.set(false))
 		).subscribe({
-			next: ((response: ResponseModel<DirectorEntity>) => {
+			next: ((response: ResponseEntity<DirectorEntity>) => {
 				if(response.isSuccess){
 					const totalPages = Math.ceil(response.pagination.totalRows/PAGINATOR_PAGE_SIZE);
 					this.totalPagesTable.set(totalPages > 0 ? totalPages : 1);

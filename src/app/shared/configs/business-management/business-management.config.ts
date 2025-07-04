@@ -68,7 +68,26 @@ export const COLUMNS_BUSINESS_MANAGEMENT: TableColumnsDefInterface[] = [
 /**
  * Diálogo de confirmación para la eliminación de una empresa.
  */
-export const CONFIG_DELETE_DIALOG_BUSINESS: DialogConfirmation = {
-    title: "¿Estás seguro de eliminar a la empresa?",
-    message: "Recuerda que una vez se haya eliminado al a la empresa no podrás visualizar su información, ni de la sus directores."
+export const CONFIG_INACTIVE_DIALOG_BUSINESS: DialogConfirmation = {
+    title: "¿Estás seguro de eliminar la empresa?",
+    message: "Recuerda que una vez eliminado la empresa, no podrá ser visualizada como activa, pero podrás consultar su información.",
+    actions: {
+        confirm: {
+            label: 'Eliminar'
+        },
+        iconClose: false
+    }
+};
+/**
+ * Configuración del diálogo de confirmación para activar la empresa.
+ */
+export const CONFIG_ACTIVE_DIALOG_BUSINESS: DialogConfirmation = {
+    title: "¿Estás seguro de activar la empresa?",
+    message: "Recuerda que una vez activado la empresa, será visualizada como activa.",
+    actions: {
+        confirm: {
+            label: 'Activar'
+        },
+        iconClose: false
+    }
 };

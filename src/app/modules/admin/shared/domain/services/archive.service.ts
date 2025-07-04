@@ -12,6 +12,8 @@ import { Observable } from 'rxjs';
 import { ArchiveInterface } from '../../application/repositories/archive.interface';
 import { ArchiveFactory } from '../../infrastructure/archive.factory';
 import { ResponseEntity } from '../entities/response.entity';
+import { MatTreeOptionsNode } from '../../components/bu-mat-tree-flat/models/mat-tree-options-node';
+import { FileData } from '../entities/archive-tree.entity';
 @Injectable({
     providedIn: 'root',
 })
@@ -39,5 +41,17 @@ export class ArchiveService {
 
     importExcelBussines(excel: FormData): Observable<ResponseEntity<boolean>> {
         return this._archiveInterface.importExcelBussines(excel);
+    }
+
+    importFileBussines(data: FormData): Observable<ResponseEntity<boolean>> {
+        return this._archiveInterface.importFileBussines(data);
+    }
+
+    listTreeBussiness(nIdEmpresa: number): Observable<ResponseEntity<MatTreeOptionsNode<FileData>>> {
+        return this._archiveInterface.listTreeBussiness(nIdEmpresa);
+    }
+
+    downloadFileBussiness(url: string): Observable<ArrayBuffer> {
+        return this._archiveInterface.downloadFileBussiness(url);
     }
 }
