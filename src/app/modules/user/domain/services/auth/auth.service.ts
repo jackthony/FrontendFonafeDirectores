@@ -11,6 +11,7 @@ import { ForgotPasswordEntity } from '../../entities/auth/forgot-password.entity
 import { ResetPasswordEntity } from '../../entities/auth/reset-password.entity';
 import { SignInEntity } from '../../entities/auth/sign-in.entity';
 import { ChangePasswordEntity } from '../../entities/auth/change-password.entity';
+import { SuccessPasswordEntity } from '../../entities/auth/sucess-password.entity';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -58,8 +59,8 @@ export class AuthService {
      *
      * @param email
      */
-    forgotPassword(credentials: ForgotPasswordEntity ): Observable<any> {
-        return this._httpClient.post(`${this.url}/forgot-password`, credentials);
+    forgotPassword(credentials: ForgotPasswordEntity ): Observable<SuccessPasswordEntity> {
+        return this._httpClient.post<SuccessPasswordEntity>(`${this.url}/forgot-password`, credentials);
     }
 
     /**
@@ -68,10 +69,8 @@ export class AuthService {
      * @param password
      */
 
-    resetPassword(credentials: ResetPasswordEntity): Observable<any> {
-        //return this._httpClient.post('api/auth/reset-password', password);
-        //return this._segUserService.updateForcePassword(credentials)
-        return this._httpClient.post(`${this.url}/reset-password`, credentials);
+    resetPassword(credentials: ResetPasswordEntity): Observable<SuccessPasswordEntity> {
+        return this._httpClient.post<SuccessPasswordEntity>(`${this.url}/reset-password`, credentials);
     }
 
     /**
