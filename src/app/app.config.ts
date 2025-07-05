@@ -23,9 +23,8 @@ import {
 import { provideFuse } from '@fuse';
 import { TranslocoService, provideTransloco } from '@ngneat/transloco';
 import { appRoutes } from 'app/app.routes';
-import { provideAuth } from 'app/core/auth/auth.provider';
+import { provideAuth } from 'app/modules/user/auth/interceptors/auth.provider';
 import { provideIcons } from 'app/core/icons/icons.provider';
-import { mockApiServices } from 'app/mock-api';
 import { firstValueFrom } from 'rxjs';
 import { TranslocoHttpLoader } from './core/transloco/transloco.http-loader';
 import { provideToastr } from 'ngx-toastr';
@@ -99,10 +98,6 @@ export const appConfig: ApplicationConfig = {
         provideAuth(),
         provideIcons(),
         provideFuse({
-            mockApi: {
-                delay: 0,
-                services: mockApiServices,
-            },
             fuse: {
                 layout: 'classy',
                 scheme: 'light',

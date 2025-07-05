@@ -1,6 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../../modules/user/auth/domain/services/auth.service';
 import { Router } from '@angular/router';
 import { ACTIVITY_MONITOR_CONFIG } from '../config/activity-monitor.config';
 import { MatDialog } from '@angular/material/dialog';

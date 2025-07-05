@@ -10,11 +10,11 @@
  *                      administrativos con control de acceso granular.
  *************************************************************************************/
 import { Route } from '@angular/router';
-import { AuthGuard } from 'app/core/auth/guards/auth.guard';
-import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
+import { AuthGuard } from 'app/modules/user/auth/guards/auth.guard';
+import { NoAuthGuard } from 'app/modules/user/auth/guards/noAuth.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
-import { permissionGuard } from './core/auth/guards/permission.guard';
-import { ResetPasswordTokenGuard } from './core/auth/guards/reset-password-token.guard';
+import { permissionGuard } from './modules/user/auth/guards/permission.guard';
+import { ResetPasswordTokenGuard } from './modules/user/auth/guards/reset-password-token.guard';
 export const appRoutes: Route[] = [
     {path: '', pathMatch : 'full', redirectTo: 'home'},
     {path: 'signed-in-redirect', pathMatch : 'full', redirectTo: 'home'},
@@ -27,10 +27,10 @@ export const appRoutes: Route[] = [
             layout: 'fonafe'
         },
         children: [
-            {path: 'confirmation-required', loadChildren: () => import('app/modules/auth/confirmation-required/confirmation-required.routes')},
-            {path: 'forgot-password', loadChildren: () => import('app/modules/auth/forgot-password/forgot-password.routes')},
-            {path: 'sign-in', loadChildren: () => import('app/modules/auth/sign-in/sign-in.routes')},
-            {path: 'sign-up', loadChildren: () => import('app/modules/auth/sign-up/sign-up.routes')},
+            {path: 'confirmation-required', loadChildren: () => import('app/modules/user/auth/components/confirmation-required/confirmation-required.routes')},
+            {path: 'forgot-password', loadChildren: () => import('app/modules/user/auth/components/forgot-password/forgot-password.routes')},
+            {path: 'sign-in', loadChildren: () => import('app/modules/user/auth/components/sign-in/sign-in.routes')},
+            {path: 'sign-up', loadChildren: () => import('app/modules/user/auth/components/sign-up/sign-up.routes')},
         ]
     },
     {
@@ -42,8 +42,8 @@ export const appRoutes: Route[] = [
             layout: 'empty'
         },
         children: [
-            {path: 'sign-out', loadChildren: () => import('app/modules/auth/sign-out/sign-out.routes')},
-            {path: 'unlock-session', loadChildren: () => import('app/modules/auth/unlock-session/unlock-session.routes')},
+            {path: 'sign-out', loadChildren: () => import('app/modules/user/auth/components/sign-out/sign-out.routes')},
+            {path: 'unlock-session', loadChildren: () => import('app/modules/user/auth/components/unlock-session/unlock-session.routes')},
         ]
     },
     {
@@ -58,41 +58,42 @@ export const appRoutes: Route[] = [
         Cargar rutas hijas
         */
         children: [
-            { path: 'change-password', loadChildren: () => import('app/modules/auth/change-password/change-password.routes') },
-            { path: 'home', loadComponent: () => import('app/modules/admin/home/components/home/home.component') },
+            { path: 'change-password', loadChildren: () => import('app/modules/user/auth/components/change-password/change-password.routes') },
+            { path: 'home', loadChildren: () => import('app/modules/home/home.module') },
             { 
                 path: 'gestion-perfiles', 
-                loadComponent: () => import('app/modules/admin/profile-management/components/profile-management/profile-management.component'),
+                loadChildren: () => import('app/modules/user/profile-management/profile-management.module'),
                 canActivate: [permissionGuard],
                 data: { module: 'gestion-perfiles', action: 'Ver' }
             },
             { 
                 path: 'gestion-empresas', 
-                loadChildren: () => import('app/modules/admin/business-management/business-management.routes'),
+                loadChildren: () => import('app/modules/business/business-management.module'),
                 canActivate: [permissionGuard],
                 data: { module: 'gestion-empresas', action: 'Ver' }
             },
             { 
                 path: 'solicitudes', 
-                loadChildren: () => import('app/modules/admin/new-requests/new-requests.routes'),
+                loadChildren: () => import('app/shared/shared.module'),
+                //loadChildren: () => import('app/modules/new-requests/new-requests.module'),
                 canActivate: [permissionGuard],
                 data: { module: 'nuevas-solicitudes', action: 'Ver' }
             },
             { 
                 path: 'mantenimiento-candidatos', 
-                loadChildren: () => import('app/modules/admin/candidate-maintenance/candidate-maintenance.routes'),
+                loadChildren: () => import('app/shared/shared.module'),
                 canActivate: [permissionGuard],
                 data: { module: 'mantenimiento-candidatos', action: 'Ver' }
             },
             { 
                 path: 'mantenedores-sistema', 
-                loadChildren: () => import('app/modules/admin/system-maintenance/system-maintenance.routes'),
+                loadChildren: () => import('app/modules/system-maintenance/system-maintenance.module'),
                 canActivate: [permissionGuard],
                 data: { module: 'mantenimiento-sistemas', action: 'Ver' }
             },
             { 
                 path: 'logs-trazabilidad', 
-                loadChildren: () => import('app/modules/admin/traceability-system/traceability-system.routes'),
+                loadChildren: () => import('app/modules/traceability-system/traceability-system.module'),
                 canActivate: [/* permissionGuard */],
                 data: { module: 'logs-trazabilidad', action: 'Ver' }
             },
@@ -108,11 +109,11 @@ export const appRoutes: Route[] = [
             {
                 path: 'reset-password', 
                 canActivate: [ResetPasswordTokenGuard],
-                loadChildren: () => import('app/modules/auth/reset-password/reset-password.routes')
+                loadChildren: () => import('app/modules/user/auth/components/reset-password/reset-password.routes')
             }
         ]
          
     },
-    { path: 'error-404', pathMatch: 'full', loadChildren: () => import('app/modules/admin/error/components/error-404/error-404.routes')},
+    { path: '', loadChildren: () => import('app/shared/shared.module')},
     { path: '**', redirectTo: 'error-404'}
 ];
