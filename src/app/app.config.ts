@@ -23,7 +23,7 @@ import {
 import { provideFuse } from '@fuse';
 import { TranslocoService, provideTransloco } from '@ngneat/transloco';
 import { appRoutes } from 'app/app.routes';
-import { provideAuth } from 'app/modules/user/auth/interceptors/auth.provider';
+import { provideAuth } from 'app/core/interceptors/providers/auth.provider';
 import { provideIcons } from 'app/core/icons/icons.provider';
 import { firstValueFrom } from 'rxjs';
 import { TranslocoHttpLoader } from './core/transloco/transloco.http-loader';

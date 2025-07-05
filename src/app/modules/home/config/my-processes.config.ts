@@ -59,13 +59,13 @@ export const LIST_OF_PROCESSES: ListOfProcesses[] = [
         url: '', 
         module: 'mantenimiento-sistemas',
         options: [
-            { label: 'Mantenimiento de roles', url: 'mantenedores-sistema/rol' },
-            { label: 'Mantenimiento de ministerios', url: 'mantenedores-sistema/ministerio' },
-            { label: 'Mantenimiento de sectores', url: 'mantenedores-sistema/sector' },
-            { label: 'Mantenimiento de rubros', url: 'mantenedores-sistema/rubro' },
-            { label: 'Mantenimiento de cargos', url: 'mantenedores-sistema/cargo' },
-            { label: 'Mantenimiento de tipo de director', url: 'mantenedores-sistema/tipo-director' },
-            { label: 'Mantenimiento de especialidad', url: 'mantenedores-sistema/especialidad' },
+            { label: 'Mantenimiento de roles', url: 'gestion-perfiles/mantenimiento/rol' },
+            { label: 'Mantenimiento de cargos', url: 'gestion-perfiles/mantenimiento/cargo' },
+            { label: 'Mantenimiento de ministerios', url: 'gestion-empresas/mantenimiento/ministerio' },
+            { label: 'Mantenimiento de sectores', url: 'gestion-empresas/mantenimiento/sector' },
+            { label: 'Mantenimiento de rubros', url: 'gestion-empresas/mantenimiento/rubro' },
+            { label: 'Mantenimiento de tipo de director', url: 'gestion-empresas/mantenimiento/tipo-director' },
+            { label: 'Mantenimiento de especialidad', url: 'gestion-empresas/mantenimiento/especialidad' },
         ]
     },
     {

@@ -10,8 +10,8 @@
  *                        - Suscripción segura a user$ con takeUntil para evitar memory leaks.
  *******************************************************************************************************/
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { UserService } from 'app/modules/user/auth/domain/services/user.service';
-import { User } from 'app/modules/user/auth/domain/entities/user.entity';
+import { UserService } from 'app/modules/user/domain/services/auth/user.service';
+import { User } from 'app/modules/user/domain/entities/auth/user.entity';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({

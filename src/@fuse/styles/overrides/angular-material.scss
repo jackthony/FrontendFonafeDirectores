@@ -1353,8 +1353,12 @@ textarea.mat-mdc-input-element {
     border-color: #565A5C !important;
 }
 
+.mat-mdc-form-field.mat-form-field-appearance-outline .mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mdc-notched-outline .mdc-notched-outline__notch {
+    border-left-style: none !important;
+}
+
 .mat-form-field-custom.mat-mdc-form-field.mat-form-field-appearance-outline.mat-focused:not(.mat-form-field-invalid).mat-primary .mdc-notched-outline__notch {
-    border-color: #565A5C !important;
+    border-color: #565A5C !important;  
 }
 
 .mat-form-field-custom.mat-mdc-form-field.mat-form-field-appearance-outline.mat-focused:not(.mat-form-field-invalid).mat-primary .mdc-notched-outline__trailing {

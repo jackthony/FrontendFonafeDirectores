@@ -11,9 +11,9 @@ import { MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule } from '@angular
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ArchiveService } from '../../../modules/system-maintenance/domain/services/archive.service';
+import { ArchiveService } from '../../../modules/business/domain/services/business/archive.service';
 import { FileData } from '../../../core/models/archive-tree.entity';
-import { ArchivingProcessService } from '../../../modules/system-maintenance/domain/services/archiving-process.service';
+import { ArchivingProcessService } from '../../../modules/business/domain/services/business/archiving-process.service';
 import { MatTreeOptionsNode } from './models/mat-tree-options-node';
 import { FlatNodeAllElements } from './models/flat-node-all-elements';
 
