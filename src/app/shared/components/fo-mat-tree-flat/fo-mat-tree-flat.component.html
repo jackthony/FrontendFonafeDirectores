@@ -9,6 +9,8 @@
         [treeControl]="treeControl"
         class="custom-tree">
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding class="min-h-5">
+            test
+            <mat-icon svgIcon="mat_outline:folder_open"></mat-icon>
             <li
                 class="mat-tree-node mat-tree-effect"
                 [ngClass]="{ 'li-node': node.level > 0 }">
@@ -24,9 +26,9 @@
                         }}
                     </mat-icon>
                 </button>
-                <mat-icon class="icon-size-5 mr-1" [svgIcon]="treeControl.isExpanded(node) ? 'fonafe:folder_open' : 'fonafe:folder_close'"></mat-icon>
+                <mat-icon class="icon-size-5 mr-1" [svgIcon]="treeControl.isExpanded(node) ? 'fonafe:folder-open' : 'fonafe:folder-close'"></mat-icon>
                 } @else {
-                <mat-icon class="ml-10 icon-size-5 mr-1" [svgIcon]="node.status === 0 ? 'fonafe:folder_close' : 'fonafe:file-document'"></mat-icon>
+                <mat-icon class="ml-10 icon-size-5 mr-1" [svgIcon]="node.status === 0 ? 'fonafe:folder-close' : 'fonafe:file-document'"></mat-icon>
 
                 }
                 
