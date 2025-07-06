@@ -1,6 +1,11 @@
-import { Component, EventEmitter, inject, input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, input, OnInit, Output, signal } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { ConstantEntity } from 'app/modules/business/domain/entities/business/constant.entity';
+import { PositionEntity } from 'app/modules/user/domain/entities/maintenance/position.entity';
+import { RoleEntity } from 'app/modules/user/domain/entities/maintenance/role.entity';
+import { SegUserEntity } from 'app/modules/user/domain/entities/profile/seg-user.entity';
 
 @Component({
   selector: 'app-audit-logs',
@@ -8,35 +13,24 @@ import { Router } from '@angular/router';
   templateUrl: './audit-logs.component.html',
   styleUrl: './audit-logs.component.scss'
 })
-export class AuditLogsComponent {
-private readonly _router = inject(Router);
+export class AuditLogsComponent implements OnInit {
+  private readonly _router = inject(Router);
   iconBtnSearch = input<string>('mat_outline:add_circle_outline');
   textBtnSearch = input<string>('Descargar');
   @Output() eventNewElement: EventEmitter<void> = new EventEmitter<void>();
   form: FormGroup;
-  /**
-   * Método encargado de redirigir al usuario a la pantalla principal del sistema.
-   * Se invoca usualmente desde el componente `FoReturnComponent`.
-   */
+  lstStatus = signal<ConstantEntity[]>([]);
+
+
+  ngOnInit(): void {
+    throw new Error('Method not implemented.');
+  }
+
   returnInit(): void {
     this._router.navigate(['home']);
   }
-  addUser(): void {
+
+    addUser(): void {
     this.eventNewElement.emit();
-  }
-  onKeyPressDate(event: KeyboardEvent) {
-    const allowedRegex = /[0-9\/]/;
-    if (!allowedRegex.test(event.key)) {
-      event.preventDefault();
-    }
-  }
-  onInputDate(event: Event, nameForm: string) {
-    const input = event.target as HTMLInputElement;
-    const validPattern = /^[0-9\/]*$/;
-    if (!validPattern.test(input.value)) {
-      const cleaned = input.value.replace(/[^0-9\/]/g, '');
-      input.value = cleaned;
-      this.form.get(nameForm)?.setValue(cleaned, { emitEvent: false });
-    }
   }
 }

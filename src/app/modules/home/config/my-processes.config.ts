@@ -73,7 +73,7 @@ export const LIST_OF_PROCESSES: ListOfProcesses[] = [
         icon: 'mat_outline:save_alt',
         value: OptionsProcess.traceabilitySystem,
         url: '',
-        module: "mantenimiento-sistemas",//CAMBIARRRRRRRRRRRRRRRRR
+        module: "logs-trazabilidad",
         options: [
             { label: 'Log de trazabilidad', url: 'trazabilidad-sistemas/trazabilidad' },
             { label: 'Log de auditoria', url: 'trazabilidad-sistemas/auditoria' },
