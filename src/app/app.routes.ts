@@ -92,10 +92,10 @@ export const appRoutes: Route[] = [
                 data: { module: 'mantenimiento-sistemas', action: 'Ver' }
             }, */
             { 
-                path: 'logs-trazabilidad', 
+                path: 'trazabilidad-sistemas', 
                 loadChildren: () => import('app/modules/traceability-system/traceability-system.module'),
                 canActivate: [/* permissionGuard */],
-                data: { module: 'logs-trazabilidad', action: 'Ver' }
+                data: { module: 'trazabilidad-sistemas', action: 'Ver' }
             },
         ]
     },
