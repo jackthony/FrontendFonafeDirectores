@@ -17,8 +17,6 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
                 errorMessage = `Error: ${error.error.message}`;
             } else {
 				errorMessage = error;
-				console.log('errorrr',error);
-				
 				if (error.status === HttpStatusCodes.BAD_REQUEST && error?.error.status === HttpStatusCodes.BAD_REQUEST) {
 					// Mostrar un toast por cada error
 					if (error.error.detail && error.error?.showToast) {

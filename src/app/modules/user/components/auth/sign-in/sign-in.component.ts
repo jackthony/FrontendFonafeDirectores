@@ -113,7 +113,7 @@ export class AuthSignInComponent implements OnInit {
                 this.signInForm.enable();
                 this.signInNgForm.resetForm();
 
-                const message = response?.error?.detail;// || 'Ocurrió un error, intentelo de nuevo';
+                const message = response?.error?.detail || 'Ocurrió un error, intentelo de nuevo';
                 this.alert = {
                     type: 'error',
                     message: message,
