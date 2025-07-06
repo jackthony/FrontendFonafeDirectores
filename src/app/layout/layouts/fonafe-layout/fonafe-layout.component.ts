@@ -1,8 +1,8 @@
 import { Component, inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { FuseLoadingBarComponent } from '@fuse/components/loading-bar';
-import { User } from '@models/user.interface';
-import { UserService } from 'app/core/user/user.service';
+import { User } from 'app/modules/user/domain/entities/auth/user.entity';
+import { UserService } from 'app/modules/user/domain/services/auth/user.service';
 import { NotificationsBellComponent } from 'app/layout/common/notifications-bell/notifications-bell.component';
 import { QuitComponent } from 'app/layout/common/quit/quit.component';
 import { Subject, takeUntil } from 'rxjs';

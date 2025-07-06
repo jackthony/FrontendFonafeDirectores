@@ -33,11 +33,11 @@ export class TranslateMessageForm implements PipeTransform {
                   return `El día debe estar entre 1 y ${daysInMonth}`;
                 }
             }
-            return "Formato requerido: dd-mm-yyyy";
+            return "Formato requerido: dd/mm/yyyy";
         } 
         if (control.hasError("customError")) return `${control.errors.customError}`;
         if (control.hasError("required")){
-            if (type === "date") return 'Formato requerido: dd-mm-yyyy';
+            if (type === "date") return 'Formato requerido: dd/mm/yyyy';
             return "El campo es requerido";
         } 
         if (control.hasError("min")) {

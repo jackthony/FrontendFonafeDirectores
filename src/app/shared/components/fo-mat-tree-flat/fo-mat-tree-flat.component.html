@@ -1,0 +1,76 @@
+@if(loading){
+    <div class="flex justify-center h-13 my-18">
+        <mat-spinner></mat-spinner>
+    </div>
+} @else {
+    @if(dataSource.data.length > 0) {
+    <mat-tree
+        [dataSource]="dataSource"
+        [treeControl]="treeControl"
+        class="custom-tree">
+        <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding class="min-h-5">
+            <li
+                class="mat-tree-node mat-tree-effect"
+                [ngClass]="{ 'li-node': node.level > 0 }">
+                @if(node.hasChild){
+                <button
+                    matTreeNodeToggle
+                    class="btn-node w-10"
+                    [attr.aria-label]="'Toggle ' + node.item">
+                    <mat-icon class="mat-icon-rtl-mirror">
+                        {{ treeControl.isExpanded(node)
+                            ? "expand_more"
+                            : "chevron_right"
+                        }}
+                    </mat-icon>
+                </button>
+                <mat-icon class="icon-size-5 mr-1" [svgIcon]="treeControl.isExpanded(node) ? 'fonafe:folder-open' : 'fonafe:folder-close'"></mat-icon>
+                } @else {
+                <mat-icon class="ml-10 icon-size-5 mr-1" [svgIcon]="node.status === 0 ? 'fonafe:folder-close' : 'fonafe:file-document'"></mat-icon>
+
+                }
+                
+                @if (node.status === 0) {
+                    <span
+                        [matMenuTriggerFor]="menuFolder"
+                        class="objective-text highlight-on-hover label-tree">
+                        {{ node.item }}
+                    </span>
+                    <mat-menu #menuFolder="matMenu">
+                        <button (click)="uploadFile(node)" mat-menu-item>
+                            <mat-icon svgIcon="mat_outline:drive_folder_upload"></mat-icon>
+                          <span>Subir archivo</span>
+                        </button>
+                    </mat-menu>
+                    
+                } @else {
+                    <span
+                        [matMenuTriggerFor]="menuFile"
+                        class="objective-text highlight-on-hover label-tree">
+                        {{ node.item }}
+                    </span>
+                    <mat-menu #menuFile="matMenu" class="mat-menu-general">
+                        <button (click)="downloadFile(node)" mat-menu-item>
+                            <mat-icon svgIcon="mat_outline:file_download"></mat-icon>
+                          <span>Descargar</span>
+                        </button>
+                        <!-- <button mat-menu-item>
+                            <mat-icon svgIcon="mat_outline:delete_outline"></mat-icon>
+                          <span>Eliminar</span>
+                        </button> -->
+                    </mat-menu>
+                }
+
+            <ul [class.custom-tree-invisible]="!treeControl.isExpanded(node)">
+                <ng-container matTreeNodeOutlet></ng-container>
+            </ul>
+        </li>
+    </mat-tree-node>
+    </mat-tree>
+    } @else {
+        <div class="w-full text-center">No se encontraron datos registrados.</div>
+    }
+}
+
+
+

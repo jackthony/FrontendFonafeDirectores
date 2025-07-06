@@ -1353,8 +1353,12 @@ textarea.mat-mdc-input-element {
     border-color: #565A5C !important;
 }
 
+.mat-mdc-form-field.mat-form-field-appearance-outline .mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mdc-notched-outline .mdc-notched-outline__notch {
+    border-left-style: none !important;
+}
+
 .mat-form-field-custom.mat-mdc-form-field.mat-form-field-appearance-outline.mat-focused:not(.mat-form-field-invalid).mat-primary .mdc-notched-outline__notch {
-    border-color: #565A5C !important;
+    border-color: #565A5C !important;  
 }
 
 .mat-form-field-custom.mat-mdc-form-field.mat-form-field-appearance-outline.mat-focused:not(.mat-form-field-invalid).mat-primary .mdc-notched-outline__trailing {
@@ -1466,4 +1470,29 @@ textarea.mat-mdc-input-element {
         background-color: transparent;
     }
 
+}
+
+/* -------------------------------------------------------------------------- */
+/*  @ Mat Menu
+/* -------------------------------------------------------------------------- */
+
+.mat-menu-general .mat-mdc-menu-item {
+    font-family: "Roboto regular";
+    font-weight: 400;
+    min-height: 40px !important;
+    span {
+        font-size: 13px;
+    }
+}
+
+.mat-menu-general .mat-mdc-menu-item:not([disabled]):hover{
+    background-color: #CA1519;
+    color: white;
+    .mat-menu-icon {
+        color: white !important; 
+    }
+}
+
+.mat-mdc-menu-panel {
+    border-radius: 10px;
 }

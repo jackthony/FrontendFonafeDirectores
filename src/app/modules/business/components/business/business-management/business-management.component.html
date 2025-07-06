@@ -1,0 +1,47 @@
+<div class="w-full">
+    <div class="grid grid-cols-1 gap-4">
+        <fo-return (eventActionClick)="returnInit()"></fo-return>
+        <fo-cont-card>
+            <fo-title-module [text]="titleModule()"></fo-title-module>
+        </fo-cont-card>
+        <fo-search-for-button
+            [delaySearch]="delaySearchBusiness()"
+            (eventSearch)="searchByEnterprise($event)"
+            (eventNewElement)="addCompany()"
+            [placeTextSearch]="placeHolderSearch()"
+            [textBtnSearch]="addEnterprise()"
+            viewFilterState
+            (eventFilterState)="setFilterState($event)"
+            (eventBtnSearch)="searchBusiness(true)"
+            >
+            <fo-button
+                [matMenuTriggerFor]="menu"
+                [text]="'Importar/Exportar'" 
+                [icon]="'file_copy'">
+            </fo-button>
+            <mat-menu #menu="matMenu">
+              <button (click)="importExcel()" class="btn-export" mat-menu-item>
+                <mat-icon>upload</mat-icon>
+                <span>Importar excel</span>
+              </button>
+              <button (click)="exportExcel()" class="btn-export" mat-menu-item>
+                <mat-icon>download</mat-icon>
+                <span>Exportar excel</span>
+              </button>
+              <button (click)="exportPdf()"  class="btn-export" mat-menu-item>
+                <mat-icon>download</mat-icon>
+                <span>Exportar PDF</span>
+              </button>
+            </mat-menu>
+        </fo-search-for-button>
+        <fo-table 
+            [currentPage]="pageIndexTable()"
+            [loading]="loadingTable()"
+            [totalPages]="totalPagesTable()"
+            [headers]="headerTable()"
+            [data]="dataTableBusiness()"
+            [icons]="iconsTable()"
+            (eventChangePage)="changePageTable($event)">
+        </fo-table>
+    </div>
+</div>
