@@ -9,8 +9,6 @@
         [treeControl]="treeControl"
         class="custom-tree">
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding class="min-h-5">
-            test
-            <mat-icon svgIcon="mat_outline:folder_open"></mat-icon>
             <li
                 class="mat-tree-node mat-tree-effect"
                 [ngClass]="{ 'li-node': node.level > 0 }">
@@ -35,7 +33,7 @@
                 @if (node.status === 0) {
                     <span
                         [matMenuTriggerFor]="menuFolder"
-                        class="objective-text highlight-on-hover">
+                        class="objective-text highlight-on-hover label-tree">
                         {{ node.item }}
                     </span>
                     <mat-menu #menuFolder="matMenu">
@@ -48,7 +46,7 @@
                 } @else {
                     <span
                         [matMenuTriggerFor]="menuFile"
-                        class="objective-text highlight-on-hover">
+                        class="objective-text highlight-on-hover label-tree">
                         {{ node.item }}
                     </span>
                     <mat-menu #menuFile="matMenu" class="mat-menu-general">

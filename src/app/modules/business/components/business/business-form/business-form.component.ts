@@ -74,6 +74,25 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
     districts = signal<DistrictEntity[]>([]);
     totalMembers = signal<number>(0);
     form: FormGroup;
+
+    modifiedFields = signal<string[]>([]);
+    areChanges = signal<boolean>(false);
+
+    controlsMapped: { [key: string]: string } = {
+        nIdSector: 'Proponente',
+        nIdRubroNegocio: 'Rubro del negocio',
+        sIdDepartamento: 'Departamento',
+        sIdProvincia: 'Provincia',
+        sIdDistrito: 'Distrito',
+        sDireccion: 'Dirección',
+        sComentario: 'Comentario',
+        mIngresosUltimoAnio: 'Ingresos del ultimo año',
+        mUtilidadUltimoAnio: 'Utilidad del ultimo año',
+        mConformacionCapitalSocial: 'Conformación del capital',
+        nNumeroMiembros: 'Número de miembros',
+        bRegistradoMercadoValores: 'Registrado en el mercado de valores'
+    };
+
     /**
      * Método de inicialización del componente
      */
@@ -137,6 +156,7 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
             nUsuarioModificacion: [{ disabled: !object, value: this._userService.userLogin().usuarioId }, Validators.required],
         });
     }
+
     /**
      * Método para manejar los cambios en el formulario
      */
@@ -252,6 +272,7 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
      * Método para actualizar una empresa existente
      */
     updateBusiness(): void {
+        this.detectarCambios();
         this._spinner.show();
         this._businessService
             .update(this.form.value)
@@ -269,9 +290,13 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
             )
             .subscribe({
                 next: (response: ResponseEntity<BusinessEntity>) => {
-                    this._ngxToastrService.showSuccess('Los campos del formulario se guardaron exitosamente', '¡Éxito!');
+                    const fields = this.modifiedFields().length > 0 ? `Los campos (${this.modifiedFields().join(', ')})`   : 'Todos los campos';
+                    this._ngxToastrService.showSuccess(`${fields} del formulario, se guardaron exitosamente`, '¡Éxito!');
                     this.business.set(response.item);
                     this.initForm(this.business());
+                    this.destroy$.next();
+                    this.destroy$ = new Subject<void>();
+                    this.valueChangesForm();
                 },
             });
     }
@@ -322,4 +347,25 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
             },
         })
     }
+
+    /**
+     * Método para detectar cambios realizados en el formulario
+     */
+    detectarCambios() {
+        this.modifiedFields.set([]);  // Resetear los cambios previos
+        this.areChanges.set(false); // Suponemos que no hay cambios al principio
+    
+        // Recorremos los controles del formulario directamente
+        for (const controlName in this.form.controls) {
+            if (this.form.controls.hasOwnProperty(controlName)) {
+                const control = this.form.controls[controlName];
+            // Verificamos si el campo ha sido modificado
+            if (control.dirty) {
+                const name = this.controlsMapped[controlName];
+                this.modifiedFields.update(prev => [...prev, name]); // Agregar a la lista de campos modificados
+                this.areChanges.set(true); // Si se encuentra algún campo modificado, ponemos esta variable en false
+            }
+          }
+        }
+      }
 }
