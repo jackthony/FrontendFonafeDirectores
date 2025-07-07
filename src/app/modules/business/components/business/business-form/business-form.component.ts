@@ -272,7 +272,7 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
      * Método para actualizar una empresa existente
      */
     updateBusiness(): void {
-        this.detectarCambios();
+        this.detectChanges();
         this._spinner.show();
         this._businessService
             .update(this.form.value)
@@ -291,7 +291,7 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
             .subscribe({
                 next: (response: ResponseEntity<BusinessEntity>) => {
                     const fields = this.modifiedFields().length > 0 ? `Los campos (${this.modifiedFields().join(', ')})`   : 'Todos los campos';
-                    this._ngxToastrService.showSuccess(`${fields} del formulario, se guardaron exitosamente`, '¡Éxito!');
+                    this._ngxToastrService.showSuccess(`${fields} de la empresa, se actualizaron exitosamente`, '¡Éxito!');
                     this.business.set(response.item);
                     this.initForm(this.business());
                     this.destroy$.next();
@@ -351,7 +351,7 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
     /**
      * Método para detectar cambios realizados en el formulario
      */
-    detectarCambios() {
+    detectChanges() {
         this.modifiedFields.set([]);  // Resetear los cambios previos
         this.areChanges.set(false); // Suponemos que no hay cambios al principio
     
@@ -367,5 +367,5 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
             }
           }
         }
-      }
+    }
 }

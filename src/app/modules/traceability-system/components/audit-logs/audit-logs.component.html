@@ -5,45 +5,59 @@
             <p class="name-banner">Log de auditoria</p>
         </div>
         <fo-cont-card>
-            <fo-title-module [text]="'Usuario'"></fo-title-module>
-            <div class="grid grid-cols-1 gap-4 p-4 md:grid-cols-4">
+            <fo-title-module [text]="'Usuario - Estado'"></fo-title-module>
+            <form [formGroup]="formStatus" class="grid grid-cols-1 gap-4 p-4 md:grid-cols-4">
                 <div class="col-span-3 md:col-span-1">
-                <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
-                    <mat-label>Usuarios</mat-label>
-                    <mat-select
-                        formControlName="nEstado"
-                        placeholder="--">
-<!--                         @for (item of data.lstStatus; track $index) {
-                            <mat-option [value]="item.nConValor">
-                                {{ item.sConDescripcion }}
-                            </mat-option>
-                        } -->
-                    </mat-select>
-                    <!--@if(form.get('nEstado').invalid) {
-                        <mat-error class="text-red-500">
-                            {{ form.get("nEstado") | translateMessageForm: "select" }}
-                        </mat-error>
-                    } -->
-                </mat-form-field>
+                    <mat-form-field class="mat-form-field-custom w-full"
+                        appearance="outline"
+                        floatLabel="always">
+                        <mat-label>Fecha de inicio - Fecha fin</mat-label>
+                        <mat-date-range-input [rangePicker]="picker">
+                          <input matStartDate formControlName="fechaInicio" placeholder="-- / -- / ----">
+                          <input matEndDate formControlName="fechaFin" placeholder="-- / -- / ----">
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #picker>
+                            <mat-datepicker-actions>
+                                <button mat-button matDatepickerCancel>Cancelar</button>
+                                <button mat-raised-button color="primary" matDatepickerApply>
+                                    Aplicar
+                                </button>
+                            </mat-datepicker-actions>
+                        </mat-date-range-picker>
+                        @if(formStatus.get('fechaInicio').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ formStatus.get("fechaInicio") | translateMessageForm }}
+                            </mat-error>
+                        }
+                        @if(formStatus.get('fechaFin').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ formStatus.get("fechaFin") | translateMessageForm }}
+                            </mat-error>
+                        }
+                    </mat-form-field>
                 </div>
                 <div class="col-span-3 md:col-span-1">
-                <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
-                    <mat-label>Roles</mat-label>
-                    <mat-select
-                        formControlName="nEstado"
-                        placeholder="--">
-<!--                         @for (item of data.lstStatus; track $index) {
-                            <mat-option [value]="item.nConValor">
-                                {{ item.sConDescripcion }}
+                    <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                        <mat-label>Estado</mat-label>
+                        <mat-select
+                            formControlName="estado"
+                            placeholder="--">
+                            <mat-option [value]="0">
+                                {{ 'Todos' }}
                             </mat-option>
-                        } -->
-                    </mat-select>
-                    <!--@if(form.get('nEstado').invalid) {
-                        <mat-error class="text-red-500">
-                            {{ form.get("nEstado") | translateMessageForm: "select" }}
-                        </mat-error>
-                    } -->
-                </mat-form-field>
+                            @for (item of lstStatusUser(); track $index) {
+                                <mat-option [value]="item.nConValor">
+                                    {{ item.sConDescripcion }}
+                                </mat-option>
+                            }
+                        </mat-select>
+                        @if(formStatus.get('estado').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ formStatus.get("estado") | translateMessageForm: "select" }}
+                            </mat-error>
+                        }
+                    </mat-form-field>
                 </div>
 
                 <div
@@ -51,14 +65,84 @@
                     class="col-span-3 flex flex-wrap content-center items-center justify-center gap-3 text-center md:col-span-2  md:justify-end md:text-end"
                 >
                     <fo-button
-                        (eventAction)="addUser()"
+                        (eventAction)="downloadStatusExcel()"
                         [text]="textBtnSearch()"
                         [icon]="iconBtnSearch()"
                     >
                     </fo-button>
                     <ng-content></ng-content>
                 </div>
-            </div>
+            </form>
+        </fo-cont-card>
+        <fo-cont-card>
+            <fo-title-module [text]="'Usuario - Rol'"></fo-title-module>
+            <form [formGroup]="formRole" class="grid grid-cols-1 gap-4 p-4 md:grid-cols-4">
+                <div class="col-span-3 md:col-span-1">
+                    <mat-form-field class="mat-form-field-custom w-full"
+                        appearance="outline"
+                        floatLabel="always">
+                        <mat-label>Fecha de inicio - Fecha fin</mat-label>
+                        <mat-date-range-input [rangePicker]="pickerRole">
+                          <input matStartDate formControlName="fechaInicio" placeholder="-- / -- / ----">
+                          <input matEndDate formControlName="fechaFin" placeholder="-- / -- / ----">
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matIconSuffix [for]="pickerRole"></mat-datepicker-toggle>
+                        <mat-date-range-picker #pickerRole>
+                            <mat-datepicker-actions>
+                                <button mat-button matDatepickerCancel>Cancelar</button>
+                                <button mat-raised-button color="primary" matDatepickerApply>
+                                    Aplicar
+                                </button>
+                            </mat-datepicker-actions>
+                        </mat-date-range-picker>
+                        @if(formRole.get('fechaInicio').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ formStatus.get("fechaInicio") | translateMessageForm }}
+                            </mat-error>
+                        }
+                        @if(formRole.get('fechaFin').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ formRole.get("fechaFin") | translateMessageForm }}
+                            </mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+                <div class="col-span-3 md:col-span-1">
+                    <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                        <mat-label>Rol</mat-label>
+                        <mat-select
+                            formControlName="tipoUsuario"
+                            placeholder="--">
+                            <mat-option [value]="0">
+                                {{ 'Todos' }}
+                            </mat-option>
+                            @for (item of lstStatusUser(); track $index) {
+                                <mat-option [value]="item.nConValor">
+                                    {{ item.sConDescripcion }}
+                                </mat-option>
+                            }
+                        </mat-select>
+                        @if(formRole.get('tipoUsuario').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ formRole.get("tipoUsuario") | translateMessageForm: "select" }}
+                            </mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+
+                <div
+                    appPermissionButton
+                    class="col-span-3 flex flex-wrap content-center items-center justify-center gap-3 text-center md:col-span-2  md:justify-end md:text-end"
+                >
+                    <fo-button
+                        (eventAction)="downloadRoleExcel()"
+                        [text]="textBtnSearch()"
+                        [icon]="iconBtnSearch()"
+                    >
+                    </fo-button>
+                    <ng-content></ng-content>
+                </div>
+            </form>
         </fo-cont-card>
     </div>
 </div>

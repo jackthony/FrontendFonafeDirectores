@@ -16,6 +16,7 @@ export class FoButtonComponent {
 	nameForm = input<string>(null);
 	icon = input<string>(null);
 	text = input<string>('');
+  type = input<string>('button');
 
 	@Output() eventAction: EventEmitter<void> = new EventEmitter();
 

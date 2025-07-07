@@ -56,7 +56,7 @@ export class FormDirectoryComponent implements OnInit {
     @Output() eventRefreshDirectory: EventEmitter<void> = new EventEmitter<void>();
 	private destroy$ = new Subject<void>();
 	business = input.required<BusinessEntity>();
-    titleDirectory = signal<string>('Composición del Directorio');
+    titleDirectory = signal<string>('Composición del Director');
     titlePersonal = signal<string>('Datos personales');
     buttonEnum = signal<typeof ButtonEnum>(ButtonEnum);
 	director = input.required<DirectorEntity>();
@@ -71,12 +71,14 @@ export class FormDirectoryComponent implements OnInit {
 	lstDepartments = input.required<DepartmentEntity[]>();
 	lstProvinces = signal<ProvinceEntity[]>([]);
 	lstDistricts = signal<DistrictEntity[]>([]);
-	form: FormGroup;
-	maxDate: Date; // Fecha máxima (18 años para el director)
-	minDate: Date;
 	yearDirector = signal<string>('');
-
 	typeDocument = signal<typeof TypeDocumentEnum>(TypeDocumentEnum); // Tipo de documento
+	modifiedFields = signal<string[]>([]);
+    areChanges = signal<boolean>(false);
+
+	maxDate: Date;
+	form: FormGroup;
+	minDate: Date;
 
 	// Método que se ejecuta al inicializar el componente
 	ngOnInit(): void {
@@ -141,6 +143,30 @@ export class FormDirectoryComponent implements OnInit {
             nUsuarioModificacion: [ { disabled: !this.director(), value: this._userService.userLogin().usuarioId }, Validators.required ],
 		})
 	}
+
+	controlsMapped: { [key: string]: string } = {
+        sDepartamento: 'Departamento',
+        sProvincia: 'Provincia',
+        sDistrito: 'Distrito',
+        sDireccion: 'Dirección',
+        sTelefono: 'Telefono principal',
+        sTelefonoSecundario: 'Telefono opcional 1',
+        sTelefonoTerciario: 'Telefono opcional 2',
+        sCorreo: 'Correo principal',
+        sCorreoSecundario: 'Correo opcional 1',
+        sCorreoTerciario: 'Correo opcional 2',
+        nCargo: 'Cargo',
+        nTipoDirector: 'Tipo de director',
+        sProfesion: 'Profesión',
+        nIdSector: 'Sector',
+        mDieta: 'Dieta',
+        nEspecialidad: 'Especialidad',
+        dFechaNombramiento: 'Fecha de nombramiento',
+        dFechaDesignacion: 'Fecha de designación',
+        dFechaRenuncia: 'Fecha de renuncia',
+        sComentario: 'Comentario'
+    };
+
 	valueChangesForm(): void {
         this.form.get('sDepartamento')!.valueChanges
 		.pipe(
@@ -288,6 +314,7 @@ export class FormDirectoryComponent implements OnInit {
 		if (this.director()) this.updateDirector();
         else this.registerDirector();
 	}
+
 	registerDirector(): void {
 		const fields = ['sNombres', 'sApellidos'];
         fields.forEach(field => {
@@ -309,13 +336,15 @@ export class FormDirectoryComponent implements OnInit {
             });
     }
     updateDirector(): void {
+		this.detectChanges();
         this._directorService
             .update(this.form.value)
 			.pipe(finalize(() => this._spinner.hide()))
             .subscribe({
                 next: (response: ResponseEntity<boolean>) => {
                     if (response.isSuccess) {
-						this._ngxToastrService.showSuccess('Director actualizado exitosamente', '¡Éxito!');
+						const fields = this.modifiedFields().length > 0 ? `Los campos (${this.modifiedFields().join(', ')})` : 'Todos los campos';
+						this._ngxToastrService.showSuccess(`${fields} del director, se actualizaron exitosamente`, '¡Éxito!');
 						this.eventRefreshDirectory.emit();
                     }
                 },
@@ -370,4 +399,25 @@ export class FormDirectoryComponent implements OnInit {
 		const dateFormat = dt.toFormat('yyyy-MM-dd');
 		return dateFormat;
 	}
+
+	/**
+     * Método para detectar cambios realizados en el formulario
+     */
+    detectChanges() {
+        this.modifiedFields.set([]);  // Resetear los cambios previos
+        this.areChanges.set(false); // Suponemos que no hay cambios al principio
+    
+        // Recorremos los controles del formulario directamente
+        for (const controlName in this.form.controls) {
+            if (this.form.controls.hasOwnProperty(controlName)) {
+                const control = this.form.controls[controlName];
+            // Verificamos si el campo ha sido modificado
+            if (control.dirty) {
+                const name = this.controlsMapped[controlName];
+                this.modifiedFields.update(prev => [...prev, name]); // Agregar a la lista de campos modificados
+                this.areChanges.set(true); // Si se encuentra algún campo modificado, ponemos esta variable en false
+            }
+          }
+        }
+    }
 }
