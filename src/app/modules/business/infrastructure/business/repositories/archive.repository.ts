@@ -44,7 +44,7 @@ export class ArchiveRepository implements ArchiveInterface {
     }
 
     importExcelBussines(excel: FormData): Observable<ResponseEntity<boolean>> {
-        return this._http.post<ResponseEntity<boolean>>(`${this.url}/importar/v2`, excel)
+        return this._http.post<ResponseEntity<boolean>>(`${this.url}/importar`, excel)
     }
 
     importFileBussines(data: FormData): Observable<ResponseEntity<boolean>> {
