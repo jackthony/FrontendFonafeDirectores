@@ -12,13 +12,12 @@ import { DateTime } from 'luxon';
   styleUrl: './traceability-system.component.scss'
 })
 export class TraceabilitySystemComponent {
-  private readonly _router = inject(Router);
+  	private readonly _router = inject(Router);
     private readonly _fb = inject(FormBuilder);
 
 	private _auditoryService = inject(AuditoryService);
 	private _archivingProcessService = inject(ArchivingProcessService);
-
-
+	
 	textBtnSearch = signal<string>('Descargar');
 	iconBtnSearch = signal<string>('download');
 	

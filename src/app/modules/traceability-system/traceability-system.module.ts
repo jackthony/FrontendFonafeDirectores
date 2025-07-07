@@ -39,7 +39,6 @@ import { AuditLogsComponent } from './components/audit-logs/audit-logs.component
             MatIconModule, 
             FoButtonDialogComponent, 
             TranslateMessageForm, 
-            NgxMaskDirective,
             TraceabilitySystemRoutingModule
           ]
 })

@@ -42,6 +42,7 @@ export class SystemLogsComponent implements OnInit {
 		const file$ = this._auditoryService.exportLogSystem(this.form.value);
         this._archivingProcessService.downloadFile(file$, `reporte_log_sistema_${id}.xlsx`, 'application/vnd.ms-excel');
 	}
+	
     /**
      * Método encargado de redirigir al usuario a la pantalla principal del sistema.
      * Se invoca usualmente desde el componente `FoReturnComponent`.
