@@ -37,6 +37,7 @@ export class AuditLogsComponent implements OnInit {
 
     ngOnInit(): void {
 		this.loadStatus();
+		this.loadRole();
         this.formStatus = this._fb.group({
             fechaInicio: [null, Validators.required],
             fechaFin: [null, Validators.required],

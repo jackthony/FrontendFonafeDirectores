@@ -137,7 +137,7 @@ export class FormDirectoryComponent implements OnInit {
 			nEspecialidad: [ this.director() ? this.director().nEspecialidad : 0, [Validators.required, Validators.min(1)] ],
 			dFechaNombramiento: [ this.director() ? this._dateUtilsService.formatDateToString(this.director().dFechaNombramiento) : null, [Validators.required,  Validators.maxLength(10)] ],
 			dFechaDesignacion: [ this.director() ? this._dateUtilsService.formatDateToString(this.director().dFechaDesignacion) : null, [Validators.required, Validators.maxLength(10)] ],
-			dFechaRenuncia: [ this.director() ? this.director().dFechaRenuncia : null , Validators.required ],
+			dFechaRenuncia: [ this.director() ? this.director().dFechaRenuncia : null],
 			sComentario: [ this.director() ? this.director().sComentario : '', Validators.maxLength(1000) ],
 			nUsuarioRegistro: [ { disabled: this.director(), value: this._userService.userLogin().usuarioId }, Validators.required ],
             nUsuarioModificacion: [ { disabled: !this.director(), value: this._userService.userLogin().usuarioId }, Validators.required ],

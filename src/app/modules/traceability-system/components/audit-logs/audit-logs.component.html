@@ -116,9 +116,9 @@
                             <mat-option [value]="0">
                                 {{ 'Todos' }}
                             </mat-option>
-                            @for (item of lstStatusUser(); track $index) {
-                                <mat-option [value]="item.nConValor">
-                                    {{ item.sConDescripcion }}
+                            @for (item of lstRoleUser(); track $index) {
+                                <mat-option [value]="item.nRolId">
+                                    {{ item.sNombreRol }}
                                 </mat-option>
                             }
                         </mat-select>
