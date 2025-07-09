@@ -110,6 +110,11 @@ export const appRoutes: Route[] = [
                 path: 'reset-password', 
                 canActivate: [ResetPasswordTokenGuard],
                 loadChildren: () => import('app/modules/user/components/auth/reset-password/reset-password.routes')
+            },
+            {
+                path: 'confirm-account', 
+                canActivate: [ResetPasswordTokenGuard],
+                loadChildren: () => import('app/modules/user/components/auth/reset-password/reset-password.routes')
             }
         ]
          

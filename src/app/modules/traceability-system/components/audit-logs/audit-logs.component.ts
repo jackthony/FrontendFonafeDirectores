@@ -81,11 +81,17 @@ export class AuditLogsComponent implements OnInit {
             this.formStatus.markAllAsTouched();
             return;
         }
+        const dateStart = this.formStatus.get('fechaInicio').value;
+        const dateEnd = this.formStatus.get('fechaFin').value;
+        const status = this.formStatus.get('estado').value;
+        const value = {
+            fechaInicio: dateStart.setZone('UTC', { keepLocalTime: true }).toISO(),
+            fechaFin: dateEnd.setZone('UTC', { keepLocalTime: true }).toISO(),
+			estado: status
+        }
         const uniqueId = DateTime.now().toMillis(); // Devuelve el número de milisegundos desde la época Unix
         const id = uniqueId.toString();
-        const file$ = this._auditoryService.exportAuditoryStatus(
-            this.formStatus.value
-        );
+        const file$ = this._auditoryService.exportAuditoryStatus(value);
         this._archivingProcessService.downloadFile(
             file$,
             `reporte_usuario_estados_${id}.xlsx`,
@@ -98,11 +104,17 @@ export class AuditLogsComponent implements OnInit {
             this.formRole.markAllAsTouched();
             return;
         }
-        const uniqueId = DateTime.now().toMillis(); // Devuelve el número de milisegundos desde la época Unix
+        const dateStart = this.formRole.get('fechaInicio').value;
+        const dateEnd = this.formRole.get('fechaFin').value;
+        const typeUser = this.formRole.get('tipoUsuario').value;
+        const value = {
+            fechaInicio: dateStart.setZone('UTC', { keepLocalTime: true }).toISO(),
+            fechaFin: dateEnd.setZone('UTC', { keepLocalTime: true }).toISO(),
+			tipoUsuario: typeUser
+        }
+        const uniqueId = DateTime.now().toMillis(); // Devuelve el número de milisegundos.
         const id = uniqueId.toString();
-        const file$ = this._auditoryService.exportAuditoryRole(
-            this.formRole.value
-        );
+        const file$ = this._auditoryService.exportAuditoryRole(value);
         this._archivingProcessService.downloadFile(
             file$,
             `reporte_usuario_roles_${id}.xlsx`,

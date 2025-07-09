@@ -37,9 +37,15 @@ export class SystemLogsComponent implements OnInit {
 			this.form.markAllAsTouched();
 			return;
 		}
+        const dateStart = this.form.get('fechaInicio').value;
+        const dateEnd = this.form.get('fechaFin').value;
+        const value = {
+            fechaInicio: dateStart.setZone('UTC', { keepLocalTime: true }).toISO(),
+            fechaFin: dateEnd.setZone('UTC', { keepLocalTime: true }).toISO()
+        }
 		const uniqueId = DateTime.now().toMillis();  // Devuelve el número de milisegundos desde la época Unix
  		const id = uniqueId.toString();
-		const file$ = this._auditoryService.exportLogSystem(this.form.value);
+		const file$ = this._auditoryService.exportLogSystem(value);
         this._archivingProcessService.downloadFile(file$, `reporte_log_sistema_${id}.xlsx`, 'application/vnd.ms-excel');
 	}
 	
