@@ -1,6 +1,15 @@
+/*******************************************************************************************************
+ * Nombre del archivo:  password-validation.service.ts
+ * Descripción:          Servicio encargado de validar las contraseñas según una serie de criterios predefinidos,
+ *                       como longitud mínima y máxima, presencia de minúsculas, mayúsculas, números, y caracteres especiales.
+ *                       El servicio devuelve los mensajes de error correspondientes a cada validación fallida.
+ * Autor:                Daniel Alva
+ * Fecha de creación:    01/07/2025
+ * Última modificación:  09/07/2025 por Daniel Alva
+ * Cambios recientes:    - Implementación inicial del servicio de validación de contraseñas.
+ *******************************************************************************************************/
 import { Injectable } from "@angular/core";
 import { ErrorMessagesPassword } from "app/shared/interfaces/error-messages.interface";
-
 @Injectable({
     providedIn: 'root',
 })
@@ -13,9 +22,6 @@ export class PasswordValidationService {
         { message: 'Debe incluir un número.', valid: true, key: 'number' },
         { message: 'Debe incluir un carácter especial.', valid: true, key: 'specialChar' },
     ];
-    
-    
-      // Validar contraseña
       validatePassword(password: string): ErrorMessagesPassword[] {
         const validations = {
           minLength: password?.length >= 8,
@@ -25,30 +31,21 @@ export class PasswordValidationService {
           number: /[0-9]/.test(password),
           specialChar: /[!@#$%^&*(),.?":{}|<>]/.test(password),
         };
-    
-        // Actualizamos el estado de validación de cada error
         Object.keys(validations).forEach((key) => {
           const valid = validations[key];
           this.updateErrorMessage(key, valid);
         });
-    
-        // Retornar los errores
         return this.errorMessages;
       }
-    
-      // Actualizar el estado de validez de los mensajes de error
       private updateErrorMessage(key: string, valid: boolean): void {
         const error = this.errorMessages.find((e) => e.key === key);
         if (error) {
-          error.valid = !valid;  // Si es 'true', la regla está violada, por lo que 'valid' debe ser 'false'
+          error.valid = !valid;
         }
       }
-    
-      // Solo retornar los errores no válidos (puedes llamar a esto cuando necesites los mensajes para mostrar)
     getInvalidErrors(): string[] {
         return this.errorMessages.filter((error) => !error.valid).map((error) => error.message);
     }
-
     getDefaultErrors(): ErrorMessagesPassword[] {
         return [...this.errorMessages];
     }

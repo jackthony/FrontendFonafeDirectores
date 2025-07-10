@@ -15,7 +15,6 @@ import { FUSE_VERSION } from '@fuse/version';
 import { Subject, combineLatest, filter, map, takeUntil } from 'rxjs';
 import { EmptyLayoutComponent } from './layouts/empty/empty.component';
 import { FonafeComponent } from './layouts/fonafe-layout/fonafe-layout.component';
-
 @Component({
     selector: 'layout',
     templateUrl: './layout.component.html',

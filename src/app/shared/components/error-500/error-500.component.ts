@@ -11,8 +11,6 @@
  *                        - Uso de RouterLink para facilitar navegación en el template.
  *******************************************************************************************************/
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { RouterLink } from '@angular/router';
-
 @Component({
     selector       : 'error-500',
     templateUrl    : './error-500.component.html',
@@ -22,9 +20,6 @@ import { RouterLink } from '@angular/router';
 })
 export class Error500Component
 {
-    /**
-     * Constructor
-     */
     constructor()
     {
     }

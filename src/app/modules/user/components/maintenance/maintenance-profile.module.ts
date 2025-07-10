@@ -1,6 +1,16 @@
+/*******************************************************************************************************
+ * Nombre del archivo:  profile-management.module.ts
+ * Descripción:          Módulo de mantenimiento de perfiles que agrupa los componentes necesarios para manejar
+ *                       los roles y posiciones dentro del sistema, además de las interacciones necesarias para 
+ *                       agregar, editar y eliminar dichos roles y posiciones.
+ * Autor:                Daniel Alva
+ * Fecha de creación:    01/07/2025
+ * Última modificación:  09/07/2025 por Daniel Alva
+ * Cambios recientes:    - Implementación del módulo de mantenimiento de perfiles con funcionalidades 
+ *                         para gestionar roles y posiciones.
+ *******************************************************************************************************/
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { PermissionButtonDirective } from 'app/shared/directives/permission-button.directive';
 import { MatIconModule } from '@angular/material/icon';
 import { FormInputModule } from 'app/shared/modules/form-input.module';
@@ -24,8 +34,6 @@ import { FoReturnComponent } from 'app/shared/components/fo-return/fo-return.com
 import { FoTitleModuleComponent } from 'app/shared/components/fo-title-module/fo-title-module.component';
 import { FoTableComponent } from 'app/shared/components/fo-table/fo-table.component';
 import { FoSearchForButtonComponent } from 'app/shared/components/fo-search-for-button/fo-search-for-button.component';
-
-
 @NgModule({
   declarations: [
     DialogMaintenanceRoleFormComponent,

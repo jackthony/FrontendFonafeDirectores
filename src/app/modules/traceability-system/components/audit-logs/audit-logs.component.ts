@@ -1,3 +1,15 @@
+/*******************************************************************************************************
+ * Nombre del archivo:  audit-logs.component.ts
+ * Descripción:          Componente encargado de gestionar y visualizar los registros de auditoría en el sistema.
+ *                       Permite descargar los registros de auditoría filtrados por fecha y estado de usuario,
+ *                       así como por tipo de usuario y rol, en formato Excel.
+ *                       El formulario reactivo permite seleccionar filtros como fecha de inicio, fecha de fin,
+ *                       estado del usuario y tipo de usuario.
+ * Autor:                Daniel Alva
+ * Fecha de creación:    01/07/2025
+ * Última modificación:  09/07/2025 por Daniel Alva
+ * Cambios recientes:    - Implementación inicial del componente de registros de auditoría con descarga de archivos.
+ *******************************************************************************************************/
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -10,7 +22,6 @@ import { ConstantEntity } from 'app/modules/business/domain/entities/business/co
 import { ResponseEntity } from '@models/response.entity';
 import { RoleService } from 'app/modules/user/domain/services/maintenance/role.service';
 import { RoleEntity } from 'app/modules/user/domain/entities/maintenance/role.entity';
-
 @Component({
     selector: 'app-audit-logs',
     standalone: false,
@@ -20,21 +31,16 @@ import { RoleEntity } from 'app/modules/user/domain/entities/maintenance/role.en
 export class AuditLogsComponent implements OnInit {
     private readonly _router = inject(Router);
     private readonly _fb = inject(FormBuilder);
-
     private _auditoryService = inject(AuditoryService);
     private _archivingProcessService = inject(ArchivingProcessService);
     private _constantService = inject(ConstantService);
-    private _roleService = inject(RoleService); // Servicio encargado de gestionar los roles de usuario
-
+    private _roleService = inject(RoleService);
     textBtnSearch = signal<string>('Descargar');
     iconBtnSearch = signal<string>('download');
-
     lstStatusUser = signal<ConstantEntity[]>([]);
     lstRoleUser = signal<RoleEntity[]>([]);
-
     formStatus: FormGroup;
     formRole: FormGroup;
-
     ngOnInit(): void {
 		this.loadStatus();
 		this.loadRole();
@@ -49,7 +55,6 @@ export class AuditLogsComponent implements OnInit {
 			tipoUsuario: [null, Validators.required]
         });
     }
-
 	loadStatus(): void {
 		this._constantService.getAll(CONST_STATUS_USER).subscribe({
 			next: ((response: ResponseEntity<ConstantEntity>) => {
@@ -62,7 +67,6 @@ export class AuditLogsComponent implements OnInit {
 			})
 		})
 	}
-
 	loadRole(): void {
 		this._roleService.getAll().subscribe({
 			next: ((response: ResponseEntity<RoleEntity>) => {
@@ -75,7 +79,6 @@ export class AuditLogsComponent implements OnInit {
 			})
 		})
 	}
-
     downloadStatusExcel(): void {
         if (this.formStatus.invalid) {
             this.formStatus.markAllAsTouched();
@@ -89,7 +92,7 @@ export class AuditLogsComponent implements OnInit {
             fechaFin: dateEnd.setZone('UTC', { keepLocalTime: true }).toISO(),
 			estado: status
         }
-        const uniqueId = DateTime.now().toMillis(); // Devuelve el número de milisegundos desde la época Unix
+        const uniqueId = DateTime.now().toMillis();
         const id = uniqueId.toString();
         const file$ = this._auditoryService.exportAuditoryStatus(value);
         this._archivingProcessService.downloadFile(
@@ -98,7 +101,6 @@ export class AuditLogsComponent implements OnInit {
             'application/vnd.ms-excel'
         );
     }
-
 	downloadRoleExcel(): void {
         if (this.formRole.invalid) {
             this.formRole.markAllAsTouched();
@@ -112,7 +114,7 @@ export class AuditLogsComponent implements OnInit {
             fechaFin: dateEnd.setZone('UTC', { keepLocalTime: true }).toISO(),
 			tipoUsuario: typeUser
         }
-        const uniqueId = DateTime.now().toMillis(); // Devuelve el número de milisegundos.
+        const uniqueId = DateTime.now().toMillis(); 
         const id = uniqueId.toString();
         const file$ = this._auditoryService.exportAuditoryRole(value);
         this._archivingProcessService.downloadFile(
@@ -121,11 +123,6 @@ export class AuditLogsComponent implements OnInit {
             'application/vnd.ms-excel'
         );
     }
-
-    /**
-     * Método encargado de redirigir al usuario a la pantalla principal del sistema.
-     * Se invoca usualmente desde el componente `FoReturnComponent`.
-     */
     returnInit(): void {
         this._router.navigate(['home']);
     }

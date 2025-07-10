@@ -1,3 +1,16 @@
+/*******************************************************************************************************
+ * Nombre del archivo:  dialog-ministry-form.component.ts
+ * Descripción:          Componente encargado de gestionar el formulario de creación y edición de ministerios.
+ *                       Este componente maneja tanto la lógica para crear un nuevo ministerio como para editar 
+ *                       uno existente. Permite al usuario ingresar o modificar los datos del ministerio, validarlos, 
+ *                       y enviarlos al servidor para su almacenamiento. El componente también incluye validaciones 
+ *                       para los campos del formulario y gestiona la interacción con el usuario a través de eventos 
+ *                       como presionar teclas y cambios en el contenido del campo de entrada.
+ * Autor:                Daniel Alva
+ * Fecha de creación:    01/07/2025
+ * Última modificación:  09/07/2025 por Daniel Alva
+ * Cambios recientes:    - Implementación inicial del componente para manejo de ministerios.
+ *******************************************************************************************************/
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -7,7 +20,6 @@ import { MinistryService } from 'app/modules/business/domain/services/maintenanc
 import { finalize } from 'rxjs';
 import { ResponseEntity } from '@models/response.entity';
 import { MinistryEntity } from 'app/modules/business/domain/entities/maintenance/ministry.entity';
-
 @Component({
   selector: 'app-dialog-ministry-form',
   standalone: false,

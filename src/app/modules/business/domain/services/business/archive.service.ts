@@ -38,19 +38,15 @@ export class ArchiveService {
     getReportPdfBussines(): Observable<ArrayBuffer> {
         return this._archiveInterface.getReportPdfBussines();
     }
-
     importExcelBussines(excel: FormData): Observable<ResponseEntity<boolean>> {
         return this._archiveInterface.importExcelBussines(excel);
     }
-
     importFileBussines(data: FormData): Observable<ResponseEntity<boolean>> {
         return this._archiveInterface.importFileBussines(data);
     }
-
     listTreeBussiness(nIdEmpresa: number): Observable<ResponseEntity<MatTreeOptionsNode<FileData>>> {
         return this._archiveInterface.listTreeBussiness(nIdEmpresa);
     }
-
     downloadFileBussiness(url: string): Observable<ArrayBuffer> {
         return this._archiveInterface.downloadFileBussiness(url);
     }

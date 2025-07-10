@@ -22,8 +22,8 @@ import { SegUserInterface } from '../../../application/repositories/profile/seg-
     providedIn: 'root',
 })
 export class SegUserRepository implements SegUserInterface {
-    private url = `${environment.apiUrlBase}/User`; //  URL base del endpoint de usuarios
-    private _http = inject(HttpClient); // Inyección directa de HttpClient para llamadas HTTP
+    private url = `${environment.apiUrlBase}/User`;
+    private _http = inject(HttpClient);
     /**
      * Recupera un listado paginado de usuarios, con soporte de búsqueda por nombre.
      * @param param Texto de búsqueda (nombre de usuario).

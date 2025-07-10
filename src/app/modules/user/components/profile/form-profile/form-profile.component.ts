@@ -141,7 +141,6 @@ export class FormProfileComponent implements OnInit {
     onInput(event: Event, nameForm: string) {
         const input = event.target as HTMLInputElement;
         const validPattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/;
-    
         if (!validPattern.test(input.value)) {
           const cleaned = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
           input.value = cleaned;

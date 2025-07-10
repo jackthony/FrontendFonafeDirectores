@@ -1,3 +1,16 @@
+/*******************************************************************************************************
+ * Nombre del archivo:  auth.service.ts
+ * Descripción:          Servicio que maneja las operaciones de autenticación en la aplicación, incluyendo 
+ *                       el inicio de sesión, registro, cambio de contraseña, verificación de tokens y 
+ *                       manejo de la sesión del usuario.
+ *                       Además, gestiona el estado de la sesión, la validación del token y la asignación 
+ *                       de permisos de usuario.
+ * Autor:                Daniel Alva
+ * Fecha de creación:    01/07/2025
+ * Última modificación:  09/07/2025 por Daniel Alva
+ * Cambios recientes:    - Implementación inicial del servicio de autenticación con funcionalidades de login, 
+ *                         logout, verificación de token y cambio de contraseña.
+ *******************************************************************************************************/
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { AuthUtils } from 'app/core/utils/auth.utils';
@@ -12,7 +25,6 @@ import { ResetPasswordEntity } from '../../entities/auth/reset-password.entity';
 import { SignInEntity } from '../../entities/auth/sign-in.entity';
 import { ChangePasswordEntity } from '../../entities/auth/change-password.entity';
 import { SuccessPasswordEntity } from '../../entities/auth/sucess-password.entity';
-
 @Injectable({ providedIn: 'root' })
 export class AuthService {
     _authenticated: boolean = false;
@@ -23,37 +35,18 @@ export class AuthService {
     private _httpClient = inject(HttpClient);
     private _userService = inject(UserService);
     private url = `${environment.apiUrlBase}/Auth`;
-    // -----------------------------------------------------------------------------------------------------
-    // @ Accessors
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Setter & getter for access token
-     */
     set accessToken(token: string) {
         localStorage.setItem('accessToken', token);
     }
-
     get accessToken(): string {
         return localStorage.getItem('accessToken') ?? '';
     }
-
-    /**
-     * Setter & getter for authenticated
-     */
-
     set authenticatedLogin(value: boolean) {
         this._authenticatedLogin.next(value);
     }
-
     get _authenticatedLogin$(): Observable<any> {
         return this._authenticatedLogin.asObservable();
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
     /**
      * Forgot password
      *
@@ -62,54 +55,41 @@ export class AuthService {
     forgotPassword(credentials: ForgotPasswordEntity ): Observable<SuccessPasswordEntity> {
         return this._httpClient.post<SuccessPasswordEntity>(`${this.url}/forgot-password`, credentials);
     }
-
     /**
      * Reset password
      *
      * @param password
      */
-
     resetPassword(credentials: ResetPasswordEntity): Observable<SuccessPasswordEntity> {
         return this._httpClient.post<SuccessPasswordEntity>(`${this.url}/reset-password`, credentials);
     }
-
     /**
      * Sign in
      *
      * @param credentials
      */
     signIn(credentials: SignInEntity): Observable<ResponseLogin> {
-        // Throw error, if the user is already logged in
         if (this._authenticated) {
             return throwError('User is already logged in.');
         }
         return this._httpClient.post(`${this.url}/login`, credentials).pipe(
             switchMap((response: ResponseLogin) => {
-                
-                // Store the access token in the local storage
                 this.accessToken = response.accessToken;
-                // Set the authenticated flag to true
                 this._authenticated = true;
                 this.authenticatedLogin = true;
                 this._check$ = of(true);
-                //this._sessionState.set(response.item.sessionState);
-
-                // Store the user on the user service
                 this._userService.user = response.usuarioResult;
                 this._authorizationService.setPermissions(response.modulos);
                 return of(response);
             })
         );
     }
-
     changePassword(credentials: ChangePasswordEntity): Observable<ResponseEntity<boolean>> {
-        // Throw error, if the user is already logged in
         if (!this._authenticated) {
             return throwError('El usuario aún no ha iniciado sesión');
         }
         return this._httpClient.post<ResponseEntity<boolean>>(`${this.url}/change-password`, credentials);
     }
-
     verifyToken(accessToken: string): Observable<boolean> {
         return this._httpClient
         .post(`${this.url}/verify-token`, {
@@ -127,9 +107,6 @@ export class AuthService {
             })
         )
     }
-
-
-
     /**
      * Sign in using the access token
      */
@@ -146,46 +123,30 @@ export class AuthService {
                 }),
                 switchMap((response: ResponseLogin) => {
                     if(!response) return of(false);
-
                     if (response.accessToken) {
                         this.accessToken = response.accessToken;
                     }
-
-                    // Set the authenticated flag to true
                     this._authenticated = true;
                     this.authenticatedLogin = true;
-
-                    // Store the user on the user service
-                    //this._userService.user = response.user;
                     this._userService.user = response.usuarioResult;
-
                     this._authorizationService.setPermissions(response.modulos);
-
-                    // Return true
                     return of(true);
                 })
             );
     }
-
     /**
      * Sign out
      */
     signOut(): Observable<any> {
-        // Remove the access token from the local storage
         localStorage.removeItem('accessToken');
-
-        // Set the authenticated flag to false
         this._authenticated = false;
         this._userService.user = null;
         this._authorizationService.setPermissions([]);
         this._sessionState.set(null);
         this._check$ = null;
         this.authenticatedLogin = false;
-
-        // Return the observable
         return of(true);
     }
-
     /**
      * Sign up
      *
@@ -199,7 +160,6 @@ export class AuthService {
     }): Observable<any> {
         return this._httpClient.post('api/auth/sign-up', user);
     }
-
     /**
      * Unlock session
      *
@@ -211,16 +171,10 @@ export class AuthService {
     }): Observable<any> {
         return this._httpClient.post('api/auth/unlock-session', credentials);
     }
-
-    /**
-     * Check the authentication status
-     */
     check(): Observable<boolean> {
-
         if (this._check$) {
             return this._check$;
         } 
-
         if (!this.accessToken) {
             return of(false);
         }
@@ -228,9 +182,8 @@ export class AuthService {
         if (AuthUtils.isTokenExpired(this.accessToken)) {
             return of(false);
         }
-
         this._check$ = this.signInUsingToken().pipe(
-            take(1), // ✅ Solo emite una vez
+            take(1),
             tap((valid) => {
                 if (!valid) {
                     this.signOut();
@@ -239,13 +192,9 @@ export class AuthService {
             }),
             shareReplay(1)
         );
-    
         return this._check$;
     }
-
     getSessionState(): 'ACTIVE' | 'FORCE_PASSWORD_UPDATE' | null {
         return this._sessionState();
     }
-
-
 }

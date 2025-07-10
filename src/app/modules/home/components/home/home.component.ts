@@ -41,7 +41,6 @@ const dataMock = [
 	  solicit: 'Sofía Meza',
 	}
   ];
-
 @Component({
   selector: 'app-home',
   standalone: false,

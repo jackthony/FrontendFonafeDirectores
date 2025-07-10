@@ -1,6 +1,17 @@
+/*******************************************************************************************************
+ * Nombre del archivo:  business-management.module.ts
+ * Descripción:          Módulo principal para la gestión de negocios, que agrupa los componentes y servicios 
+ *                       necesarios para la administración y visualización de archivos, directorios y formularios 
+ *                       de negocios dentro del sistema. Este módulo también integra la funcionalidad de tablas,
+ *                       formularios y componentes de carga de archivos.
+ * Autor:                Daniel Alva
+ * Fecha de creación:    01/07/2025
+ * Última modificación:  09/07/2025 por Daniel Alva
+ * Cambios recientes:    - Implementación inicial del módulo de gestión de negocios con funcionalidades de 
+ *                         archivos y directorios.
+ *******************************************************************************************************/
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { BusinessManagementRoutingModule } from './business-management-routing.module';
 import { FoMatTreeFlatComponent } from '../../shared/components/fo-mat-tree-flat/fo-mat-tree-flat.component';
 import { MatIconModule } from '@angular/material/icon';
@@ -28,8 +39,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { BusinessFormComponent } from './components/business/business-form/business-form.component';
 import { BusinessManagementComponent } from './components/business/business-management/business-management.component';
 import { FormDirectoryComponent } from './components/business/form-directory/form-directory.component';
-
-
 @NgModule({
   declarations: [
     ArchivesBussinessComponent,

@@ -63,14 +63,10 @@ export const appRoutes: Route[] = [
             { 
                 path: 'gestion-perfiles', 
                 loadChildren: () => import('app/modules/user/profile-management.module'),
-                /* canActivate: [permissionGuard],
-                data: { module: 'gestion-perfiles', action: 'Ver' } */
             },
             { 
                 path: 'gestion-empresas', 
                 loadChildren: () => import('app/modules/business/business-management.module'),
-                /* canActivate: [permissionGuard],
-                data: { module: 'gestion-empresas', action: 'Ver' } */
             },
             { 
                 path: 'solicitudes', 
@@ -85,12 +81,6 @@ export const appRoutes: Route[] = [
                 canActivate: [permissionGuard],
                 data: { module: 'mantenimiento-candidatos', action: 'Ver' }
             },
-            /* { 
-                path: 'mantenedores-sistema', 
-                loadChildren: () => import('app/modules/system-maintenance/system-maintenance.module'),
-                canActivate: [permissionGuard],
-                data: { module: 'mantenimiento-sistemas', action: 'Ver' }
-            }, */
             { 
                 path: 'trazabilidad-sistemas', 
                 loadChildren: () => import('app/modules/traceability-system/traceability-system.module'),
