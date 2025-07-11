@@ -9,7 +9,7 @@
  * Cambios recientes:   Implementación de validadores reutilizables para formularios reactivos.
  *************************************************************************************/
 import { Injectable } from '@angular/core';
-import { AbstractControl, ValidationErrors } from '@angular/forms';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 @Injectable({
     providedIn: 'root',
 })
@@ -56,6 +56,16 @@ export class ValidationFormService {
         const value = control.value;
         
         if (!value) return null; // If the value is empty, return no validation errors.
+
+        const trimmedValue = value.trim();
+
+        /* if (value == trimmedValue) {
+            return { customError: 'La contraseña no puede tener espacios al inicio o final.' };
+        }
+ */
+        if (value !== trimmedValue) {
+            return { customError: 'La contraseña no puede tener espacios al inicio o final.' };
+        }
     
         // Minimum length validation
         if (value.length < 8) {
@@ -85,6 +95,20 @@ export class ValidationFormService {
         // Special character validation
         if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
             return { customError: 'Debe contener al menos un carácter especial.' };
+        }
+    
+        return null; // If all validations pass, return null indicating no errors.
+    }
+
+    spaceValidator(control: AbstractControl): ValidationErrors | null {
+        const value = control.value;
+        
+        if (!value) return null;
+
+        const trimmedValue = value.trim();
+
+        if (value !== trimmedValue) {
+            return { customError: 'No puede contener espacios al inicio o final' };
         }
     
         return null; // If all validations pass, return null indicating no errors.
@@ -144,5 +168,14 @@ export class ValidationFormService {
             return { customError: 'La fecha ingresada no es válida.' };
         }
         return null;
+    }
+
+    validatePersonalTypeFonafe(control: AbstractControl): ValidationErrors | null {
+        const email = control.value;
+            const emailPattern = /^[a-zA-Z0-9._%+-]+@fonafe\.gob\.pe$/;
+            if (email && !emailPattern.test(email)) {
+                return { customError: 'Formato requerido: xxxx@fonafe.gob.pe' };
+            }
+            return null;
     }
 }

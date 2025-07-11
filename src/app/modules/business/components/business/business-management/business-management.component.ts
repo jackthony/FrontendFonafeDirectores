@@ -97,6 +97,7 @@ export class BusinessManagementComponent implements OnInit {
    * Método para buscar por empresa
    */
   searchByEnterprise(event: string): void {
+    if(event.length > 1 && event.trim().length === 0) return;
     this.businessSearch.set(event); 
     this.pageIndexTable.set(1); 
     this.searchBusiness(); 

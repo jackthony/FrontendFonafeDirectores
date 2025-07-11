@@ -12,11 +12,12 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, input, OnDestroy, OnInit, Output, signal, ViewEncapsulation } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { debounceTime, Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-fo-search',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule],
+  imports: [CommonModule, MatIconModule, MatButtonModule, MatTooltipModule],
   templateUrl: './fo-search.component.html',
   styleUrl: './fo-search.component.scss',
   encapsulation: ViewEncapsulation.None

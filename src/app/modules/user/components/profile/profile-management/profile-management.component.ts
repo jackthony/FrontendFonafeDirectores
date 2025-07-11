@@ -59,7 +59,6 @@ export class ProfileManagementComponent {
 	totalPagesTable = signal<number>(1);
 	userSearch = signal<string>('');
 	placeHolderSearch = signal<string>('Busca por apellidos y/o nombres');
-	delaySearchProfile = signal<number>(400);
 	/**
 	 * Inicializa el componente cargando la cabecera de la tabla, los íconos y realiza una búsqueda inicial de usuarios.
 	 */
@@ -112,7 +111,8 @@ export class ProfileManagementComponent {
 	 * @param event Texto de búsqueda (nombre del usuario).
 	 */
 	searchByUser(event: string): void {
-		this.userSearch.set(event); 
+		if(event.length > 1 && event.trim().length === 0) return;
+		this.userSearch.set(event.trim());
 		this.pageIndexTable.set(1); 
 		this.searchUsers(); 
 	}
@@ -146,7 +146,7 @@ export class ProfileManagementComponent {
 		});
 		respDialogo.beforeClosed().subscribe(res => {
 		    if(res){
-				this.searchByUser(null);
+				this.searchUsers();
 			    this._ngxToastrService.showSuccess('Cambio de clave realizado exitosamente', '¡Éxito!');
 		    }
 		});

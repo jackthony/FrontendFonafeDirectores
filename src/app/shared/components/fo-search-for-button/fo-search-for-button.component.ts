@@ -53,6 +53,7 @@ export class FoSearchForButtonComponent implements OnInit {
     viewFilterState = input(false, { transform: booleanAttribute });
     @Output() eventNewElement: EventEmitter<void> = new EventEmitter<void>();
     @Output() eventSearch: EventEmitter<string> = new EventEmitter<string>();
+    @Output() eventClickSearch: EventEmitter<string> = new EventEmitter<string>();
     @Output() eventFilterState: EventEmitter<boolean | null> = new EventEmitter<boolean | null>();
     @Output() eventBtnSearch: EventEmitter<void> = new EventEmitter<void>();
     ngOnInit(): void {
@@ -64,6 +65,11 @@ export class FoSearchForButtonComponent implements OnInit {
     getDataSearch(event: string): void {
         this.eventSearch.emit(event);
     }
+
+    getDataClickSearch(event: string): void {
+      this.eventClickSearch.emit(event);
+    }
+
     onCheckboxChange() {
         if (this.isActive && this.isInactive) {
           this.filterValue.set(null);

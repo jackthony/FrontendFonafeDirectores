@@ -9,8 +9,9 @@
         [value]="defaultValue()"
         class="search-input"
         [placeholder]="placeText()"
-        (input)="search($event.target.value)" />
-        <button mat-icon-button (click)="searchValue()" [ngClass]="{'pointer-events-none' : delaySearch() > 0}">
+        (input)="search($event.target.value)"
+        (keydown.enter)="searchValue()" />
+        <button mat-icon-button (click)="searchValue()" [ngClass]="{'pointer-events-none' : delaySearch() > 0}" [matTooltip]="'Buscar'">
             <mat-icon class="icon-search">search</mat-icon>
         </button>
 </div>

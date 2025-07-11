@@ -2,7 +2,7 @@
     <div class="header-dialog-user">
         <div class="header-container-user gap-3 flex">
             <mat-icon class="icon-size-7" svgIcon="mat_outline:person_outline"></mat-icon>
-            <div class="header-text">Agregar usuario</div>
+            <div class="header-text"> {{ data.object ? 'Editar' : 'Agregar' }} usuario</div>
         </div>
     </div>
     <div class="body-dialog-user">
@@ -144,8 +144,9 @@
                         formControlName="sContrasena"
                         matInput 
                         placeholder="--"
+                        autocomplete="off"
                         [type]="typeInputPassword() ? 'text' : 'password'"
-                        maxlength="32">
+                        maxlength="12">
                         @if(form.get('sContrasena').invalid) {
                             <mat-error class="text-red-500">
                                 {{ form.get("sContrasena") | translateMessageForm }}

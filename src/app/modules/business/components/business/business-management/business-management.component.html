@@ -5,8 +5,7 @@
             <fo-title-module [text]="titleModule()"></fo-title-module>
         </fo-cont-card>
         <fo-search-for-button
-            [delaySearch]="delaySearchBusiness()"
-            (eventSearch)="searchByEnterprise($event)"
+            (eventClickSearch)="searchByEnterprise($event)"
             (eventNewElement)="addCompany()"
             [placeTextSearch]="placeHolderSearch()"
             [textBtnSearch]="addEnterprise()"

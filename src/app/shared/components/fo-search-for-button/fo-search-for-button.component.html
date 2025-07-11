@@ -1,7 +1,7 @@
 <fo-cont-card>
     <div class="grid grid-cols-1 md:grid-cols-8 lg:grid-cols-8">
         <div class="col-span-1 md:col-span-4 lg:col-span-2 flex items-center gap-4">
-            <app-fo-search class="w-full" [delaySearch]="delaySearch()" (eventChangeData)="getDataSearch($event)" (eventClickSearch)="getDataSearch($event)" [placeText]="placeTextSearch()"></app-fo-search>
+            <app-fo-search class="w-full" [delaySearch]="delaySearch()" (eventChangeData)="getDataSearch($event)" (eventClickSearch)="getDataClickSearch($event)" [placeText]="placeTextSearch()"></app-fo-search>
             @if (viewFilterState()) {
                 <button [matTooltip]="'Filtrar'" mat-icon-button class="btn-funnel" [matMenuTriggerFor]="filterMenu">
                     <mat-icon>filter_list</mat-icon>

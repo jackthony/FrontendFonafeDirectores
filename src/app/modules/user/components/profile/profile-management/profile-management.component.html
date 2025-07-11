@@ -4,10 +4,9 @@
         <fo-cont-card>
             <fo-title-module [text]="titleModule()"></fo-title-module>
         </fo-cont-card>
-        <fo-search-for-button 
-            [delaySearch]="delaySearchProfile()"
+        <fo-search-for-button
             [placeTextSearch]="placeHolderSearch()"
-            (eventSearch)="searchByUser($event)"
+            (eventClickSearch)="searchByUser($event)"
             (eventNewElement)="loadDataFormDialog()">
         </fo-search-for-button>
         <fo-table 
