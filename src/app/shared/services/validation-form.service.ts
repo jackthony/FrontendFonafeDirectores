@@ -51,7 +51,7 @@ export class ValidationFormService {
         return null;  // Si pasa la validación
     }
     
-    // Validador para Carnet de Extranjería (CE) - 9 caracteres (8 dígitos + 1 letra opcional)
+    // Validador para Carnet de Extranjería (CE) - 9 caracteres (alfanuméricos)
     ceValidator(control: AbstractControl): ValidationErrors | null {
         const value = control.value;
         if (!value) return null;  // Si no hay valor, no se aplica ninguna validación
