@@ -38,14 +38,31 @@ export class ValidationFormService {
      * @param control El control del formulario que contiene el documento
      * @returns Un objeto de error si el documento no es válido, o null si es válido
      */
-    validationDocument(control: AbstractControl): ValidationErrors | null {
+    dniValidator(control: AbstractControl): ValidationErrors | null {
         const value = control.value;
-        if (!value) return null;
-        const regex = /^\d{8,9}[A-Za-z]?$/;
-        if (!regex.test(value)) {
-            return { customError: 'Documento inválido' };
+        if (!value) return null;  // Si no hay valor, no se aplica ninguna validación
+    
+        const dniRegex = /^\d{8}$/;  // Validación para 8 dígitos
+    
+        if (!dniRegex.test(value)) {
+            return { customError: 'Documento inválido.' };
         }
-        return null;
+    
+        return null;  // Si pasa la validación
+    }
+    
+    // Validador para Carnet de Extranjería (CE) - 9 caracteres (8 dígitos + 1 letra opcional)
+    ceValidator(control: AbstractControl): ValidationErrors | null {
+        const value = control.value;
+        if (!value) return null;  // Si no hay valor, no se aplica ninguna validación
+    
+        const ceRegex = /^[A-Za-z0-9]{9}$/;  // Validación para 8 dígitos seguidos de una letra
+    
+        if (!ceRegex.test(value)) {
+            return { customError: 'Documento inválido.' };
+        }
+    
+        return null;  // Si pasa la validación
     }
     /**
      * Valida una contraseña detallada.

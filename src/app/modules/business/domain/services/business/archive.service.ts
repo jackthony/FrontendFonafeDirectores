@@ -14,6 +14,8 @@ import { ArchiveFactory } from '../../../infrastructure/business/factory/archive
 import { ResponseEntity } from '../../../../../core/models/response.entity';
 import { FileData } from '../../../../../core/models/archive-tree.entity';
 import { MatTreeOptionsNode } from 'app/shared/components/fo-mat-tree-flat/models/mat-tree-options-node';
+import { ArchiveDownloadZip } from '../../entities/business/archive-download-zip.entity';
+import { DeleteFileBusiness } from '../../entities/business/delete-file-business.entity';
 @Injectable({
     providedIn: 'root',
 })
@@ -49,5 +51,11 @@ export class ArchiveService {
     }
     downloadFileBussiness(url: string): Observable<ArrayBuffer> {
         return this._archiveInterface.downloadFileBussiness(url);
+    }
+    downloadFileBussinessZip(object: ArchiveDownloadZip): Observable<ArrayBuffer> {
+        return this._archiveInterface.downloadFileBussinessZip(object);
+    }
+    deleteFileBussiness(object: DeleteFileBusiness): Observable<ResponseEntity<boolean>> {
+        return this._archiveInterface.deleteFileBussiness(object);
     }
 }

@@ -50,7 +50,7 @@ export class ChangePasswordAdmComponent implements OnInit {
     form: FormGroup;
     ngOnInit(): void {
         this.form = this._fb.group({
-            //usuarioId: [this._userService.userLogin().usuarioId, Validators.required],
+            nUserIdModifica: [this._userService.userLogin().usuarioId, Validators.required],
             usuarioId: [this.data.object.nIdUsuario, Validators.required],
             newPassword: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(12), this._validationFormService.passwordDetailedValidator]],
             token: [this._authService.accessToken, Validators.required],

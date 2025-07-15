@@ -18,6 +18,7 @@ import { UserService } from 'app/modules/user/domain/services/auth/user.service'
 import { RoleEntity } from 'app/modules/user/domain/entities/maintenance/role.entity';
 import { finalize } from 'rxjs';
 import { RoleService } from 'app/modules/user/domain/services/maintenance/role.service';
+import { ValidationFormService } from 'app/shared/services/validation-form.service';
 @Component({
   selector: 'app-dialog-maintenance-role-form',
   standalone: false,
@@ -29,7 +30,8 @@ export class DialogMaintenanceRoleFormComponent {
 	private readonly dialogRef = inject(MatDialogRef<DialogMaintenanceRoleFormComponent>); // Inyecta MatDialogRef para cerrar el diálogo
     private _userService = inject(UserService); // Inyecta el servicio UserService para obtener información del usuario
 	private _roleService = inject(RoleService); // Inyecta el servicio MinistryService para interactuar con los datos del rol
-	public data: { object: RoleEntity } = inject(MAT_DIALOG_DATA);
+	private _validationFormService = inject(ValidationFormService); // Servicio utilitario que centraliza lógica de validación y mensajes de error en formularios reactivos.
+    public data: { object: RoleEntity } = inject(MAT_DIALOG_DATA);
     buttonEnum = signal<typeof ButtonEnum>(ButtonEnum);
 	form: FormGroup;
 	isEdit = signal<boolean>(false);
@@ -53,7 +55,7 @@ export class DialogMaintenanceRoleFormComponent {
 	initForm(object: RoleEntity): void {
         this.form = this._fb.group({
             nRolId: [{ disabled: !object, value: object?.nRolId }, Validators.required],
-            sNombreRol: [ object?  object.sNombreRol : '', [Validators.required, Validators.maxLength(100)] ],
+            sNombreRol: [ object?  object.sNombreRol : '', [Validators.required, this._validationFormService.spaceValidator, Validators.maxLength(100)] ],
             bActivo: [ object? object.bActivo : true, Validators.required ],
             nIdUsuarioCreacion: [ { disabled: object, value: this._userService.userLogin().usuarioId }, Validators.required ],
             nIdUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin().usuarioId },Validators.required ],

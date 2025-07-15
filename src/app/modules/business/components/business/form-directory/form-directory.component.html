@@ -30,7 +30,7 @@
                     matInput 
                     placeholder="--"
                     type="text"
-                    [mask]="form.get('nTipoDocumento').value === typeDocument().ce ? '000000000':'00000000'"
+                    [mask]="form.get('nTipoDocumento').value === typeDocument().ce ? 'AAAAAAAAA':'00000000'"
                     maxlength="9">
                     @if(form.get('sNumeroDocumento').invalid) {
                         <mat-error class="text-red-500">

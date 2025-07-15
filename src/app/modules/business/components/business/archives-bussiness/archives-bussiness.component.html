@@ -20,7 +20,7 @@
             </div>
         } @else {
                 @defer (when !loadingFolder()) {
-                    <fo-mat-tree-flat (eventUploadFile)="uploadFile($event)" [data]="dataTree()"></fo-mat-tree-flat>
+                    <fo-mat-tree-flat (eventDeleteFile)="deleteFile($event)" (eventUploadFile)="uploadFile($event)" [data]="dataTree()"></fo-mat-tree-flat>
 
                 } @placeholder {
                     <div class="space-y-4">
@@ -31,8 +31,6 @@
                         </div>
                       </div>
                 }
-            
-
         }
     </div>
     @if (!business()) {

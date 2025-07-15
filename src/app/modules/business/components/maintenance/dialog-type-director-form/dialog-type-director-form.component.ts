@@ -16,6 +16,7 @@ import { UserService } from 'app/modules/user/domain/services/auth/user.service'
 import { TypeDirectorEntity } from 'app/modules/business/domain/entities/maintenance/type-director.entity';
 import { TypeDirectorService } from 'app/modules/business/domain/services/maintenance/type-director.service';
 import { finalize } from 'rxjs';
+import { ValidationFormService } from 'app/shared/services/validation-form.service';
 @Component({
   selector: 'app-dialog-type-director-form',
   standalone: false,
@@ -27,7 +28,8 @@ export class DialogTypeDirectorFormComponent {
 	private readonly dialogRef = inject(MatDialogRef<DialogTypeDirectorFormComponent>); // Inyecta MatDialogRef para cerrar el diálogo
     private _userService = inject(UserService); // Inyecta el servicio UserService para obtener información del usuario
 	private _typeDirectorService = inject(TypeDirectorService); // Inyecta el servicio MinistryService para interactuar con los datos del ministerio
-	public data: { object: TypeDirectorEntity } = inject(MAT_DIALOG_DATA); // Inyecta los datos del diálogo, que contienen el objeto TypeDirectorEntity si se está editando
+	private _validationFormService = inject(ValidationFormService); // Servicio utilitario que centraliza lógica de validación y mensajes de error en formularios reactivos.
+    public data: { object: TypeDirectorEntity } = inject(MAT_DIALOG_DATA); // Inyecta los datos del diálogo, que contienen el objeto TypeDirectorEntity si se está editando
     buttonEnum = signal<typeof ButtonEnum>(ButtonEnum); // Enum para los botones del diálogo
 	form: FormGroup; // Formulario reactivo para manejar los datos del ministerio
 	isEdit = signal<boolean>(false);
@@ -51,7 +53,7 @@ export class DialogTypeDirectorFormComponent {
 	initForm(object: TypeDirectorEntity): void {
         this.form = this._fb.group({
             nIdTipoDirector: [{ disabled: !object, value: object?.nIdTipoDirector }, Validators.required], 
-            sNombreTipoDirector: [ object?  object.sNombreTipoDirector : '', [Validators.required, Validators.maxLength(255)] ], 
+            sNombreTipoDirector: [ object?  object.sNombreTipoDirector : '', [Validators.required, this._validationFormService.spaceValidator,Validators.maxLength(255)] ], 
             bActivo: [ object? object.bActivo : true, Validators.required ],
             nUsuarioRegistro: [ { disabled: object, value: this._userService.userLogin().usuarioId }, Validators.required ],
             nUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin().usuarioId },Validators.required ], 

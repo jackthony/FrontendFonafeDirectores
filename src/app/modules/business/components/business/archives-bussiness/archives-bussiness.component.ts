@@ -23,6 +23,7 @@ import { ResponseEntity } from '@models/response.entity';
 import { FlatNodeAllElements } from 'app/shared/components/fo-mat-tree-flat/models/flat-node-all-elements';
 import { MatTreeOptionsNode } from 'app/shared/components/fo-mat-tree-flat/models/mat-tree-options-node';
 import { BusinessEntity } from 'app/modules/business/domain/entities/business/business.entity';
+import { DeleteFileBusiness } from 'app/modules/business/domain/entities/business/delete-file-business.entity';
 
 @Component({
   selector: 'app-archives-bussiness',
@@ -86,5 +87,24 @@ export class ArchivesBussinessComponent implements OnInit {
 	setViewFolder(): void {
 		this.openFolder.set(!this.openFolder());
 		if(this.openFolder()) this.loadFolderBussiness();
+	}
+	deleteFile(event: FlatNodeAllElements<FileData>): void {
+		const request: DeleteFileBusiness = {
+			elementoId: event.id,
+			usuarioEliminacionId: this._userService.userLogin().usuarioId,
+		}
+        this._spinner.show();
+        this._archiveService.deleteFileBussiness(request)
+        .pipe(
+            finalize(() => this._spinner.hide())
+        )
+        .subscribe({
+            next: (response: ResponseEntity<boolean>) => {
+                if (response.isSuccess) {
+					this.loadFolderBussiness();
+                    this._ngxToastrService.showSuccess('El documento se eliminó exitosamente', '¡Éxito!');
+                }
+            },
+        })
 	}
 }

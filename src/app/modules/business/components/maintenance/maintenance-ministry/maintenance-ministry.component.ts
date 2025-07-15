@@ -50,7 +50,6 @@ export default class MaintenanceMinistryComponent {
 	totalPagesTable = signal<number>(1);
 	paramSearchTable = signal<string>('');
 	placeHolderSearch = signal<string>('Busca por nombre');
-	delaySearchTable = signal<number>(400);
 	filterState = signal<boolean | null>(true);
 	/**
 	 * Hook de inicialización del componente.
@@ -106,7 +105,8 @@ export default class MaintenanceMinistryComponent {
 	 * @param event Texto del campo de búsqueda.
 	 */
 	searchByItem(event: string): void {
-		this.paramSearchTable.set(event);
+		if(event.length >= 1 && event.trim().length === 0) return;
+		this.paramSearchTable.set(event?.trim());
 		this.pageIndexTable.set(1);
 		this.searchTable();
 	}

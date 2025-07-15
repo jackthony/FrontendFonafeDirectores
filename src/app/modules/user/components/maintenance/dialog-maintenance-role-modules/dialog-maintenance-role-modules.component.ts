@@ -52,6 +52,10 @@ export class DialogMaintenanceRoleModulesComponent implements OnInit {
 		this.registerForm();
     }
 	registerForm(): void {
+		if (!this.hasChanges()) { // Verificamos si hubo algún cambio
+			this.dialogRef.close(false)
+			return; // Si no hubo cambios, no hacemos nada
+		}
 		this.loadingService.set(true);
         this._roleService
             .insertPermissionRole(this.form.value)
@@ -102,8 +106,9 @@ export class DialogMaintenanceRoleModulesComponent implements OnInit {
 		  const actionsArray = this.getFormArrayActions(index);
 		  actionsArray.controls.forEach((action) => action.get('bPermitir').setValue(true));
 		}
-	  }
-	  onActionChange(moduleIndex: number): void {
+	}
+
+	onActionChange(moduleIndex: number): void {
 		const actionsArray = this.getFormArrayActions(moduleIndex);
 		const moduleControl = this.formArrayModules.at(moduleIndex);
 		const anyActionSelected = actionsArray.controls.some((action) => action.get('bPermitir').value);
@@ -111,5 +116,24 @@ export class DialogMaintenanceRoleModulesComponent implements OnInit {
 		else {
 		  moduleControl.get('bPermitir').setValue(true);
 		}
-	  }
+	}
+
+	hasChanges(): boolean {
+		// Verificamos si hay cambios en el formulario de módulos
+		for (const moduleControl of this.formArrayModules.controls) {
+			// Revisamos si el módulo tiene cambios
+			if (moduleControl.dirty) {
+				return true;
+			}
+	
+			// Verificamos si alguna acción dentro del módulo tiene cambios
+			const actionsArray = moduleControl.get('lstAcciones') as FormArray;
+			for (const actionControl of actionsArray.controls) {
+				if (actionControl.dirty) {
+					return true;
+				}
+			}
+		}
+		return false; // No hubo cambios
+	}
 }

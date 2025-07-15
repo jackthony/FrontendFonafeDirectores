@@ -114,7 +114,7 @@ export class FormDirectoryComponent implements OnInit {
 			nIdRegistro: [ this.director() ? this.director().nIdRegistro : { disabled: true, value: 0  } ],
 			nIdEmpresa: [ this.business().nIdEmpresa , [Validators.required, Validators.min(1)] ],
 			nTipoDocumento: [ this.director() ? { disabled: true, value: this.director().nTipoDocumento } : 0, [Validators.required, Validators.min(1)] ],
-			sNumeroDocumento: [ this.director() ? { disabled: true, value: this.director().sNumeroDocumento } : '', [Validators.required, this._validationFormService.validationDocument] ],
+			sNumeroDocumento: [ this.director() ? { disabled: true, value: this.director().sNumeroDocumento } : '', [Validators.required, this._validationFormService.dniValidator] ],
 			sNombres: [ this.director() ? { disabled: true, value: this.director().sNombres } : '', [Validators.required, this._validationFormService.spaceValidator, Validators.maxLength(150)] ],
 			sApellidos: [ this.director() ? { disabled: true, value: this.director().sApellidos } : '', [Validators.required, this._validationFormService.spaceValidator, Validators.maxLength(150)] ],
 			dFechaNacimiento: [ this.director() ? { disabled: true, value: this.director().dFechaNacimiento } : null, [Validators.required, Validators.maxLength(10)] ],
@@ -230,9 +230,14 @@ export class FormDirectoryComponent implements OnInit {
 			distinctUntilChanged(),
 			takeUntil(this.destroy$)
 		).subscribe((value) => {
-			if(value) this.form.get('sNumeroDocumento').enable();
+			if(value === TypeDocumentEnum.dni) this.form.get('sNumeroDocumento').setValidators([Validators.required, this._validationFormService.dniValidator]);
+			if(value === TypeDocumentEnum.ce) this.form.get('sNumeroDocumento').setValidators([Validators.required, this._validationFormService.ceValidator]);
+			if(value) {
+				this.form.get('sNumeroDocumento').enable();
+			}
 			this.form.get('sNumeroDocumento').setValue('');
 			this.form.get('sNumeroDocumento').markAsUntouched();
+			this.form.get('sNumeroDocumento').updateValueAndValidity();
 		})
 		
 		this.form.get('dFechaNacimiento').valueChanges

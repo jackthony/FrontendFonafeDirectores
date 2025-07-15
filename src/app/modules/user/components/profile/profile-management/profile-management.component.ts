@@ -111,7 +111,7 @@ export class ProfileManagementComponent {
 	 * @param event Texto de búsqueda (nombre del usuario).
 	 */
 	searchByUser(event: string): void {
-		if(event.length > 1 && event.trim().length === 0) return;
+		if(event.length >= 1 && event.trim().length === 0) return;
 		this.userSearch.set(event.trim());
 		this.pageIndexTable.set(1); 
 		this.searchUsers(); 

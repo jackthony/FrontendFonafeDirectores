@@ -120,6 +120,11 @@ export class FormProfileComponent implements OnInit {
      * Actualiza los datos de un usuario existente mediante el servicio.
      */
     updateProfile(): void {
+        const areChanges = this.detectChanges();
+        if(!areChanges) {
+            this.dialogRef.close(false);
+            return;
+        } 
         this._segUserService
             .update(this.form.value) 
             .pipe(finalize(() => this.loadingService.set(false))) 
@@ -182,6 +187,20 @@ export class FormProfileComponent implements OnInit {
     
         // Actualizar la validación
         correoControl?.updateValueAndValidity();
+    }
+
+    detectChanges(): boolean {
+        // Recorremos los controles del formulario directamente
+        for (const controlName in this.form.controls) {
+            if (this.form.controls.hasOwnProperty(controlName)) {
+                const control = this.form.controls[controlName];
+                // Verificamos si el campo ha sido modificado
+                if (control.dirty) {
+                    return true; // Si encontramos un control modificado, devolvemos true
+                }
+            }
+        }
+        return false; // Si no encontramos ningún cambio, devolvemos false
     }
     
 

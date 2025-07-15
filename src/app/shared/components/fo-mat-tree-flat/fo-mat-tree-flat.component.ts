@@ -57,6 +57,7 @@ export class FoMatTreeFlatComponent<T> {
     @Input() btnClose: boolean = false;
     @Output() eventSelectionObject:EventEmitter<T> = new EventEmitter<T>();
     @Output() eventUploadFile:EventEmitter<FlatNodeAllElements<FileData>> = new EventEmitter<FlatNodeAllElements<FileData>>();
+    @Output() eventDeleteFile:EventEmitter<FlatNodeAllElements<FileData>> = new EventEmitter<FlatNodeAllElements<FileData>>();
     flatNodeMap = new Map<FlatNodeAllElements<T>, MatTreeOptionsNode<T>>();
     nestedNodeMap = new Map<MatTreeOptionsNode<T>, FlatNodeAllElements<T>>();
     selectedParent: FlatNodeAllElements<T> | null = null;
@@ -137,5 +138,19 @@ export class FoMatTreeFlatComponent<T> {
     downloadFile(node: FlatNodeAllElements<FileData>): void {
         const file$ = this._archiveService.downloadFileBussiness(node.element.sUrlStorage);
         this._archivingProcessService.downloadFile(file$, node.element.sNombre, node.element.sTipoMime);
+    }
+    downloadFileZip(node: FlatNodeAllElements<FileData>): void {
+        if(!node.hasChild) return;
+        console.log('NODEEE', node);
+        const body = {
+            nCarpetaPadreId: node.id,
+            nDirectorId: 0,
+            nIdEmpresa: 0
+        }
+        const file$ = this._archiveService.downloadFileBussinessZip(body);
+        this._archivingProcessService.downloadFile(file$, `${node.element.sNombre ?? 'document'}.zip`, 'application/zip');
+    }
+    deleteFile(node: FlatNodeAllElements<FileData>): void {
+        this.eventDeleteFile.emit(node);
     }
 }

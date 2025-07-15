@@ -8,6 +8,8 @@ import { Observable } from "rxjs";
 import { ResponseEntity } from "../../../../../core/models/response.entity";
 import { FileData } from "../../../../../core/models/archive-tree.entity";
 import { MatTreeOptionsNode } from "app/shared/components/fo-mat-tree-flat/models/mat-tree-options-node";
+import { ArchiveDownloadZip } from "app/modules/business/domain/entities/business/archive-download-zip.entity";
+import { DeleteFileBusiness } from "app/modules/business/domain/entities/business/delete-file-business.entity";
 export interface ArchiveInterface {
     getReportExcelBussines(): Observable<ArrayBuffer>;
     getReportPdfBussines(): Observable<ArrayBuffer>;
@@ -15,4 +17,6 @@ export interface ArchiveInterface {
     importFileBussines(data: FormData): Observable<ResponseEntity<boolean>>;
     listTreeBussiness(nIdEmpresa: number): Observable<ResponseEntity<MatTreeOptionsNode<FileData>>>;
     downloadFileBussiness(url: string): Observable<ArrayBuffer>;
+    downloadFileBussinessZip(object: ArchiveDownloadZip): Observable<ArrayBuffer>;
+    deleteFileBussiness(object: DeleteFileBusiness): Observable<ResponseEntity<boolean>>;
 }
