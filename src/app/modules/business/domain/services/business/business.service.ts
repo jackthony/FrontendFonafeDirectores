@@ -24,8 +24,8 @@ export class BusinessService {
     constructor(private _businessFactory : BusinessFactory){ 
         this._businessInterface = this._businessFactory.injectRepository();
     }
-    getByPagination(nameEnterprise: string, pageIndex: number, pageSize: number, filterState: boolean | null): Observable<ResponseEntity<BusinessEntity>> {
-        return this._businessInterface.getByPagination(nameEnterprise, pageIndex, pageSize, filterState);
+    getByPagination(nameEnterprise: string, pageIndex: number, pageSize: number, filterState: boolean | null, dtFechaInicio: string | null, dtFechaFin: string | null): Observable<ResponseEntity<BusinessEntity>> {
+        return this._businessInterface.getByPagination(nameEnterprise, pageIndex, pageSize, filterState, dtFechaInicio, dtFechaFin);
     }
     getById(nIdEmpresa: number): Observable<ResponseEntity<BusinessEntity>> {
         return this._businessInterface.getById(nIdEmpresa);

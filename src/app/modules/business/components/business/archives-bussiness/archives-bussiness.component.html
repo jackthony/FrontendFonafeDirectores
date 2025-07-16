@@ -12,11 +12,13 @@
     <div class="content-tree">
         @if(!openFolder()) {
             <div class="img-container-file">
-                <img
-                    alt="Archivo de repositorio"
-                    class="image-upload"
-                    src="images/uploads/repository-file.png"
-                />
+                <button [disabled]="!business()"  (click)="setViewFolder()">
+                    <img
+                        alt="Archivo de repositorio"
+                        class="image-upload"
+                        src="images/uploads/repository-file.png"
+                    />
+                </button>
             </div>
         } @else {
                 @defer (when !loadingFolder()) {

@@ -39,6 +39,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { BusinessFormComponent } from './components/business/business-form/business-form.component';
 import { BusinessManagementComponent } from './components/business/business-management/business-management.component';
 import { FormDirectoryComponent } from './components/business/form-directory/form-directory.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 @NgModule({
   declarations: [
     ArchivesBussinessComponent,
@@ -70,7 +71,8 @@ import { FormDirectoryComponent } from './components/business/form-directory/for
     FoButtonComponent,
     MatMenuModule, 
     MatDatepickerModule,
-    MatDialogModule
+    MatDialogModule,
+    MatTooltipModule
   ]
 })
 export default class BusinessManagementModule { }

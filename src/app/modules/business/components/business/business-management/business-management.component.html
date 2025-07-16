@@ -13,6 +13,38 @@
             (eventFilterState)="setFilterState($event)"
             (eventBtnSearch)="searchBusiness(true)"
             >
+            <div date>
+              <form [formGroup]="formDate" class="w-full p-4 mb-1">
+                    <mat-form-field class="mat-form-field-custom w-full"
+                        appearance="outline"
+                        floatLabel="always">
+                        <mat-label>Fecha de inicio - Fecha fin</mat-label>
+                        <mat-date-range-input (click)="$event.stopPropagation()" [rangePicker]="pickerRole">
+                          <input (click)="$event.stopPropagation()" matStartDate formControlName="dateStart" placeholder="-- / -- / ----">
+                          <input (click)="$event.stopPropagation()" matEndDate formControlName="dateEnd" placeholder="-- / -- / ----">
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matIconSuffix [for]="pickerRole"></mat-datepicker-toggle>
+                        <mat-date-range-picker #pickerRole>
+                            <mat-datepicker-actions>
+                                <button mat-button matDatepickerCancel>Cancelar</button>
+                                <button mat-raised-button color="primary" matDatepickerApply>
+                                    Aplicar
+                                </button>
+                            </mat-datepicker-actions>
+                        </mat-date-range-picker>
+                        @if(formDate.get('dateStart').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ formDate.get("dateStart") | translateMessageForm }}
+                            </mat-error>
+                        }
+                        @if(formDate.get('dateEnd').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ formDate.get("dateEnd") | translateMessageForm }}
+                            </mat-error>
+                        }
+                    </mat-form-field>
+            </form>
+            </div>
             <fo-button
                 [matMenuTriggerFor]="menu"
                 [text]="'Importar/Exportar'" 

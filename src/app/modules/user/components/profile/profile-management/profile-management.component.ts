@@ -58,7 +58,7 @@ export class ProfileManagementComponent {
 	pageIndexTable = signal<number>(1);
 	totalPagesTable = signal<number>(1);
 	userSearch = signal<string>('');
-	placeHolderSearch = signal<string>('Busca por apellidos y/o nombres');
+	placeHolderSearch = signal<string>('Busca por multiples campos');
 	/**
 	 * Inicializa el componente cargando la cabecera de la tabla, los íconos y realiza una búsqueda inicial de usuarios.
 	 */

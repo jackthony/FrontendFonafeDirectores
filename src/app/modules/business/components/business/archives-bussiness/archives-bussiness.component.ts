@@ -85,6 +85,7 @@ export class ArchivesBussinessComponent implements OnInit {
 		});
 	}
 	setViewFolder(): void {
+		if(!this.business) return;
 		this.openFolder.set(!this.openFolder());
 		if(this.openFolder()) this.loadFolderBussiness();
 	}

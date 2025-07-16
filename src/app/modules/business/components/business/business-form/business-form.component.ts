@@ -138,7 +138,7 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
         this.form = this._fb.group({
             nIdEmpresa: [object ? object.nIdEmpresa : 0, Validators.required],
             sRuc: [object ? { disabled: object, value: object.sRuc } : '', [Validators.required, this._validationFormService.validarRuc, Validators.maxLength(11)]],
-            sRazonSocial: [object ? { disabled: object, value: object.sRazonSocial } : '', [Validators.required, Validators.maxLength(255)]],
+            sRazonSocial: [object ? { disabled: object, value: object.sRazonSocial } : '', [Validators.required, this._validationFormService.spaceValidator, Validators.maxLength(255)]],
             nIdSector: [object ? object.nIdSector : 0, [Validators.required, Validators.min(1)]],
             sIdDepartamento: [object ? object.sIdDepartamento : 0, [Validators.required, Validators.min(1)]],
             sIdProvincia: [object ? object.sIdProvincia : 0, [Validators.required, Validators.min(1)]],

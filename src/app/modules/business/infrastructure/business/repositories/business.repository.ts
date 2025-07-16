@@ -28,11 +28,11 @@ export class BusinessRepository implements BusinessInterface {
      * @param pageSize - Tamaño de la página
      * @param filterState - Estado lógico (true/false) o null para ambos
      */
-    getByPagination(param: string, pageIndex: number, pageSize: number, filterState: boolean | null): Observable<ResponseEntity<BusinessEntity>> {
+    getByPagination(param: string, pageIndex: number, pageSize: number, filterState: boolean | null, dtFechaInicio: string | null, dtFechaFin: string | null): Observable<ResponseEntity<BusinessEntity>> {
         let params = new HttpParams().append('Page', pageIndex).append('PageSize', pageSize);
-        if(param) {
-            params = params.append('sRazonSocial', param)
-        }
+        if(param) params = params.append('sRazonSocial', param);
+        if(dtFechaInicio) params = params.append('dtFechaInicio', dtFechaInicio);
+        if(dtFechaFin) params = params.append('dtFechaFin', dtFechaFin);
         if(filterState !== null) params = params.append('bEstado', filterState);
         return this._http.get<ResponseEntity<BusinessEntity>>(`${this.url}/listar-paginado`, { params });
     }

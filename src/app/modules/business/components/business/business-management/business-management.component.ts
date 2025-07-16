@@ -21,6 +21,7 @@ import { ResponseEntity } from '@models/response.entity';
 import { BusinessService } from 'app/modules/business/domain/services/business/business.service';
 import { BusinessEntity } from 'app/modules/business/domain/entities/business/business.entity';
 import { COLUMNS_BUSINESS_MANAGEMENT, CONFIG_ACTIVE_DIALOG_BUSINESS, CONFIG_INACTIVE_DIALOG_BUSINESS } from 'app/modules/business/config/business/business-management.config';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-business-management',
@@ -36,6 +37,7 @@ export class BusinessManagementComponent implements OnInit {
   private _ngxToastrService = inject(NgxToastrService); // Servicio para mostrar notificaciones
   private _spinner = inject(NgxSpinnerService); // Servicio para mostrar un spinner de carga
   private _archivingProcessService = inject(ArchivingProcessService); // Servicio para mostrar un spinner de carga
+  private _formBuilder = inject(FormBuilder); // Servicio para mostrar un spinner de carga
   private _userService = inject(UserService)
   placeHolderSearch = signal<string>('Busca por múltiples campos');
   downloadEnterprise = signal<string>('Agregar empresa');
@@ -50,11 +52,16 @@ export class BusinessManagementComponent implements OnInit {
   totalPagesTable = signal<number>(1);
   delaySearchBusiness = signal<number>(400);
   filterState = signal<boolean | null>(true);
+  formDate: FormGroup; //Declarar formulario para las fechas de inicio y fin
   
   /**
    * Método de inicialización del componente
    */
   ngOnInit(): void {
+	this.formDate = this._formBuilder.group({
+		dateStart: [null],
+		dateEnd: [null]
+	});
     this.headerTable.set(COLUMNS_BUSINESS_MANAGEMENT);
     this.iconsTable.set(this.defineIconsTable());
     this.searchBusiness();
@@ -66,7 +73,17 @@ export class BusinessManagementComponent implements OnInit {
   	searchBusiness(resetIndexTable?: boolean): void {
 		if(resetIndexTable) this.pageIndexTable.set(1);
         this.loadingTable.set(true);
-        this._businessService.getByPagination(this.businessSearch(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState()).pipe(
+        const dateStartForm = this.formDate.get('dateStart');
+        const dateEndForm = this.formDate.get('dateEnd');
+        let dateStart = null;
+		let dateEnd = null;
+        if(dateStartForm?.value && dateStartForm?.valid) {
+          dateStart = dateStartForm.value.setZone('UTC', { keepLocalTime: true }).toISO()
+        }
+		if(dateEndForm?.value && dateEndForm?.valid) {
+			dateEnd = dateEndForm.value.setZone('UTC', { keepLocalTime: true }).toISO()
+		}
+        this._businessService.getByPagination(this.businessSearch(), this.pageIndexTable(), PAGINATOR_PAGE_SIZE, this.filterState(), dateStart, dateEnd).pipe(
           finalize(() => this.loadingTable.set(false))
         ).subscribe({
           next: (response: ResponseEntity<BusinessEntity>) => {
