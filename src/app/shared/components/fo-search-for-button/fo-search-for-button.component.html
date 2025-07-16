@@ -1,6 +1,6 @@
 <fo-cont-card>
     <div class="grid grid-cols-1 md:grid-cols-8 lg:grid-cols-8">
-        <div class="col-span-1 md:col-span-4 lg:col-span-2 flex items-center gap-4">
+        <div class="col-span-1 md:col-span-4 lg:col-span-3 flex items-center gap-4">
             <app-fo-search class="w-full" [delaySearch]="delaySearch()" (eventChangeData)="getDataSearch($event)" (eventClickSearch)="getDataClickSearch($event)" [placeText]="placeTextSearch()"></app-fo-search>
             @if (viewFilterState()) {
                 <button [matTooltip]="'Filtrar'" mat-icon-button class="btn-funnel" [matMenuTriggerFor]="filterMenu">
@@ -8,7 +8,7 @@
                 </button>
             }
         </div>
-        <div appPermissionButton [disableDirective]="disableDirective()" class="col-span-1 md:col-span-4 lg:col-span-6 text-center md:text-end content-center mt-2 md:mt-0 xs:col-span-4 flex justify-center md:justify-end items-center gap-3 flex-wrap">  
+        <div appPermissionButton [disableDirective]="disableDirective()" class="col-span-1 md:col-span-4 lg:col-span-5 text-center md:text-end content-center mt-2 md:mt-0 xs:col-span-4 flex justify-center md:justify-end items-center gap-3 flex-wrap">  
             <fo-button
                 (eventAction)="addUser()"
                 [text]="textBtnSearch()" 
@@ -40,4 +40,4 @@
     <!--  <div class="btn-search my-2">
          <button mat-stroked-button (click)="onSearch()">Buscar</button>
      </div> -->
-  </mat-menu>
+</mat-menu>

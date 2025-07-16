@@ -24,8 +24,8 @@ export class DirectorService {
     constructor(private _directorFactory : DirectorFactory){ 
         this._directorInterface = this._directorFactory.injectRepository(); 
     }
-    getByPagination(nIdEmpresa: number, pageIndex: number, pageSize: number): Observable<ResponseEntity<DirectorEntity>> {
-        return this._directorInterface.getByPagination(nIdEmpresa, pageIndex, pageSize);
+    getByPagination(param: string, nIdEmpresa: number, pageIndex: number, pageSize: number, dtFechaInicio: string, dtFechaFin: string): Observable<ResponseEntity<DirectorEntity>> {
+        return this._directorInterface.getByPagination(param, nIdEmpresa, pageIndex, pageSize, dtFechaInicio, dtFechaFin);
     }
     create(object: DirectorEntity): Observable<ResponseEntity<number>> {
         return this._directorInterface.create(object);

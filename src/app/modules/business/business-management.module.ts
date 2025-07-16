@@ -40,6 +40,7 @@ import { BusinessFormComponent } from './components/business/business-form/busin
 import { BusinessManagementComponent } from './components/business/business-management/business-management.component';
 import { FormDirectoryComponent } from './components/business/form-directory/form-directory.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { FoSearchComponent } from 'app/shared/components/fo-search/fo-search.component';
 @NgModule({
   declarations: [
     ArchivesBussinessComponent,
@@ -72,7 +73,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatMenuModule, 
     MatDatepickerModule,
     MatDialogModule,
-    MatTooltipModule
+    MatTooltipModule,
+    FoSearchComponent
   ]
 })
 export default class BusinessManagementModule { }

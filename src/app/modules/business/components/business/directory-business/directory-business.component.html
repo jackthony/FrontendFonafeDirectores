@@ -17,16 +17,25 @@
     } @else {
         <div class="p-6">
             <div class="w-full text-end mb-8">
-                @if (!blockCreateDirectory()) {
-                    <fo-button
-                            [disabledBtn]="loadingTable()"
-                            [text]="textButtonNew()"
-                            [icon]="iconButtonNew()"
-                            (eventAction)="openRegisterDirectory()"
-                            >
-                        </fo-button>
-                }
-                    
+                <div class="grid grid-cols-1 md:grid-cols-8 lg:grid-cols-8">
+                    <div class="col-span-1 md:col-span-4 lg:col-span-3 flex items-center gap-4">
+                        <app-fo-search class="w-full" (eventClickSearch)="searchByDirectorsByEnterprise($event)" [placeText]="placeHolderSearch()"></app-fo-search>
+                        <button [matTooltip]="'Filtrar'" mat-icon-button class="btn-funnel" [matMenuTriggerFor]="filterMenu">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                    <div class="col-span-1 md:col-span-4 lg:col-span-5 text-center md:text-end content-center mt-2 md:mt-0 xs:col-span-4 flex justify-center md:justify-end items-center gap-3 flex-wrap">
+                        @if (!blockCreateDirectory()) {
+                            <fo-button
+                                [disabledBtn]="loadingTable()"
+                                [text]="textButtonNew()"
+                                [icon]="iconButtonNew()"
+                                (eventAction)="openRegisterDirectory()"
+                                >
+                            </fo-button>
+                        }
+                    </div>
+                </div>
             </div>
                 <fo-table 
                     [currentPage]="pageIndexTable()"
@@ -42,3 +51,39 @@
 
     }
 </fo-cont-card>
+
+<mat-menu #filterMenu="matMenu" class="min-w-44">
+    <ng-container matMenuItem disabled>
+        <div class="font-bold title-status">Filtro</div>
+      </ng-container>
+    <form [formGroup]="formDate" class="w-full p-4 mt-2 mb-1">
+        <mat-form-field class="mat-form-field-custom w-full"
+            appearance="outline"
+            floatLabel="always">
+            <mat-label>Fecha de inicio - Fecha fin</mat-label>
+            <mat-date-range-input (click)="$event.stopPropagation()" [rangePicker]="pickerRole">
+              <input (click)="$event.stopPropagation()" matStartDate formControlName="dateStart" placeholder="-- / -- / ----">
+              <input (click)="$event.stopPropagation()" matEndDate formControlName="dateEnd" placeholder="-- / -- / ----">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matIconSuffix [for]="pickerRole"></mat-datepicker-toggle>
+            <mat-date-range-picker #pickerRole>
+                <mat-datepicker-actions>
+                    <button mat-button matDatepickerCancel>Cancelar</button>
+                    <button mat-raised-button color="primary" matDatepickerApply>
+                        Aplicar
+                    </button>
+                </mat-datepicker-actions>
+            </mat-date-range-picker>
+            @if(formDate.get('dateStart').invalid) {
+                <mat-error class="text-red-500">
+                    {{ formDate.get("dateStart") | translateMessageForm }}
+                </mat-error>
+            }
+            @if(formDate.get('dateEnd').invalid) {
+                <mat-error class="text-red-500">
+                    {{ formDate.get("dateEnd") | translateMessageForm }}
+                </mat-error>
+            }
+        </mat-form-field>
+    </form>
+</mat-menu>
