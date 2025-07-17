@@ -37,7 +37,11 @@
     <ng-content select="[date]"></ng-content>
   
     <!-- Botón de búsqueda -->
-    <!--  <div class="btn-search my-2">
-         <button mat-stroked-button (click)="onSearch()">Buscar</button>
-     </div> -->
+     <div class="btn-search mb-2">
+        <fo-button
+            (eventAction)="clickFoSearch()"
+            [text]="'Consultar'">
+        </fo-button>
+        <!--  <button mat-stroked-button (click)="onSearch()">Consultar</button> -->
+     </div>
 </mat-menu>

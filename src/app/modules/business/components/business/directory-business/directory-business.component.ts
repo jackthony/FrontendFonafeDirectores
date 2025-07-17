@@ -5,7 +5,7 @@
  * Autor               : Daniel Alva
  * Fecha de creación   : 23/06/2025
  *******************************************************************************************************/
-import { Component, EventEmitter, inject, input, OnChanges, OnInit, Output, signal, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, inject, input, OnChanges, OnInit, Output, signal, SimpleChanges, ViewChild } from '@angular/core';
 import { DialogConfirmationService } from 'app/shared/services/dialog-confirmation.service';
 import { IconOption } from 'app/shared/interfaces/generic-icon.interface';
 import { TableColumnsDefInterface } from 'app/shared/interfaces/table-columns-def.interface';
@@ -24,6 +24,7 @@ import { BusinessEntity } from 'app/modules/business/domain/entities/business/bu
 import { ConstantEntity } from 'app/modules/business/domain/entities/business/constant.entity';
 import { DepartmentEntity } from 'app/modules/business/domain/entities/business/departament.entity';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { FoSearchComponent } from 'app/shared/components/fo-search/fo-search.component';
 
 
 @Component({
@@ -63,6 +64,7 @@ export class DirectoryBusinessComponent implements OnInit, OnChanges {
 	placeHolderSearch = signal<string>('Busca por múltiples campos');
 	formDate: FormGroup; //Declarar formulario para las fechas de inicio y fin
 	@Output() eventTotalMembers: EventEmitter<number> = new EventEmitter<number>(); // Evento para emitir el total de miembros
+	@ViewChild(FoSearchComponent) private _foSearchComponent: FoSearchComponent;
 
 	ngOnChanges(changes: SimpleChanges): void {
 		if(changes.business) {
@@ -217,5 +219,11 @@ export class DirectoryBusinessComponent implements OnInit, OnChanges {
 		if(event.length >= 1 && event.trim().length === 0) return;
 		this.directorSearch.set(event); 
 		this.searchDirectors(true); 
+	}
+
+	clickFoSearch(): void {
+		if(this._foSearchComponent) {
+		  this._foSearchComponent.searchValue();
+		}
 	}
 }

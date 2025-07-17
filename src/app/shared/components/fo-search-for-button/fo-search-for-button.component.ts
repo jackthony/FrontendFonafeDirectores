@@ -10,7 +10,7 @@
  * Cambios recientes:    - Implementación inicial del componente con búsqueda, filtros y manejo de botones.
  *******************************************************************************************************/
 import { CommonModule } from '@angular/common';
-import { booleanAttribute, Component, EventEmitter, input, OnInit, Output, signal, ViewEncapsulation } from '@angular/core';
+import { booleanAttribute, Component, EventEmitter, input, OnInit, Output, signal, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FoSearchComponent } from 'app/shared/components/fo-search/fo-search.component';
 import { PermissionButtonDirective } from 'app/shared/directives/permission-button.directive';
 import { FoContCardComponent } from '../fo-cont-card/fo-cont-card.component';
@@ -56,6 +56,7 @@ export class FoSearchForButtonComponent implements OnInit {
     @Output() eventClickSearch: EventEmitter<string> = new EventEmitter<string>();
     @Output() eventFilterState: EventEmitter<boolean | null> = new EventEmitter<boolean | null>();
     @Output() eventBtnSearch: EventEmitter<void> = new EventEmitter<void>();
+    @ViewChild(FoSearchComponent) private _foSearchComponent: FoSearchComponent;
     ngOnInit(): void {
         this.onCheckboxChange();
     }
@@ -85,5 +86,11 @@ export class FoSearchForButtonComponent implements OnInit {
     }
     onSearch(): void {
         this.eventBtnSearch.emit();
+    }
+
+    clickFoSearch(): void {
+      if(this._foSearchComponent) {
+        this._foSearchComponent.searchValue();
+      }
     }
 }

@@ -56,8 +56,8 @@
     <ng-container matMenuItem disabled>
         <div class="font-bold title-status">Filtro</div>
       </ng-container>
-    <form [formGroup]="formDate" class="w-full p-4 mt-2 mb-1">
-        <mat-form-field class="mat-form-field-custom w-full"
+    <form [formGroup]="formDate" class="w-full p-4 mt-2">
+        <mat-form-field class="mat-form-field-custom w-full" [subscriptSizing]="'dynamic'"
             appearance="outline"
             floatLabel="always">
             <mat-label>Fecha de inicio - Fecha fin</mat-label>
@@ -86,4 +86,11 @@
             }
         </mat-form-field>
     </form>
+    <div class="btn-search mb-2">
+        <fo-button
+            (eventAction)="clickFoSearch()"
+            [text]="'Consultar'">
+        </fo-button>
+        <!--  <button mat-stroked-button (click)="onSearch()">Consultar</button> -->
+     </div>
 </mat-menu>

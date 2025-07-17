@@ -14,8 +14,8 @@
             (eventBtnSearch)="searchBusiness(true)"
             >
             <div date>
-              <form [formGroup]="formDate" class="w-full p-4 mb-1">
-                    <mat-form-field class="mat-form-field-custom w-full"
+               <form [formGroup]="formDate" class="w-full p-4">
+                    <mat-form-field class="mat-form-field-custom w-full" [subscriptSizing]="'dynamic'"
                         appearance="outline"
                         floatLabel="always">
                         <mat-label>Fecha de inicio - Fecha fin</mat-label>
@@ -43,7 +43,8 @@
                             </mat-error>
                         }
                     </mat-form-field>
-            </form>
+                </form>
+                
             </div>
             <fo-button
                 [matMenuTriggerFor]="menu"
