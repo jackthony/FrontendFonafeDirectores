@@ -177,6 +177,13 @@ export class FormProfileComponent implements OnInit {
                 this._validationFormService.validationMail,
                 this._validationFormService.validatePersonalTypeFonafe
             ]);
+        } else if(nTipoPersonal === 2) {
+            correoControl?.setValidators([
+                Validators.required,
+                Validators.maxLength(150),
+                this._validationFormService.validationMail,
+                this._validationFormService.validatePersonalNotTypeFonafe
+            ]);
         } else {
             correoControl?.setValidators([
                 Validators.required,

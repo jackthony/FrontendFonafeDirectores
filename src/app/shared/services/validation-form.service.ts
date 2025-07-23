@@ -195,4 +195,13 @@ export class ValidationFormService {
             }
             return null;
     }
+
+    validatePersonalNotTypeFonafe(control: AbstractControl): ValidationErrors | null {
+        const email = control.value;
+            const emailPattern = /^[a-zA-Z0-9._%+-]+@fonafe\.gob\.pe$/;
+            if (email && emailPattern.test(email)) {
+                return { customError: 'Correo no permitido: @fonafe.gob.pe' };
+            }
+            return null;
+    }
 }
