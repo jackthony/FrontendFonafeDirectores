@@ -1,3 +1,17 @@
+/*******************************************************************************************************
+ * Nombre del archivo:  director-form.service.ts
+ * Descripción:          Servicio encargado de la gestión y recuperación de datos relacionados con el formulario 
+ *                       de directores, como tipos de documentos, géneros, cargos de los directores, especialidades, 
+ *                       sectores, y departamentos. Este servicio utiliza un sistema de caché para optimizar el 
+ *                       rendimiento y evitar peticiones repetidas a los servicios backend.
+ *                       Además, utiliza servicios auxiliares como `ConstantService`, `UbigeoService`, 
+ *                       `TypeDirectorService`, `SpecialtyService`, y `SectorService` para acceder a los datos 
+ *                       relevantes.
+ * Autor:                Daniel Alva
+ * Fecha de creación:    01/07/2025
+ * Última modificación:  09/07/2025 por Daniel Alva
+ * Cambios recientes:    - Implementación inicial del servicio para gestionar datos relacionados con el formulario de director.
+ *******************************************************************************************************/
 import { inject, Injectable } from '@angular/core';
 import { map, Observable, of, tap } from 'rxjs';
 import { ConstantService } from 'app/modules/business/domain/services/business/constant.service';
@@ -12,87 +26,68 @@ import { ResponseEntity } from '@models/response.entity';
 import { CONST_CARGO_DIRECTOR, CONST_GENDER, CONST_TYPE_DOCUMENT } from '../../../config/business/directory-business.config';
 import { ConstantEntity } from '../../entities/business/constant.entity';
 import { DepartmentEntity } from '../../entities/business/departament.entity';
-
 @Injectable({
   providedIn: 'root'
 })
 export class DirectorFormService {
-
 	private _constantService = inject(ConstantService);
-
 	private _ubigeoService = inject(UbigeoService);
 	private _typeDirectorService = inject(TypeDirectorService);
 	private _specialtyService = inject(SpecialtyService);
 	private _sectorService = inject(SectorService);
-
 	private cacheConstant = new Map<string, ConstantEntity[]>();
 	private cacheDepartment = new Map<string, DepartmentEntity[]>();
 	private cacheTypeDirector = new Map<string, TypeDirectorEntity[]>();
 	private cacheSpecialty = new Map<string, SpecialtyEntity[]>();
 	private cacheSector = new Map<string, SectorEntity[]>();
-
 	public getTypeDocument(): Observable<ConstantEntity[]> {
 		return this.getCachedTypeDocument('typeDocument', CONST_TYPE_DOCUMENT);
 	}
-
 	public getGender(): Observable<ConstantEntity[]> {
 		return this.getCachedTypeDocument('gender', CONST_GENDER);
 	}
-	
 	public getCargoManager(): Observable<ConstantEntity[]> {
 		return this.getCachedTypeDocument('cargoManager', CONST_CARGO_DIRECTOR);
 	}
-
 	public getTypeDirector(): Observable<TypeDirectorEntity[]> {
 		return this.getCachedTypeDirector('typeDirector')
 	}
-
 	public getSpecialty(): Observable<SpecialtyEntity[]> {
 		return this.getCachedSpecialty('specialty')
 	}
-
 	public getDepartments(): Observable<DepartmentEntity[]> {
 		return this.getCachedDepartments('departments');
 	}
-
 	public getSector(): Observable<SectorEntity[]> {
 		return this.getCachedSector('sector')
 	}
-	
-
 	private getCachedTypeDocument(key: string, nConValor: number): Observable<ConstantEntity[]> {
 		if (this.cacheConstant.has(key)) {
 		  return of(this.cacheConstant.get(key)!);
 		}
-	
 		return this._constantService.getAll(nConValor).pipe(
 		  tap((data: ResponseEntity<ConstantEntity>) => this.cacheConstant.set(key, data.lstItem)),
 		  map((data: ResponseEntity<ConstantEntity>) => data.lstItem)
 		);
 	}
-
 	private getCachedDepartments(key: string): Observable<DepartmentEntity[]> {
 		if (this.cacheDepartment.has(key)) {
 		  return of(this.cacheDepartment.get(key)!);
 		}
-
 		return this._ubigeoService.getDepartments().pipe(
 		  tap((data: ResponseEntity<DepartmentEntity>) => this.cacheDepartment.set(key, data.lstItem)),
 		  map((data: ResponseEntity<DepartmentEntity>) => data.lstItem)
 		);
 	}
-	
 	private getCachedTypeDirector(key: string): Observable<TypeDirectorEntity[]> {
 		if (this.cacheTypeDirector.has(key)) {
 		  return of(this.cacheTypeDirector.get(key)!);
 		}
-		
 		return this._typeDirectorService.getAll().pipe(
 		  tap((data: ResponseEntity<TypeDirectorEntity>) => this.cacheTypeDirector.set(key, data.lstItem)),
 		  map((data: ResponseEntity<TypeDirectorEntity>) => data.lstItem)
 		);
 	}
-
 	private getCachedSpecialty(key: string): Observable<SpecialtyEntity[]> {
 		if (this.cacheSpecialty.has(key)) {
 		  return of(this.cacheSpecialty.get(key)!);
@@ -103,7 +98,6 @@ export class DirectorFormService {
 		  map((data: ResponseEntity<SpecialtyEntity>) => data.lstItem)
 		);
 	}
-
 	private getCachedSector(key: string): Observable<SectorEntity[]> {
 		if (this.cacheSector.has(key)) {
 		  return of(this.cacheSector.get(key)!);
@@ -114,9 +108,4 @@ export class DirectorFormService {
 		  map((data: ResponseEntity<SectorEntity>) => data.lstItem)
 		);
 	}
-
-	
-
-
-
 }

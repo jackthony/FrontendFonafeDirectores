@@ -17,6 +17,7 @@ import { UserService } from 'app/modules/user/domain/services/auth/user.service'
 import { SectorEntity } from 'app/modules/business/domain/entities/maintenance/sector.entity';
 import { SectorService } from 'app/modules/business/domain/services/maintenance/sector.service';
 import { finalize } from 'rxjs';
+import { ValidationFormService } from 'app/shared/services/validation-form.service';
 @Component({
   selector: 'app-dialog-sector-form',
   standalone: false,
@@ -28,6 +29,7 @@ export class DialogSectorFormComponent {
 	private readonly dialogRef = inject(MatDialogRef<DialogSectorFormComponent>); // Referencia al diálogo para poder cerrarlo
     private _userService = inject(UserService); // Servicio para obtener información del usuario actual
 	private _sectorService = inject(SectorService); // Servicio para interactuar con los datos del sector
+    private _validationFormService = inject(ValidationFormService); // Servicio utilitario que centraliza lógica de validación y mensajes de error en formularios reactivos.
 	public data: { object: SectorEntity } = inject(MAT_DIALOG_DATA);
     buttonEnum = signal<typeof ButtonEnum>(ButtonEnum);
 	form: FormGroup;
@@ -52,7 +54,7 @@ export class DialogSectorFormComponent {
 	initForm(object: SectorEntity): void {
         this.form = this._fb.group({
             nIdSector: [{ disabled: !object, value: object?.nIdSector }, Validators.required],
-            sNombreSector: [ object?  object.sNombreSector : '', [Validators.required, Validators.maxLength(255)] ],
+            sNombreSector: [ object?  object.sNombreSector : '', [Validators.required, this._validationFormService.spaceValidator, Validators.maxLength(255)] ],
             bActivo: [ object? object.bActivo : true, Validators.required ],
             nUsuarioRegistro: [ { disabled: object, value: this._userService.userLogin().usuarioId }, Validators.required ],
             nUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin().usuarioId },Validators.required ],

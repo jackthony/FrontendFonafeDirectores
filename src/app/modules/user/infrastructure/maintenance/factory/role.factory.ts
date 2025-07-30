@@ -16,7 +16,7 @@ import { RoleInterface } from "../../../application/repositories/maintenance/rol
     providedIn: 'root',
 })
 export class RoleFactory {
-    private _roleRepository = inject(RoleRepository); // Inyecta el repositorio de roles, que implementa RoleInterface
+    private _roleRepository = inject(RoleRepository);
     /**
      * Método para inyectar el repositorio de roles.
      * @returns Una instancia del repositorio que implementa RoleInterface.

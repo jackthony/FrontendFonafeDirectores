@@ -1,5 +1,16 @@
+/*******************************************************************************************************
+ * Nombre del archivo:  fo-search-for-button.component.ts
+ * Descripción:          Componente que combina la funcionalidad de búsqueda con filtros y un botón de acción 
+ *                       (como agregar un nuevo usuario). Incluye un campo de búsqueda, un botón para agregar 
+ *                       usuarios, y un filtro basado en el estado activo/inactivo. Emite eventos asociados a 
+ *                       la búsqueda, filtro y acción de agregar elementos.
+ * Autor:                Daniel Alva
+ * Fecha de creación:    01/07/2025
+ * Última modificación:  09/07/2025 por Daniel Alva
+ * Cambios recientes:    - Implementación inicial del componente con búsqueda, filtros y manejo de botones.
+ *******************************************************************************************************/
 import { CommonModule } from '@angular/common';
-import { booleanAttribute, Component, EventEmitter, input, OnInit, Output, signal, ViewEncapsulation } from '@angular/core';
+import { booleanAttribute, Component, EventEmitter, input, OnInit, Output, signal, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FoSearchComponent } from 'app/shared/components/fo-search/fo-search.component';
 import { PermissionButtonDirective } from 'app/shared/directives/permission-button.directive';
 import { FoContCardComponent } from '../fo-cont-card/fo-cont-card.component';
@@ -10,7 +21,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FoButtonComponent } from '../fo-button/fo-button.component';
-
 @Component({
     selector: 'fo-search-for-button',
     standalone: true,
@@ -41,22 +51,24 @@ export class FoSearchForButtonComponent implements OnInit {
     isInactive: boolean = false;
     filterValue = signal<boolean | null>(null);
     viewFilterState = input(false, { transform: booleanAttribute });
-
     @Output() eventNewElement: EventEmitter<void> = new EventEmitter<void>();
     @Output() eventSearch: EventEmitter<string> = new EventEmitter<string>();
+    @Output() eventClickSearch: EventEmitter<string> = new EventEmitter<string>();
     @Output() eventFilterState: EventEmitter<boolean | null> = new EventEmitter<boolean | null>();
     @Output() eventBtnSearch: EventEmitter<void> = new EventEmitter<void>();
-
+    @ViewChild(FoSearchComponent) private _foSearchComponent: FoSearchComponent;
     ngOnInit(): void {
         this.onCheckboxChange();
     }
-
     addUser(): void {
         this.eventNewElement.emit();
     }
-
     getDataSearch(event: string): void {
         this.eventSearch.emit(event);
+    }
+
+    getDataClickSearch(event: string): void {
+      this.eventClickSearch.emit(event);
     }
 
     onCheckboxChange() {
@@ -72,8 +84,13 @@ export class FoSearchForButtonComponent implements OnInit {
         
         this.eventFilterState.emit(this.filterValue());
     }
-
     onSearch(): void {
         this.eventBtnSearch.emit();
+    }
+
+    clickFoSearch(): void {
+      if(this._foSearchComponent) {
+        this._foSearchComponent.searchValue();
+      }
     }
 }

@@ -17,7 +17,7 @@ import { PositionInterface } from "../../../application/repositories/maintenance
     providedIn: 'root',
 })
 export class PositionFactory {
-    private _positionRepository = inject(PositionRepository); // Inyecta el repositorio de posiciones, que implementa PositionInterface
+    private _positionRepository = inject(PositionRepository); 
     /**
      * Método para inyectar el repositorio de posiciones.
      * @returns Una instancia del repositorio que implementa PositionInterface.

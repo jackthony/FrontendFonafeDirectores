@@ -16,13 +16,14 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ButtonEnum } from 'app/shared/enums/button.enum';
 import { UserService } from 'app/modules/user/domain/services/auth/user.service';
 import { ValidationFormService } from 'app/shared/services/validation-form.service';
-import { finalize } from 'rxjs';
+import { finalize, Subject, takeUntil } from 'rxjs';
 import { RoleEntity } from 'app/modules/user/domain/entities/maintenance/role.entity';
 import { ResponseEntity } from '@models/response.entity';
 import { SegUserEntity } from '../../../domain/entities/profile/seg-user.entity';
 import { SegUserService } from '../../../domain/services/profile/seg-user.service';
 import { PositionEntity } from '../../../domain/entities/maintenance/position.entity';
 import { ConstantEntity } from 'app/modules/business/domain/entities/business/constant.entity';
+import { PasswordValidationService } from 'app/modules/user/domain/services/auth/password-validation.service';
 @Component({
     selector: 'app-form-profile',
     standalone: false,
@@ -31,6 +32,7 @@ import { ConstantEntity } from 'app/modules/business/domain/entities/business/co
 	encapsulation: ViewEncapsulation.None
 })
 export class FormProfileComponent implements OnInit {
+    private destroy$ = new Subject<void>(); //Eliminar subcripción de los observableS del formulario.
 	private _fb = inject(FormBuilder);
 	public data: { object: SegUserEntity, lstStatus: ConstantEntity[], lstPosition: PositionEntity[], lstProfile: RoleEntity[], lstTypePersonal: ConstantEntity[] } = inject(MAT_DIALOG_DATA);// Datos inyectados al componente de diálogo (usuario, estados, cargos y perfiles) desde el componente que lo abrió.
 	private readonly dialogRef = inject(MatDialogRef<FormProfileComponent>); // Referencia al diálogo actual, usada para cerrarlo y devolver resultados al componente padre.
@@ -58,18 +60,28 @@ export class FormProfileComponent implements OnInit {
 	initForm(object: SegUserEntity): void {
         this.form = this._fb.group({
             nIdUsuario: [{ disabled: !object, value: object?.nIdUsuario }, Validators.required],
-            sApellidoPaterno: [ { disabled: object, value: object?  object.sApellidoPaterno : '' }, [Validators.required, Validators.maxLength(50)] ],
-            sApellidoMaterno: [ { disabled: object, value: object?  object.sApellidoMaterno : '' }, [Validators.required, Validators.maxLength(50)] ],
-            sNombres: [ { disabled: object, value: object?  object.sNombres : '' }, [Validators.required, Validators.maxLength(150)] ],
+            sApellidoPaterno: [ { disabled: object, value: object?  object.sApellidoPaterno : '' }, [Validators.required, this._validationFormService.spaceValidator,Validators.maxLength(50)] ],
+            sApellidoMaterno: [ { disabled: object, value: object?  object.sApellidoMaterno : '' }, [Validators.required, this._validationFormService.spaceValidator,Validators.maxLength(50)] ],
+            sNombres: [ { disabled: object, value: object?  object.sNombres : '' }, [Validators.required, this._validationFormService.spaceValidator,Validators.maxLength(150)] ],
             nIdCargo: [ object? object.nIdCargo : 0, [Validators.required, Validators.min(1)] ],
             nIdRol: [ object? object.nIdRol : 0, [Validators.required, Validators.min(1)] ],
-            nTipoPersonal: [ object? object.nTipoPersonal : 0, [Validators.required, Validators.min(1)] ],
+            nTipoPersonal: [ { disabled: object, value: object ? object.nTipoPersonal : 0 }, [Validators.required, Validators.min(1)] ],
             nEstado: [ object? object.nEstado : 0, [Validators.required, Validators.min(1)] ],
-            sCorreoElectronico:  [ { disabled: object, value: object ? object.sCorreoElectronico : '' }, [Validators.required, Validators.maxLength(150), this._validationFormService.validationMail] ],
-            sContrasena:  [ { disabled: object, value: object ? '******' : '' } , [Validators.required, Validators.maxLength(32)] ],
+            sCorreoElectronico:  [ { disabled: object, value: object ? object.sCorreoElectronico : '' }, [Validators.required, Validators.maxLength(150)] ],
+            sContrasena:  [ { disabled: object, value: object ? '******' : '' } , [Validators.required, Validators.maxLength(12), this._validationFormService.passwordDetailedValidator] ],
             nUsuarioRegistro: [ { disabled: object, value: this._userService.userLogin()?.usuarioId }, Validators.required ],
             nUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin()?.usuarioId },Validators.required ],
         });
+
+        //Subscripción a los cambios del campo tipo personal
+        this.form.get('nTipoPersonal')?.valueChanges
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(value => {
+            this.applyEmailValidation(value);
+        });
+    
+        // Aplicar validación inicial
+        this.applyEmailValidation(this.form.get('nTipoPersonal')?.value);
     }
     /**
      * Ejecuta la validación completa del formulario.
@@ -108,6 +120,11 @@ export class FormProfileComponent implements OnInit {
      * Actualiza los datos de un usuario existente mediante el servicio.
      */
     updateProfile(): void {
+        const areChanges = this.detectChanges();
+        if(!areChanges) {
+            this.dialogRef.close(false);
+            return;
+        } 
         this._segUserService
             .update(this.form.value) 
             .pipe(finalize(() => this.loadingService.set(false))) 
@@ -141,11 +158,62 @@ export class FormProfileComponent implements OnInit {
     onInput(event: Event, nameForm: string) {
         const input = event.target as HTMLInputElement;
         const validPattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/;
-    
         if (!validPattern.test(input.value)) {
           const cleaned = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
           input.value = cleaned;
           this.form.get(nameForm).setValue(cleaned, { emitEvent: false });
         }
+    }
+
+    //Aplicar validaciones al campo Correo electrónico
+    applyEmailValidation(nTipoPersonal: number): void {
+        const correoControl = this.form.get('sCorreoElectronico');
+        
+        // Si el tipo de personal es 1, aplicar la validación específica para fonafe
+        if (nTipoPersonal === 1) {
+            correoControl?.setValidators([
+                Validators.required,
+                Validators.maxLength(150),
+                this._validationFormService.validationMail,
+                this._validationFormService.validatePersonalTypeFonafe
+            ]);
+        } else if(nTipoPersonal === 2) {
+            correoControl?.setValidators([
+                Validators.required,
+                Validators.maxLength(150),
+                this._validationFormService.validationMail,
+                this._validationFormService.validatePersonalNotTypeFonafe
+            ]);
+        } else {
+            correoControl?.setValidators([
+                Validators.required,
+                Validators.maxLength(150),
+                this._validationFormService.validationMail
+            ]);
+        }
+    
+        // Actualizar la validación
+        correoControl?.updateValueAndValidity();
+    }
+
+    detectChanges(): boolean {
+        // Recorremos los controles del formulario directamente
+        for (const controlName in this.form.controls) {
+            if (this.form.controls.hasOwnProperty(controlName)) {
+                const control = this.form.controls[controlName];
+                // Verificamos si el campo ha sido modificado
+                if (control.dirty) {
+                    return true; // Si encontramos un control modificado, devolvemos true
+                }
+            }
+        }
+        return false; // Si no encontramos ningún cambio, devolvemos false
+    }
+    
+
+    // Emite un valor en el destroy$ para cancelar la suscripción
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 }

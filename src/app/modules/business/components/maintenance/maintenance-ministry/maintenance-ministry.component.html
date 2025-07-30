@@ -5,9 +5,8 @@
             <fo-title-module [text]="titleModule()"></fo-title-module>
         </fo-cont-card>
         <fo-search-for-button 
-            [delaySearch]="delaySearchTable()"
             [placeTextSearch]="placeHolderSearch()"
-            (eventSearch)="searchByItem($event)"
+            (eventClickSearch)="searchByItem($event)"
             (eventNewElement)="openFormDialog()"
             [textBtnSearch]="nameBtnAdd()"
             viewFilterState

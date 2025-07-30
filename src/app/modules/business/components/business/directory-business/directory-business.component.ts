@@ -5,7 +5,7 @@
  * Autor               : Daniel Alva
  * Fecha de creación   : 23/06/2025
  *******************************************************************************************************/
-import { Component, EventEmitter, inject, input, OnChanges, OnInit, Output, signal, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, inject, input, OnChanges, OnInit, Output, signal, SimpleChanges, ViewChild } from '@angular/core';
 import { DialogConfirmationService } from 'app/shared/services/dialog-confirmation.service';
 import { IconOption } from 'app/shared/interfaces/generic-icon.interface';
 import { TableColumnsDefInterface } from 'app/shared/interfaces/table-columns-def.interface';
@@ -23,6 +23,8 @@ import { COLUMNS_DIRECTORY_BUSINESS } from '../../../config/business/directory-b
 import { BusinessEntity } from 'app/modules/business/domain/entities/business/business.entity';
 import { ConstantEntity } from 'app/modules/business/domain/entities/business/constant.entity';
 import { DepartmentEntity } from 'app/modules/business/domain/entities/business/departament.entity';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { FoSearchComponent } from 'app/shared/components/fo-search/fo-search.component';
 
 
 @Component({
@@ -37,7 +39,7 @@ export class DirectoryBusinessComponent implements OnInit, OnChanges {
 	private _directorService = inject(DirectorService); // Servicio para interactuar con los directores
 	private _directorFormService = inject(DirectorFormService); // Servicio para interactuar con los formularios de los directores
 	private _fileComponentStateService = inject(FileComponentStateService); // Servicio para manejar el estado de los archivos
-
+	private _formBuilder = inject(FormBuilder); // Servicio para estructurar el formulario
 	// Señales de texto y valores reactivamente configurados
 	textButtonNew = signal<string>('Agregar director'); // Texto del botón para agregar director
 	iconButtonNew = signal<string>('mat_outline:add_circle_outline'); // Icono del botón para agregar director
@@ -58,8 +60,11 @@ export class DirectoryBusinessComponent implements OnInit, OnChanges {
     lstDepartments = signal<DepartmentEntity[]>([]); // Lista de departamentos
     lstSector = signal<SectorEntity[]>([]); // Lista de sectores
 	blockCreateDirectory = signal<boolean>(false);
-
+	directorSearch = signal<string>('');
+	placeHolderSearch = signal<string>('Busca por múltiples campos');
+	formDate: FormGroup; //Declarar formulario para las fechas de inicio y fin
 	@Output() eventTotalMembers: EventEmitter<number> = new EventEmitter<number>(); // Evento para emitir el total de miembros
+	@ViewChild(FoSearchComponent) private _foSearchComponent: FoSearchComponent;
 
 	ngOnChanges(changes: SimpleChanges): void {
 		if(changes.business) {
@@ -76,6 +81,10 @@ export class DirectoryBusinessComponent implements OnInit, OnChanges {
 	 * Método que se ejecuta al inicializar el componente
 	 */
 	ngOnInit(): void {
+		this.formDate = this._formBuilder.group({
+			dateStart: [null],
+			dateEnd: [null]
+		});
 		this.headerTable.set(COLUMNS_DIRECTORY_BUSINESS); 
 		this.searchDirectors(); 
 		this.iconsTable.set(this.defineIconsTable()); 
@@ -87,7 +96,17 @@ export class DirectoryBusinessComponent implements OnInit, OnChanges {
     searchDirectors(resetPage?: boolean): void {
 		if(resetPage) this.pageIndexTable.set(1);
 		this.loadingTable.set(true);
-		this._directorService.getByPagination(this.business().nIdEmpresa, this.pageIndexTable(), PAGINATOR_PAGE_SIZE).pipe(
+		const dateStartForm = this.formDate.get('dateStart');
+        const dateEndForm = this.formDate.get('dateEnd');
+        let dateStart = null;
+		let dateEnd = null;
+        if(dateStartForm?.value && dateStartForm?.valid) {
+          dateStart = dateStartForm.value.setZone('UTC', { keepLocalTime: true }).toISO()
+        }
+		if(dateEndForm?.value && dateEndForm?.valid) {
+			dateEnd = dateEndForm.value.setZone('UTC', { keepLocalTime: true }).toISO()
+		}
+		this._directorService.getByPagination(this.directorSearch(), this.business().nIdEmpresa, this.pageIndexTable(), PAGINATOR_PAGE_SIZE, dateStart, dateEnd).pipe(
 			finalize(() => this.loadingTable.set(false))
 		).subscribe({
 			next: ((response: ResponseEntity<DirectorEntity>) => {
@@ -194,5 +213,17 @@ export class DirectoryBusinessComponent implements OnInit, OnChanges {
 			root: `Empresa\\${this.business().sRazonSocial}` // Ruta raíz para los archivos
 		}
 		this._fileComponentStateService.setFileComponentState(fileState); // Establece el estado del componente de archivos
+	}
+
+	searchByDirectorsByEnterprise(event: string): void {
+		if(event.length >= 1 && event.trim().length === 0) return;
+		this.directorSearch.set(event); 
+		this.searchDirectors(true); 
+	}
+
+	clickFoSearch(): void {
+		if(this._foSearchComponent) {
+		  this._foSearchComponent.searchValue();
+		}
 	}
 }

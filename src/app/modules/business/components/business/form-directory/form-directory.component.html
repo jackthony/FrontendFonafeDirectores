@@ -1,5 +1,5 @@
 <form class="w-full" [formGroup]="form" autocomplete="off">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 p-10">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 xl:gap-4 p-10">
         <div class="col-span-3 mb-4 flex justify-between items-center">
             <fo-title-area [titleArea]="titlePersonal()"></fo-title-area>
         </div>
@@ -30,7 +30,7 @@
                     matInput 
                     placeholder="--"
                     type="text"
-                    [mask]="form.get('nTipoDocumento').value === typeDocument().ce ? '000000000':'00000000'"
+                    [mask]="form.get('nTipoDocumento').value === typeDocument().ce ? 'AAAAAAAAA':'00000000'"
                     maxlength="9">
                     @if(form.get('sNumeroDocumento').invalid) {
                         <mat-error class="text-red-500">
@@ -161,7 +161,7 @@
         </div>
         <div class="col-span-3 lg:col-span-1">
             <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
-                <mat-label>Pronvincia</mat-label>
+                <mat-label>Provincia</mat-label>
                 <mat-select
                     formControlName="sProvincia"
                     placeholder="--">
@@ -217,7 +217,7 @@
         </div>
         <div class="col-start-1 col-span-3 lg:col-span-1">
             <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
-                <mat-label>Teléfono</mat-label>
+                <mat-label>Teléfono principal</mat-label>
                 <input
                     formControlName="sTelefono"
                     mask="000 0000||000 000 000"
@@ -506,7 +506,7 @@
 
         <div class="col-span-3 lg:col-span-1">
             <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
-                <mat-label>Fecha de renuncia</mat-label>
+                <mat-label>Fecha de renuncia / Cese</mat-label>
                 <input  
                     formControlName="dFechaRenuncia"
                     matInput

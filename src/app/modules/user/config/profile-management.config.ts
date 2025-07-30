@@ -59,12 +59,14 @@ export const COLUMNS_PROFILE_MANAGEMENT: TableColumnsDefInterface[] = [
         id: 6,
         name: "dtFechaRegistro",
         displayedName: "Fecha de creación",
+        format: "shortTimeHour",
         type: "date"
     },
     {
         id: 7,
         name: "dtFechaModificacion",
         displayedName: "Ult. modificación",
+        format: "shortTimeHour",
         type: "date"
     },
     {

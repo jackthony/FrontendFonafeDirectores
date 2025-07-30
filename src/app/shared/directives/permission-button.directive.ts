@@ -5,7 +5,7 @@
  * Autor:               Daniel Alva
  * Última modificación: 23/06/2025
  *******************************************************************************************************/
-import { Directive, ElementRef, Input, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Directive, ElementRef, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthorizationService } from '../services/authorization.service';
 @Directive({
@@ -31,7 +31,7 @@ export class PermissionButtonDirective {
     const resolvedModule = this.module ?? this.route.snapshot.data['module'];
     
     if (!resolvedModule) {
-      this.applyMode(false); // No tiene acceso, oculta el elemento
+      this.applyMode(false);
       return;
     }
     const hasAccess = this.auth.canPerform(resolvedModule, this.action || 'write');

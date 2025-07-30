@@ -9,7 +9,7 @@
  * Cambios recientes:   Implementación de validadores reutilizables para formularios reactivos.
  *************************************************************************************/
 import { Injectable } from '@angular/core';
-import { AbstractControl, ValidationErrors } from '@angular/forms';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 @Injectable({
     providedIn: 'root',
 })
@@ -38,14 +38,31 @@ export class ValidationFormService {
      * @param control El control del formulario que contiene el documento
      * @returns Un objeto de error si el documento no es válido, o null si es válido
      */
-    validationDocument(control: AbstractControl): ValidationErrors | null {
+    dniValidator(control: AbstractControl): ValidationErrors | null {
         const value = control.value;
-        if (!value) return null;
-        const regex = /^\d{8,9}[A-Za-z]?$/;
-        if (!regex.test(value)) {
-            return { customError: 'Documento inválido' };
+        if (!value) return null;  // Si no hay valor, no se aplica ninguna validación
+    
+        const dniRegex = /^\d{8}$/;  // Validación para 8 dígitos
+    
+        if (!dniRegex.test(value)) {
+            return { customError: 'Documento inválido.' };
         }
-        return null;
+    
+        return null;  // Si pasa la validación
+    }
+    
+    // Validador para Carnet de Extranjería (CE) - 9 caracteres (alfanuméricos)
+    ceValidator(control: AbstractControl): ValidationErrors | null {
+        const value = control.value;
+        if (!value) return null;  // Si no hay valor, no se aplica ninguna validación
+    
+        const ceRegex = /^[A-Za-z0-9]{9}$/;  // Validación para 8 dígitos seguidos de una letra
+    
+        if (!ceRegex.test(value)) {
+            return { customError: 'Documento inválido.' };
+        }
+    
+        return null;  // Si pasa la validación
     }
     /**
      * Valida una contraseña detallada.
@@ -56,6 +73,16 @@ export class ValidationFormService {
         const value = control.value;
         
         if (!value) return null; // If the value is empty, return no validation errors.
+
+        const trimmedValue = value.trim();
+
+        /* if (value == trimmedValue) {
+            return { customError: 'La contraseña no puede tener espacios al inicio o final.' };
+        }
+ */
+        if (value !== trimmedValue) {
+            return { customError: 'La contraseña no puede tener espacios al inicio o final.' };
+        }
     
         // Minimum length validation
         if (value.length < 8) {
@@ -85,6 +112,20 @@ export class ValidationFormService {
         // Special character validation
         if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
             return { customError: 'Debe contener al menos un carácter especial.' };
+        }
+    
+        return null; // If all validations pass, return null indicating no errors.
+    }
+
+    spaceValidator(control: AbstractControl): ValidationErrors | null {
+        const value = control.value;
+        
+        if (!value) return null;
+
+        const trimmedValue = value.trim();
+
+        if (value !== trimmedValue) {
+            return { customError: 'No puede contener espacios al inicio o final' };
         }
     
         return null; // If all validations pass, return null indicating no errors.
@@ -144,5 +185,23 @@ export class ValidationFormService {
             return { customError: 'La fecha ingresada no es válida.' };
         }
         return null;
+    }
+
+    validatePersonalTypeFonafe(control: AbstractControl): ValidationErrors | null {
+        const email = control.value;
+            const emailPattern = /^[a-zA-Z0-9._%+-]+@fonafe\.gob\.pe$/;
+            if (email && !emailPattern.test(email)) {
+                return { customError: 'Formato requerido: xxxx@fonafe.gob.pe' };
+            }
+            return null;
+    }
+
+    validatePersonalNotTypeFonafe(control: AbstractControl): ValidationErrors | null {
+        const email = control.value;
+            const emailPattern = /^[a-zA-Z0-9._%+-]+@fonafe\.gob\.pe$/;
+            if (email && emailPattern.test(email)) {
+                return { customError: 'Correo no permitido: @fonafe.gob.pe' };
+            }
+            return null;
     }
 }

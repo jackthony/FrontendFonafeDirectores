@@ -63,14 +63,10 @@ export const appRoutes: Route[] = [
             { 
                 path: 'gestion-perfiles', 
                 loadChildren: () => import('app/modules/user/profile-management.module'),
-                /* canActivate: [permissionGuard],
-                data: { module: 'gestion-perfiles', action: 'Ver' } */
             },
             { 
                 path: 'gestion-empresas', 
                 loadChildren: () => import('app/modules/business/business-management.module'),
-                /* canActivate: [permissionGuard],
-                data: { module: 'gestion-empresas', action: 'Ver' } */
             },
             { 
                 path: 'solicitudes', 
@@ -85,16 +81,10 @@ export const appRoutes: Route[] = [
                 canActivate: [permissionGuard],
                 data: { module: 'mantenimiento-candidatos', action: 'Ver' }
             },
-            /* { 
-                path: 'mantenedores-sistema', 
-                loadChildren: () => import('app/modules/system-maintenance/system-maintenance.module'),
-                canActivate: [permissionGuard],
-                data: { module: 'mantenimiento-sistemas', action: 'Ver' }
-            }, */
             { 
-                path: 'logs-trazabilidad', 
+                path: 'trazabilidad-sistemas', 
                 loadChildren: () => import('app/modules/traceability-system/traceability-system.module'),
-                canActivate: [/* permissionGuard */],
+                canActivate: [permissionGuard],
                 data: { module: 'logs-trazabilidad', action: 'Ver' }
             },
         ]
@@ -108,6 +98,11 @@ export const appRoutes: Route[] = [
         children: [
             {
                 path: 'reset-password', 
+                canActivate: [ResetPasswordTokenGuard],
+                loadChildren: () => import('app/modules/user/components/auth/reset-password/reset-password.routes')
+            },
+            {
+                path: 'confirm-account', 
                 canActivate: [ResetPasswordTokenGuard],
                 loadChildren: () => import('app/modules/user/components/auth/reset-password/reset-password.routes')
             }

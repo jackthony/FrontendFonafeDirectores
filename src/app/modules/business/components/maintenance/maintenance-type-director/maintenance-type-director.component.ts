@@ -51,7 +51,6 @@ export default class MaintenanceTypeDirectorComponent {
 	paramSearchTable = signal<string>('');
 	placeHolderSearch = signal<string>('Busca por nombre');
 	filterState = signal<boolean | null>(true);
-	delaySearchTable = signal<number>(400);
 	/**
 	 * Hook de inicialización del componente.
 	 * Inicializa los encabezados de tabla, los íconos de acciones por fila y ejecuta la búsqueda inicial.
@@ -103,7 +102,8 @@ export default class MaintenanceTypeDirectorComponent {
 	 * @param event Texto ingresado por el usuario.
 	 */
 	searchByItem(event: string): void {
-		this.paramSearchTable.set(event);
+		if(event.length >= 1 && event.trim().length === 0) return;
+		this.paramSearchTable.set(event?.trim());
 		this.pageIndexTable.set(1);
 		this.searchTable();
 	}

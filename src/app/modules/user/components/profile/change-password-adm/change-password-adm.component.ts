@@ -27,6 +27,7 @@ import { ResponseEntity } from '@models/response.entity';
 import { SegUserService } from '../../../domain/services/profile/seg-user.service';
 import { SegUserEntity } from '../../../domain/entities/profile/seg-user.entity';
 import { AuthService } from 'app/modules/user/domain/services/auth/auth.service';
+import { ValidationFormService } from 'app/shared/services/validation-form.service';
 @Component({
     selector: 'app-change-password-adm',
     standalone: false,
@@ -38,6 +39,7 @@ export class ChangePasswordAdmComponent implements OnInit {
     private _fb = inject(FormBuilder); // Inyección del FormBuilder para crear formularios reactivos de manera más sencilla
     public data: { object: SegUserEntity } = inject(MAT_DIALOG_DATA); // Inyección de los datos del diálogo que se pasan desde el componente que invoca este diálogo
     private readonly dialogRef = inject(MatDialogRef<ChangePasswordAdmComponent>);// Referencia al diálogo para cerrar el diálogo después de una acción
+    private _validationFormService = inject(ValidationFormService); // Servicio utilitario que centraliza lógica de validación y mensajes de error en formularios reactivos.
     private _userService = inject(UserService);// Servicios inyectados para obtener y manejar la información del usuario
     private _segUserService = inject(SegUserService);
     private _authService = inject(AuthService);
@@ -48,9 +50,9 @@ export class ChangePasswordAdmComponent implements OnInit {
     form: FormGroup;
     ngOnInit(): void {
         this.form = this._fb.group({
-            //usuarioId: [this._userService.userLogin().usuarioId, Validators.required],
+            nUserIdModifica: [this._userService.userLogin().usuarioId, Validators.required],
             usuarioId: [this.data.object.nIdUsuario, Validators.required],
-            newPassword: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(12)]],
+            newPassword: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(12), this._validationFormService.passwordDetailedValidator]],
             token: [this._authService.accessToken, Validators.required],
         });
     }

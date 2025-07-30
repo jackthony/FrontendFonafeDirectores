@@ -56,7 +56,7 @@ export class FormDirectoryComponent implements OnInit {
     @Output() eventRefreshDirectory: EventEmitter<void> = new EventEmitter<void>();
 	private destroy$ = new Subject<void>();
 	business = input.required<BusinessEntity>();
-    titleDirectory = signal<string>('Composición del Directorio');
+    titleDirectory = signal<string>('Composición del Director');
     titlePersonal = signal<string>('Datos personales');
     buttonEnum = signal<typeof ButtonEnum>(ButtonEnum);
 	director = input.required<DirectorEntity>();
@@ -71,12 +71,14 @@ export class FormDirectoryComponent implements OnInit {
 	lstDepartments = input.required<DepartmentEntity[]>();
 	lstProvinces = signal<ProvinceEntity[]>([]);
 	lstDistricts = signal<DistrictEntity[]>([]);
-	form: FormGroup;
-	maxDate: Date; // Fecha máxima (18 años para el director)
-	minDate: Date;
 	yearDirector = signal<string>('');
-
 	typeDocument = signal<typeof TypeDocumentEnum>(TypeDocumentEnum); // Tipo de documento
+	modifiedFields = signal<string[]>([]);
+    areChanges = signal<boolean>(false);
+
+	maxDate: Date;
+	form: FormGroup;
+	minDate: Date;
 
 	// Método que se ejecuta al inicializar el componente
 	ngOnInit(): void {
@@ -112,15 +114,15 @@ export class FormDirectoryComponent implements OnInit {
 			nIdRegistro: [ this.director() ? this.director().nIdRegistro : { disabled: true, value: 0  } ],
 			nIdEmpresa: [ this.business().nIdEmpresa , [Validators.required, Validators.min(1)] ],
 			nTipoDocumento: [ this.director() ? { disabled: true, value: this.director().nTipoDocumento } : 0, [Validators.required, Validators.min(1)] ],
-			sNumeroDocumento: [ this.director() ? { disabled: true, value: this.director().sNumeroDocumento } : '', [Validators.required, this._validationFormService.validationDocument] ],
-			sNombres: [ this.director() ? { disabled: true, value: this.director().sNombres } : '', [Validators.required, Validators.maxLength(150)] ],
-			sApellidos: [ this.director() ? { disabled: true, value: this.director().sApellidos } : '', [Validators.required, Validators.maxLength(150)] ],
+			sNumeroDocumento: [ this.director() ? { disabled: true, value: this.director().sNumeroDocumento } : '', [Validators.required, this._validationFormService.dniValidator] ],
+			sNombres: [ this.director() ? { disabled: true, value: this.director().sNombres } : '', [Validators.required, this._validationFormService.spaceValidator, Validators.maxLength(150)] ],
+			sApellidos: [ this.director() ? { disabled: true, value: this.director().sApellidos } : '', [Validators.required, this._validationFormService.spaceValidator, Validators.maxLength(150)] ],
 			dFechaNacimiento: [ this.director() ? { disabled: true, value: this.director().dFechaNacimiento } : null, [Validators.required, Validators.maxLength(10)] ],
 			nGenero: [ this.director() ? { disabled: true, value: this.director().nGenero } : 0, [Validators.required, Validators.min(1)] ],
 			sDepartamento: [ this.director() ? this.director().sDepartamento : 0, [Validators.required, Validators.min(1)] ],
 			sProvincia: [ this.director() ? this.director().sProvincia : 0, [Validators.required, Validators.min(1)] ],
 			sDistrito: [ this.director() ? this.director().sDistrito : 0, [Validators.required, Validators.min(1)] ],
-			sDireccion: [ this.director() ? this.director().sDireccion : '', [Validators.required, Validators.maxLength(255)] ],
+			sDireccion: [ this.director() ? this.director().sDireccion : '', [Validators.required, this._validationFormService.spaceValidator, Validators.maxLength(255)] ],
 			sTelefono: [ this.director() ? this.director().sTelefono : '', [Validators.required, this._validationFormService.validationPhone] ],
 			sTelefonoSecundario: [ this.director() ? this.director().sTelefonoSecundario : '', [this._validationFormService.validationPhone] ],
 			sTelefonoTerciario: [ this.director() ? this.director().sTelefonoTerciario : '', [this._validationFormService.validationPhone] ],
@@ -129,18 +131,42 @@ export class FormDirectoryComponent implements OnInit {
 			sCorreoTerciario: [ this.director() ? this.director().sCorreoTerciario : '', [ Validators.maxLength(250), this._validationFormService.validationMail] ],
 			nCargo: [ this.director() ? this.director().nCargo : 0, [Validators.required, Validators.min(1)] ],
 			nTipoDirector: [ this.director() ? this.director().nTipoDirector : 0, [Validators.required, Validators.min(1)] ],
-			sProfesion: [ this.director() ? this.director().sProfesion : '', [Validators.required, Validators.maxLength(150)] ],
+			sProfesion: [ this.director() ? this.director().sProfesion : '', [Validators.required, this._validationFormService.spaceValidator, Validators.maxLength(150)] ],
 			nIdSector: [this.director() ? this.director().nIdSector : 0, [Validators.required, Validators.min(1)]], // Campo de proponente
 			mDieta: [ this.director() ? this.director().mDieta : null, [Validators.required, Validators.min(0), Validators.max(999999999999.99)] ],
 			nEspecialidad: [ this.director() ? this.director().nEspecialidad : 0, [Validators.required, Validators.min(1)] ],
 			dFechaNombramiento: [ this.director() ? this._dateUtilsService.formatDateToString(this.director().dFechaNombramiento) : null, [Validators.required,  Validators.maxLength(10)] ],
 			dFechaDesignacion: [ this.director() ? this._dateUtilsService.formatDateToString(this.director().dFechaDesignacion) : null, [Validators.required, Validators.maxLength(10)] ],
-			dFechaRenuncia: [ this.director() ? this.director().dFechaRenuncia : null , Validators.required ],
-			sComentario: [ this.director() ? this.director().sComentario : '', Validators.maxLength(1000) ],
+			dFechaRenuncia: [ this.director() ? this.director().dFechaRenuncia : null],
+			sComentario: [ this.director() ? this.director().sComentario : '', [Validators.maxLength(1000), this._validationFormService.spaceValidator] ],
 			nUsuarioRegistro: [ { disabled: this.director(), value: this._userService.userLogin().usuarioId }, Validators.required ],
             nUsuarioModificacion: [ { disabled: !this.director(), value: this._userService.userLogin().usuarioId }, Validators.required ],
 		})
 	}
+
+	controlsMapped: { [key: string]: string } = {
+        sDepartamento: 'Departamento',
+        sProvincia: 'Provincia',
+        sDistrito: 'Distrito',
+        sDireccion: 'Dirección',
+        sTelefono: 'Telefono principal',
+        sTelefonoSecundario: 'Telefono opcional 1',
+        sTelefonoTerciario: 'Telefono opcional 2',
+        sCorreo: 'Correo principal',
+        sCorreoSecundario: 'Correo opcional 1',
+        sCorreoTerciario: 'Correo opcional 2',
+        nCargo: 'Cargo',
+        nTipoDirector: 'Tipo de director',
+        sProfesion: 'Profesión',
+        nIdSector: 'Sector',
+        mDieta: 'Dieta',
+        nEspecialidad: 'Especialidad',
+        dFechaNombramiento: 'Fecha de nombramiento',
+        dFechaDesignacion: 'Fecha de designación',
+        dFechaRenuncia: 'Fecha de renuncia',
+        sComentario: 'Comentario'
+    };
+
 	valueChangesForm(): void {
         this.form.get('sDepartamento')!.valueChanges
 		.pipe(
@@ -204,9 +230,14 @@ export class FormDirectoryComponent implements OnInit {
 			distinctUntilChanged(),
 			takeUntil(this.destroy$)
 		).subscribe((value) => {
-			if(value) this.form.get('sNumeroDocumento').enable();
+			if(value === TypeDocumentEnum.dni) this.form.get('sNumeroDocumento').setValidators([Validators.required, this._validationFormService.dniValidator]);
+			if(value === TypeDocumentEnum.ce) this.form.get('sNumeroDocumento').setValidators([Validators.required, this._validationFormService.ceValidator]);
+			if(value) {
+				this.form.get('sNumeroDocumento').enable();
+			}
 			this.form.get('sNumeroDocumento').setValue('');
 			this.form.get('sNumeroDocumento').markAsUntouched();
+			this.form.get('sNumeroDocumento').updateValueAndValidity();
 		})
 		
 		this.form.get('dFechaNacimiento').valueChanges
@@ -288,6 +319,7 @@ export class FormDirectoryComponent implements OnInit {
 		if (this.director()) this.updateDirector();
         else this.registerDirector();
 	}
+
 	registerDirector(): void {
 		const fields = ['sNombres', 'sApellidos'];
         fields.forEach(field => {
@@ -309,13 +341,15 @@ export class FormDirectoryComponent implements OnInit {
             });
     }
     updateDirector(): void {
+		this.detectChanges();
         this._directorService
             .update(this.form.value)
 			.pipe(finalize(() => this._spinner.hide()))
             .subscribe({
                 next: (response: ResponseEntity<boolean>) => {
                     if (response.isSuccess) {
-						this._ngxToastrService.showSuccess('Director actualizado exitosamente', '¡Éxito!');
+						const fields = this.modifiedFields().length > 0 ? `Los campos (${this.modifiedFields().join(', ')})` : 'Todos los campos';
+						this._ngxToastrService.showSuccess(`${fields} del director, se actualizaron exitosamente`, '¡Éxito!');
 						this.eventRefreshDirectory.emit();
                     }
                 },
@@ -370,4 +404,25 @@ export class FormDirectoryComponent implements OnInit {
 		const dateFormat = dt.toFormat('yyyy-MM-dd');
 		return dateFormat;
 	}
+
+	/**
+     * Método para detectar cambios realizados en el formulario
+     */
+    detectChanges() {
+        this.modifiedFields.set([]);  // Resetear los cambios previos
+        this.areChanges.set(false); // Suponemos que no hay cambios al principio
+    
+        // Recorremos los controles del formulario directamente
+        for (const controlName in this.form.controls) {
+            if (this.form.controls.hasOwnProperty(controlName)) {
+                const control = this.form.controls[controlName];
+            // Verificamos si el campo ha sido modificado
+            if (control.dirty) {
+                const name = this.controlsMapped[controlName];
+                this.modifiedFields.update(prev => [...prev, name]); // Agregar a la lista de campos modificados
+                this.areChanges.set(true); // Si se encuentra algún campo modificado, ponemos esta variable en false
+            }
+          }
+        }
+    }
 }

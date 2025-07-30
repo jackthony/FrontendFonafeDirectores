@@ -1,3 +1,14 @@
+/*******************************************************************************************************
+ * Nombre del archivo:  auth-interceptor.ts
+ * Descripción:          Interceptor HTTP que agrega el token de autenticación a las solicitudes
+ *                       HTTP salientes, si el token de acceso es válido. Si el token está presente y
+ *                       no ha expirado, se incluye en el encabezado de la solicitud bajo el nombre 
+ *                       "Authorization". Además, maneja los errores que puedan ocurrir durante la solicitud.
+ * Autor:                Daniel Alva
+ * Fecha de creación:    01/07/2025
+ * Última modificación:  09/07/2025 por Daniel Alva
+ * Cambios recientes:    - Implementación para agregar el token JWT en los encabezados de las solicitudes.
+ *******************************************************************************************************/
 import {
     HttpErrorResponse,
     HttpEvent,
@@ -8,7 +19,6 @@ import { inject } from '@angular/core';
 import { AuthUtils } from 'app/core/utils/auth.utils';
 import { AuthService } from 'app/modules/user/domain/services/auth/auth.service';
 import { Observable, catchError, throwError } from 'rxjs';
-
 /**
  * Intercept
  *
@@ -20,18 +30,7 @@ export const authInterceptor = (
     next: HttpHandlerFn
 ): Observable<HttpEvent<unknown>> => {
     const authService = inject(AuthService);
-
-    // Clone the request object
     let newReq = req.clone();
-
-    // Request
-    //
-    // If the access token didn't expire, add the Authorization header.
-    // We won't add the Authorization header if the access token expired.
-    // This will force the server to return a "401 Unauthorized" response
-    // for the protected API routes which our response interceptor will
-    // catch and delete the access token from the local storage while logging
-    // the user out from the app.
     if (
         authService.accessToken &&
         !AuthUtils.isTokenExpired(authService.accessToken)
@@ -43,8 +42,6 @@ export const authInterceptor = (
             ),
         });
     }
-
-    // Response
     return next(newReq).pipe(
         catchError((error) => {
             return throwError(error);

@@ -16,6 +16,7 @@ import { UserService } from 'app/modules/user/domain/services/auth/user.service'
 import { finalize } from 'rxjs';
 import { PositionEntity } from '../../../domain/entities/maintenance/position.entity';
 import { PositionService } from 'app/modules/user/domain/services/maintenance/position.service';
+import { ValidationFormService } from 'app/shared/services/validation-form.service';
 @Component({
   selector: 'app-dialog-position-form',
   standalone: false,
@@ -27,7 +28,8 @@ export class DialogPositionFormComponent {
 	private readonly dialogRef = inject(MatDialogRef<DialogPositionFormComponent>); // Referencia al diálogo para cerrarlo
     private _userService = inject(UserService); // Servicio de usuario para obtener información del usuario logueado
 	private _sectorService = inject(PositionService); // Servicio de sector para manejar operaciones CRUD de la entidad Position
-	public data: { object: PositionEntity } = inject(MAT_DIALOG_DATA); // Datos inyectados en el diálogo, contiene el objeto PositionEntity si se está editando
+	private _validationFormService = inject(ValidationFormService); // Servicio utilitario que centraliza lógica de validación y mensajes de error en formularios reactivos.
+    public data: { object: PositionEntity } = inject(MAT_DIALOG_DATA); // Datos inyectados en el diálogo, contiene el objeto PositionEntity si se está editando
     buttonEnum = signal<typeof ButtonEnum>(ButtonEnum);
 	form: FormGroup;
 	isEdit = signal<boolean>(false);
@@ -50,7 +52,7 @@ export class DialogPositionFormComponent {
 	initForm(object: PositionEntity): void {
         this.form = this._fb.group({
             nIdCargo: [{ disabled: !object, value: object?.nIdCargo }, Validators.required],
-            sNombreCargo: [ object?  object.sNombreCargo : '', [Validators.required, Validators.maxLength(255)] ],
+            sNombreCargo: [ object?  object.sNombreCargo : '', [Validators.required, this._validationFormService.spaceValidator,Validators.maxLength(255)] ],
             bActivo: [ object? object.bActivo : true, Validators.required ],
             nUsuarioRegistro: [ { disabled: object, value: this._userService.userLogin().usuarioId }, Validators.required ],
             nUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin().usuarioId },Validators.required ],

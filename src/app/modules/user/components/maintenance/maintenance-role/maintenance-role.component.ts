@@ -55,7 +55,6 @@ export default class MaintenanceRoleComponent {
 	paramSearchTable = signal<string>('');
 	placeHolderSearch = signal<string>('Busca por nombre');
 	filterState = signal<boolean | null>(true);
-	delaySearchTable = signal<number>(400);
 	/**
 	 * Hook de inicialización del componente.
 	 * Carga la definición de columnas, íconos y ejecuta la búsqueda inicial de datos.
@@ -107,7 +106,8 @@ export default class MaintenanceRoleComponent {
 	 * @param event Texto del campo de búsqueda.
 	 */
 	searchByItem(event: string): void {
-		this.paramSearchTable.set(event);
+		if(event.length >= 1 && event.trim().length === 0) return;
+		this.paramSearchTable.set(event?.trim());
 		this.pageIndexTable.set(1);
 		this.searchTable();
 	}

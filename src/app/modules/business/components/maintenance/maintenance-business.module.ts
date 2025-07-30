@@ -1,6 +1,18 @@
+/*******************************************************************************************************
+ * Nombre del archivo:  maintenance-business.module.ts
+ * Descripción:          Módulo encargado de gestionar el mantenimiento de las entidades relacionadas con 
+ *                       el negocio, como ministerios, sectores, industrias, tipos de directores, especialidades, 
+ *                       entre otros. Este módulo incluye componentes para mostrar y editar los datos de 
+ *                       estas entidades, así como formularios y diálogos para la creación y modificación de 
+ *                       información. Además, se utiliza para organizar el contenido en pestañas y tablas, 
+ *                       permitiendo a los usuarios gestionar eficientemente los datos del negocio.
+ * Autor:                Daniel Alva
+ * Fecha de creación:    01/07/2025
+ * Última modificación:  09/07/2025 por Daniel Alva
+ * Cambios recientes:    - Implementación inicial del módulo de mantenimiento para gestionar entidades de negocio.
+ *******************************************************************************************************/
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { MaintenanceBusinessRoutingModule } from './maintenance-business-routing.module';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,7 +28,6 @@ import { FoFileUrlUploadComponent } from 'app/shared/components/fo-file-url-uplo
 import { FoContCardComponent } from 'app/shared/components/fo-cont-card/fo-cont-card.component';
 import { FoButtonDialogComponent } from 'app/shared/components/fo-button-dialog/fo-button-dialog.component';
 import { FoButtonComponent } from 'app/shared/components/fo-button/fo-button.component';
-
 import { MatDialogModule } from '@angular/material/dialog';
 import MaintenanceMinistryComponent from './maintenance-ministry/maintenance-ministry.component';
 import MaintenanceSectorComponent from './maintenance-sector/maintenance-sector.component';
@@ -34,8 +45,6 @@ import { FoTitleModuleComponent } from 'app/shared/components/fo-title-module/fo
 import { FoTitleAreaComponent } from 'app/shared/components/fo-title-area/fo-title-area.component';
 import { FoTableComponent } from 'app/shared/components/fo-table/fo-table.component';
 import { FoSearchForButtonComponent } from 'app/shared/components/fo-search-for-button/fo-search-for-button.component';
-
-
 @NgModule({
   declarations: [
     MaintenanceMinistryComponent,

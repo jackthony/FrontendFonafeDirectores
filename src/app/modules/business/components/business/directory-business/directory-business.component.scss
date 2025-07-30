@@ -1,0 +1,24 @@
+.btn-funnel {
+    .mat-icon {
+        color: #c51f2a;
+    }
+}
+
+.title-status {
+    font-family: "Museo Sans";
+    display: flex;
+    justify-content: center;
+    padding: 0 16px;
+    border-bottom: 1px solid #DDDDDD;
+    padding-bottom: 5px;
+}
+
+.btn-search {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    .mat-mdc-outlined-button:not(:disabled) {
+        border-color: #CD202C !important;;
+        color: #CD202C;
+    }
+}

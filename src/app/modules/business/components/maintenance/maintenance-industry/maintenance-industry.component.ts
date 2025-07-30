@@ -51,7 +51,6 @@ export default class MaintenanceIndustryComponent {
 	paramSearchTable = signal<string>('');
 	placeHolderSearch = signal<string>('Busca por nombre');
 	filterState = signal<boolean | null>(true);
-	delaySearchTable = signal<number>(400);
 	/**
 	 * Hook de ciclo de vida que se ejecuta al inicializar el componente.
 	 * - Carga las cabeceras e íconos de la tabla desde configuración.
@@ -112,7 +111,8 @@ export default class MaintenanceIndustryComponent {
 	 * @param event Texto del campo de búsqueda.
 	 */
 	searchByItem(event: string): void {
-		this.paramSearchTable.set(event);
+		if(event.length >= 1 && event.trim().length === 0) return;
+		this.paramSearchTable.set(event?.trim());
 		this.pageIndexTable.set(1);
 		this.searchTable();
 	}

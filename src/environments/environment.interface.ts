@@ -8,9 +8,6 @@
  * Última modificación: 23/06/2025 por Daniel Alva
  * Cambios recientes:   Definición inicial de la interfaz de entorno.
  *************************************************************************************/
-/**
- * Estructura base de configuración para entornos Angular.
- */
 export interface Environment {
     production: boolean;
     apiUrlBase: string;

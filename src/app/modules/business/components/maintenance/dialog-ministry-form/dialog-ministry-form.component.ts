@@ -1,3 +1,16 @@
+/*******************************************************************************************************
+ * Nombre del archivo:  dialog-ministry-form.component.ts
+ * Descripción:          Componente encargado de gestionar el formulario de creación y edición de ministerios.
+ *                       Este componente maneja tanto la lógica para crear un nuevo ministerio como para editar 
+ *                       uno existente. Permite al usuario ingresar o modificar los datos del ministerio, validarlos, 
+ *                       y enviarlos al servidor para su almacenamiento. El componente también incluye validaciones 
+ *                       para los campos del formulario y gestiona la interacción con el usuario a través de eventos 
+ *                       como presionar teclas y cambios en el contenido del campo de entrada.
+ * Autor:                Daniel Alva
+ * Fecha de creación:    01/07/2025
+ * Última modificación:  09/07/2025 por Daniel Alva
+ * Cambios recientes:    - Implementación inicial del componente para manejo de ministerios.
+ *******************************************************************************************************/
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -7,7 +20,7 @@ import { MinistryService } from 'app/modules/business/domain/services/maintenanc
 import { finalize } from 'rxjs';
 import { ResponseEntity } from '@models/response.entity';
 import { MinistryEntity } from 'app/modules/business/domain/entities/maintenance/ministry.entity';
-
+import { ValidationFormService } from 'app/shared/services/validation-form.service';
 @Component({
   selector: 'app-dialog-ministry-form',
   standalone: false,
@@ -19,7 +32,8 @@ export class DialogMinistryFormComponent {
 	private readonly dialogRef = inject(MatDialogRef<DialogMinistryFormComponent>); // Inyecta MatDialogRef para cerrar el diálogo
     private _userService = inject(UserService); // Inyecta el servicio UserService para obtener información del usuario
 	private _ministryService = inject(MinistryService); // Inyecta el servicio MinistryService para interactuar con los datos del ministerio
-	public data: { object: MinistryEntity } = inject(MAT_DIALOG_DATA);
+	private _validationFormService = inject(ValidationFormService); // Servicio utilitario que centraliza lógica de validación y mensajes de error en formularios reactivos.
+    public data: { object: MinistryEntity } = inject(MAT_DIALOG_DATA);
     buttonEnum = signal<typeof ButtonEnum>(ButtonEnum);
 	form: FormGroup;
 	isEdit = signal<boolean>(false);
@@ -43,7 +57,7 @@ export class DialogMinistryFormComponent {
 	initForm(object: MinistryEntity): void {
         this.form = this._fb.group({
             nIdMinisterio: [{ disabled: !object, value: object?.nIdMinisterio }, Validators.required],
-            sNombreMinisterio: [ object?  object.sNombreMinisterio : '', [Validators.required, Validators.maxLength(255)] ],
+            sNombreMinisterio: [ object?  object.sNombreMinisterio : '', [Validators.required, this._validationFormService.spaceValidator, Validators.maxLength(255)] ],
             bActivo: [ object? object.bActivo : true, Validators.required ],
             nUsuarioRegistro: [ { disabled: object, value: this._userService.userLogin().usuarioId }, Validators.required ],
             nUsuarioModificacion: [ { disabled: !object, value: this._userService.userLogin().usuarioId },Validators.required ],

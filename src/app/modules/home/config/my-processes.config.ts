@@ -69,11 +69,15 @@ export const LIST_OF_PROCESSES: ListOfProcesses[] = [
         ]
     },
     {
-        label: 'Logs de trazabilidad',
+        label: 'Logs',
         icon: 'mat_outline:save_alt',
         value: OptionsProcess.traceabilitySystem,
-        url: 'logs-trazabilidad',
+        url: '',
         module: "logs-trazabilidad",
-        options: []
+        options: [
+            { label: 'Log de trazabilidad', url: 'trazabilidad-sistemas/trazabilidad' },
+            { label: 'Log de auditoria', url: 'trazabilidad-sistemas/auditoria' },
+            { label: 'Log de sistemas', url: 'trazabilidad-sistemas/sistemas' },
+        ]
     },
 ]

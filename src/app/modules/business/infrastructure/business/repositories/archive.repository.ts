@@ -17,6 +17,8 @@ import { ArchiveInterface } from "../../../application/repositories/business/arc
 import { ResponseEntity } from "../../../../../core/models/response.entity";
 import { FileData } from "../../../../../core/models/archive-tree.entity";
 import { MatTreeOptionsNode } from "app/shared/components/fo-mat-tree-flat/models/mat-tree-options-node";
+import { ArchiveDownloadZip } from "app/modules/business/domain/entities/business/archive-download-zip.entity";
+import { DeleteFileBusiness } from "app/modules/business/domain/entities/business/delete-file-business.entity";
 @Injectable({
     providedIn: 'root',
 })
@@ -62,6 +64,16 @@ export class ArchiveRepository implements ArchiveInterface {
             params,
             responseType: 'arraybuffer'
         });
+    }
+
+    downloadFileBussinessZip(object: ArchiveDownloadZip): Observable<ArrayBuffer> {
+        return this._http.post(`${this.url}/descargar-zip`, object, {
+            responseType: 'arraybuffer'
+        });
+    }
+
+    deleteFileBussiness(object: DeleteFileBusiness): Observable<ResponseEntity<boolean>> {
+        return this._http.post<ResponseEntity<boolean>>(`${this.url}/eliminar`, object);
     }
 
 }

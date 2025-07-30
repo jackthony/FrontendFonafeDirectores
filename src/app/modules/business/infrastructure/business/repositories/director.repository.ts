@@ -27,8 +27,11 @@ export class DirectorRepository implements DirectorInterface {
      * @param pageSize - Cantidad de registros por página
      * @returns Observable con la entidad paginada de directores
      */
-    getByPagination(nIdEmpresa: number, pageIndex: number, pageSize: number): Observable<ResponseEntity<DirectorEntity>> {
+    getByPagination(param: string, nIdEmpresa: number, pageIndex: number, pageSize: number, dtFechaInicio: string, dtFechaFin: string): Observable<ResponseEntity<DirectorEntity>> {
         let params = new HttpParams().append('Page', pageIndex).append('PageSize', pageSize).append('nIdEmpresa', nIdEmpresa);
+        if(param) params = params.append('Nombre', param);
+        if(dtFechaInicio) params = params.append('dtFechaInicio', dtFechaInicio);
+        if(dtFechaFin) params = params.append('dtFechaFin', dtFechaFin);
         return this._http.get<ResponseEntity<DirectorEntity>>(`${this.url}/listar-paginado`, { params });
     }
         /**

@@ -1,3 +1,14 @@
+/*******************************************************************************************************
+ * Nombre del archivo:  fo-mat-tree-flat.component.ts
+ * Descripción:          Componente que implementa un árbol jerárquico plano utilizando Angular Material Tree,
+ *                       permitiendo mostrar, seleccionar, y gestionar archivos, con opciones para cargar 
+ *                       y descargar archivos. El árbol también maneja el estado expandido de los nodos.
+ * Autor:                Daniel Alva
+ * Fecha de creación:    01/07/2025
+ * Última modificación:  09/07/2025 por Daniel Alva
+ * Cambios recientes:    - Implementación del árbol jerárquico plano con funcionalidades de selección,
+ *                         carga y descarga de archivos.
+ *******************************************************************************************************/
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output, SimpleChanges } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -5,7 +16,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
+import { MatMenuModule} from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule } from '@angular/material/tree';
 import { FlatTreeControl } from '@angular/cdk/tree';
@@ -16,7 +27,6 @@ import { FileData } from '../../../core/models/archive-tree.entity';
 import { ArchivingProcessService } from '../../../modules/business/domain/services/business/archiving-process.service';
 import { MatTreeOptionsNode } from './models/mat-tree-options-node';
 import { FlatNodeAllElements } from './models/flat-node-all-elements';
-
 @Component({
   selector: 'fo-mat-tree-flat',
   standalone: true,
@@ -40,8 +50,6 @@ import { FlatNodeAllElements } from './models/flat-node-all-elements';
 export class FoMatTreeFlatComponent<T> {
     private _archiveService = inject(ArchiveService);
     private _archivingProcessService = inject(ArchivingProcessService);
-
-
     @Input() data: MatTreeOptionsNode<T>[] = [];
     @Input() viewStatus: boolean = false;
     @Input() infoProperty: string;
@@ -49,20 +57,13 @@ export class FoMatTreeFlatComponent<T> {
     @Input() btnClose: boolean = false;
     @Output() eventSelectionObject:EventEmitter<T> = new EventEmitter<T>();
     @Output() eventUploadFile:EventEmitter<FlatNodeAllElements<FileData>> = new EventEmitter<FlatNodeAllElements<FileData>>();
-
-    /** Map from flat node to nested node. This helps us finding the nested node to be modified */
+    @Output() eventDeleteFile:EventEmitter<FlatNodeAllElements<FileData>> = new EventEmitter<FlatNodeAllElements<FileData>>();
     flatNodeMap = new Map<FlatNodeAllElements<T>, MatTreeOptionsNode<T>>();
-
-    /** Map from nested node to flattened node. This helps us to keep the same object for selection */
     nestedNodeMap = new Map<MatTreeOptionsNode<T>, FlatNodeAllElements<T>>();
-
-    /** A selected parent node to be inserted */
     selectedParent: FlatNodeAllElements<T> | null = null;
     treeControl: FlatTreeControl<FlatNodeAllElements<T>>;
     treeFlattener: MatTreeFlattener<MatTreeOptionsNode<T>, FlatNodeAllElements<T>>;
     dataSource: MatTreeFlatDataSource<MatTreeOptionsNode<T>, FlatNodeAllElements<T>>;
-    
-
     constructor() {
         this.treeFlattener = new MatTreeFlattener(
             this.transformer,
@@ -79,7 +80,6 @@ export class FoMatTreeFlatComponent<T> {
             this.treeFlattener
         );
     }
-
     ngOnChanges(changes: SimpleChanges): void{
         if(changes.data){
             const expandNodes = this.getExpandedNodes();
@@ -87,15 +87,10 @@ export class FoMatTreeFlatComponent<T> {
             this.restoreExpandedNodes(expandNodes);
         }
     }
-
     getLevel = (node: FlatNodeAllElements<T>) => node.level;
-
     isExpandable = (node: FlatNodeAllElements<T>) => node.expandable;
-
     getChildren = (node: MatTreeOptionsNode<T>): MatTreeOptionsNode<T>[] => node.children;
-
     hasChild = (_: number, _nodeData: FlatNodeAllElements<T>) => _nodeData.expandable;
-
     /**
      * Transformer to convert nested node to flat node. Record the nodes in maps for later use.
      */
@@ -110,13 +105,12 @@ export class FoMatTreeFlatComponent<T> {
 		flatNode.status = node.status;
         flatNode.element = node.element;
         flatNode.level = level;
-        flatNode.expandable = true; //Convertir todo en desplegable.
-        flatNode.hasChild = !!node.children?.length; // ver boton desplegado
+        flatNode.expandable = true;
+        flatNode.hasChild = !!node.children?.length; 
         this.flatNodeMap.set(flatNode, node);
         this.nestedNodeMap.set(node, flatNode);
         return flatNode;
     };
-
     private getExpandedNodes(): string[] {
         if(this.treeControl.dataNodes){
             return this.treeControl.dataNodes
@@ -124,7 +118,6 @@ export class FoMatTreeFlatComponent<T> {
           .map(node => node.item);
         } return [];
     }
-
     private restoreExpandedNodes(expandedNodeNames: string[]): void {
         this.treeControl.dataNodes.forEach(node => {
           if (expandedNodeNames.includes(node.item)) {
@@ -132,22 +125,32 @@ export class FoMatTreeFlatComponent<T> {
           }
         });
     }
-
 	convertToNumber(value: number | boolean): number {
 		if (typeof value === "boolean") return +value;
 		else return value;
 	}
-
     selectObject(element: T):void{
         this.eventSelectionObject.emit(element);
     }
-
     uploadFile(node: FlatNodeAllElements<FileData>): void {
         this.eventUploadFile.emit(node);
     }
-
     downloadFile(node: FlatNodeAllElements<FileData>): void {
         const file$ = this._archiveService.downloadFileBussiness(node.element.sUrlStorage);
         this._archivingProcessService.downloadFile(file$, node.element.sNombre, node.element.sTipoMime);
+    }
+    downloadFileZip(node: FlatNodeAllElements<FileData>): void {
+        if(!node.hasChild) return;
+        console.log('NODEEE', node);
+        const body = {
+            nCarpetaPadreId: node.id,
+            nDirectorId: 0,
+            nIdEmpresa: 0
+        }
+        const file$ = this._archiveService.downloadFileBussinessZip(body);
+        this._archivingProcessService.downloadFile(file$, `${node.element.sNombre ?? 'document'}.zip`, 'application/zip');
+    }
+    deleteFile(node: FlatNodeAllElements<FileData>): void {
+        this.eventDeleteFile.emit(node);
     }
 }

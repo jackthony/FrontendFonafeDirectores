@@ -1,4 +1,15 @@
-import { DatePipe } from "@angular/common";
+/*******************************************************************************************************
+ * Nombre del archivo:  translate-message-form.pipe.ts
+ * Descripción:          Pipe personalizado que transforma y traduce los mensajes de error de los formularios.
+ *                       Se utiliza en formularios reactivos de Angular para mostrar mensajes de error 
+ *                       legibles en función de las validaciones aplicadas a los campos.
+ *                       Este pipe toma un control de formulario (AbstractControl) y traduce sus errores 
+ *                       a un mensaje adecuado para el usuario.
+ * Autor:                Daniel Alva
+ * Fecha de creación:    01/07/2025
+ * Última modificación:  09/07/2025 por Daniel Alva
+ * Cambios recientes:    - Implementación inicial para traducir mensajes de error de validaciones de formularios.
+ *******************************************************************************************************/
 import { Pipe, PipeTransform, inject } from "@angular/core";
 import { AbstractControl } from "@angular/forms";
 @Pipe({
@@ -7,13 +18,11 @@ import { AbstractControl } from "@angular/forms";
     pure: false
 })
 export class TranslateMessageForm implements PipeTransform {
-
     transform(value: AbstractControl, type?: string): string {
         if (!value || !value.errors) return "";
         const error = this.getErrorControl(value, type);
         return error;
     }
-
     private getErrorControl(control: AbstractControl, type?: string): string {
         if (control.hasError("matDatepickerParse")) {
             const dateText = control.errors.matDatepickerParse.text as string
@@ -22,15 +31,12 @@ export class TranslateMessageForm implements PipeTransform {
                 const day = Number(dayStr);
                 const month = Number(monthStr);
                 const year = Number(yearStr);
-              
                 if (month < 1 || month > 12) {/*  */
-                  return 'El mes debe estar entre 1 y 12.' ;
+                return 'El mes debe estar entre 1 y 12.' ;
                 }
-              
                 const daysInMonth = new Date(year, month, 0).getDate();
-              
                 if (day < 1 || day > daysInMonth) {
-                  return `El día debe estar entre 1 y ${daysInMonth}`;
+                return `El día debe estar entre 1 y ${daysInMonth}`;
                 }
             }
             return "Formato requerido: dd/mm/yyyy";

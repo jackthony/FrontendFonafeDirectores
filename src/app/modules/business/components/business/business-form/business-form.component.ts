@@ -138,14 +138,14 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
         this.form = this._fb.group({
             nIdEmpresa: [object ? object.nIdEmpresa : 0, Validators.required],
             sRuc: [object ? { disabled: object, value: object.sRuc } : '', [Validators.required, this._validationFormService.validarRuc, Validators.maxLength(11)]],
-            sRazonSocial: [object ? { disabled: object, value: object.sRazonSocial } : '', [Validators.required, Validators.maxLength(255)]],
+            sRazonSocial: [object ? { disabled: object, value: object.sRazonSocial } : '', [Validators.required, this._validationFormService.spaceValidator, Validators.maxLength(255)]],
             nIdSector: [object ? object.nIdSector : 0, [Validators.required, Validators.min(1)]],
             sIdDepartamento: [object ? object.sIdDepartamento : 0, [Validators.required, Validators.min(1)]],
             sIdProvincia: [object ? object.sIdProvincia : 0, [Validators.required, Validators.min(1)]],
             sIdDistrito: [object ? object.sIdDistrito : 0, [Validators.required, Validators.min(1)]],
             nIdRubroNegocio: [ object ? object.nIdRubroNegocio : 0, [Validators.required, Validators.min(1)] ],
-            sDireccion: [object ? object.sDireccion : '', [Validators.required, Validators.maxLength(255)]],
-            sComentario: [object ? object.sComentario : '', Validators.maxLength(1000)],
+            sDireccion: [object ? object.sDireccion : '', [Validators.required, this._validationFormService.spaceValidator, Validators.maxLength(255)]],
+            sComentario: [object ? object.sComentario : '', [Validators.maxLength(1000), this._validationFormService.spaceValidator]],
             mIngresosUltimoAnio: [object ? object.mIngresosUltimoAnio : null, [Validators.required, Validators.min(0), Validators.max(9999999999999999.99)]], 
             mUtilidadUltimoAnio: [object ? object.mUtilidadUltimoAnio : null, [Validators.required, Validators.min(0), Validators.max(9999999999999999.99)]],
             mConformacionCapitalSocial: [object ? object.mConformacionCapitalSocial : null, [Validators.required, Validators.min(0), Validators.max(9999999999999999.99)]],
@@ -272,7 +272,7 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
      * Método para actualizar una empresa existente
      */
     updateBusiness(): void {
-        this.detectarCambios();
+        this.detectChanges();
         this._spinner.show();
         this._businessService
             .update(this.form.value)
@@ -291,7 +291,7 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
             .subscribe({
                 next: (response: ResponseEntity<BusinessEntity>) => {
                     const fields = this.modifiedFields().length > 0 ? `Los campos (${this.modifiedFields().join(', ')})`   : 'Todos los campos';
-                    this._ngxToastrService.showSuccess(`${fields} del formulario, se guardaron exitosamente`, '¡Éxito!');
+                    this._ngxToastrService.showSuccess(`${fields} de la empresa, se actualizaron exitosamente`, '¡Éxito!');
                     this.business.set(response.item);
                     this.initForm(this.business());
                     this.destroy$.next();
@@ -351,7 +351,7 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
     /**
      * Método para detectar cambios realizados en el formulario
      */
-    detectarCambios() {
+    detectChanges() {
         this.modifiedFields.set([]);  // Resetear los cambios previos
         this.areChanges.set(false); // Suponemos que no hay cambios al principio
     
@@ -367,5 +367,5 @@ export class BusinessFormComponent implements OnInit, OnDestroy {
             }
           }
         }
-      }
+    }
 }

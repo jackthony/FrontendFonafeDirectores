@@ -1,6 +1,18 @@
+/*******************************************************************************************************
+ * Nombre del archivo:  profile-management.module.ts
+ * Descripción:          Módulo de gestión de perfiles, que agrupa los componentes necesarios para manejar
+ *                       la administración de perfiles de usuario, incluido el cambio de contraseña, 
+ *                       la visualización de datos de perfiles y la gestión de formularios.
+ *                       Este módulo incluye directivas, componentes, y servicios relacionados con la 
+ *                       gestión de perfiles en la aplicación.
+ * Autor:                Daniel Alva
+ * Fecha de creación:    01/07/2025
+ * Última modificación:  09/07/2025 por Daniel Alva
+ * Cambios recientes:    - Implementación inicial del módulo de gestión de perfiles con los componentes 
+ *                         necesarios para mostrar, editar y gestionar perfiles.
+ *******************************************************************************************************/
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { ProfileManagementRoutingModule } from './profile-management-routing.module';
 import { FoReturnComponent } from '../../shared/components/fo-return/fo-return.component';
 import { FoTitleModuleComponent } from '../../shared/components/fo-title-module/fo-title-module.component';
@@ -22,8 +34,6 @@ import { FoButtonDialogComponent } from 'app/shared/components/fo-button-dialog/
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ChangePasswordAdmComponent } from './components/profile/change-password-adm/change-password-adm.component';
 import { FormProfileComponent } from './components/profile/form-profile/form-profile.component';
-
-
 @NgModule({
   declarations: [
     ProfileManagementComponent,

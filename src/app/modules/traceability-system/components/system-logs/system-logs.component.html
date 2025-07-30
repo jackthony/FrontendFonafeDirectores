@@ -1,0 +1,55 @@
+<div class="w-full">
+    <form [formGroup]="form" class="grid grid-cols-1 gap-4" (ngSubmit)="downloadExcel()">
+        <fo-return (eventActionClick)="returnInit()"></fo-return>
+        <div class="w-full">
+            <p class="name-banner">Log de sistemas</p>
+        </div>
+        <fo-cont-card>
+            <fo-title-module [text]="''"></fo-title-module>
+            <div class="grid grid-cols-1 gap-4 p-4 md:grid-cols-3">
+                <div class="col-span-3 md:col-span-1">
+                    <mat-form-field class="mat-form-field-custom w-full"
+                    appearance="outline"
+                    floatLabel="always">
+                        <mat-label>Fecha de inicio - Fecha fin</mat-label>
+                        <mat-date-range-input [rangePicker]="picker">
+                          <input matStartDate formControlName="fechaInicio" placeholder="-- / -- / ----">
+                          <input matEndDate formControlName="fechaFin" placeholder="-- / -- / ----">
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #picker>
+                            <mat-datepicker-actions>
+                                <button mat-button matDatepickerCancel>Cancelar</button>
+                                <button mat-raised-button color="primary" matDatepickerApply>
+                                    Aplicar
+                                </button>
+                            </mat-datepicker-actions>
+                        </mat-date-range-picker>
+                        @if(form.get('fechaInicio').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ form.get("fechaInicio") | translateMessageForm }}
+                            </mat-error>
+                        }
+                        @if(form.get('fechaFin').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ form.get("fechaFin") | translateMessageForm }}
+                            </mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+                <div
+                    appPermissionButton
+                    class="col-span-3 mt-2 flex flex-wrap content-center items-center justify-center gap-3 text-center md:col-span-2 md:mt-0 md:justify-end md:text-end"
+                >
+                    <fo-button
+                        [type]="'submit'"
+                        [text]="textBtnSearch()"
+                        [icon]="iconBtnSearch()"
+                    >
+                    </fo-button>
+                    <ng-content></ng-content>
+                </div>
+            </div>
+        </fo-cont-card>
+    </form>
+</div>

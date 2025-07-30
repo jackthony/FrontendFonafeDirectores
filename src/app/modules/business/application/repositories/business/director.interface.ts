@@ -8,7 +8,7 @@ import { Observable } from "rxjs";
 import { DirectorEntity } from "../../../domain/entities/business/director.entity";
 import { ResponseEntity } from "@models/response.entity";
 export interface DirectorInterface {
-    getByPagination(nIdEmpresa: number, pageIndex: number, pageSize: number): Observable<ResponseEntity<DirectorEntity>>;
+    getByPagination(param: string, nIdEmpresa: number, pageIndex: number, pageSize: number, dtFechaInicio: string, dtFechaFin: string): Observable<ResponseEntity<DirectorEntity>>;
     create(object: DirectorEntity): Observable<ResponseEntity<number>>;
     update(object: DirectorEntity): Observable<ResponseEntity<boolean>>;
 }
