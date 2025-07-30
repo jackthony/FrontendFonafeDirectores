@@ -10,8 +10,8 @@
  *******************************************************************************************************/
 import { inject, Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { FoDialogConfirmationComponent } from 'app/modules/admin/shared/components/fo-dialog-confirmation/fo-dialog-confirmation.component';
-import { DialogConfirmation } from 'app/modules/admin/shared/components/fo-dialog-confirmation/models/dialog-confirmation.interface';
+import { FoDialogConfirmationComponent } from 'app/shared/components/fo-dialog-confirmation/fo-dialog-confirmation.component';
+import { DialogConfirmation } from 'app/shared/components/fo-dialog-confirmation/models/dialog-confirmation.interface';
 import { merge } from 'lodash';
 @Injectable({
     providedIn: 'root',

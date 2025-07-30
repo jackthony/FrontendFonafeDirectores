@@ -15,7 +15,7 @@ import { RouterOutlet } from '@angular/router';
 import { ActivityMonitorService } from '@services/activity-monitor.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { distinctUntilChanged, Subscription } from 'rxjs';
-import { AuthService } from './core/auth/auth.service';
+import { AuthService } from './modules/user/domain/services/auth/auth.service';
 import { SessionWarningComponent } from './shared/components/session-warning/session-warning.component';
 @Component({
     selector: 'app-root',

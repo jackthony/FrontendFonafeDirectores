@@ -1,0 +1,229 @@
+/*******************************************************************************************************
+ * Nombre del archivo : directory-business.component.ts
+ * Descripción         : Componente que gestiona el directorio de directores de una empresa. Permite
+ *                       listar, agregar, editar y cargar datos asociados al formulario del director.
+ * Autor               : Daniel Alva
+ * Fecha de creación   : 23/06/2025
+ *******************************************************************************************************/
+import { Component, EventEmitter, inject, input, OnChanges, OnInit, Output, signal, SimpleChanges, ViewChild } from '@angular/core';
+import { DialogConfirmationService } from 'app/shared/services/dialog-confirmation.service';
+import { IconOption } from 'app/shared/interfaces/generic-icon.interface';
+import { TableColumnsDefInterface } from 'app/shared/interfaces/table-columns-def.interface';
+import { PAGINATOR_PAGE_SIZE } from 'app/shared/config/paginator.config';
+import { finalize, forkJoin } from 'rxjs';
+import { FileComponentStateService } from '@services/file-component-state.service';
+import { DirectorService } from '../../../domain/services/business/director.service';
+import { DirectorEntity } from '../../../domain/entities/business/director.entity';
+import { DirectorFormService } from '../../../domain/services/business/director-form.service';
+import { TypeDirectorEntity } from 'app/modules/business/domain/entities/maintenance/type-director.entity';
+import { SpecialtyEntity } from 'app/modules/business/domain/entities/maintenance/specialty.entity';
+import { SectorEntity } from 'app/modules/business/domain/entities/maintenance/sector.entity';
+import { ResponseEntity } from '@models/response.entity';
+import { COLUMNS_DIRECTORY_BUSINESS } from '../../../config/business/directory-business.config';
+import { BusinessEntity } from 'app/modules/business/domain/entities/business/business.entity';
+import { ConstantEntity } from 'app/modules/business/domain/entities/business/constant.entity';
+import { DepartmentEntity } from 'app/modules/business/domain/entities/business/departament.entity';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { FoSearchComponent } from 'app/shared/components/fo-search/fo-search.component';
+
+
+@Component({
+  selector: 'app-directory-business',
+  standalone: false,
+  templateUrl: './directory-business.component.html',
+  styleUrl: './directory-business.component.scss'
+})
+export class DirectoryBusinessComponent implements OnInit, OnChanges {
+	
+	private _dialogConfirmationService = inject(DialogConfirmationService); // Servicio para mostrar diálogos de confirmación
+	private _directorService = inject(DirectorService); // Servicio para interactuar con los directores
+	private _directorFormService = inject(DirectorFormService); // Servicio para interactuar con los formularios de los directores
+	private _fileComponentStateService = inject(FileComponentStateService); // Servicio para manejar el estado de los archivos
+	private _formBuilder = inject(FormBuilder); // Servicio para estructurar el formulario
+	// Señales de texto y valores reactivamente configurados
+	textButtonNew = signal<string>('Agregar director'); // Texto del botón para agregar director
+	iconButtonNew = signal<string>('mat_outline:add_circle_outline'); // Icono del botón para agregar director
+    business = input.required<BusinessEntity>(); // Empresa requerida
+	headerTable = signal<TableColumnsDefInterface[]>([]); // Columnas de la tabla
+	dataTableDirectory = signal<DirectorEntity[]>([]); // Datos de la tabla de directores
+	iconsTable = signal<IconOption<DirectorEntity>[]>([]); // Iconos en la tabla de directores
+	newFormDirectory = signal<boolean>(false); // Determina si el formulario de director está activo
+	loadingTable = signal<boolean>(false); // Indica si la tabla está cargando datos
+	pageIndexTable = signal<number>(1); // Página actual de la tabla
+	totalPagesTable = signal<number>(1); // Total de páginas en la tabla
+	director = signal<DirectorEntity>(null); // Director seleccionado
+    lstTypedocument = signal<ConstantEntity[]>([]); // Lista de tipos de documento
+    lstGender = signal<ConstantEntity[]>([]); // Lista de géneros
+    lstCargoManager = signal<ConstantEntity[]>([]); // Lista de cargos de gerente
+    lstTypeDirector = signal<TypeDirectorEntity[]>([]); // Lista de tipos de director
+    lstSpecialty = signal<SpecialtyEntity[]>([]); // Lista de especialidades
+    lstDepartments = signal<DepartmentEntity[]>([]); // Lista de departamentos
+    lstSector = signal<SectorEntity[]>([]); // Lista de sectores
+	blockCreateDirectory = signal<boolean>(false);
+	directorSearch = signal<string>('');
+	placeHolderSearch = signal<string>('Busca por múltiples campos');
+	formDate: FormGroup; //Declarar formulario para las fechas de inicio y fin
+	@Output() eventTotalMembers: EventEmitter<number> = new EventEmitter<number>(); // Evento para emitir el total de miembros
+	@ViewChild(FoSearchComponent) private _foSearchComponent: FoSearchComponent;
+
+	ngOnChanges(changes: SimpleChanges): void {
+		if(changes.business) {
+			this.verifiyBlockCreate();
+		}
+	} 
+
+	verifiyBlockCreate(): void {
+		const block = this.business().nNumeroMiembros <= (this.dataTableDirectory().filter(data => !!data.nIdRegistro).length);
+		this.blockCreateDirectory.set(block);
+	}
+
+	/**
+	 * Método que se ejecuta al inicializar el componente
+	 */
+	ngOnInit(): void {
+		this.formDate = this._formBuilder.group({
+			dateStart: [null],
+			dateEnd: [null]
+		});
+		this.headerTable.set(COLUMNS_DIRECTORY_BUSINESS); 
+		this.searchDirectors(); 
+		this.iconsTable.set(this.defineIconsTable()); 
+		this.loadDataForm();
+	}
+    /**
+     * Método para buscar los directores
+     */
+    searchDirectors(resetPage?: boolean): void {
+		if(resetPage) this.pageIndexTable.set(1);
+		this.loadingTable.set(true);
+		const dateStartForm = this.formDate.get('dateStart');
+        const dateEndForm = this.formDate.get('dateEnd');
+        let dateStart = null;
+		let dateEnd = null;
+        if(dateStartForm?.value && dateStartForm?.valid) {
+          dateStart = dateStartForm.value.setZone('UTC', { keepLocalTime: true }).toISO()
+        }
+		if(dateEndForm?.value && dateEndForm?.valid) {
+			dateEnd = dateEndForm.value.setZone('UTC', { keepLocalTime: true }).toISO()
+		}
+		this._directorService.getByPagination(this.directorSearch(), this.business().nIdEmpresa, this.pageIndexTable(), PAGINATOR_PAGE_SIZE, dateStart, dateEnd).pipe(
+			finalize(() => this.loadingTable.set(false))
+		).subscribe({
+			next: ((response: ResponseEntity<DirectorEntity>) => {
+				if(response.isSuccess){
+					const totalPages = Math.ceil(response.pagination.totalRows/PAGINATOR_PAGE_SIZE);
+					this.totalPagesTable.set(totalPages > 0 ? totalPages : 1);
+					this.dataTableDirectory.set(response.lstItem); 
+					this.eventTotalMembers.emit(response?.pagination?.totalRows || 0);
+					this.verifiyBlockCreate();
+				} else { 
+					this.dataTableDirectory.set([]); 
+					this.eventTotalMembers.emit(0);
+					this.blockCreateDirectory.set(true);
+				}
+			}),
+			error:(() => { 
+				this.totalPagesTable.set(1); 
+				this.dataTableDirectory.set([]); 
+				this.eventTotalMembers.emit(0); 
+				this.blockCreateDirectory.set(true);
+			})
+		})
+	}
+	/**
+	 * Método para cambiar la página de la tabla
+	 */
+	changePageTable(event: number): void {
+		this.pageIndexTable.set(event); 
+		this.searchDirectors();
+	}
+	/**
+	 * Método para cargar los datos del formulario
+	 */
+	loadDataForm(): void {
+		forkJoin({
+			typeDocument: this._directorFormService.getTypeDocument(), // Obtiene los tipos de documento
+			gender: this._directorFormService.getGender(), // Obtiene los géneros
+			deparments : this._directorFormService.getDepartments(), // Obtiene los departamentos
+			cargoManager: this._directorFormService.getCargoManager(), // Obtiene los cargos de gerente
+			typeDirector: this._directorFormService.getTypeDirector(), // Obtiene los tipos de director
+			specialty: this._directorFormService.getSpecialty(), // Obtiene las especialidades
+			sector: this._directorFormService.getSector() // Obtiene las especialidades
+		}).subscribe({
+			next: (response => {
+				this.lstTypedocument.set(response.typeDocument),
+				this.lstGender.set(response.gender),
+				this.lstDepartments.set(response.deparments),
+				this.lstCargoManager.set(response.cargoManager),
+				this.lstTypeDirector.set(response.typeDirector),
+				this.lstSpecialty.set(response.specialty),
+				this.lstSector.set(response.sector)
+			})
+		})
+	}
+	/**
+	 * Método para definir los iconos de la tabla
+	 */
+	defineIconsTable(): IconOption<DirectorEntity>[]{
+        const iconEdit = new IconOption("create", "mat_outline", "Editar");
+		iconEdit.actionIcono = (data: DirectorEntity) => {
+            this.editDirector(data); 
+        };
+
+		iconEdit.isHidden = (data: DirectorEntity) => !data.nIdRegistro;
+        return [iconEdit]; 
+    }
+	/**
+	 * Método para editar un director
+	 */
+	editDirector(data: DirectorEntity): void {
+		this.director.set(data); 
+		this.newFormDirectory.set(true); 
+	}
+	/**
+	 * Método para abrir el formulario de registro de un nuevo director
+	 */
+	openRegisterDirectory(): void {
+		this.director.set(null); 
+		this.newFormDirectory.set(true);
+	}
+	/**
+	 * Método para cancelar la edición o registro de un director
+	 */
+    cancelDirectory(): void {
+        this.newFormDirectory.set(false);
+		this.setFileComponentToEnterprise();
+    }
+	/**
+	 * Método para refrescar la lista de directores
+	 */
+	refreshDirectory(): void {
+		this.searchDirectors(); 
+		this.newFormDirectory.set(false); 
+		this.director.set(null); 
+		this.setFileComponentToEnterprise();
+	}
+	/**
+	 * Método para establecer el estado del componente de archivos
+	 */
+	setFileComponentToEnterprise(): void {
+		const fileState = {
+			title: 'Empresa', // Título del archivo
+			isDisabled: false, // Habilita el componente de archivo
+			root: `Empresa\\${this.business().sRazonSocial}` // Ruta raíz para los archivos
+		}
+		this._fileComponentStateService.setFileComponentState(fileState); // Establece el estado del componente de archivos
+	}
+
+	searchByDirectorsByEnterprise(event: string): void {
+		if(event.length >= 1 && event.trim().length === 0) return;
+		this.directorSearch.set(event); 
+		this.searchDirectors(true); 
+	}
+
+	clickFoSearch(): void {
+		if(this._foSearchComponent) {
+		  this._foSearchComponent.searchValue();
+		}
+	}
+}
