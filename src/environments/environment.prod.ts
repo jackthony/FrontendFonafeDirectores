@@ -12,6 +12,6 @@ import { Environment } from "./environment.interface";
 export const environment: Environment = {
     production: true,
     //apiUrlBase: 'https://jackgptgod-001-site1.ktempurl.com/api',
-    apiUrlBase: 'http://fonafebackend-001-site1.ntempurl.com/api',
+    apiUrlBase: 'https://fonafebackend-001-site1.ntempurl.com/api',
     siteKeyCaptcha: '6Le_914rAAAAAEIpvmvQu_r8561iDthHJuTuwp6K'
 };

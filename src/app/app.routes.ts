@@ -70,11 +70,17 @@ export const appRoutes: Route[] = [
             },
             { 
                 path: 'solicitudes', 
-                loadChildren: () => import('app/shared/shared.module'),
+                loadChildren: () => import('app/modules/pre-evaluation/pre-evaluation.module'),
                 //loadChildren: () => import('app/modules/new-requests/new-requests.module'),
                 canActivate: [permissionGuard],
                 data: { module: 'nuevas-solicitudes', action: 'Ver' }
             },
+/*             { 
+                path: 'solicitudes', 
+                loadChildren: () => import('app/modules/pre-evaluation/pre-evaluation.module'),
+                //loadChildren: () => import('app/modules/new-requests/new-requests.module'),
+                canActivate: [permissionGuard],
+            }, */
             { 
                 path: 'mantenimiento-candidatos', 
                 loadChildren: () => import('app/shared/shared.module'),

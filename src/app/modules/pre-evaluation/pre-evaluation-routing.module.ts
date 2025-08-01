@@ -1,0 +1,29 @@
+/*******************************************************************************************************
+ * Nombre del archivo:  traceability-system-routing.module.ts
+ * Descripción:          Módulo de enrutamiento que define las rutas para el sistema de trazabilidad, permitiendo
+ *                       la navegación entre los diferentes componentes relacionados con la gestión de logs de 
+ *                       sistemas y auditoría.
+ *                       Este módulo gestiona las rutas para las vistas de trazabilidad, auditoría y logs del sistema.
+ * Autor:                Daniel Alva
+ * Fecha de creación:    01/07/2025
+ * Última modificación:  09/07/2025 por Daniel Alva
+ * Cambios recientes:    - Implementación inicial del módulo de enrutamiento para el sistema de trazabilidad.
+ *******************************************************************************************************/
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { PreEvaluationComponent } from './components/pre-evaluation/pre-evaluation.component';
+import { permissionGuard } from '../user/guards/permission.guard';
+
+const routes: Routes = [
+        {
+            path: '',
+            component: PreEvaluationComponent,
+/*             canActivate: [permissionGuard],
+            data: { module: 'nuevas-solicitudes', action: 'Ver' } */
+        },
+];
+@NgModule({
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule]
+})
+export class PreEvaluationSystemRoutingModule { }

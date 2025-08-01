@@ -1,0 +1,89 @@
+<div class="w-full">
+    <form class="grid grid-cols-1 gap-4">
+        <fo-return (eventActionClick)="returnInit()"></fo-return>
+        <div class="w-full">
+            <p class="name-banner">Buscamos al candidato</p>
+        </div>
+            <div class="mt-4 grid grid-cols-8 gap-4 md:grid-cols-8 lg:grid-cols-8 sm:grid-cols-1 xs:grid-cols-1">
+        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
+            <mat-form-field
+                class="mat-form-field-custom w-full "
+                appearance="outline"
+                floatLabel="always"
+            >
+                <mat-label class="">Tipo de documento</mat-label>
+                <mat-select  placeholder="--">
+                    <!-- @for (item of lstTypedocument(); track $index) {
+                        <mat-option [value]="item?.nConValor">
+                            {{ item?.sConDescripcion }}
+                        </mat-option>
+                    } -->
+                </mat-select>
+                <!-- @if(form.get('nTipoDocumento').invalid) {
+                    <mat-error class="text-red-500">
+                        {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
+                    </mat-error>
+                } -->
+            </mat-form-field>
+        </div>
+        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
+            <mat-form-field
+                class="mat-form-field-custom w-full "
+                appearance="outline"
+                floatLabel="always"
+            >
+                <mat-label>Número de documento</mat-label>
+                <input
+                    matInput
+                    placeholder="--"
+                    type="text"
+                    maxlength="9"
+                />
+                <!-- @if(form.get('sNumeroDocumento').invalid) {
+                        <mat-error class="text-red-500">
+                            {{ form.get("sNumeroDocumento") | translateMessageForm }}
+                        </mat-error>
+                    } -->
+            </mat-form-field>
+        </div>
+        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
+            <mat-form-field
+                class="mat-form-field-custom w-full "
+                appearance="outline"
+                floatLabel="always"
+            >
+                <mat-label>Apellidos y nombres</mat-label>
+                <input
+                    matInput
+                    placeholder="--"
+                    type="text"
+                    maxlength="9"
+                />
+                <!-- @if(form.get('sApellidosNombres').invalid) {
+                        <mat-error class="text-red-500">
+                            {{ form.get("sApellidosNombres") | translateMessageForm }}
+                        </mat-error>
+                    } -->
+            </mat-form-field>
+        </div>
+        <div appPermissionButton class="col-span-1 md:col-span-2 lg:col-span-1 sm:col-span-1 xs:grid-cols-1 text-end w-full  justify-end items-center">
+            <fo-button
+                (eventAction)="searchuser()"
+                [text]="textBtnSearch()"
+                [icon]="iconBtnSearch()"
+            >
+            </fo-button>
+        </div>
+    </div>
+            <fo-table 
+            [loading]="loadingTable()"
+            [totalPages]="totalPagesTable()"
+            [headers]="headerTable()"
+            [currentPage]="pageIndexTable()"
+            [data]="dataTableActivities()"
+            [icons]="iconsTable()"
+            (eventChangePage)="changePageTable($event)">
+        </fo-table>
+    </form>
+
+</div>

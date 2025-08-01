@@ -11,7 +11,7 @@
  *******************************************************************************************************/
 import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { LIST_OF_PROCESSES } from '../../config/my-processes.config';
+import { LIST_OF_CANDIDATES, LIST_OF_PROCESSES } from '../../config/my-processes.config';
 import { ListOfProcesses } from 'app/shared/interfaces/list-of-processes.interface';
 @Component({
   selector: 'app-my-processes',
@@ -20,11 +20,15 @@ import { ListOfProcesses } from 'app/shared/interfaces/list-of-processes.interfa
   styleUrl: './my-processes.component.scss'
 })
 export class MyProcessesComponent {
-    titleProcess = signal<string>('Mis procesos');// Signal reactivo que almacena el título de la sección
+    titleProcesscandidates = signal<string>('Selección de Candidatos');// Signal reactivo que almacena el título de la sección
+    titleProcessMaintenance = signal<string>('Mantenimiento de Sistemas');// Signal reactivo que almacena el título de la sección
+    titleProcessMonitoring = signal<string>('Monitoreo de Procesos');// Signal reactivo que almacena el título de la sección
     private readonly _router = inject(Router); // Inyección del servicio Router para manejar la navegación entre vistas    
     lstProcess = signal<ListOfProcesses[]>(LIST_OF_PROCESSES); // Signal reactivo que almacena la lista de procesos, inicializado con los valores de LIST_OF_PROCESSES
+    lstProcesscandidates = signal<ListOfProcesses[]>(LIST_OF_CANDIDATES);
     enterOption(event: string): void {
         if(!event) return;
         this._router.navigate([event]);
     }
+    
 }

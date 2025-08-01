@@ -81,3 +81,74 @@ export const LIST_OF_PROCESSES: ListOfProcesses[] = [
         ]
     },
 ]
+
+export const LIST_OF_CANDIDATES: ListOfProcesses[] = [
+    {
+        label: 'Pre Evaluación',
+        icon: 'mat_outline:add_circle_outline',
+        value: OptionsProcess.preEvaluation,
+        url: 'solicitudes',
+        module: "nuevas-solicitudes",// cambiar esto
+        options: []
+    },
+    {
+        label: 'Evaluación',
+        icon: 'mat_outline:event_available',
+        value: OptionsProcess.newRequest,
+        url: 'solicitudes',
+        module: "nuevas-solicitudes",
+        options: []
+    },
+    {
+        label: 'Post Evaluación',
+        icon: 'mat_outline:perm_identity',
+        value: OptionsProcess.newRequest,
+        url: 'solicitudes',
+        module: "nuevas-solicitudes",
+        options: []
+    },
+/*     {
+        label: 'Gestión de empresas',
+        icon: 'mat_outline:work_outline',
+        value: OptionsProcess.businessManagement,
+        url: 'gestion-empresas',
+        module: 'gestion-empresas',
+        options: []
+    },
+    {
+        label: 'Historial de atenciones',
+        icon: 'mat_outline:format_list_numbered_rtl',
+        value: OptionsProcess.careHistory,
+        url: '', 
+        module: 'historial-atenciones',
+        options: []
+    },
+    {
+        label: 'Mantenedores del sistema',
+        icon: 'mat_outline:settings',
+        value: OptionsProcess.systemMaintenance,
+        url: '', 
+        module: 'mantenimiento-sistemas',
+        options: [
+            { label: 'Mantenimiento de roles', url: 'gestion-perfiles/mantenimiento/rol' },
+            { label: 'Mantenimiento de cargos', url: 'gestion-perfiles/mantenimiento/cargo' },
+            { label: 'Mantenimiento de ministerios', url: 'gestion-empresas/mantenimiento/ministerio' },
+            { label: 'Mantenimiento de sectores', url: 'gestion-empresas/mantenimiento/sector' },
+            { label: 'Mantenimiento de rubros', url: 'gestion-empresas/mantenimiento/rubro' },
+            { label: 'Mantenimiento de tipo de director', url: 'gestion-empresas/mantenimiento/tipo-director' },
+            { label: 'Mantenimiento de especialidad', url: 'gestion-empresas/mantenimiento/especialidad' },
+        ]
+    },
+    {
+        label: 'Logs',
+        icon: 'mat_outline:save_alt',
+        value: OptionsProcess.traceabilitySystem,
+        url: '',
+        module: "logs-trazabilidad",
+        options: [
+            { label: 'Log de trazabilidad', url: 'trazabilidad-sistemas/trazabilidad' },
+            { label: 'Log de auditoria', url: 'trazabilidad-sistemas/auditoria' },
+            { label: 'Log de sistemas', url: 'trazabilidad-sistemas/sistemas' },
+        ]
+    }, */
+]
