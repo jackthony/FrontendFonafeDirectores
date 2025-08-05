@@ -1,1 +1,45 @@
-<p>info-candidates works!</p>
+<div class="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 mb-10">
+
+  <header class="bg-red-600 text-white p-4 flex items-center">
+    <mat-icon class="mr-3">person</mat-icon>
+    <h2 class="font-bold text-lg">Envío de solicitudes</h2>
+  </header>
+
+  <main class="p-6">
+    <form >
+      
+      <div>
+        <p class="text-gray-700 mb-3">
+          Selecciona el estado del candidato después de la evaluación.
+        </p>
+        <mat-radio-group formControlName="candidateState" class="flex flex-col gap-3">
+<!--           <mat-radio-button *ngFor="let state of candidateStates" [value]="state">
+          </mat-radio-button> -->
+        </mat-radio-group>
+      </div>
+
+      <div class="mt-8">
+        <p class="text-gray-700 mb-2">
+          Puedes seleccionar a la persona que quieres enviar la solicitud a revisión.
+        </p>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Enviar a</mat-label>
+          <mat-select formControlName="reviewerId">
+            <mat-option >
+
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="flex justify-end mt-8">
+        <button mat-flat-button color="warn" type="submit" >
+          <span>Enviar</span>
+          <mat-icon class="ml-2">send</mat-icon>
+        </button>
+      </div>
+
+    </form>
+  </main>
+
+</div>

@@ -20,8 +20,8 @@ export const appRoutes: Route[] = [
     {path: 'signed-in-redirect', pathMatch : 'full', redirectTo: 'home'},
     {
         path: '',
-        canActivate: [NoAuthGuard],
-        canActivateChild: [NoAuthGuard],
+/*         canActivate: [NoAuthGuard],
+        canActivateChild: [NoAuthGuard], */
         component: LayoutComponent,
         data: {
             layout: 'fonafe'
@@ -35,8 +35,8 @@ export const appRoutes: Route[] = [
     },
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+/*         canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard], */
         component: LayoutComponent,
         data: {
             layout: 'empty'
@@ -48,8 +48,8 @@ export const appRoutes: Route[] = [
     },
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+    /*         canActivate: [AuthGuard],
+            canActivateChild: [AuthGuard], */
         component: LayoutComponent,
         data: {
             layout: 'fonafe'
@@ -72,7 +72,7 @@ export const appRoutes: Route[] = [
                 path: 'solicitudes', 
                 loadChildren: () => import('app/modules/pre-evaluation/pre-evaluation.module'),
                 //loadChildren: () => import('app/modules/new-requests/new-requests.module'),
-                canActivate: [permissionGuard],
+/*                 canActivate: [permissionGuard], */
                 data: { module: 'nuevas-solicitudes', action: 'Ver' }
             },
 /*             { 

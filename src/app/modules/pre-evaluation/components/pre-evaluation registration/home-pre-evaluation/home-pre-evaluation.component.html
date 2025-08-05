@@ -1,1 +1,317 @@
-<p>home-pre-evaluation works!</p>
+<div class="w-full">
+    <form class="grid grid-cols-1 gap-4">
+        <fo-return (eventActionClick)="returnInit()"></fo-return>
+        <div class="w-full bg-white px-10">
+        <div class="mt-4 grid grid-cols-3 gap-4 md:grid-cols-5 lg:grid-cols-8 sm:grid-cols-1 xs:grid-cols-1">
+            <p class="name-banner col-span-2 md:col-span-2 lg:col-span-6 sm:col-span-1 xs:grid-cols-1 text-start w-full  justify-start ">Ingresar nueva solicitud</p>
+            <div appPermissionButton class="col-span-1 md:col-span-1 lg:col-span-1 sm:col-span-1 xs:grid-cols-1 text-end w-full  justify-end items-center">
+            <fo-button
+                (eventAction)="searchuser()"
+                [text]="textBtnSearch()"
+                [icon]="iconBtnSearch()"
+            >
+            </fo-button>
+        </div>
+        <div appPermissionButton class="col-span-1 md:col-span-1 lg:col-span-1 sm:col-span-1 xs:grid-cols-1 text-end w-full  justify-end items-center">
+            <fo-button
+                (eventAction)="searchuser()"
+                [text]="textBtnSearch()"
+                [icon]="iconBtnSearch()"
+            >
+            </fo-button>
+        </div>
+        </div>
+        <div class="mt-4 grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-4 sm:grid-cols-1 xs:grid-cols-1">
+            <p class="col-span-1 md:col-span-1 lg:col-span-1 sm:col-span-1 xs:grid-cols-1 text-start w-full  justify-start items-center">Buscamos al candidato</p>
+            <p class="col-span-1 md:col-span-1 lg:col-span-1 sm:col-span-1 xs:grid-cols-1 text-start w-full  justify-start items-center">Buscamos al candidato</p>
+        </div>
+        <div class="w-full mt-5">
+            <p class="name-banner-sub">Ingresar nueva solicitud</p>
+        </div>
+        <div class="mt-4 grid grid-cols-8 gap-4 md:grid-cols-8 lg:grid-cols-8 sm:grid-cols-1 xs:grid-cols-1">
+        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
+            <mat-form-field
+                class="mat-form-field-custom w-full "
+                appearance="outline"
+                floatLabel="always"
+            >
+                <mat-label>Nombres*</mat-label>
+                <input
+                    matInput
+                    placeholder="--"
+                    type="text"
+                    maxlength="9"
+                />
+                <!-- @if(form.get('sApellidosNombres').invalid) {
+                        <mat-error class="text-red-500">
+                            {{ form.get("sApellidosNombres") | translateMessageForm }}
+                        </mat-error>
+                    } -->
+            </mat-form-field>
+        </div>
+                <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
+            <mat-form-field
+                class="mat-form-field-custom w-full "
+                appearance="outline"
+                floatLabel="always"
+            >
+                <mat-label>Apellidos*</mat-label>
+                <input
+                    matInput
+                    placeholder="--"
+                    type="text"
+                    maxlength="9"
+                />
+                <!-- @if(form.get('sApellidosNombres').invalid) {
+                        <mat-error class="text-red-500">
+                            {{ form.get("sApellidosNombres") | translateMessageForm }}
+                        </mat-error>
+                    } -->
+            </mat-form-field>
+        </div>
+        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
+            <mat-form-field
+                class="mat-form-field-custom w-full "
+                appearance="outline"
+                floatLabel="always"
+            >
+                <mat-label class="">Tipo de documento</mat-label>
+                <mat-select  placeholder="--">
+                    <!-- @for (item of lstTypedocument(); track $index) {
+                        <mat-option [value]="item?.nConValor">
+                            {{ item?.sConDescripcion }}
+                        </mat-option>
+                    } -->
+                </mat-select>
+                <!-- @if(form.get('nTipoDocumento').invalid) {
+                    <mat-error class="text-red-500">
+                        {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
+                    </mat-error>
+                } -->
+            </mat-form-field>
+        </div>
+        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
+            <mat-form-field
+                class="mat-form-field-custom w-full "
+                appearance="outline"
+                floatLabel="always"
+            >
+                <mat-label>Número de documento</mat-label>
+                <input
+                    matInput
+                    placeholder="--"
+                    type="text"
+                    maxlength="9"
+                />
+                <!-- @if(form.get('sNumeroDocumento').invalid) {
+                        <mat-error class="text-red-500">
+                            {{ form.get("sNumeroDocumento") | translateMessageForm }}
+                        </mat-error>
+                    } -->
+            </mat-form-field>
+        </div>
+        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
+            <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                <mat-label>Fecha de nacimiento</mat-label>
+                <input
+                    (keypress)="onKeyPressDate($event)"
+                    (input)="onInputDate($event, 'dFechaNacimiento')"
+                    [max]="maxDate"
+                    [min]="minDate"
+                    formControlName="dFechaNacimiento"
+                    matInput
+                    maxlength="10"
+                    placeholder="--/--/----"
+                    [matDatepicker]="picker" />
+                <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker>
+                    <mat-datepicker-actions>
+                        <button mat-button matDatepickerCancel>
+                            Cancelar
+                        </button>
+                        <button mat-raised-button color="primary" matDatepickerApply>
+                            Aplicar
+                        </button>
+                    </mat-datepicker-actions>
+                </mat-datepicker>
+<!--                 @if(form.get('dFechaNacimiento').invalid) {
+                    <mat-error class="text-red-500">
+                        {{ form.get("dFechaNacimiento") | translateMessageForm: "date" }}
+                    </mat-error>
+                } -->
+            </mat-form-field>
+        </div>
+        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
+            <mat-form-field
+                class="mat-form-field-custom w-full "
+                appearance="outline"
+                floatLabel="always"
+            >
+                <mat-label class="">Género</mat-label>
+                <mat-select  placeholder="--">
+                    <!-- @for (item of lstTypedocument(); track $index) {
+                        <mat-option [value]="item?.nConValor">
+                            {{ item?.sConDescripcion }}
+                        </mat-option>
+                    } -->
+                </mat-select>
+                <!-- @if(form.get('nTipoDocumento').invalid) {
+                    <mat-error class="text-red-500">
+                        {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
+                    </mat-error>
+                } -->
+            </mat-form-field>
+        </div>
+        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
+            <mat-form-field
+                class="mat-form-field-custom w-full "
+                appearance="outline"
+                floatLabel="always"
+            >
+                <mat-label>Correo</mat-label>
+                <input
+                    matInput
+                    placeholder="--"
+                    type="text"
+                    maxlength="9"
+                />
+                <!-- @if(form.get('sNumeroDocumento').invalid) {
+                        <mat-error class="text-red-500">
+                            {{ form.get("sNumeroDocumento") | translateMessageForm }}
+                        </mat-error>
+                    } -->
+            </mat-form-field>
+        </div>
+        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
+            <mat-form-field
+                class="mat-form-field-custom w-full "
+                appearance="outline"
+                floatLabel="always"
+            >
+                <mat-label>Telefono</mat-label>
+                <input
+                    matInput
+                    placeholder="--"
+                    type="text"
+                    maxlength="9"
+                />
+                <!-- @if(form.get('sNumeroDocumento').invalid) {
+                        <mat-error class="text-red-500">
+                            {{ form.get("sNumeroDocumento") | translateMessageForm }}
+                        </mat-error>
+                    } -->
+            </mat-form-field>
+        </div>
+        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
+            <mat-form-field
+                class="mat-form-field-custom w-full "
+                appearance="outline"
+                floatLabel="always"
+            >
+                <mat-label class="">Departamiento</mat-label>
+                <mat-select  placeholder="--">
+                    <!-- @for (item of lstTypedocument(); track $index) {
+                        <mat-option [value]="item?.nConValor">
+                            {{ item?.sConDescripcion }}
+                        </mat-option>
+                    } -->
+                </mat-select>
+                <!-- @if(form.get('nTipoDocumento').invalid) {
+                    <mat-error class="text-red-500">
+                        {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
+                    </mat-error>
+                } -->
+            </mat-form-field>
+        </div>
+        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
+            <mat-form-field
+                class="mat-form-field-custom w-full "
+                appearance="outline"
+                floatLabel="always"
+            >
+                <mat-label class="">Provincia</mat-label>
+                <mat-select  placeholder="--">
+                    <!-- @for (item of lstTypedocument(); track $index) {
+                        <mat-option [value]="item?.nConValor">
+                            {{ item?.sConDescripcion }}
+                        </mat-option>
+                    } -->
+                </mat-select>
+                <!-- @if(form.get('nTipoDocumento').invalid) {
+                    <mat-error class="text-red-500">
+                        {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
+                    </mat-error>
+                } -->
+            </mat-form-field>
+        </div>
+        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
+            <mat-form-field
+                class="mat-form-field-custom w-full "
+                appearance="outline"
+                floatLabel="always"
+            >
+                <mat-label class="">Distrito</mat-label>
+                <mat-select  placeholder="--">
+                    <!-- @for (item of lstTypedocument(); track $index) {
+                        <mat-option [value]="item?.nConValor">
+                            {{ item?.sConDescripcion }}
+                        </mat-option>
+                    } -->
+                </mat-select>
+                <!-- @if(form.get('nTipoDocumento').invalid) {
+                    <mat-error class="text-red-500">
+                        {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
+                    </mat-error>
+                } -->
+            </mat-form-field>
+        </div>
+                <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
+            <mat-form-field
+                class="mat-form-field-custom w-full "
+                appearance="outline"
+                floatLabel="always"
+            >
+                <mat-label>Dirección</mat-label>
+                <input
+                    matInput
+                    placeholder="--"
+                    type="text"
+                    maxlength="9"
+                />
+                <!-- @if(form.get('sNumeroDocumento').invalid) {
+                        <mat-error class="text-red-500">
+                            {{ form.get("sNumeroDocumento") | translateMessageForm }}
+                        </mat-error>
+                    } -->
+            </mat-form-field>
+        </div>
+    </div>
+        </div>
+    <div class="mt-4 grid grid-cols-3 gap-4 md:grid-cols-5 lg:grid-cols-8 sm:grid-cols-1 xs:grid-cols-1">
+    <mat-tab-group class="col-span-2 sm:col-span-1 md:col-span-8 lg:col-span-6 xs:grid-cols-1">
+        <mat-tab  class="first-mat-tab" label="Datos generales">
+            <app-tab-general-data></app-tab-general-data>
+        </mat-tab>
+        <mat-tab  class="first-mat-tab" label="Solicitud">
+            <app-tab-application></app-tab-application>
+        </mat-tab>
+            <mat-tab class="first-mat-tab" label="Documentos">
+            <app-tab-comments></app-tab-comments>
+
+        </mat-tab>
+            <mat-tab class="first-mat-tab" label="Comentarios">
+            <app-tab-comments></app-tab-comments>
+            
+        </mat-tab>
+    </mat-tab-group>
+    <div class="col-span-2 sm:col-span-1 md:col-span-8 lg:col-span-2 xs:grid-cols-1">
+        <app-info-candidates class="mb-4">
+        </app-info-candidates>
+        <app-fo-file-url-upload >
+        </app-fo-file-url-upload>
+        </div>
+    </div>
+    </form>
+</div>

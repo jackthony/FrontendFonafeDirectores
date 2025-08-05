@@ -25,11 +25,26 @@ import { FoButtonComponent } from 'app/shared/components/fo-button/fo-button.com
 import { PreEvaluationSystemRoutingModule } from './pre-evaluation-routing.module';
 import { PreEvaluationComponent } from './components/pre-evaluation/pre-evaluation.component';
 import { FoTableComponent } from 'app/shared/components/fo-table/fo-table.component';
+import { HomePreEvaluationComponent } from './components/pre-evaluation registration/home-pre-evaluation/home-pre-evaluation.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { TabApplicationComponent } from './components/pre-evaluation registration/tab-application/tab-application.component';
+import { TabCommentsComponent } from './components/pre-evaluation registration/tab-comments/tab-comments.component';
+import { InfoCandidatesComponent } from './components/pre-evaluation registration/info-candidates/info-candidates.component';
+import { FoFileUrlUploadComponent } from 'app/shared/components/fo-file-url-upload/fo-file-url-upload.component';
+import { TabDocumentsComponent } from './components/pre-evaluation registration/tab-documents/tab-documents.component';
+import { TabGeneralDataComponent } from './components/pre-evaluation registration/tab-general-data/tab-general-data.component';
+
 
 
 @NgModule({
   declarations: [
-          PreEvaluationComponent
+          PreEvaluationComponent,
+          HomePreEvaluationComponent,
+          TabApplicationComponent,
+          TabCommentsComponent,
+          InfoCandidatesComponent,
+          TabDocumentsComponent,
+          TabGeneralDataComponent
           ],
   imports: [CommonModule, 
             PreEvaluationSystemRoutingModule,
@@ -46,6 +61,8 @@ import { FoTableComponent } from 'app/shared/components/fo-table/fo-table.compon
             FoButtonDialogComponent, 
             TranslateMessageForm, 
             FoTableComponent,
+            MatTabsModule,
+            FoFileUrlUploadComponent
           ]
 })
 export default class PreEvaluationSystemModule { }

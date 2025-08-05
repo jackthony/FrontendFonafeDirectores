@@ -13,6 +13,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PreEvaluationComponent } from './components/pre-evaluation/pre-evaluation.component';
 import { permissionGuard } from '../user/guards/permission.guard';
+import { HomePreEvaluationComponent } from './components/pre-evaluation registration/home-pre-evaluation/home-pre-evaluation.component';
+import { businessResolver } from '../business/infrastructure/business/resolvers/business.resolver';
 
 const routes: Routes = [
         {
@@ -21,7 +23,16 @@ const routes: Routes = [
 /*             canActivate: [permissionGuard],
             data: { module: 'nuevas-solicitudes', action: 'Ver' } */
         },
-];
+        {
+            path     : 'home-pre-evaluation',
+            component: HomePreEvaluationComponent,
+/*             canActivate: [permissionGuard], */
+            resolve: {
+                /* data: businessResolver */
+            },
+            data: { module: 'nuevas-solicitudes', action: 'Ver' }
+        },
+        ];
 @NgModule({
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]

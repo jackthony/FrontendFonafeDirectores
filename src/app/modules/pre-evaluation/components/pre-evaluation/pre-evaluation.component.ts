@@ -39,14 +39,13 @@ export class PreEvaluationComponent implements OnInit {
           new EventEmitter<string>();
 
   searchuser(): void {
-        this.eventNewElement.emit();
+        this._router.navigate(['solicitudes/home-pre-evaluation']);
     }
     
     ngOnInit(): void {
       this.initForm(null);
       this.headerTable.set(COLUMNS_PROFILE_MANAGEMENT);
       // this.iconsTable.set(this.defineIconsTable());
-      this.searchuser();
     }
 
   initForm(object: SegUserEntity): void {
