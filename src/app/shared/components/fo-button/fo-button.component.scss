@@ -36,3 +36,22 @@
         color: #CD202C;
     }
 }
+
+.btn-success {
+    background-color: #565A5C !important;
+    border-radius: 16px !important;
+    //border-color: #CD202C !important;
+    gap: 5px;
+    mat-icon {
+        color: #FFFFFF;
+        margin-right: 10px !important;
+    }
+    span {
+        font-family: "Museo Sans";
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 100%;
+        letter-spacing: 0.6px;
+        color: #FFFFFF;
+    }
+}

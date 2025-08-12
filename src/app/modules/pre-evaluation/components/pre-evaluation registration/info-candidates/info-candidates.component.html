@@ -1,45 +1,59 @@
-<div class="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 mb-10">
+<div
+    class="mx-auto mb-10 max-w-md overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-md"
+>
+    <header class="flex items-center bg-red-600 p-4 text-white">
+        <div
+            class="mx-2 flex h-10 w-10 items-center justify-center rounded-full bg-white"
+        >
+            <mat-icon
+                class="text-red-600 icon-size-8"
+                svgIcon="mat_outline:person"
+            ></mat-icon>
+        </div>
+        <h2 class="text-lg font-bold">Envío de solicitudes</h2>
+    </header>
 
-  <header class="bg-red-600 text-white p-4 flex items-center">
-    <mat-icon class="mr-3">person</mat-icon>
-    <h2 class="font-bold text-lg">Envío de solicitudes</h2>
-  </header>
+    <main class="p-7">
+        <form>
+            <div>
+                <p class="card-text-send mb-3">
+                    Selecciona el estado del candidato después de la evaluación.
+                </p>
+                <mat-radio-group
+                    formControlName="candidateState"
+                    class="flex flex-col gap-1"
+                >
+					@for (item of lstSendingApplication(); track $index) {
+						<mat-radio-button [value]="item.key">
+							<span class="card-text-send text-slate-700">{{ item.value }}</span>
+						  </mat-radio-button>
+					}
+                </mat-radio-group>
+            </div>
 
-  <main class="p-6">
-    <form >
-      
-      <div>
-        <p class="text-gray-700 mb-3">
-          Selecciona el estado del candidato después de la evaluación.
-        </p>
-        <mat-radio-group formControlName="candidateState" class="flex flex-col gap-3">
-<!--           <mat-radio-button *ngFor="let state of candidateStates" [value]="state">
-          </mat-radio-button> -->
-        </mat-radio-group>
-      </div>
+            <div class="mt-8">
+                <p class="card-text-send mb-6">
+                    Puedes seleccionar a la persona que quieres enviar la
+                    solicitud a revisión.
+                </p>
+                <mat-form-field
+                    appearance="outline"
+                    floatLabel="always"
+                    class="mat-form-field-custom w-full"
+                >
+                    <mat-label>Enviar a</mat-label>
+                    <mat-select placeholder="--" formControlName="reviewerId">
+                        <mat-option> </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
 
-      <div class="mt-8">
-        <p class="text-gray-700 mb-2">
-          Puedes seleccionar a la persona que quieres enviar la solicitud a revisión.
-        </p>
-        <mat-form-field appearance="outline" class="w-full">
-          <mat-label>Enviar a</mat-label>
-          <mat-select formControlName="reviewerId">
-            <mat-option >
-
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-
-      <div class="flex justify-end mt-8">
-        <button mat-flat-button color="warn" type="submit" >
-          <span>Enviar</span>
-          <mat-icon class="ml-2">send</mat-icon>
-        </button>
-      </div>
-
-    </form>
-  </main>
-
+            <div class="mt-3 flex justify-end">
+                <button mat-flat-button color="warn" type="submit">
+                    <span>Enviar</span>
+                    <mat-icon class="ml-2">send</mat-icon>
+                </button>
+            </div>
+        </form>
+    </main>
 </div>

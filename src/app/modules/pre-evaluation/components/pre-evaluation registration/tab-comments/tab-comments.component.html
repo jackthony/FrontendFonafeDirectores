@@ -1,157 +1,24 @@
-    <form class="grid grid-cols-1 gap-4">
-        <div class="w-full  px-10">
-        <div class="w-full mt-5">
-            <p class="name-banner-sub mb-5">Datos de la empresa a la que postula</p>
+<fo-cont-card [enabledPadding]="false">
+    <div class="grid grid-cols-8 gap-1 p-10">
+        <div class="col-span-8 flex justify-end">
+            <fo-button
+                [btnClass]="btnInverter()"
+                (eventAction)="null"
+                [text]="'Agregar comentario'"
+                [icon]="iconBtnSearch()">
+            </fo-button>
         </div>
-    <div class="mt-4 grid grid-cols-8 gap-4 md:grid-cols-8 lg:grid-cols-8 sm:grid-cols-1 xs:grid-cols-1">
-        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
-            <mat-form-field
-                class="mat-form-field-custom w-full "
-                appearance="outline"
-                floatLabel="always"
-            >
-                <mat-label class="">Empresa</mat-label>
-                <mat-select  placeholder="--">
-                    <!-- @for (item of lstTypedocument(); track $index) {
-                        <mat-option [value]="item?.nConValor">
-                            {{ item?.sConDescripcion }}
-                        </mat-option>
-                    } -->
-                </mat-select>
-                <!-- @if(form.get('nTipoDocumento').invalid) {
-                    <mat-error class="text-red-500">
-                        {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
-                    </mat-error>
-                } -->
-            </mat-form-field>
+        <div class="col-span-8 mt-1 w-full">
+            <p class="title-ide mb-1">Comentarios ({{lstComments().length}})</p>
+            <div class="line-form mb-4 mt-3"></div>
+            <fo-table 
+                [loading]="loadingTable()"
+                [totalPages]="totalPagesTable()"
+                [headers]="headerTable()"
+                [currentPage]="pageIndexTable()"
+                [data]="dataTable()"
+                (eventChangePage)="changePageTable($event)">
+        </fo-table>
         </div>
-        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
-            <mat-form-field
-                class="mat-form-field-custom w-full "
-                appearance="outline"
-                floatLabel="always"
-            >
-                <mat-label class="">Sector</mat-label>
-                <mat-select  placeholder="--">
-                    <!-- @for (item of lstTypedocument(); track $index) {
-                        <mat-option [value]="item?.nConValor">
-                            {{ item?.sConDescripcion }}
-                        </mat-option>
-                    } -->
-                </mat-select>
-                <!-- @if(form.get('nTipoDocumento').invalid) {
-                    <mat-error class="text-red-500">
-                        {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
-                    </mat-error>
-                } -->
-            </mat-form-field>
-        </div>
-        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
-            <mat-form-field
-                class="mat-form-field-custom w-full "
-                appearance="outline"
-                floatLabel="always"
-            >
-                <mat-label>Ruc*</mat-label>
-                <input
-                    matInput
-                    placeholder="--"
-                    type="text"
-                    maxlength="9"
-                />
-                <!-- @if(form.get('sApellidosNombres').invalid) {
-                        <mat-error class="text-red-500">
-                            {{ form.get("sApellidosNombres") | translateMessageForm }}
-                        </mat-error>
-                    } -->
-            </mat-form-field>
-        </div>
-        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
-            <mat-form-field
-                class="mat-form-field-custom w-full "
-                appearance="outline"
-                floatLabel="always"
-            >
-                <mat-label class="">Tipo de designación</mat-label>
-                <mat-select  placeholder="--">
-                    <!-- @for (item of lstTypedocument(); track $index) {
-                        <mat-option [value]="item?.nConValor">
-                            {{ item?.sConDescripcion }}
-                        </mat-option>
-                    } -->
-                </mat-select>
-                <!-- @if(form.get('nTipoDocumento').invalid) {
-                    <mat-error class="text-red-500">
-                        {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
-                    </mat-error>
-                } -->
-            </mat-form-field>
-        </div>
-        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
-            <mat-form-field
-                class="mat-form-field-custom w-full "
-                appearance="outline"
-                floatLabel="always"
-            >
-                <mat-label class="">Cargo</mat-label>
-                <mat-select  placeholder="--">
-                    <!-- @for (item of lstTypedocument(); track $index) {
-                        <mat-option [value]="item?.nConValor">
-                            {{ item?.sConDescripcion }}
-                        </mat-option>
-                    } -->
-                </mat-select>
-                <!-- @if(form.get('nTipoDocumento').invalid) {
-                    <mat-error class="text-red-500">
-                        {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
-                    </mat-error>
-                } -->
-            </mat-form-field>
-        </div>
-        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
-            <mat-form-field
-                class="mat-form-field-custom w-full "
-                appearance="outline"
-                floatLabel="always"
-            >
-                <mat-label class="">Categoria</mat-label>
-                <mat-select  placeholder="--">
-                    <!-- @for (item of lstTypedocument(); track $index) {
-                        <mat-option [value]="item?.nConValor">
-                            {{ item?.sConDescripcion }}
-                        </mat-option>
-                    } -->
-                </mat-select>
-                <!-- @if(form.get('nTipoDocumento').invalid) {
-                    <mat-error class="text-red-500">
-                        {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
-                    </mat-error>
-                } -->
-            </mat-form-field>
-        </div>
-        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
-            <mat-form-field
-                class="mat-form-field-custom w-full "
-                appearance="outline"
-                floatLabel="always"
-            >
-                <mat-label class="">Proponente</mat-label>
-                <mat-select  placeholder="--">
-                    <!-- @for (item of lstTypedocument(); track $index) {
-                        <mat-option [value]="item?.nConValor">
-                            {{ item?.sConDescripcion }}
-                        </mat-option>
-                    } -->
-                </mat-select>
-                <!-- @if(form.get('nTipoDocumento').invalid) {
-                    <mat-error class="text-red-500">
-                        {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
-                    </mat-error>
-                } -->
-            </mat-form-field>
-        </div>
-
-        
     </div>
-    </div>
-    </form>
+</fo-cont-card>

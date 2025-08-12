@@ -56,3 +56,20 @@
     width: 100%;
     background-color: #DDDDDD;
 }
+
+.exist-card {
+    display: flex;
+    align-items: center;
+    padding: 7px 16px;
+    background-color: #EEF0ED;
+    border-radius: 25px;
+    width: max-content;
+    span {
+        font-family: "Inter var";
+        font-weight: 500;
+        font-size: 13px;
+        line-height: 16px;
+        letter-spacing: 0.6px;
+        color: #69725F;
+    }
+}

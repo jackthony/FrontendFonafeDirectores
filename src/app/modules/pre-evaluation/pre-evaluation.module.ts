@@ -34,7 +34,7 @@ import { FoFileUrlUploadComponent } from 'app/shared/components/fo-file-url-uplo
 import { TabDocumentsComponent } from './components/pre-evaluation registration/tab-documents/tab-documents.component';
 import { TabGeneralDataComponent } from './components/pre-evaluation registration/tab-general-data/tab-general-data.component';
 import { MatCheckbox } from "@angular/material/checkbox";
-
+import {MatRadioModule} from '@angular/material/radio';
 
 
 @NgModule({
@@ -63,6 +63,7 @@ import { MatCheckbox } from "@angular/material/checkbox";
     TranslateMessageForm,
     FoTableComponent,
     MatTabsModule,
+    MatRadioModule,
     FoFileUrlUploadComponent, MatCheckbox]
 })
 export default class PreEvaluationSystemModule { }
