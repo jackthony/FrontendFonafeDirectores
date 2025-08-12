@@ -1,5 +1,5 @@
 <div class="w-full">
-    <form class="grid grid-cols-1 gap-4">
+    <form class="grid grid-cols-1 gap-4 mb-8">
         <fo-return (eventActionClick)="returnInit()"></fo-return>
         <div class="w-full bg-white px-10">
         <div class="mt-4 grid grid-cols-3 gap-4 md:grid-cols-5 lg:grid-cols-8 sm:grid-cols-1 xs:grid-cols-1">
@@ -25,8 +25,9 @@
             <p class="col-span-1 md:col-span-1 lg:col-span-1 sm:col-span-1 xs:grid-cols-1 text-start w-full  justify-start items-center">Buscamos al candidato</p>
             <p class="col-span-1 md:col-span-1 lg:col-span-1 sm:col-span-1 xs:grid-cols-1 text-start w-full  justify-start items-center">Buscamos al candidato</p>
         </div>
-        <div class="w-full mt-5">
-            <p class="name-banner-sub">Ingresar nueva solicitud</p>
+        <div class="line-form mt-3"></div>
+        <div class="w-full mt-5 mb-6">
+            <fo-title-area [titleArea]="'Datos del candidato'"></fo-title-area>
         </div>
         <div class="mt-4 grid grid-cols-8 gap-4 md:grid-cols-8 lg:grid-cols-8 sm:grid-cols-1 xs:grid-cols-1">
         <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
@@ -290,7 +291,10 @@
     </div>
         </div>
     <div class="mt-4 grid grid-cols-3 gap-4 md:grid-cols-5 lg:grid-cols-8 sm:grid-cols-1 xs:grid-cols-1">
-    <mat-tab-group class="col-span-2 sm:col-span-1 md:col-span-8 lg:col-span-6 xs:grid-cols-1">
+    <mat-tab-group 
+        mat-align-tabs="start"
+        mat-stretch-tabs="false"
+        class="mat-tab-custom-fonafe not-padding-body col-span-2 sm:col-span-1 md:col-span-8 lg:col-span-6 xs:grid-cols-1">
         <mat-tab  class="first-mat-tab" label="Datos generales">
             <app-tab-general-data></app-tab-general-data>
         </mat-tab>
@@ -298,7 +302,7 @@
             <app-tab-application></app-tab-application>
         </mat-tab>
             <mat-tab class="first-mat-tab" label="Documentos">
-            <app-tab-comments></app-tab-comments>
+            <app-tab-documents></app-tab-documents>
 
         </mat-tab>
             <mat-tab class="first-mat-tab" label="Comentarios">

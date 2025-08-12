@@ -1,8 +1,8 @@
 .name-banner {
     font-family: "Museo Sans Bold";
     color:#565A5C;
-    font-weight: 800;
-    font-size: 20px;
+    font-weight: 400;
+    font-size: 24px;
     line-height: 42px;
     letter-spacing: 1.16px;
 }
@@ -49,4 +49,10 @@
 
 .icon-password .mat-mdc-form-field-infix {
     display: flex !important;
+}
+
+.line-form {
+    height: 1px;
+    width: 100%;
+    background-color: #DDDDDD;
 }

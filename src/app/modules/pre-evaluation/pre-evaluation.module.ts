@@ -33,6 +33,7 @@ import { InfoCandidatesComponent } from './components/pre-evaluation registratio
 import { FoFileUrlUploadComponent } from 'app/shared/components/fo-file-url-upload/fo-file-url-upload.component';
 import { TabDocumentsComponent } from './components/pre-evaluation registration/tab-documents/tab-documents.component';
 import { TabGeneralDataComponent } from './components/pre-evaluation registration/tab-general-data/tab-general-data.component';
+import { MatCheckbox } from "@angular/material/checkbox";
 
 
 
@@ -46,23 +47,22 @@ import { TabGeneralDataComponent } from './components/pre-evaluation registratio
           TabDocumentsComponent,
           TabGeneralDataComponent
           ],
-  imports: [CommonModule, 
-            PreEvaluationSystemRoutingModule,
-            FoButtonComponent, 
-            FoReturnComponent, 
-            FoTitleModuleComponent, 
-            FoContCardComponent, 
-            MatDatepickerModule, 
-            FormInputModule, 
-            MatDatepickerModule, 
-            FoTitleAreaComponent, 
-            MatButtonModule, 
-            MatIconModule, 
-            FoButtonDialogComponent, 
-            TranslateMessageForm, 
-            FoTableComponent,
-            MatTabsModule,
-            FoFileUrlUploadComponent
-          ]
+  imports: [CommonModule,
+    PreEvaluationSystemRoutingModule,
+    FoButtonComponent,
+    FoReturnComponent,
+    FoTitleModuleComponent,
+    FoContCardComponent,
+    MatDatepickerModule,
+    FormInputModule,
+    MatDatepickerModule,
+    FoTitleAreaComponent,
+    MatButtonModule,
+    MatIconModule,
+    FoButtonDialogComponent,
+    TranslateMessageForm,
+    FoTableComponent,
+    MatTabsModule,
+    FoFileUrlUploadComponent, MatCheckbox]
 })
 export default class PreEvaluationSystemModule { }

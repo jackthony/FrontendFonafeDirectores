@@ -1,0 +1,46 @@
+.line-form {
+    height: 1px;
+    width: 100%;
+    background-color: #DDDDDD;
+}
+
+.title-ide {
+    font-family: "Museo Sans";
+    font-weight: 600;
+    font-style: 700;
+    font-size: 13px;
+    text-align: justify;
+    color: #565A5C;
+}
+
+.btn-observation {
+    background-color: #FFFFFF !important;
+    border-radius: 8px !important;
+    padding: 0px 4px !important;
+    max-height: 33px !important;
+    min-height: 33px !important;
+    //border-color: #CD202C !important;
+    border: 2px solid #CD202C !important;
+    gap: 5px;
+    mat-icon {
+        color: #CD202C;
+        margin-right: 5px !important;
+    }
+    span {
+        font-family: "Museo Sans";
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 100%;
+        letter-spacing: 0.6px;
+        color: #CD202C;
+    }
+}
+
+.list-doc {
+    font-family: "Museo Sans";
+    font-weight: 400;
+    font-style: 500;
+    font-size: 13px;    
+    letter-spacing: 0%;
+    color: #000000E0;
+}

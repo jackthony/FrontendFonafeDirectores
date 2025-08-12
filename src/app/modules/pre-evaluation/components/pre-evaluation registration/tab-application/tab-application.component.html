@@ -1,8 +1,11 @@
-<div class="w-full bg-white">
-    <form class="grid grid-cols-1 gap-4">
+<fo-cont-card [enabledPadding]="false">
+    <form class="grid grid-cols-1 gap-4 mb-8">
         <div class="w-full px-10">
-            <div class="mt-5 w-full">
-                <p class="name-banner-sub mb-5">Requisitos mínimos</p>
+            <div class="mt-7 w-full">
+                <fo-title-area
+                    [titleArea]="'Requisitos mínimos'"
+                ></fo-title-area>
+                <div class="line-form mb-8 mt-3"></div>
             </div>
             <div
                 class="xs:grid-cols-1 mt-4 grid grid-cols-8 gap-4 sm:grid-cols-1 md:grid-cols-8 lg:grid-cols-8"
@@ -173,7 +176,10 @@
     <form class="grid grid-cols-1 gap-4">
         <div class="w-full px-10">
             <div class="mt-5 w-full">
-                <p class="name-banner-sub mb-5">Requisitos adicionales</p>
+                <fo-title-area
+                    [titleArea]="'Requisitos adicionales'"
+                ></fo-title-area>
+                <div class="line-form mb-8 mt-3"></div>
             </div>
             <div
                 class="xs:grid-cols-1 mt-4 grid grid-cols-8 gap-4 sm:grid-cols-1 md:grid-cols-8 lg:grid-cols-8"
@@ -390,7 +396,10 @@
         <form class="grid grid-cols-1 gap-4">
         <div class="w-full px-10">
             <div class="mt-5 w-full">
-                <p class="name-banner-sub mb-5">Trayectoria profesional</p>
+                <fo-title-area
+                    [titleArea]="'Trayectoria profesional'"
+                ></fo-title-area>
+                <div class="line-form mb-8 mt-3"></div>
             </div>
             <div
                 class="xs:grid-cols-1 mt-4 grid grid-cols-8 gap-4 sm:grid-cols-1 md:grid-cols-8 lg:grid-cols-8"
@@ -607,7 +616,10 @@
             <form class="grid grid-cols-1 gap-4">
         <div class="w-full px-10">
             <div class="mt-5 w-full">
-                <p class="name-banner-sub mb-5">Puntaje total</p>
+                <fo-title-area
+                    [titleArea]="'Puntaje total'"
+                ></fo-title-area>
+                <div class="line-form mb-8 mt-3"></div>
             </div>
             <div
                 class="xs:grid-cols-1 mt-4 grid grid-cols-8 gap-4 sm:grid-cols-1 md:grid-cols-8 lg:grid-cols-8"
@@ -637,186 +649,168 @@
             </div>
         </div>
     </form>
-</div>
-<div class="w-full bg-white mt-5">
-    <form class="grid grid-cols-1 gap-4">
-        <div class="w-full px-10">
-            <div class="mt-5 w-full">
-                <p class="name-banner-sub mb-5">Evaluación requisitos del artículo 43 del Decreto Legislativo N° 1693: Artículo 43.- Requisitos para ser director de las Empresas bajo el ámbito del FONAFE</p>
-            </div>
-            <div
-                class="xs:grid-cols-1 mt-4 grid grid-cols-8 gap-4 sm:grid-cols-1 md:grid-cols-8 lg:grid-cols-8"
-            >
-            <div class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-8">
-                <p class=" mb-5">Idoneidad ética y moral</p>
-            </div>
+</fo-cont-card>
+<div class="mt-5">
+    <fo-cont-card [enabledPadding]="false">
+        <form class="grid grid-cols-1 gap-4 mb-8">
+            <div class="w-full px-10">
+                <div class="mt-5 w-full">
+                    <p class="name-banner-sub mb-5">Evaluación requisitos del artículo 43 del Decreto Legislativo N° 1693: Artículo 43.- Requisitos para ser director de las Empresas bajo el ámbito del FONAFE</p>
+                    <div class="line-form mb-8 mt-3"></div>
+                </div>
                 <div
-                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-3"
+                    class="xs:grid-cols-1 mt-4 grid grid-cols-8 gap-4 sm:grid-cols-1 md:grid-cols-8 lg:grid-cols-8"
                 >
-                    <mat-form-field
-                        class="mat-form-field-custom w-full"
-                        appearance="outline"
-                        floatLabel="always"
+                <div class="xs:grid-cols-1 col-span-8 sm:col-span-1 md:col-span-8 lg:col-span-8">
+                    <p class="title-ide mb-1">Idoneidad ética y moral</p>
+                </div>
+                    <div
+                        class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-3"
                     >
-                        <mat-label class=""
-                            >Experiencia profesional más de 15 años*</mat-label
+                        <mat-form-field
+                            class="mat-form-field-custom w-full"
+                            appearance="outline"
+                            floatLabel="always"
                         >
-                        <mat-select placeholder="--">
-                            <!-- @for (item of lstTypedocument(); track $index) {
-                        <mat-option [value]="item?.nConValor">
-                            {{ item?.sConDescripcion }}
-                        </mat-option>
-                    } -->
-                        </mat-select>
-                        <!-- @if(form.get('nTipoDocumento').invalid) {
-                    <mat-error class="text-red-500">
-                        {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
-                    </mat-error>
-                } -->
-                    </mat-form-field>
-                </div>
-                <div
-                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-4"
-                >
-                    <mat-form-field
-                        class="mat-form-field-custom w-full"
-                        appearance="outline"
-                        floatLabel="always"
-                    >
-                        <mat-label>Descripción*</mat-label>
-                        <input
-                            matInput
-                            placeholder="--"
-                            type="text"
-                            maxlength="9"
-                        />
-                        <!-- @if(form.get('sApellidosNombres').invalid) {
+                            <mat-label class=""
+                                >Experiencia profesional más de 15 años*</mat-label
+                            >
+                            <mat-select placeholder="--">
+                                <!-- @for (item of lstTypedocument(); track $index) {
+                            <mat-option [value]="item?.nConValor">
+                                {{ item?.sConDescripcion }}
+                            </mat-option>
+                        } -->
+                            </mat-select>
+                            <!-- @if(form.get('nTipoDocumento').invalid) {
                         <mat-error class="text-red-500">
-                            {{ form.get("sApellidosNombres") | translateMessageForm }}
+                            {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
                         </mat-error>
                     } -->
-                    </mat-form-field>
-                </div>
-                <div class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-8">
-                <p class=" mb-5">Familiarizado con actividades que coadyuven al giro propio del negocio de la empresa</p>
-                </div>
-                <div
-                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-3"
-                >
-                    <mat-form-field
-                        class="mat-form-field-custom w-full"
-                        appearance="outline"
-                        floatLabel="always"
+                        </mat-form-field>
+                    </div>
+                    <div
+                        class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-4"
                     >
-                        <mat-label class="">Egresado de maestría*</mat-label>
-                        <mat-select placeholder="--">
-                            <!-- @for (item of lstTypedocument(); track $index) {
-                        <mat-option [value]="item?.nConValor">
-                            {{ item?.sConDescripcion }}
-                        </mat-option>
-                    } -->
-                        </mat-select>
-                        <!-- @if(form.get('nTipoDocumento').invalid) {
-                    <mat-error class="text-red-500">
-                        {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
-                    </mat-error>
-                } -->
-                    </mat-form-field>
-                </div>
-                <div
-                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-4"
-                >
-                    <mat-form-field
-                        class="mat-form-field-custom w-full"
-                        appearance="outline"
-                        floatLabel="always"
+                        <mat-form-field
+                            class="mat-form-field-custom w-full"
+                            appearance="outline"
+                            floatLabel="always"
+                        >
+                            <mat-label>Descripción*</mat-label>
+                            <input
+                                matInput
+                                placeholder="--"
+                                type="text"
+                                maxlength="9"
+                            />
+                            <!-- @if(form.get('sApellidosNombres').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ form.get("sApellidosNombres") | translateMessageForm }}
+                            </mat-error>
+                        } -->
+                        </mat-form-field>
+                    </div>
+                    <div class="xs:grid-cols-1 col-span-8 sm:col-span-1 md:col-span-8 lg:col-span-8">
+                        <p class="title-ide mb-1">Familiarizado con actividades que coadyuven al giro propio del negocio de la empresa</p>
+                    </div>
+                    <div
+                        class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-3"
                     >
-                        <mat-label>Descripción*</mat-label>
-                        <input
-                            matInput
-                            placeholder="--"
-                            type="text"
-                            maxlength="9"
-                        />
-                        <!-- @if(form.get('sApellidosNombres').invalid) {
+                        <mat-form-field
+                            class="mat-form-field-custom w-full"
+                            appearance="outline"
+                            floatLabel="always"
+                        >
+                            <mat-label class="">Egresado de maestría*</mat-label>
+                            <mat-select placeholder="--">
+                                <!-- @for (item of lstTypedocument(); track $index) {
+                            <mat-option [value]="item?.nConValor">
+                                {{ item?.sConDescripcion }}
+                            </mat-option>
+                        } -->
+                            </mat-select>
+                            <!-- @if(form.get('nTipoDocumento').invalid) {
                         <mat-error class="text-red-500">
-                            {{ form.get("sApellidosNombres") | translateMessageForm }}
+                            {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
                         </mat-error>
                     } -->
-                    </mat-form-field>
-                </div>
-                <div class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-8">
-                <p class=" mb-5">Contar con amplia experiencia en la toma de decisiones estratégicas y de gestión empresarial en empresas públicas o privadas</p>
-                </div>
-                <div
-                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-3"
-                >
-                    <mat-form-field
-                        class="mat-form-field-custom w-full"
-                        appearance="outline"
-                        floatLabel="always"
+                        </mat-form-field>
+                    </div>
+                    <div
+                        class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-4"
                     >
-                        <mat-label class="">Titulo profesional*</mat-label>
-                        <mat-select placeholder="--">
-                            <!-- @for (item of lstTypedocument(); track $index) {
-                        <mat-option [value]="item?.nConValor">
-                            {{ item?.sConDescripcion }}
-                        </mat-option>
-                    } -->
-                        </mat-select>
-                        <!-- @if(form.get('nTipoDocumento').invalid) {
-                    <mat-error class="text-red-500">
-                        {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
-                    </mat-error>
-                } -->
-                    </mat-form-field>
-                </div>
-                                <div
-                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-4"
-                >
-                    <mat-form-field
-                        class="mat-form-field-custom w-full"
-                        appearance="outline"
-                        floatLabel="always"
+                        <mat-form-field
+                            class="mat-form-field-custom w-full"
+                            appearance="outline"
+                            floatLabel="always"
+                        >
+                            <mat-label>Descripción*</mat-label>
+                            <input
+                                matInput
+                                placeholder="--"
+                                type="text"
+                                maxlength="9"
+                            />
+                            <!-- @if(form.get('sApellidosNombres').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ form.get("sApellidosNombres") | translateMessageForm }}
+                            </mat-error>
+                        } -->
+                        </mat-form-field>
+                    </div>
+                    
+                    <div class="xs:grid-cols-1 col-span-8 sm:col-span-1 md:col-span-8 lg:col-span-8">
+                        <p class="title-ide mb-1">Contar con amplia experiencia en la toma de decisiones estratégicas y de gestión empresarial en empresas públicas o privadas</p>
+                    </div>
+                    <div
+                        class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-3"
                     >
-                        <mat-label>Descripción*</mat-label>
-                        <input
-                            matInput
-                            placeholder="--"
-                            type="text"
-                            maxlength="9"
-                        />
-                        <!-- @if(form.get('sApellidosNombres').invalid) {
+                        <mat-form-field
+                            class="mat-form-field-custom w-full"
+                            appearance="outline"
+                            floatLabel="always"
+                        >
+                            <mat-label class="">Titulo profesional*</mat-label>
+                            <mat-select placeholder="--">
+                                <!-- @for (item of lstTypedocument(); track $index) {
+                            <mat-option [value]="item?.nConValor">
+                                {{ item?.sConDescripcion }}
+                            </mat-option>
+                        } -->
+                            </mat-select>
+                            <!-- @if(form.get('nTipoDocumento').invalid) {
                         <mat-error class="text-red-500">
-                            {{ form.get("sApellidosNombres") | translateMessageForm }}
+                            {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
                         </mat-error>
                     } -->
-                    </mat-form-field>
-                </div>
-                                <div
-                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-1"
-                >
-                    <mat-form-field
-                        class="mat-form-field-custom w-full"
-                        appearance="outline"
-                        floatLabel="always"
+                        </mat-form-field>
+                    </div>
+                                    <div
+                        class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-4"
                     >
-                        <mat-label class="">Puntaje*</mat-label>
-                        <mat-select placeholder="--">
-                            <!-- @for (item of lstTypedocument(); track $index) {
-                        <mat-option [value]="item?.nConValor">
-                            {{ item?.sConDescripcion }}
-                        </mat-option>
-                    } -->
-                        </mat-select>
-                        <!-- @if(form.get('nTipoDocumento').invalid) {
-                    <mat-error class="text-red-500">
-                        {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
-                    </mat-error>
-                } -->
-                    </mat-form-field>
+                        <mat-form-field
+                            class="mat-form-field-custom w-full"
+                            appearance="outline"
+                            floatLabel="always"
+                        >
+                            <mat-label>Descripción*</mat-label>
+                            <input
+                                matInput
+                                placeholder="--"
+                                type="text"
+                                maxlength="9"
+                            />
+                            <!-- @if(form.get('sApellidosNombres').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ form.get("sApellidosNombres") | translateMessageForm }}
+                            </mat-error>
+                        } -->
+                        </mat-form-field>
+                    </div>
                 </div>
             </div>
-        </div>
-    </form>
+        </form>
+    </fo-cont-card>
+
 </div>
