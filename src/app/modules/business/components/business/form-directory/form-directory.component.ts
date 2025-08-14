@@ -370,6 +370,7 @@ export class FormDirectoryComponent implements OnInit {
           event.preventDefault();
         }
     }
+	
     onInput(event: Event, nameForm: string) {
         const input = event.target as HTMLInputElement;
         const validPattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/;

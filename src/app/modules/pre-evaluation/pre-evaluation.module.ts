@@ -35,6 +35,9 @@ import { TabDocumentsComponent } from './components/pre-evaluation registration/
 import { TabGeneralDataComponent } from './components/pre-evaluation registration/tab-general-data/tab-general-data.component';
 import { MatCheckbox } from "@angular/material/checkbox";
 import {MatRadioModule} from '@angular/material/radio';
+import { NgxMaskDirective } from 'ngx-mask';
+import { VocationalTrainingComponent } from './components/pre-evaluation registration/dialog/vocational-training/vocational-training.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 @NgModule({
@@ -45,7 +48,8 @@ import {MatRadioModule} from '@angular/material/radio';
           TabCommentsComponent,
           InfoCandidatesComponent,
           TabDocumentsComponent,
-          TabGeneralDataComponent
+          TabGeneralDataComponent,
+          VocationalTrainingComponent
           ],
   imports: [CommonModule,
     PreEvaluationSystemRoutingModule,
@@ -64,6 +68,8 @@ import {MatRadioModule} from '@angular/material/radio';
     FoTableComponent,
     MatTabsModule,
     MatRadioModule,
+    NgxMaskDirective,
+    MatDialogModule,
     FoFileUrlUploadComponent, MatCheckbox]
 })
 export default class PreEvaluationSystemModule { }

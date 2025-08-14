@@ -1,332 +1,395 @@
 <div class="w-full">
-    <form class="grid grid-cols-1 gap-4 mb-8">
+    <form [formGroup]="form" class="mb-8 grid grid-cols-1 gap-4">
         <fo-return (eventActionClick)="returnInit()"></fo-return>
-        <div class="w-full bg-white px-10">
-        <div class="mt-4 flex gap-4 justify-between">
-            <div class="name-banner">Ingresar nueva solicitud</div>
-            <div class="flex gap-4">
-                <div appPermissionButton>
-                <fo-button
-                    (eventAction)="searchuser()"
-                    [text]="'Desestimar'"
-                    [icon]="iconBtnCancel()"
-                    [btnClass]="btnInverter()"
+        <div
+            formGroupName="CrearCandidatoRequest"
+            class="w-full bg-white px-10"
+        >
+            <div class="mt-4 flex justify-between gap-4">
+                <div class="name-banner">Ingresar nueva solicitud</div>
+                <div class="flex gap-4">
+                    <div appPermissionButton>
+                        <fo-button
+                            (eventAction)="searchuser()"
+                            [text]="'Desestimar'"
+                            [icon]="iconBtnCancel()"
+                            [btnClass]="btnInverter()"
+                        >
+                        </fo-button>
+                    </div>
+                    <div appPermissionButton>
+                        <fo-button
+                            (eventAction)="searchuser()"
+                            [text]="'Proceso finalizado'"
+                            [icon]="iconBtnChecked()"
+                            [btnClass]="btnSuccess()"
+                        >
+                        </fo-button>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-8 mt-4 flex w-full gap-4">
+                <div class="exist-card">
+                    <mat-icon
+                        class="mr-2"
+                        svgIcon="heroicons_outline:check-badge"
+                    ></mat-icon>
+                    <span>El candidato ya existe</span>
+                </div>
+                <div class="exist-card">
+                    <mat-icon
+                        class="mr-2"
+                        svgIcon="heroicons_outline:check-badge"
+                    ></mat-icon>
+                    <span
+                        >El candidato no se encuentra en la lista de personas no
+                        calificadas u observadas.</span
+                    >
+                </div>
+            </div>
+            <div class="line-form mt-3"></div>
+            <div class="mb-6 mt-5 w-full">
+                <fo-title-area
+                    [titleArea]="'Datos del candidato'"
+                ></fo-title-area>
+            </div>
+            <div
+                class="xs:grid-cols-1 mt-4 grid grid-cols-8 gap-4 sm:grid-cols-1 md:grid-cols-8 lg:grid-cols-8"
+            >
+                <div
+                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
                 >
-                </fo-button>
-            </div>
-            <div appPermissionButton>
-                <fo-button
-                    (eventAction)="searchuser()"
-                    [text]="'Proceso finalizado'"
-                    [icon]="iconBtnChecked()"
-                    [btnClass]="btnSuccess()"
+                    <mat-form-field
+                        class="mat-form-field-custom w-full"
+                        appearance="outline"
+                        floatLabel="always"
+                    >
+                        <mat-label>Nombres</mat-label>
+                        <input
+                            class="uppercase"
+                            formControlName="SNombres"
+                            matInput
+                            placeholder="--"
+                            type="text"
+                            (keypress)="onKeyPress($event)"
+                            (input)="onInput($event, 'SNombres')"
+                            maxlength="150"
+                        />
+                        @if (groupCrearCandidatoRequest.get('SNombres').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ groupCrearCandidatoRequest.get('SNombres')| translateMessageForm }}
+                            </mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+                <div
+                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
                 >
-                </fo-button>
+                    <mat-form-field
+                        class="mat-form-field-custom w-full"
+                        appearance="outline"
+                        floatLabel="always"
+                    >
+                        <mat-label>Apellidos</mat-label>
+                        <input
+                            class="uppercase"
+                            formControlName="SApellidos"
+                            matInput 
+                            placeholder="--"
+                            (keypress)="onKeyPress($event)"
+                            (input)="onInput($event, 'SApellidos')"
+                            type="text"
+                            maxlength="150"
+                        />
+                        @if(groupCrearCandidatoRequest.get('SApellidos').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ groupCrearCandidatoRequest.get("SApellidos") | translateMessageForm }}
+                            </mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+                <div
+                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
+                >
+                    <mat-form-field
+                        class="mat-form-field-custom w-full"
+                        appearance="outline"
+                        floatLabel="always"
+                    >
+                        <mat-label>Tipo de documento</mat-label>
+                        <mat-select 
+                            formControlName="NTipoDocumento"
+                            placeholder="--"
+                            >
+                            @for (item of lstTypedocument(); track $index) {
+                                <mat-option [value]="item?.nConValor">
+                                    {{ item?.sConDescripcion }}
+                                </mat-option>
+                            }
+                        </mat-select>
+                        @if(groupCrearCandidatoRequest.get('NTipoDocumento').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ groupCrearCandidatoRequest.get("NTipoDocumento") | translateMessageForm: 'select' }}
+                            </mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+                <div
+                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
+                >
+                    <mat-form-field
+                        class="mat-form-field-custom w-full"
+                        appearance="outline"
+                        floatLabel="always"
+                    >
+                        <mat-label>Número de documento</mat-label>
+                        <input
+                            formControlName="SNumeroDocumento"
+                            matInput 
+                            placeholder="--"
+                            type="text"
+                            [mask]="groupCrearCandidatoRequest.get('NTipoDocumento').value === typeDocument().ce ? 'AAAAAAAAA':'00000000'"
+                            maxlength="9">
+                        @if(groupCrearCandidatoRequest.get('SNumeroDocumento').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ groupCrearCandidatoRequest.get("SNumeroDocumento") | translateMessageForm }}
+                            </mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+                <div
+                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
+                >
+                    <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                        <mat-label>Fecha de nacimiento</mat-label>
+                        <input
+                            (keypress)="onKeyPressDate($event)"
+                            (input)="onInputDate($event, 'DtFechaNacimiento')"
+                            [max]="maxDate"
+                            [min]="minDate"
+                            formControlName="DtFechaNacimiento"
+                            matInput
+                            maxlength="10"
+                            placeholder="--/--/----"
+                            [matDatepicker]="pickerBird" />
+                        <mat-datepicker-toggle
+                            matSuffix
+                            [for]="pickerBird"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerBird>
+                            <mat-datepicker-actions>
+                                <button mat-button matDatepickerCancel>
+                                    Cancelar
+                                </button>
+                                <button mat-raised-button color="primary" matDatepickerApply>
+                                    Aplicar
+                                </button>
+                            </mat-datepicker-actions>
+                        </mat-datepicker>
+                        @if(groupCrearCandidatoRequest.get('DtFechaNacimiento').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ groupCrearCandidatoRequest.get("DtFechaNacimiento") | translateMessageForm: "date" }}
+                            </mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+                <div
+                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
+                >
+                    <mat-form-field
+                        class="mat-form-field-custom w-full"
+                        appearance="outline"
+                        floatLabel="always"
+                    >
+                        <mat-label class="">Género</mat-label>
+                        <mat-select 
+                            formControlName="NGenero"
+                            placeholder="--">
+                            @for (item of lstGender(); track $index) {
+                                <mat-option [value]="item?.nConValor">
+                                    {{ item?.sConDescripcion }}
+                                </mat-option>
+                            }
+                </mat-select>
+                @if(groupCrearCandidatoRequest.get('NGenero').invalid) {
+                    <mat-error class="text-red-500">
+                        {{ groupCrearCandidatoRequest.get("NGenero") | translateMessageForm: 'select' }}
+                    </mat-error>
+                }
+                    </mat-form-field>
+                </div>
+                <div
+                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
+                >
+                    <mat-form-field
+                        class="mat-form-field-custom w-full"
+                        appearance="outline"
+                        floatLabel="always"
+                    >
+                        <mat-label>Correo</mat-label>
+                        <input
+                            formControlName="SCorreoElectronico"
+                            matInput 
+                            placeholder="--"
+                            type="text"
+                            maxlength="250"
+                        />
+                        @if(groupCrearCandidatoRequest.get('SCorreoElectronico').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ groupCrearCandidatoRequest.get("SCorreoElectronico") | translateMessageForm }}
+                            </mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+                <div
+                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
+                >
+                    <mat-form-field
+                        class="mat-form-field-custom w-full"
+                        appearance="outline"
+                        floatLabel="always"
+                    >
+                        <mat-label>Telefono</mat-label>
+                        <input
+                            formControlName="STelefono"
+                            mask="000 0000||000 000 000"
+                            matInput 
+                            placeholder="--"
+                            type="text"
+                            maxlength="25"
+                        />
+                        @if(groupCrearCandidatoRequest.get('STelefono').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ groupCrearCandidatoRequest.get("STelefono") | translateMessageForm }}
+                            </mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+                <div
+                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
+                >
+                    <mat-form-field
+                        class="mat-form-field-custom w-full"
+                        appearance="outline"
+                        floatLabel="always"
+                    >
+                        <mat-label class="">Departamento</mat-label>
+                        <mat-select
+                        formControlName="NDepartamentoId"
+                        placeholder="--">
+                        @for (item of lstDepartments(); track $index) {
+                            <mat-option [value]="item?.sCode">
+                                {{ item?.sName }}
+                            </mat-option>
+                        }
+                    </mat-select>
+                    @if(groupCrearCandidatoRequest.get('NDepartamentoId').invalid) {
+                        <mat-error class="text-red-500">
+                            {{ groupCrearCandidatoRequest.get("NDepartamentoId") | translateMessageForm: 'select' }}
+                        </mat-error>
+                    }
+                    </mat-form-field>
+                </div>
+                <div
+                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
+                >
+                    <mat-form-field
+                        class="mat-form-field-custom w-full"
+                        appearance="outline"
+                        floatLabel="always"
+                    >
+                        <mat-label class="">Provincia</mat-label>
+                        <mat-select
+                            formControlName="NProvinciaId"
+                            placeholder="--">
+                            @for (item of lstProvinces(); track $index) {
+                                <mat-option [value]="item.sCode">
+                                    {{ item.sName }}
+                                </mat-option>
+                            }
+                        </mat-select>
+                        @if(groupCrearCandidatoRequest.get('NProvinciaId').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ groupCrearCandidatoRequest.get("NProvinciaId") | translateMessageForm: 'select' }}
+                            </mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+                <div
+                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
+                >
+                    <mat-form-field
+                        class="mat-form-field-custom w-full"
+                        appearance="outline"
+                        floatLabel="always"
+                    >
+                        <mat-label class="">Distrito</mat-label>
+                        <mat-select
+                            formControlName="NDistritoId"
+                            placeholder="--">
+                            @for (item of lstDistricts(); track $index) {
+                                <mat-option [value]="item.sCode">
+                                    {{ item.sName }}
+                                </mat-option>
+                            }
+                        </mat-select>
+                        @if(groupCrearCandidatoRequest.get('NDistritoId').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ groupCrearCandidatoRequest.get("NDistritoId") | translateMessageForm: 'select' }}
+                            </mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+                <div
+                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
+                >
+                    <mat-form-field
+                        class="mat-form-field-custom w-full"
+                        appearance="outline"
+                        floatLabel="always"
+                    >
+                        <mat-label>Dirección</mat-label>
+                        <input
+                            formControlName="SDireccion"
+                            matInput 
+                            placeholder="--"
+                            type="text"
+                            maxlength="255">
+                        @if(groupCrearCandidatoRequest.get('SDireccion').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ groupCrearCandidatoRequest.get("SDireccion") | translateMessageForm }}
+                            </mat-error>
+                        }
+                    </mat-form-field>
+                </div>
             </div>
-
+        </div>
+        <div
+            class="xs:grid-cols-1 mt-4 grid grid-cols-3 gap-4 sm:grid-cols-1 md:grid-cols-5 lg:grid-cols-8"
+        >
+            <mat-tab-group
+                mat-align-tabs="start"
+                mat-stretch-tabs="false"
+                class="mat-tab-custom-fonafe not-padding-body xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-8 lg:col-span-6"
+            >
+                <mat-tab class="first-mat-tab" label="Datos generales">
+                    <app-tab-general-data></app-tab-general-data>
+                </mat-tab>
+                <mat-tab class="first-mat-tab" label="Solicitud">
+                    <app-tab-application></app-tab-application>
+                </mat-tab>
+                <mat-tab class="first-mat-tab" label="Documentos">
+                    <app-tab-documents></app-tab-documents>
+                </mat-tab>
+                <mat-tab class="first-mat-tab" label="Comentarios">
+                    <app-tab-comments></app-tab-comments>
+                </mat-tab>
+            </mat-tab-group>
+            <div
+                class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-8 lg:col-span-2"
+            >
+                <app-info-candidates class="mb-4"> </app-info-candidates>
+                <app-fo-file-url-upload> </app-fo-file-url-upload>
             </div>
         </div>
-        <div class="w-full flex gap-4 mt-4 mb-8">
-            <div class="exist-card">
-                <mat-icon class="mr-2" svgIcon="heroicons_outline:check-badge"></mat-icon>
-                <span>El candidato ya existe</span>
-            </div>
-            <div class="exist-card">
-                <mat-icon class="mr-2" svgIcon="heroicons_outline:check-badge"></mat-icon>
-                <span>El candidato no se encuentra en la lista de personas no calificadas u observadas.</span>
-            </div>
-        </div>
-        <div class="line-form mt-3"></div>
-        <div class="w-full mt-5 mb-6">
-            <fo-title-area [titleArea]="'Datos del candidato'"></fo-title-area>
-        </div>
-        <div class="mt-4 grid grid-cols-8 gap-4 md:grid-cols-8 lg:grid-cols-8 sm:grid-cols-1 xs:grid-cols-1">
-        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
-            <mat-form-field
-                class="mat-form-field-custom w-full "
-                appearance="outline"
-                floatLabel="always"
-            >
-                <mat-label>Nombres*</mat-label>
-                <input
-                    matInput
-                    placeholder="--"
-                    type="text"
-                    maxlength="9"
-                />
-                <!-- @if(form.get('sApellidosNombres').invalid) {
-                        <mat-error class="text-red-500">
-                            {{ form.get("sApellidosNombres") | translateMessageForm }}
-                        </mat-error>
-                    } -->
-            </mat-form-field>
-        </div>
-                <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
-            <mat-form-field
-                class="mat-form-field-custom w-full "
-                appearance="outline"
-                floatLabel="always"
-            >
-                <mat-label>Apellidos*</mat-label>
-                <input
-                    matInput
-                    placeholder="--"
-                    type="text"
-                    maxlength="9"
-                />
-                <!-- @if(form.get('sApellidosNombres').invalid) {
-                        <mat-error class="text-red-500">
-                            {{ form.get("sApellidosNombres") | translateMessageForm }}
-                        </mat-error>
-                    } -->
-            </mat-form-field>
-        </div>
-        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
-            <mat-form-field
-                class="mat-form-field-custom w-full "
-                appearance="outline"
-                floatLabel="always"
-            >
-                <mat-label class="">Tipo de documento</mat-label>
-                <mat-select  placeholder="--">
-                    <!-- @for (item of lstTypedocument(); track $index) {
-                        <mat-option [value]="item?.nConValor">
-                            {{ item?.sConDescripcion }}
-                        </mat-option>
-                    } -->
-                </mat-select>
-                <!-- @if(form.get('nTipoDocumento').invalid) {
-                    <mat-error class="text-red-500">
-                        {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
-                    </mat-error>
-                } -->
-            </mat-form-field>
-        </div>
-        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
-            <mat-form-field
-                class="mat-form-field-custom w-full "
-                appearance="outline"
-                floatLabel="always"
-            >
-                <mat-label>Número de documento</mat-label>
-                <input
-                    matInput
-                    placeholder="--"
-                    type="text"
-                    maxlength="9"
-                />
-                <!-- @if(form.get('sNumeroDocumento').invalid) {
-                        <mat-error class="text-red-500">
-                            {{ form.get("sNumeroDocumento") | translateMessageForm }}
-                        </mat-error>
-                    } -->
-            </mat-form-field>
-        </div>
-        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
-            <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
-                <mat-label>Fecha de nacimiento</mat-label>
-                <input
-                    (keypress)="onKeyPressDate($event)"
-                    (input)="onInputDate($event, 'dFechaNacimiento')"
-                    [max]="maxDate"
-                    [min]="minDate"
-                    formControlName="dFechaNacimiento"
-                    matInput
-                    maxlength="10"
-                    placeholder="--/--/----"
-                    [matDatepicker]="picker" />
-                <mat-datepicker-toggle
-                    matSuffix
-                    [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker>
-                    <mat-datepicker-actions>
-                        <button mat-button matDatepickerCancel>
-                            Cancelar
-                        </button>
-                        <button mat-raised-button color="primary" matDatepickerApply>
-                            Aplicar
-                        </button>
-                    </mat-datepicker-actions>
-                </mat-datepicker>
-<!--                 @if(form.get('dFechaNacimiento').invalid) {
-                    <mat-error class="text-red-500">
-                        {{ form.get("dFechaNacimiento") | translateMessageForm: "date" }}
-                    </mat-error>
-                } -->
-            </mat-form-field>
-        </div>
-        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
-            <mat-form-field
-                class="mat-form-field-custom w-full "
-                appearance="outline"
-                floatLabel="always"
-            >
-                <mat-label class="">Género</mat-label>
-                <mat-select  placeholder="--">
-                    <!-- @for (item of lstTypedocument(); track $index) {
-                        <mat-option [value]="item?.nConValor">
-                            {{ item?.sConDescripcion }}
-                        </mat-option>
-                    } -->
-                </mat-select>
-                <!-- @if(form.get('nTipoDocumento').invalid) {
-                    <mat-error class="text-red-500">
-                        {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
-                    </mat-error>
-                } -->
-            </mat-form-field>
-        </div>
-        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
-            <mat-form-field
-                class="mat-form-field-custom w-full "
-                appearance="outline"
-                floatLabel="always"
-            >
-                <mat-label>Correo</mat-label>
-                <input
-                    matInput
-                    placeholder="--"
-                    type="text"
-                    maxlength="9"
-                />
-                <!-- @if(form.get('sNumeroDocumento').invalid) {
-                        <mat-error class="text-red-500">
-                            {{ form.get("sNumeroDocumento") | translateMessageForm }}
-                        </mat-error>
-                    } -->
-            </mat-form-field>
-        </div>
-        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
-            <mat-form-field
-                class="mat-form-field-custom w-full "
-                appearance="outline"
-                floatLabel="always"
-            >
-                <mat-label>Telefono</mat-label>
-                <input
-                    matInput
-                    placeholder="--"
-                    type="text"
-                    maxlength="9"
-                />
-                <!-- @if(form.get('sNumeroDocumento').invalid) {
-                        <mat-error class="text-red-500">
-                            {{ form.get("sNumeroDocumento") | translateMessageForm }}
-                        </mat-error>
-                    } -->
-            </mat-form-field>
-        </div>
-        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
-            <mat-form-field
-                class="mat-form-field-custom w-full "
-                appearance="outline"
-                floatLabel="always"
-            >
-                <mat-label class="">Departamiento</mat-label>
-                <mat-select  placeholder="--">
-                    <!-- @for (item of lstTypedocument(); track $index) {
-                        <mat-option [value]="item?.nConValor">
-                            {{ item?.sConDescripcion }}
-                        </mat-option>
-                    } -->
-                </mat-select>
-                <!-- @if(form.get('nTipoDocumento').invalid) {
-                    <mat-error class="text-red-500">
-                        {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
-                    </mat-error>
-                } -->
-            </mat-form-field>
-        </div>
-        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
-            <mat-form-field
-                class="mat-form-field-custom w-full "
-                appearance="outline"
-                floatLabel="always"
-            >
-                <mat-label class="">Provincia</mat-label>
-                <mat-select  placeholder="--">
-                    <!-- @for (item of lstTypedocument(); track $index) {
-                        <mat-option [value]="item?.nConValor">
-                            {{ item?.sConDescripcion }}
-                        </mat-option>
-                    } -->
-                </mat-select>
-                <!-- @if(form.get('nTipoDocumento').invalid) {
-                    <mat-error class="text-red-500">
-                        {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
-                    </mat-error>
-                } -->
-            </mat-form-field>
-        </div>
-        <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
-            <mat-form-field
-                class="mat-form-field-custom w-full "
-                appearance="outline"
-                floatLabel="always"
-            >
-                <mat-label class="">Distrito</mat-label>
-                <mat-select  placeholder="--">
-                    <!-- @for (item of lstTypedocument(); track $index) {
-                        <mat-option [value]="item?.nConValor">
-                            {{ item?.sConDescripcion }}
-                        </mat-option>
-                    } -->
-                </mat-select>
-                <!-- @if(form.get('nTipoDocumento').invalid) {
-                    <mat-error class="text-red-500">
-                        {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
-                    </mat-error>
-                } -->
-            </mat-form-field>
-        </div>
-                <div class="col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2 xs:grid-cols-1">
-            <mat-form-field
-                class="mat-form-field-custom w-full "
-                appearance="outline"
-                floatLabel="always"
-            >
-                <mat-label>Dirección</mat-label>
-                <input
-                    matInput
-                    placeholder="--"
-                    type="text"
-                    maxlength="9"
-                />
-                <!-- @if(form.get('sNumeroDocumento').invalid) {
-                        <mat-error class="text-red-500">
-                            {{ form.get("sNumeroDocumento") | translateMessageForm }}
-                        </mat-error>
-                    } -->
-            </mat-form-field>
-        </div>
-    </div>
-        </div>
-    <div class="mt-4 grid grid-cols-3 gap-4 md:grid-cols-5 lg:grid-cols-8 sm:grid-cols-1 xs:grid-cols-1">
-    <mat-tab-group 
-        mat-align-tabs="start"
-        mat-stretch-tabs="false"
-        class="mat-tab-custom-fonafe not-padding-body col-span-2 sm:col-span-1 md:col-span-8 lg:col-span-6 xs:grid-cols-1">
-        <mat-tab  class="first-mat-tab" label="Datos generales">
-            <app-tab-general-data></app-tab-general-data>
-        </mat-tab>
-        <mat-tab  class="first-mat-tab" label="Solicitud">
-            <app-tab-application></app-tab-application>
-        </mat-tab>
-            <mat-tab class="first-mat-tab" label="Documentos">
-            <app-tab-documents></app-tab-documents>
-
-        </mat-tab>
-            <mat-tab class="first-mat-tab" label="Comentarios">
-            <app-tab-comments></app-tab-comments>
-            
-        </mat-tab>
-    </mat-tab-group>
-    <div class="col-span-2 sm:col-span-1 md:col-span-8 lg:col-span-2 xs:grid-cols-1">
-        <app-info-candidates class="mb-4">
-        </app-info-candidates>
-        <app-fo-file-url-upload >
-        </app-fo-file-url-upload>
-        </div>
-    </div>
     </form>
 </div>

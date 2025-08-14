@@ -282,7 +282,7 @@
                 >
                     <fo-button
                         [btnClass]="btnInverter()"
-                        (eventAction)="searchuser()"
+                        (eventAction)="loadDataFormDialog()"
                         [text]="'Agregar formación'"
                         [icon]="iconBtnSearch()"
                     >
@@ -362,11 +362,6 @@
                         </mat-option>
                     } -->
                         </mat-select>
-                        <!-- @if(form.get('nTipoDocumento').invalid) {
-                    <mat-error class="text-red-500">
-                        {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
-                    </mat-error>
-                } -->
                     </mat-form-field>
                 </div>
                 <div
@@ -384,11 +379,6 @@
                             type="text"
                             maxlength="9"
                         />
-                        <!-- @if(form.get('sApellidosNombres').invalid) {
-                        <mat-error class="text-red-500">
-                            {{ form.get("sApellidosNombres") | translateMessageForm }}
-                        </mat-error>
-                    } -->
                     </mat-form-field>
                 </div>
                 <div
