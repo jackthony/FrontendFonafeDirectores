@@ -70,40 +70,39 @@ export class HomePreEvaluationComponent implements OnInit {
     minDate: Date;
 
     get groupCrearCandidatoRequest(): FormGroup {
-        return this.form.get('CrearCandidatoRequest') as FormGroup;
+        return this.form.get('crearCandidatoRequest') as FormGroup;
     }
 
     ngOnInit(): void {
+        this.form = this._presenter.initFormCandidate(this.candidate());
         this.minDate = this.calculateMaxDate().toJSDate(); // Fecha mínima de 120 años
 		this.maxDate = this.calculateMinDate().toJSDate(); // Fecha máxima de 18 años
-        this.form = this._presenter.initFormCandidate(this.candidate());
         this.valueChangesForm();
         this.loadProvincesDistricts(); // Carga provincias y distritos
     }
 
     valueChangesForm(): void {
-        if(!(this.candidate()) && !(this.groupCrearCandidatoRequest.get('NTipoDocumento').value)) this.groupCrearCandidatoRequest.get('SNumeroDocumento').disable();
-		this.groupCrearCandidatoRequest.get('NTipoDocumento').valueChanges
+        if(!(this.candidate()) && !(this.groupCrearCandidatoRequest.get('nTipoDocumento').value)) this.groupCrearCandidatoRequest.get('sNumeroDocumento').disable();
+		this.groupCrearCandidatoRequest.get('nTipoDocumento').valueChanges
 		.pipe(
 			distinctUntilChanged(),
 			takeUntil(this.destroy$)
 		).subscribe((value) => {
-			if(value === TypeDocumentEnum.dni) this.groupCrearCandidatoRequest.get('SNumeroDocumento').setValidators([Validators.required, this._validationFormService.dniValidator]);
-			if(value === TypeDocumentEnum.ce) this.groupCrearCandidatoRequest.get('SNumeroDocumento').setValidators([Validators.required, this._validationFormService.ceValidator]);
+			if(value === TypeDocumentEnum.dni) this.groupCrearCandidatoRequest.get('sNumeroDocumento').setValidators([Validators.required, this._validationFormService.dniValidator]);
+			if(value === TypeDocumentEnum.ce) this.groupCrearCandidatoRequest.get('sNumeroDocumento').setValidators([Validators.required, this._validationFormService.ceValidator]);
 			if(value) {
-				this.groupCrearCandidatoRequest.get('SNumeroDocumento').enable();
+				this.groupCrearCandidatoRequest.get('sNumeroDocumento').enable();
 			}
-			this.groupCrearCandidatoRequest.get('SNumeroDocumento').setValue('');
-			this.groupCrearCandidatoRequest.get('SNumeroDocumento').markAsUntouched();
-			this.groupCrearCandidatoRequest.get('SNumeroDocumento').updateValueAndValidity();
+			this.groupCrearCandidatoRequest.get('sNumeroDocumento').setValue('');
+			this.groupCrearCandidatoRequest.get('sNumeroDocumento').markAsUntouched();
+			this.groupCrearCandidatoRequest.get('sNumeroDocumento').updateValueAndValidity();
 		});
 
-        //continuar
-        this.form.get('sDepartamento')!.valueChanges
+        this.groupCrearCandidatoRequest.get('sDepartamentoId')!.valueChanges
 		.pipe(
                 distinctUntilChanged(),
                 tap(() => {
-                    this.form.patchValue({ sProvincia: 0, sDistrito: 0 });
+                    this.form.patchValue({ sProvinciaId: 0, sDistritoId: 0 });
                     this.lstProvinces.set([]); 
                     this.lstDistricts.set([]); 
                 }),
@@ -120,11 +119,12 @@ export class HomePreEvaluationComponent implements OnInit {
                 takeUntil(this.destroy$) 
             )
             .subscribe((lstItem) => this.lstProvinces.set(lstItem));
-        this.form.get('sProvincia')!.valueChanges
+
+        this.groupCrearCandidatoRequest.get('sProvinciaId')!.valueChanges
 		.pipe(
                 distinctUntilChanged(),
                 tap(() => {
-                    this.form.patchValue({ sDistrito: 0 });
+                    this.form.patchValue({ sDistritoId: 0 });
                     this.lstDistricts.set([]);
                 }),
                 switchMap((provId) =>

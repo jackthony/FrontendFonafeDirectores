@@ -77,8 +77,8 @@ export class FormDirectoryComponent implements OnInit {
     areChanges = signal<boolean>(false);
 
 	maxDate: Date;
-	form: FormGroup;
 	minDate: Date;
+	form: FormGroup;
 
 	// Método que se ejecuta al inicializar el componente
 	ngOnInit(): void {

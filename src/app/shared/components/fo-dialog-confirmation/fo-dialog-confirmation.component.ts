@@ -16,10 +16,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { DialogConfirmation } from './models/dialog-confirmation.interface';
 import { ButtonEnum } from 'app/shared/enums/button.enum';
 import { FoButtonDialogComponent } from '../fo-button-dialog/fo-button-dialog.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 @Component({
     selector: 'fo-dialog-confirmation',
     standalone: true,
-    imports: [CommonModule, MatButtonModule, MatDialogModule, MatIconModule, FoButtonDialogComponent],
+    imports: [CommonModule, MatButtonModule, MatDialogModule, MatIconModule, FoButtonDialogComponent, MatTooltipModule],
     templateUrl: './fo-dialog-confirmation.component.html',
     styleUrl: './fo-dialog-confirmation.component.scss',
     encapsulation: ViewEncapsulation.None,

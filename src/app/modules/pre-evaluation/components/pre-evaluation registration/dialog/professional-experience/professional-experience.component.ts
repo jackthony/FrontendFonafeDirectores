@@ -1,25 +1,24 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ConstantEntity } from 'app/modules/business/domain/entities/business/constant.entity';
 import { CandidateEntity } from 'app/modules/pre-evaluation/domain/entities/candidate.entity';
-import { CreateRequestEntity } from 'app/modules/pre-evaluation/domain/entities/create-request.entity';
 import { FormationCandidateEntity } from 'app/modules/pre-evaluation/domain/entities/formation-candidate.entity';
+import { WorkExperienceEntity } from 'app/modules/pre-evaluation/domain/entities/work-experience.entity';
 import { UserService } from 'app/modules/user/domain/services/auth/user.service';
 import { ButtonEnum } from 'app/shared/enums/button.enum';
 import { ValidationFormService } from 'app/shared/services/validation-form.service';
 import { DateTime } from 'luxon';
 
 @Component({
-  selector: 'app-vocational-training',
+  selector: 'app-professional-experience',
   standalone: false,
-  templateUrl: './vocational-training.component.html',
-  styleUrl: './vocational-training.component.scss'
+  templateUrl: './professional-experience.component.html',
+  styleUrl: './professional-experience.component.scss'
 })
-export class VocationalTrainingComponent {
+export class ProfessionalExperienceComponent {
 	private _fb = inject(FormBuilder);
-	public data: { object: FormationCandidateEntity, candidate: CandidateEntity, grade: ConstantEntity[] /* lstStatus: ConstantEntity[], lstPosition: PositionEntity[], lstProfile: RoleEntity[], lstTypePersonal: ConstantEntity[] */ } = inject(MAT_DIALOG_DATA);// Datos inyectados al componente de diálogo (usuario, estados, cargos y perfiles) desde el componente que lo abrió.
-	private readonly dialogRef = inject(MatDialogRef<VocationalTrainingComponent>); // Referencia al diálogo actual, usada para cerrarlo y devolver resultados al componente padre.
+	public data: { object: WorkExperienceEntity, candidate: CandidateEntity /* lstStatus: ConstantEntity[], lstPosition: PositionEntity[], lstProfile: RoleEntity[], lstTypePersonal: ConstantEntity[] */ } = inject(MAT_DIALOG_DATA);// Datos inyectados al componente de diálogo (usuario, estados, cargos y perfiles) desde el componente que lo abrió.
+	private readonly dialogRef = inject(MatDialogRef<ProfessionalExperienceComponent>); // Referencia al diálogo actual, usada para cerrarlo y devolver resultados al componente padre.
 	private _userService = inject(UserService); // Servicio personalizado para operaciones generales de usuario.
 	private _validationFormService = inject(ValidationFormService); // Servicio utilitario que centraliza lógica de validación y mensajes de error en formularios reactivos.
     buttonEnum = signal<typeof ButtonEnum>(ButtonEnum);
@@ -30,10 +29,7 @@ export class VocationalTrainingComponent {
 	minDateStart: Date;
     maxDateEnd: Date;
 	minDateEnd: Date;
-    /**
-     * Método del ciclo de vida que se ejecuta al iniciar el componente.
-     * Define si el formulario será de edición o registro, y lo inicializa.
-     */
+
 	ngOnInit(): void {
 		this.isEdit.set(this.data.object ? true : false);
 		this.initForm(this.data?.object, this.data.candidate);
@@ -42,18 +38,15 @@ export class VocationalTrainingComponent {
         this.minDateEnd = this.calculateMaxDateEnd().toJSDate(); // Fecha mínima de 120 años
 		this.maxDateEnd = this.calculateMinDateEnd().toJSDate(); // Fecha máxima de 18 años
 	}
-    /**
-     * Inicializa el formulario reactivo con validaciones. Deshabilita campos si se trata de una edición.
-     * @param object Objeto del usuario a editar, si existe.
-     */
-	initForm(object: FormationCandidateEntity, candidate: CandidateEntity): void {
+	
+    initForm(object: WorkExperienceEntity, candidate: CandidateEntity): void {
         this.form = this._fb.group({
-            nFormacionId: [object ? object.nFormacionId : 0, Validators.required ],
+            nExperienciaProfId: [object ? object.nExperienciaProfId : 0, Validators.required ],
 			nCandidatoId: [object ? object.nCandidatoId : candidate?.nCandidatoId , Validators.required],
-            nGradoId: [ object? object.nGradoId : 0, [Validators.required, Validators.min(1)] ],
-            nProfesionId: [ object? object.nProfesionId : '', [Validators.required, this._validationFormService.spaceValidator, Validators.maxLength(100)] ],
-            sUniversidad: [ object? object.sUniversidad : '', [Validators.required, this._validationFormService.spaceValidator, Validators.maxLength(100)] ],
-            nPaisId: [ object? object.nPaisId : 0, [Validators.required, Validators.min(1)] ],
+            sNombreEmpresa: [ object? object.sNombreEmpresa : '', [Validators.required, this._validationFormService.spaceValidator, Validators.maxLength(255)] ],
+            sRucEmpresa: [ object? object.sRucEmpresa : '', [Validators.required, this._validationFormService.validarRuc, Validators.maxLength(11)] ],
+            nCargoId: [ object? object.nCargoId : 0, [Validators.required, Validators.min(1)] ],
+            sNombreCargo: [ object? object.sNombreCargo : '', [Validators.required, this._validationFormService.spaceValidator, Validators.maxLength(150)] ],
             nEstado: [ object? object.nEstado : 1, Validators.required ],
             bActivo: [ object? object.bActivo : true, Validators.required ],
 			dFechaInicio: [ object? object.dFechaInicio: null, [Validators.required, Validators.maxLength(10)]],
@@ -63,65 +56,21 @@ export class VocationalTrainingComponent {
         },
         {
             validators: this._validationFormService.rangeDateValidator('dFechaInicio', 'dFechaFin')
-        }
-    );
-
-
+        });
     }
-    /**
-     * Ejecuta la validación completa del formulario.
-     * Si es válido, determina si se ejecutará una operación de creación o actualización.
-     */
+
 	registerForm() {
         console.log('this.form', this.form.value)
         if (this.form.invalid) {
             this.form.markAllAsTouched();
             return;
         }
-        this.loadingService.set(true);
-        if (this.isEdit()) this.updateProfile(); 
-        else this.registerProfile();
-    }
-    /**
-     * Registra un nuevo perfil de usuario. Convierte campos clave a mayúsculas antes del envío.
-     */
-    registerProfile(): void {
-        /* const fields = ['sNombres', 'sApellidoPaterno', 'sApellidoMaterno'];
-        fields.forEach(field => {
-            const control = this.form.get(field);
-            if (control && typeof control.value === 'string') {
-                control.setValue(control.value.toUpperCase(), { emitEvent: false });
-            }
-        });
-        this._segUserService
-            .create(this.form.value) 
-            .pipe(finalize(() => this.loadingService.set(false))) 
-            .subscribe({
-                next: (response: ResponseEntity<number>) => {
-                    if (response.isSuccess) this.dialogRef.close(true); 
-                },
-            }); */
-    }
-    /**
-     * Actualiza los datos de un usuario existente mediante el servicio.
-     */
-    updateProfile(): void {
-        /* const areChanges = this.detectChanges();
-        if(!areChanges) {
-            this.dialogRef.close(false);
-            return;
-        } 
-        this._segUserService
-            .update(this.form.value) 
-            .pipe(finalize(() => this.loadingService.set(false))) 
-            .subscribe({
-                next: (response: ResponseEntity<boolean>) => {
-                    if (response.isSuccess) this.dialogRef.close(true);
-                },
-            }); */
+        //this.loadingService.set(true);
+        /* if (this.isEdit()) this.updateProfile(); 
+        else this.registerProfile(); */
     }
 
-    /**
+	/**
      * Valida en tiempo real las teclas presionadas para evitar caracteres no permitidos (solo letras y espacios).
      * @param event Evento del teclado.
      */
@@ -163,7 +112,7 @@ export class VocationalTrainingComponent {
 		}
 	}
 
-    private calculateMinDateStart(): DateTime {
+	private calculateMinDateStart(): DateTime {
 		return DateTime.now();
 	}
 	

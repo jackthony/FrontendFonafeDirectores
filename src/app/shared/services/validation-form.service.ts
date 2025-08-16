@@ -130,6 +130,68 @@ export class ValidationFormService {
     
         return null; // If all validations pass, return null indicating no errors.
     }
+
+    fechasOrdenValidator = (inicio: string, fin: string): ValidatorFn =>
+        (group: AbstractControl): ValidationErrors | null => {
+          const a = group.get(inicio)?.value;
+          const b = group.get(fin)?.value;
+          return a && b && b < a ? { customError: 'No puede ser anterior a la fecha de inicio' } : null;
+        };
+
+        rangeDateValidator(start: string, end: string): ValidatorFn {
+            return (group: AbstractControl) => {
+              const startCtrl = group.get(start);
+              const endCtrl = group.get(end);
+              if (!startCtrl || !endCtrl) return null;
+          
+              const s = startCtrl.value;
+              const e = endCtrl.value;
+          
+              if (!s || !e) {
+                endCtrl.setErrors(null);
+                return null;
+              }
+          
+              const invalid = new Date(e) < new Date(s);
+              endCtrl.setErrors(invalid ? { customError: 'No puede ser anterior a la fecha de inicio' } : null);
+          
+              return null;
+            };
+        }
+    /* rangeDateValidator(dateStart: string, dateEnd : string): ValidatorFn {
+        return (group: AbstractControl): ValidationErrors | null => {
+            const inicioCtrl = group.get(dateStart);
+            const finCtrl = group.get(dateEnd);
+        
+            if (!inicioCtrl || !finCtrl) return null;
+        
+            const inicio = inicioCtrl.value;
+            const fin = finCtrl.value;
+        
+            if (!inicio || !fin) {
+              finCtrl.setErrors(null);
+              return null;
+            }
+        
+            const inicioDate = new Date(inicio);
+            const finDate = new Date(fin);
+        
+            if (finDate < inicioDate) {
+              finCtrl.setErrors({ customError: 'No puede ser anterior a la fecha de inicio' });
+              return { customError: 'No puede ser anterior a la fecha de inicio' };
+            } else {
+              // 👇 OJO: si tiene otros errores, hay que preservarlos
+              if (finCtrl.errors) {
+                const { fechaFinMenor, ...rest } = finCtrl.errors;
+                finCtrl.setErrors(Object.keys(rest).length ? rest : null);
+              } else {
+                finCtrl.setErrors(null);
+              }
+              return null;
+            }
+          };
+      } */
+
     /**
      * Valida un número de teléfono.
      * @param control El control del formulario que contiene el número de teléfono

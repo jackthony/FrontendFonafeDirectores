@@ -15,6 +15,7 @@ import { PreEvaluationComponent } from './components/pre-evaluation/pre-evaluati
 import { permissionGuard } from '../user/guards/permission.guard';
 import { HomePreEvaluationComponent } from './components/pre-evaluation registration/home-pre-evaluation/home-pre-evaluation.component';
 import { businessResolver } from '../business/infrastructure/business/resolvers/business.resolver';
+import { GenerateRequestComponent } from './components/pre-evaluation registration/generate-request/generate-request.component';
 
 const routes: Routes = [
         {
@@ -32,6 +33,11 @@ const routes: Routes = [
             },
             data: { module: 'nuevas-solicitudes', action: 'Ver' }
         },
+        {
+            path: "nueva-solicitud/:id",
+            component: GenerateRequestComponent,
+            data: { module: 'nuevas-solicitudes', action: 'Ver' }
+        }
         ];
 @NgModule({
     imports: [RouterModule.forChild(routes)],

@@ -2,85 +2,81 @@
     <div class="header-dialog-user">
         <div class="header-container-user gap-3 flex">
             <mat-icon class="icon-size-7" svgIcon="mat_outline:person_outline"></mat-icon>
-            <div class="header-text"> {{ data.object ? 'Editar' : 'Agregar' }} formación profesional</div>
+            <div class="header-text"> {{ data.object ? 'Editar' : 'Agregar' }} experiencia profesional</div>
         </div>
     </div>
     <div class="body-dialog-user">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="col-span-1">
                 <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
-                    <mat-label>Universidad</mat-label>
+                    <mat-label>Empresa</mat-label>
                     <input
-                        formControlName="sUniversidad"
+                        formControlName="sNombreEmpresa"
                         matInput 
                         placeholder="--"
                         type="text"
                         (keypress)="onKeyPress($event)"
-                        (input)="onInput($event, 'sUniversidad')"
-                        maxlength="100">
-                        @if(form.get('sUniversidad').invalid) {
+                        (input)="onInput($event, 'sNombreEmpresa')"
+                        maxlength="255">
+                        @if(form.get('sNombreEmpresa').invalid) {
                             <mat-error class="text-red-500">
-                                {{ form.get("sUniversidad") | translateMessageForm }}
+                                {{ form.get("sNombreEmpresa") | translateMessageForm }}
                             </mat-error>
                         }
                 </mat-form-field>     
             </div>
             <div class="col-span-1">
                 <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
-                    <mat-label>Grado</mat-label>
+                    <mat-label>Ruc de la empresa</mat-label>
+                    <input
+                        formControlName="sRucEmpresa"
+                        matInput 
+                        placeholder="--"
+                        type="text"
+                        maxlength="11">
+                        @if(form.get('sRucEmpresa').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ form.get("sRucEmpresa") | translateMessageForm }}
+                            </mat-error>
+                        }
+                </mat-form-field>     
+            </div>
+            <div class="col-span-1">
+                <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                    <mat-label>Tipo de cargo</mat-label>
                     <mat-select
-                        formControlName="nGradoId"
+                        formControlName="nCargoId"
                         placeholder="--">
-                        @for (item of data.grade ?? []; track $index) {
+                        @for (item of []; track $index) {
                             <mat-option [value]="item?.nConValor">
                                 {{ item?.sConDescripcion }}
                             </mat-option>
                         }
                     </mat-select>
-                        @if(form.get('nGradoId').invalid) {
+                        @if(form.get('nCargoId').invalid) {
                             <mat-error class="text-red-500">
-                                {{ form.get("nGradoId") | translateMessageForm: 'select' }}
+                                {{ form.get("nCargoId") | translateMessageForm: 'select' }}
                             </mat-error>
                         }
                 </mat-form-field>     
             </div>
             <div class="col-span-1">
                 <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
-                    <mat-label>Profesión</mat-label>
+                    <mat-label>Nombre del cargo</mat-label>
                     <input
-                        formControlName="nProfesionId"
+                        formControlName="sNombreCargo"
                         matInput 
                         placeholder="--"
                         type="text"
                         (keypress)="onKeyPress($event)"
-                        (input)="onInput($event, 'nProfesionId')"
-                        maxlength="100">
-                        @if(form.get('nProfesionId').invalid) {
+                        (input)="onInput($event, 'sNombreCargo')"
+                        maxlength="150">
+                        @if(form.get('sNombreCargo').invalid) {
                             <mat-error class="text-red-500">
-                                {{ form.get("nProfesionId") | translateMessageForm }}
+                                {{ form.get("sNombreCargo") | translateMessageForm }}
                             </mat-error>
                         }
                 </mat-form-field>     
-            </div>
-            
-            <div class="col-span-1">
-                <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
-                    <mat-label>País</mat-label>
-                    <mat-select
-                            formControlName="nPaisId"
-                            placeholder="--">
-                            @for (item of []; track $index) {
-                                <mat-option [value]="item.nIdCargo">
-                                    {{ item.sNombreCargo }}
-                                </mat-option>
-                            }
-                    </mat-select>
-                    @if(form.get('nPaisId').invalid) {
-                        <mat-error class="text-red-500">
-                            {{ form.get("nPaisId") | translateMessageForm: "select" }}
-                        </mat-error>
-                    }
-                </mat-form-field>
             </div>
             
             <div class="col-span-1">

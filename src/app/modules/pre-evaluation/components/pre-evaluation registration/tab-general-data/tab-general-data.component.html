@@ -173,112 +173,35 @@
             </div>
         </div>
     </form>
-    <form class="grid grid-cols-1 gap-4">
+    <div class="grid grid-cols-1 gap-4">
         <div class="w-full px-10">
             <div class="mt-5 w-full">
                 <fo-title-area
                     [titleArea]="'Formación profesional'"
                 ></fo-title-area>
-                <div class="line-form mb-8 mt-3"></div>
+                <div class="line-form mb-6 mt-3"></div>
             </div>
-            <div
-                class="xs:grid-cols-1 mt-4 grid grid-cols-8 gap-4 sm:grid-cols-1 md:grid-cols-8 lg:grid-cols-8"
-            >
-                <div
-                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
-                >
-                    <mat-form-field
-                        class="mat-form-field-custom w-full"
-                        appearance="outline"
-                        floatLabel="always"
-                    >
-                        <mat-label class="">Grado</mat-label>
-                        <mat-select placeholder="--">
-                            <!-- @for (item of lstTypedocument(); track $index) {
-                        <mat-option [value]="item?.nConValor">
-                            {{ item?.sConDescripcion }}
-                        </mat-option>
-                    } -->
-                        </mat-select>
-                        <!-- @if(form.get('nTipoDocumento').invalid) {
-                    <mat-error class="text-red-500">
-                        {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
-                    </mat-error>
-                } -->
-                    </mat-form-field>
+            <div class="px-4">
+                <div class="w-full">
+                    <div class="flex gap-2">
+                        <mat-icon svgIcon="heroicons_outline:academic-cap"></mat-icon>
+                        <p class="universidad">Licenciatura en Ingeniería Informática</p>
+                    </div>
+                    <div class="pl-8">
+    
+                        <p class="university">Universidad Complutense de Madrid</p>
+                        <p class="grado">Bachiller - Perú</p>
+                        <div class="date-time-section">
+                            <div class="date-row">
+                                <span class="date-value">Enero 2023 - Enero 2024</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div
-                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
-                >
-                    <mat-form-field
-                        class="mat-form-field-custom w-full"
-                        appearance="outline"
-                        floatLabel="always"
-                    >
-                        <mat-label class="">Profesión</mat-label>
-                        <mat-select placeholder="--">
-                            <!-- @for (item of lstTypedocument(); track $index) {
-                        <mat-option [value]="item?.nConValor">
-                            {{ item?.sConDescripcion }}
-                        </mat-option>
-                    } -->
-                        </mat-select>
-                        <!-- @if(form.get('nTipoDocumento').invalid) {
-                    <mat-error class="text-red-500">
-                        {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
-                    </mat-error>
-                } -->
-                    </mat-form-field>
-                </div>
-                <div
-                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
-                >
-                    <mat-form-field
-                        class="mat-form-field-custom w-full"
-                        appearance="outline"
-                        floatLabel="always"
-                    >
-                        <mat-label class="">Universidad</mat-label>
-                        <mat-select placeholder="--">
-                            <!-- @for (item of lstTypedocument(); track $index) {
-                        <mat-option [value]="item?.nConValor">
-                            {{ item?.sConDescripcion }}
-                        </mat-option>
-                    } -->
-                        </mat-select>
-                        <!-- @if(form.get('nTipoDocumento').invalid) {
-                    <mat-error class="text-red-500">
-                        {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
-                    </mat-error>
-                } -->
-                    </mat-form-field>
-                </div>
-                <div
-                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
-                >
-                    <mat-form-field
-                        class="mat-form-field-custom w-full"
-                        appearance="outline"
-                        floatLabel="always"
-                    >
-                        <mat-label class="">País</mat-label>
-                        <mat-select placeholder="--">
-                            <!-- @for (item of lstTypedocument(); track $index) {
-                        <mat-option [value]="item?.nConValor">
-                            {{ item?.sConDescripcion }}
-                        </mat-option>
-                    } -->
-                        </mat-select>
-                        <!-- @if(form.get('nTipoDocumento').invalid) {
-                    <mat-error class="text-red-500">
-                        {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
-                    </mat-error>
-                } -->
-                    </mat-form-field>
-                </div>
+                
                 <div
                     appPermissionButton
-                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
+                    class="w-full flex justify-start mt-5"
                 >
                     <fo-button
                         [btnClass]="btnInverter()"
@@ -289,9 +212,10 @@
                     </fo-button>
                 </div>
             </div>
+            
         </div>
-    </form>
-    <form class="grid grid-cols-1 gap-4">
+    </div>
+    <div class="grid grid-cols-1 gap-4">
         <div class="w-full px-10">
             <div class="mt-7 w-full">
                 <fo-title-area
@@ -299,396 +223,77 @@
                 ></fo-title-area>
                 <div class="line-form mb-8 mt-3"></div>
             </div>
-            <div
-                class="xs:grid-cols-1 mt-4 grid grid-cols-8 gap-4 sm:grid-cols-1 md:grid-cols-8 lg:grid-cols-8"
-            >
-                <div
-                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
-                >
-                    <mat-form-field
-                        class="mat-form-field-custom w-full"
-                        appearance="outline"
-                        floatLabel="always"
-                    >
-                        <mat-label>Ruc de la empresa*</mat-label>
-                        <input
-                            matInput
-                            placeholder="--"
-                            type="text"
-                            maxlength="9"
-                        />
-                        <!-- @if(form.get('sApellidosNombres').invalid) {
-                        <mat-error class="text-red-500">
-                            {{ form.get("sApellidosNombres") | translateMessageForm }}
-                        </mat-error>
-                    } -->
-                    </mat-form-field>
+            <div class="px-4">
+                <div class="w-full">
+                    <div class="flex gap-2">
+                        <mat-icon svgIcon="heroicons_outline:building-library"></mat-icon>
+                        <p class="universidad">SDC CONSULTING S.A.C</p>
+                    </div>
+                    <div class="pl-8">
+    
+                        <p class="university">RUC: 2021454787454</p>
+                        <p class="grado">Director - Tecnología de la información</p>
+                        <div class="date-time-section">
+                            <div class="date-row">
+                                <span class="date-value">Enero 2023 - Enero 2024</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div
-                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
-                >
-                    <mat-form-field
-                        class="mat-form-field-custom w-full"
-                        appearance="outline"
-                        floatLabel="always"
-                    >
-                        <mat-label>Empresa*</mat-label>
-                        <input
-                            matInput
-                            placeholder="--"
-                            type="text"
-                            maxlength="9"
-                        />
-                        <!-- @if(form.get('sApellidosNombres').invalid) {
-                        <mat-error class="text-red-500">
-                            {{ form.get("sApellidosNombres") | translateMessageForm }}
-                        </mat-error>
-                    } -->
-                    </mat-form-field>
-                </div>
-                <div
-                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
-                >
-                    <mat-form-field
-                        class="mat-form-field-custom w-full"
-                        appearance="outline"
-                        floatLabel="always"
-                    >
-                        <mat-label class="">Tipo de cargo</mat-label>
-                        <mat-select placeholder="--">
-                            <!-- @for (item of lstTypedocument(); track $index) {
-                        <mat-option [value]="item?.nConValor">
-                            {{ item?.sConDescripcion }}
-                        </mat-option>
-                    } -->
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div
-                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
-                >
-                    <mat-form-field
-                        class="mat-form-field-custom w-full"
-                        appearance="outline"
-                        floatLabel="always"
-                    >
-                        <mat-label>Nombre del cargo*</mat-label>
-                        <input
-                            matInput
-                            placeholder="--"
-                            type="text"
-                            maxlength="9"
-                        />
-                    </mat-form-field>
-                </div>
-                <div
-                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
-                >
-                    <mat-form-field
-                        class="mat-form-field-custom w-full"
-                        appearance="outline"
-                        floatLabel="always"
-                    >
-                        <mat-label>Inicio</mat-label>
-                        <input
-                            (keypress)="onKeyPressDate($event)"
-                            (input)="onInputDate($event, 'dFechaNacimiento')"
-                            [max]="maxDate"
-                            [min]="minDate"
-                            formControlName="dFechaNacimiento"
-                            matInput
-                            maxlength="10"
-                            placeholder="--/--/----"
-                            [matDatepicker]="picker"
-                        />
-                        <mat-datepicker-toggle
-                            matSuffix
-                            [for]="picker"
-                        ></mat-datepicker-toggle>
-                        <mat-datepicker #picker>
-                            <mat-datepicker-actions>
-                                <button mat-button matDatepickerCancel>
-                                    Cancelar
-                                </button>
-                                <button
-                                    mat-raised-button
-                                    color="primary"
-                                    matDatepickerApply
-                                >
-                                    Aplicar
-                                </button>
-                            </mat-datepicker-actions>
-                        </mat-datepicker>
-                        <!--                 @if(form.get('dFechaNacimiento').invalid) {
-                    <mat-error class="text-red-500">
-                        {{ form.get("dFechaNacimiento") | translateMessageForm: "date" }}
-                    </mat-error>
-                } -->
-                    </mat-form-field>
-                </div>
-                <div
-                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
-                >
-                    <mat-form-field
-                        class="mat-form-field-custom w-full"
-                        appearance="outline"
-                        floatLabel="always"
-                    >
-                        <mat-label>Fin</mat-label>
-                        <input
-                            (keypress)="onKeyPressDate($event)"
-                            (input)="onInputDate($event, 'dFechaNacimiento')"
-                            [max]="maxDate"
-                            [min]="minDate"
-                            formControlName="dFechaNacimiento"
-                            matInput
-                            maxlength="10"
-                            placeholder="--/--/----"
-                            [matDatepicker]="picker"
-                        />
-                        <mat-datepicker-toggle
-                            matSuffix
-                            [for]="picker"
-                        ></mat-datepicker-toggle>
-                        <mat-datepicker #picker>
-                            <mat-datepicker-actions>
-                                <button mat-button matDatepickerCancel>
-                                    Cancelar
-                                </button>
-                                <button
-                                    mat-raised-button
-                                    color="primary"
-                                    matDatepickerApply
-                                >
-                                    Aplicar
-                                </button>
-                            </mat-datepicker-actions>
-                        </mat-datepicker>
-                        <!--                 @if(form.get('dFechaNacimiento').invalid) {
-                    <mat-error class="text-red-500">
-                        {{ form.get("dFechaNacimiento") | translateMessageForm: "date" }}
-                    </mat-error>
-                } -->
-                    </mat-form-field>
-                </div>
-                <div
-                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
-                >
-                    <mat-form-field
-                        class="mat-form-field-custom w-full"
-                        appearance="outline"
-                        floatLabel="always"
-                    >
-                        <mat-label>Años de experiencia*</mat-label>
-                        <input
-                            matInput
-                            placeholder="--"
-                            type="text"
-                            maxlength="9"
-                        />
-                        <!-- @if(form.get('sApellidosNombres').invalid) {
-                        <mat-error class="text-red-500">
-                            {{ form.get("sApellidosNombres") | translateMessageForm }}
-                        </mat-error>
-                    } -->
-                    </mat-form-field>
-                </div>
+                
                 <div
                     appPermissionButton
-                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
+                    class="w-full flex justify-start mt-5"
                 >
-                <fo-button
-                     [btnClass]="btnInverter()"
-                     (eventAction)="searchuser()"
-                     [text]="'Agregar experiencia'"
-                     [icon]="iconBtnSearch()"
-                 >
-                 </fo-button>
+                    <fo-button
+                        [btnClass]="btnInverter()"
+                        (eventAction)="loadDataFormExperience()"
+                        [text]="'Agregar experiencia'"
+                        [icon]="iconBtnSearch()"
+                    >
+                    </fo-button>
                 </div>
             </div>
         </div>
-    </form>
+    </div>
     <form class="grid grid-cols-1 gap-4 mb-8">
         <div class="w-full px-10">
             <div class="mt-5 w-full">
                 <fo-title-area [titleArea]="'Capacitaciones'"></fo-title-area>
                 <div class="line-form mb-8 mt-3"></div>
             </div>
-            <div
-                class="xs:grid-cols-1 mt-4 grid grid-cols-8 gap-4 sm:grid-cols-1 md:grid-cols-8 lg:grid-cols-8"
-            >
-                <div
-                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
-                >
-                    <mat-form-field
-                        class="mat-form-field-custom w-full"
-                        appearance="outline"
-                        floatLabel="always"
-                    >
-                        <mat-label>Institución*</mat-label>
-                        <input
-                            matInput
-                            placeholder="--"
-                            type="text"
-                            maxlength="9"
-                        />
-                        <!-- @if(form.get('sApellidosNombres').invalid) {
-                        <mat-error class="text-red-500">
-                            {{ form.get("sApellidosNombres") | translateMessageForm }}
-                        </mat-error>
-                    } -->
-                    </mat-form-field>
+            <div class="px-4">
+                <div class="w-full">
+                    <div class="flex gap-2">
+                        <mat-icon svgIcon="heroicons_outline:building-library"></mat-icon>
+                        <p class="universidad">SDC CONSULTING S.A.C</p>
+                    </div>
+                    <div class="pl-8">
+    
+                        <p class="university">RUC: 2021454787454</p>
+                        <p class="grado">Director - Tecnología de la información</p>
+                        <div class="date-time-section">
+                            <div class="date-row">
+                                <span class="date-value">Enero 2023 - Enero 2024</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <div
-                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
-                >
-                    <mat-form-field
-                        class="mat-form-field-custom w-full"
-                        appearance="outline"
-                        floatLabel="always"
-                    >
-                        <mat-label class="">Tipo de curso</mat-label>
-                        <mat-select placeholder="--">
-                            <!-- @for (item of lstTypedocument(); track $index) {
-                        <mat-option [value]="item?.nConValor">
-                            {{ item?.sConDescripcion }}
-                        </mat-option>
-                    } -->
-                        </mat-select>
-                        <!-- @if(form.get('nTipoDocumento').invalid) {
-                    <mat-error class="text-red-500">
-                        {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
-                    </mat-error>
-                } -->
-                    </mat-form-field>
-                </div>
-                <div
-                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
-                >
-                    <mat-form-field
-                        class="mat-form-field-custom w-full"
-                        appearance="outline"
-                        floatLabel="always"
-                    >
-                        <mat-label>Nombre de la especialidad</mat-label>
-                        <input
-                            matInput
-                            placeholder="--"
-                            type="text"
-                            maxlength="9"
-                        />
-                        <!-- @if(form.get('sApellidosNombres').invalid) {
-                        <mat-error class="text-red-500">
-                            {{ form.get("sApellidosNombres") | translateMessageForm }}
-                        </mat-error>
-                    } -->
-                    </mat-form-field>
-                </div>
-
-                <div
-                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
-                >
-                    <mat-form-field
-                        class="mat-form-field-custom w-full"
-                        appearance="outline"
-                        floatLabel="always"
-                    >
-                        <mat-label>Inicio</mat-label>
-                        <input
-                            (keypress)="onKeyPressDate($event)"
-                            (input)="onInputDate($event, 'dFechaNacimiento')"
-                            [max]="maxDate"
-                            [min]="minDate"
-                            formControlName="dFechaNacimiento"
-                            matInput
-                            maxlength="10"
-                            placeholder="--/--/----"
-                            [matDatepicker]="picker"
-                        />
-                        <mat-datepicker-toggle
-                            matSuffix
-                            [for]="picker"
-                        ></mat-datepicker-toggle>
-                        <mat-datepicker #picker>
-                            <mat-datepicker-actions>
-                                <button mat-button matDatepickerCancel>
-                                    Cancelar
-                                </button>
-                                <button
-                                    mat-raised-button
-                                    color="primary"
-                                    matDatepickerApply
-                                >
-                                    Aplicar
-                                </button>
-                            </mat-datepicker-actions>
-                        </mat-datepicker>
-                        <!--                 @if(form.get('dFechaNacimiento').invalid) {
-                    <mat-error class="text-red-500">
-                        {{ form.get("dFechaNacimiento") | translateMessageForm: "date" }}
-                    </mat-error>
-                } -->
-                    </mat-form-field>
-                </div>
-                <div
-                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
-                >
-                    <mat-form-field
-                        class="mat-form-field-custom w-full"
-                        appearance="outline"
-                        floatLabel="always"
-                    >
-                        <mat-label>Fin</mat-label>
-                        <input
-                            (keypress)="onKeyPressDate($event)"
-                            (input)="onInputDate($event, 'dFechaNacimiento')"
-                            [max]="maxDate"
-                            [min]="minDate"
-                            formControlName="dFechaNacimiento"
-                            matInput
-                            maxlength="10"
-                            placeholder="--/--/----"
-                            [matDatepicker]="picker"
-                        />
-                        <mat-datepicker-toggle
-                            matSuffix
-                            [for]="picker"
-                        ></mat-datepicker-toggle>
-                        <mat-datepicker #picker>
-                            <mat-datepicker-actions>
-                                <button mat-button matDatepickerCancel>
-                                    Cancelar
-                                </button>
-                                <button
-                                    mat-raised-button
-                                    color="primary"
-                                    matDatepickerApply
-                                >
-                                    Aplicar
-                                </button>
-                            </mat-datepicker-actions>
-                        </mat-datepicker>
-                        <!--                 @if(form.get('dFechaNacimiento').invalid) {
-                    <mat-error class="text-red-500">
-                        {{ form.get("dFechaNacimiento") | translateMessageForm: "date" }}
-                    </mat-error>
-                } -->
-                    </mat-form-field>
-                </div>
+                
                 <div
                     appPermissionButton
-                    class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
+                    class="w-full flex justify-start mt-5"
                 >
-                <fo-button
-                    [btnClass]="btnInverter()"
-                    (eventAction)="searchuser()"
-                    [text]="'Agregar capacitación'"
-                    [icon]="iconBtnSearch()"
-                >
-                </fo-button>
+                    <fo-button
+                        [btnClass]="btnInverter()"
+                        (eventAction)="loadDataFormTraining()"
+                        [text]="'Agregar capacitación'"
+                        [icon]="iconBtnSearch()"
+                    >
+                    </fo-button>
                 </div>
             </div>
+
         </div>
     </form>
 </fo-cont-card>

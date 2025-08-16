@@ -1,4 +1,17 @@
 <div class="relative flex h-full w-full flex-col px-12 py-8">
+    @if (data.actions.iconClose) {
+        <div class="absolute top-0 right-0 pt-4 pr-4">
+            <button
+                [matTooltip]="'Cancelar'"
+                type="button"
+                mat-icon-button
+                [matDialogClose]="undefined">
+                <mat-icon
+                    class="text-secondary icon-size-5"
+                    [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
+            </button>
+        </div>
+    }
     <!-- Dismiss button -->
     <!-- @if (true) {
         <div class="absolute right-0 top-0 pr-4 pt-4">
@@ -77,7 +90,7 @@
                 <fo-button-dialog
                     [textBtn]="data.actions.cancel.label"
                     [typeButton]="buttonEnum().CANCEL"
-                    matDialogClose>
+                    [matDialogClose]="false">
                 </fo-button-dialog>
             }
 

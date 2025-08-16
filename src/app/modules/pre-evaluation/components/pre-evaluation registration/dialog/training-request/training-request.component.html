@@ -2,87 +2,86 @@
     <div class="header-dialog-user">
         <div class="header-container-user gap-3 flex">
             <mat-icon class="icon-size-7" svgIcon="mat_outline:person_outline"></mat-icon>
-            <div class="header-text"> {{ data.object ? 'Editar' : 'Agregar' }} formación profesional</div>
+            <div class="header-text"> {{ data.object ? 'Editar' : 'Agregar' }} capacitación</div>
         </div>
     </div>
     <div class="body-dialog-user">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="col-span-1">
                 <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
-                    <mat-label>Universidad</mat-label>
+                    <mat-label>Institución</mat-label>
                     <input
-                        formControlName="sUniversidad"
+                        formControlName="sInstitucion"
                         matInput 
                         placeholder="--"
                         type="text"
                         (keypress)="onKeyPress($event)"
-                        (input)="onInput($event, 'sUniversidad')"
+                        (input)="onInput($event, 'sInstitucion')"
                         maxlength="100">
-                        @if(form.get('sUniversidad').invalid) {
+                        @if(form.get('sInstitucion').invalid) {
                             <mat-error class="text-red-500">
-                                {{ form.get("sUniversidad") | translateMessageForm }}
+                                {{ form.get("sInstitucion") | translateMessageForm }}
                             </mat-error>
                         }
                 </mat-form-field>     
             </div>
             <div class="col-span-1">
                 <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
-                    <mat-label>Grado</mat-label>
+                    <mat-label>Tipo de curso</mat-label>
                     <mat-select
-                        formControlName="nGradoId"
+                        formControlName="nTipoCursoId"
                         placeholder="--">
-                        @for (item of data.grade ?? []; track $index) {
+                        @for (item of []; track $index) {
                             <mat-option [value]="item?.nConValor">
                                 {{ item?.sConDescripcion }}
                             </mat-option>
                         }
                     </mat-select>
-                        @if(form.get('nGradoId').invalid) {
+                        @if(form.get('nTipoCursoId').invalid) {
                             <mat-error class="text-red-500">
-                                {{ form.get("nGradoId") | translateMessageForm: 'select' }}
+                                {{ form.get("nTipoCursoId") | translateMessageForm: 'select' }}
                             </mat-error>
                         }
                 </mat-form-field>     
             </div>
             <div class="col-span-1">
                 <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
-                    <mat-label>Profesión</mat-label>
+                    <mat-label>Nombre de la especialidad</mat-label>
                     <input
-                        formControlName="nProfesionId"
+                        formControlName="sNombreEspecialidad"
                         matInput 
                         placeholder="--"
                         type="text"
                         (keypress)="onKeyPress($event)"
-                        (input)="onInput($event, 'nProfesionId')"
+                        (input)="onInput($event, 'sNombreEspecialidad')"
                         maxlength="100">
-                        @if(form.get('nProfesionId').invalid) {
+                        @if(form.get('sNombreEspecialidad').invalid) {
                             <mat-error class="text-red-500">
-                                {{ form.get("nProfesionId") | translateMessageForm }}
+                                {{ form.get("sNombreEspecialidad") | translateMessageForm }}
                             </mat-error>
                         }
                 </mat-form-field>     
             </div>
-            
             <div class="col-span-1">
-                <mat-form-field  class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
-                    <mat-label>País</mat-label>
-                    <mat-select
-                            formControlName="nPaisId"
-                            placeholder="--">
-                            @for (item of []; track $index) {
-                                <mat-option [value]="item.nIdCargo">
-                                    {{ item.sNombreCargo }}
-                                </mat-option>
-                            }
-                    </mat-select>
-                    @if(form.get('nPaisId').invalid) {
-                        <mat-error class="text-red-500">
-                            {{ form.get("nPaisId") | translateMessageForm: "select" }}
-                        </mat-error>
-                    }
-                </mat-form-field>
+                <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                    <mat-label>Horas lectivas</mat-label>
+                    <input
+                        formControlName="nHorasLectivas"
+                        matInput 
+                        placeholder="--"
+                        type="number"
+                        min="1"
+                        (keydown)="preventInvalidInput($event)"
+                        (input)="enforceRange($event)"
+                        max="200">
+                        @if(form.get('nHorasLectivas').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ form.get("nHorasLectivas") | translateMessageForm }}
+                            </mat-error>
+                        }
+                </mat-form-field>     
             </div>
-            
+
             <div class="col-span-1">
                 <mat-form-field
                     class="mat-form-field-custom w-full"

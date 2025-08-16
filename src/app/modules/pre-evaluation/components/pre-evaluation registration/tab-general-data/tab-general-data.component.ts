@@ -1,9 +1,13 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { CreateFormationRequest } from 'app/modules/pre-evaluation/domain/entities/create-formation.entity';
 import { GeneralButtonEnum } from 'app/shared/enums/general-button.enum';
 import { VocationalTrainingComponent } from '../dialog/vocational-training/vocational-training.component';
 import { MatDialog } from '@angular/material/dialog';
+import { FormationCandidateEntity } from 'app/modules/pre-evaluation/domain/entities/formation-candidate.entity';
+import { WorkExperienceEntity } from 'app/modules/pre-evaluation/domain/entities/work-experience.entity';
+import { ProfessionalExperienceComponent } from '../dialog/professional-experience/professional-experience.component';
+import { TrainingRequestEntity } from 'app/modules/pre-evaluation/domain/entities/training-request.entity';
+import { TrainingRequestComponent } from '../dialog/training-request/training-request.component';
 
 @Component({
     selector: 'app-tab-general-data',
@@ -38,7 +42,7 @@ export class TabGeneralDataComponent {
         }
     }
 
-    loadDataFormDialog(element?: CreateFormationRequest | null): void {
+    loadDataFormDialog(element?: FormationCandidateEntity | null): void {
         this.openFormDialog(element);
 		/* this._spinner.show();
 		forkJoin({
@@ -55,9 +59,57 @@ export class TabGeneralDataComponent {
 		}) */
 	}
 
-    openFormDialog(element: CreateFormationRequest/*  | null, lstStatus: ConstantEntity[], lstPosition: PositionEntity[], lstProfile: RoleEntity[], lstTypePersonal: ConstantEntity[] */): void {
+	loadDataFormTraining(element?: TrainingRequestEntity) {
+		this.openFormDialogWorkTraining(element);
+	}
+
+	loadDataFormExperience(element?: WorkExperienceEntity) {
+		this.openFormDialogWorkExperience(element);
+	}
+
+    openFormDialog(element: FormationCandidateEntity/*  | null, lstStatus: ConstantEntity[], lstPosition: PositionEntity[], lstProfile: RoleEntity[], lstTypePersonal: ConstantEntity[] */): void {
 		const respDialogo = this._matDialog.open(VocationalTrainingComponent, {
-			data: { object: element, /* lstStatus, lstPosition, lstProfile, lstTypePersonal */ },
+			data: { object: element, /* lstStatus, lstPosition, lstProfile, lstTypePersonal */ },//FALTA CANDIDATO y grado
+		    disableClose: true,
+			width: "700px",
+		    minWidth: "350px",
+			panelClass: 'mat-dialog-not-padding',
+		});
+		respDialogo.beforeClosed().subscribe(res => {
+		    if(res){
+				/* this.searchUsers();
+				if(element) {
+					this._ngxToastrService.showSuccess('Usuario actualizado exitosamente', '¡Éxito!'); 
+				} else {
+					this._ngxToastrService.showSuccess('Usuario registrado exitosamente', '¡Éxito!'); 
+				} */
+		    }
+		});
+	}
+
+	openFormDialogWorkExperience(element: WorkExperienceEntity/*  | null, lstStatus: ConstantEntity[], lstPosition: PositionEntity[], lstProfile: RoleEntity[], lstTypePersonal: ConstantEntity[] */): void {
+		const respDialogo = this._matDialog.open(ProfessionalExperienceComponent, {
+			data: { object: element, /* lstStatus, lstPosition, lstProfile, lstTypePersonal */ },//FALTA CANDIDATO y grado
+		    disableClose: true,
+			width: "700px",
+		    minWidth: "350px",
+			panelClass: 'mat-dialog-not-padding',
+		});
+		respDialogo.beforeClosed().subscribe(res => {
+		    if(res){
+				/* this.searchUsers();
+				if(element) {
+					this._ngxToastrService.showSuccess('Usuario actualizado exitosamente', '¡Éxito!'); 
+				} else {
+					this._ngxToastrService.showSuccess('Usuario registrado exitosamente', '¡Éxito!'); 
+				} */
+		    }
+		});
+	}
+
+	openFormDialogWorkTraining(element: TrainingRequestEntity/*  | null, lstStatus: ConstantEntity[], lstPosition: PositionEntity[], lstProfile: RoleEntity[], lstTypePersonal: ConstantEntity[] */): void {
+		const respDialogo = this._matDialog.open(TrainingRequestComponent, {
+			data: { object: element, /* lstStatus, lstPosition, lstProfile, lstTypePersonal */ },//FALTA CANDIDATO y grado
 		    disableClose: true,
 			width: "700px",
 		    minWidth: "350px",

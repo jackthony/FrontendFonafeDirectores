@@ -38,6 +38,9 @@ import {MatRadioModule} from '@angular/material/radio';
 import { NgxMaskDirective } from 'ngx-mask';
 import { VocationalTrainingComponent } from './components/pre-evaluation registration/dialog/vocational-training/vocational-training.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { GenerateRequestComponent } from './components/pre-evaluation registration/generate-request/generate-request.component';
+import { ProfessionalExperienceComponent } from './components/pre-evaluation registration/dialog/professional-experience/professional-experience.component';
+import { TrainingRequestComponent } from './components/pre-evaluation registration/dialog/training-request/training-request.component';
 
 
 @NgModule({
@@ -49,7 +52,10 @@ import { MatDialogModule } from '@angular/material/dialog';
           InfoCandidatesComponent,
           TabDocumentsComponent,
           TabGeneralDataComponent,
-          VocationalTrainingComponent
+          VocationalTrainingComponent,
+          GenerateRequestComponent,
+          ProfessionalExperienceComponent,
+          TrainingRequestComponent
           ],
   imports: [CommonModule,
     PreEvaluationSystemRoutingModule,

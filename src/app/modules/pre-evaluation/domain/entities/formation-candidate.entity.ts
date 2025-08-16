@@ -1,11 +1,10 @@
-
-export interface WorkExperienceEntity {
-    nExperienciaProfId: number;
+export interface FormationCandidateEntity {
+    nFormacionId: number;
     nCandidatoId: number;
-    sRucEmpresa: string;
-    sNombreEmpresa: string;
-    nCargoId: number;
-    sNombreCargo: string;
+    nGradoId: number;
+    nProfesionId: number;
+    sUniversidad: string;
+    nPaisId: number;
     nEstado: number;
     bActivo: boolean;
     dFechaInicio: string;

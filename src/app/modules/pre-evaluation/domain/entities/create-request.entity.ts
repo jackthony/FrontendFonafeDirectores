@@ -1,12 +1,12 @@
-import { CreateCandidateRequest } from "./create-candidate.entity";
-import { CreateFormationRequest } from "./create-formation.entity";
-import { CreateTrainingRequest } from "./create-training.entity";
-import { WorkExperienceRequest } from "./work-experience.entity";
+import { CandidateEntity } from "./candidate.entity";
+import { TrainingRequestEntity } from "./training-request.entity";
+import { FormationCandidateEntity } from "./formation-candidate.entity";
+import { WorkExperienceEntity } from "./work-experience.entity";
 
 export interface CreateRequestEntity {
-    CrearCandidatoRequest: CreateCandidateRequest;
-    Formaciones: CreateFormationRequest[];
-    ExperienciasLaborales: WorkExperienceRequest[];
-    Capacitaciones: CreateTrainingRequest[];
+    crearCandidatoRequest: CandidateEntity;
+    formaciones: FormationCandidateEntity[];
+    experienciasLaborales: WorkExperienceEntity[];
+    capacitaciones: TrainingRequestEntity[];
 
 }

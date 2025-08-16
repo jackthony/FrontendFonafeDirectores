@@ -1,0 +1,351 @@
+
+
+    <div class="w-full">
+        <form [formGroup]="form" class="mb-8 grid grid-cols-1 gap-4">
+            <fo-return (eventActionClick)="returnInit()"></fo-return>
+            <fo-cont-card [enabledPadding]="true">
+                <div class="flex justify-between gap-4">
+                    <div class="name-banner">Ingresar nueva solicitud</div>
+                </div>
+                @if(candidate().bBlock) {
+                    <div class="mb-8 mt-4 flex w-full gap-4">
+                        <div class="exist-card">
+                            <mat-icon
+                                class="mr-2"
+                                svgIcon="heroicons_outline:check-badge"
+                            ></mat-icon>
+                            <span
+                                >El candidato no se encuentra en la lista de personas no
+                                calificadas u observadas.</span
+                            >
+                        </div>
+                    </div>
+                }
+                <div class="line-form mt-3"></div>
+                <div class="mb-6 mt-5 w-full">
+                    <fo-title-area
+                        [titleArea]="'Datos del candidato'"
+                    ></fo-title-area>
+                </div>
+                <div
+                    class="xs:grid-cols-1 mt-4 grid grid-cols-8 gap-4 sm:grid-cols-1 md:grid-cols-8 lg:grid-cols-8"
+                >
+                    <div
+                        class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
+                    >
+                        <mat-form-field
+                            class="mat-form-field-custom w-full"
+                            appearance="outline"
+                            floatLabel="always"
+                        >
+                            <mat-label>Nombres</mat-label>
+                            <input
+                                class="uppercase"
+                                formControlName="sNombres"
+                                matInput
+                                placeholder="--"
+                                type="text"
+                                (keypress)="onKeyPress($event)"
+                                (input)="onInput($event, 'sNombres')"
+                                maxlength="150"
+                            />
+                            @if (form.get('sNombres').invalid) {
+                                <mat-error class="text-red-500">
+                                    {{ form.get('sNombres')| translateMessageForm }}
+                                </mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+                    <div
+                        class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
+                    >
+                        <mat-form-field
+                            class="mat-form-field-custom w-full"
+                            appearance="outline"
+                            floatLabel="always"
+                        >
+                            <mat-label>Apellidos</mat-label>
+                            <input
+                                class="uppercase"
+                                formControlName="sApellidos"
+                                matInput 
+                                placeholder="--"
+                                (keypress)="onKeyPress($event)"
+                                (input)="onInput($event, 'sApellidos')"
+                                type="text"
+                                maxlength="150"
+                            />
+                            @if(form.get('sApellidos').invalid) {
+                                <mat-error class="text-red-500">
+                                    {{ form.get("sApellidos") | translateMessageForm }}
+                                </mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+                    <div
+                        class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
+                    >
+                        <mat-form-field
+                            class="mat-form-field-custom w-full"
+                            appearance="outline"
+                            floatLabel="always"
+                        >
+                            <mat-label>Tipo de documento</mat-label>
+                            <mat-select 
+                                formControlName="nTipoDocumento"
+                                placeholder="--"
+                                >
+                                @for (item of lstTypedocument(); track $index) {
+                                    <mat-option [value]="item?.nConValor">
+                                        {{ item?.sConDescripcion }}
+                                    </mat-option>
+                                }
+                            </mat-select>
+                            @if(form.get('nTipoDocumento').invalid) {
+                                <mat-error class="text-red-500">
+                                    {{ form.get("nTipoDocumento") | translateMessageForm: 'select' }}
+                                </mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+                    <div
+                        class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
+                    >
+                        <mat-form-field
+                            class="mat-form-field-custom w-full"
+                            appearance="outline"
+                            floatLabel="always"
+                        >
+                            <mat-label>Número de documento</mat-label>
+                            <input
+                                formControlName="sNumeroDocumento"
+                                matInput 
+                                placeholder="--"
+                                type="text"
+                                [mask]="form.get('nTipoDocumento').value === typeDocument().ce ? 'AAAAAAAAA':'00000000'"
+                                maxlength="9">
+                            @if(form.get('sNumeroDocumento').invalid) {
+                                <mat-error class="text-red-500">
+                                    {{ form.get("sNumeroDocumento") | translateMessageForm }}
+                                </mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+                    <div
+                        class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
+                    >
+                        <mat-form-field class="mat-form-field-custom w-full" appearance="outline" floatLabel="always">
+                            <mat-label>Fecha de nacimiento</mat-label>
+                            <input
+                                (keypress)="onKeyPressDate($event)"
+                                (input)="onInputDate($event, 'dtFechaNacimiento')"
+                                [max]="maxDate"
+                                [min]="minDate"
+                                formControlName="dtFechaNacimiento"
+                                matInput
+                                maxlength="10"
+                                placeholder="--/--/----"
+                                [matDatepicker]="pickerBird" />
+                            <mat-datepicker-toggle
+                                matSuffix
+                                [for]="pickerBird"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerBird>
+                                <mat-datepicker-actions>
+                                    <button mat-button matDatepickerCancel>
+                                        Cancelar
+                                    </button>
+                                    <button mat-raised-button color="primary" matDatepickerApply>
+                                        Aplicar
+                                    </button>
+                                </mat-datepicker-actions>
+                            </mat-datepicker>
+                            @if(form.get('dtFechaNacimiento').invalid) {
+                                <mat-error class="text-red-500">
+                                    {{ form.get("dtFechaNacimiento") | translateMessageForm: "date" }}
+                                </mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+                    <div
+                        class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
+                    >
+                        <mat-form-field
+                            class="mat-form-field-custom w-full"
+                            appearance="outline"
+                            floatLabel="always"
+                        >
+                            <mat-label class="">Género</mat-label>
+                            <mat-select 
+                                formControlName="nGenero"
+                                placeholder="--">
+                                @for (item of lstGender(); track $index) {
+                                    <mat-option [value]="item?.nConValor">
+                                        {{ item?.sConDescripcion }}
+                                    </mat-option>
+                                }
+                    </mat-select>
+                    @if(form.get('nGenero').invalid) {
+                        <mat-error class="text-red-500">
+                            {{ form.get("nGenero") | translateMessageForm: 'select' }}
+                        </mat-error>
+                    }
+                        </mat-form-field>
+                    </div>
+                    <div
+                        class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
+                    >
+                        <mat-form-field
+                            class="mat-form-field-custom w-full"
+                            appearance="outline"
+                            floatLabel="always"
+                        >
+                            <mat-label>Correo</mat-label>
+                            <input
+                                formControlName="sCorreoElectronico"
+                                matInput 
+                                placeholder="--"
+                                type="text"
+                                maxlength="250"
+                            />
+                            @if(form.get('sCorreoElectronico').invalid) {
+                                <mat-error class="text-red-500">
+                                    {{ form.get("sCorreoElectronico") | translateMessageForm }}
+                                </mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+                    <div
+                        class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
+                    >
+                        <mat-form-field
+                            class="mat-form-field-custom w-full"
+                            appearance="outline"
+                            floatLabel="always"
+                        >
+                            <mat-label>Telefono</mat-label>
+                            <input
+                                formControlName="sTelefono"
+                                mask="000 0000||000 000 000"
+                                matInput 
+                                placeholder="--"
+                                type="text"
+                                maxlength="25"
+                            />
+                            @if(form.get('sTelefono').invalid) {
+                                <mat-error class="text-red-500">
+                                    {{ form.get("sTelefono") | translateMessageForm }}
+                                </mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+                    <div
+                        class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
+                    >
+                        <mat-form-field
+                            class="mat-form-field-custom w-full"
+                            appearance="outline"
+                            floatLabel="always"
+                        >
+                            <mat-label class="">Departamento</mat-label>
+                            <mat-select
+                            formControlName="sDepartamentoId"
+                            placeholder="--">
+                            @for (item of lstDepartments(); track $index) {
+                                <mat-option [value]="item?.sCode">
+                                    {{ item?.sName }}
+                                </mat-option>
+                            }
+                        </mat-select>
+                        @if(form.get('sDepartamentoId').invalid) {
+                            <mat-error class="text-red-500">
+                                {{ form.get("sDepartamentoId") | translateMessageForm: 'select' }}
+                            </mat-error>
+                        }
+                        </mat-form-field>
+                    </div>
+                    <div
+                        class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
+                    >
+                        <mat-form-field
+                            class="mat-form-field-custom w-full"
+                            appearance="outline"
+                            floatLabel="always"
+                        >
+                            <mat-label class="">Provincia</mat-label>
+                            <mat-select
+                                formControlName="sProvinciaId"
+                                placeholder="--">
+                                @for (item of lstProvinces(); track $index) {
+                                    <mat-option [value]="item.sCode">
+                                        {{ item.sName }}
+                                    </mat-option>
+                                }
+                            </mat-select>
+                            @if(form.get('sProvinciaId').invalid) {
+                                <mat-error class="text-red-500">
+                                    {{ form.get("sProvinciaId") | translateMessageForm: 'select' }}
+                                </mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+                    <div
+                        class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
+                    >
+                        <mat-form-field
+                            class="mat-form-field-custom w-full"
+                            appearance="outline"
+                            floatLabel="always"
+                        >
+                            <mat-label class="">Distrito</mat-label>
+                            <mat-select
+                                formControlName="sDistritoId"
+                                placeholder="--">
+                                @for (item of lstDistricts(); track $index) {
+                                    <mat-option [value]="item.sCode">
+                                        {{ item.sName }}
+                                    </mat-option>
+                                }
+                            </mat-select>
+                            @if(form.get('sDistritoId').invalid) {
+                                <mat-error class="text-red-500">
+                                    {{ form.get("sDistritoId") | translateMessageForm: 'select' }}
+                                </mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+                    <div
+                        class="xs:grid-cols-1 col-span-2 sm:col-span-1 md:col-span-4 lg:col-span-2"
+                    >
+                        <mat-form-field
+                            class="mat-form-field-custom w-full"
+                            appearance="outline"
+                            floatLabel="always"
+                        >
+                            <mat-label>Dirección</mat-label>
+                            <input
+                                formControlName="sDireccion"
+                                matInput 
+                                placeholder="--"
+                                type="text"
+                                maxlength="255">
+                            @if(form.get('sDireccion').invalid) {
+                                <mat-error class="text-red-500">
+                                    {{ form.get("sDireccion") | translateMessageForm }}
+                                </mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+                </div>
+                @if (!(candidate().bBlock)) {
+                    <div class="w-full flex justify-end mt-4">
+                        <fo-button
+                                (eventAction)="generateCandidate()"
+                                [text]="'Generar Solicitud'"
+                                [icon]="iconBtnGenerate()"
+                                [btnClass]="btnInverter()"
+                        ></fo-button>
+                    </div>
+                }
+            </fo-cont-card>
+        </form>
+    </div>

@@ -20,40 +20,28 @@ export class HomePreEvaluationPresenter {
     }
 // Class createRequest
     initFormCandidate(element: CreateRequestEntity): FormGroup {
-        const candidate = element?.CrearCandidatoRequest;
+        const candidate = element?.crearCandidatoRequest;
         return this._fb.group({
-            CrearCandidatoRequest: this._fb.group({
-                SNombres: [element ? { disabled: true, value: candidate.SNombres} : '', [Validators.required, this._validationFormService.spaceValidator, Validators.maxLength(150)]],
-                SApellidos: [element ? { disabled: true, value: candidate.SApellidos} : '', [Validators.required, this._validationFormService.spaceValidator, Validators.maxLength(150)]],
-                NTipoDocumento: [element ? { disabled: true, value: candidate.NTipoDocumento} : 0, [Validators.required, Validators.min(1)]],
-                SNumeroDocumento: [element ? { disabled: true, value: candidate.SNumeroDocumento} : '', Validators.required],
-                DtFechaNacimiento: [element ?  { disabled: true, value: candidate.DtFechaNacimiento} : null, [Validators.required, Validators.maxLength(10)]],
-                NGenero: [element ? { disabled: true, value: candidate.NGenero } : 0, [Validators.required, Validators.min(1)]],
-                SCorreoElectronico: [element ? candidate.SCorreoElectronico: '', [Validators.required, Validators.maxLength(250), this._validationFormService.validationMail]],
-                STelefono: [element ? candidate.STelefono: '', [Validators.required, this._validationFormService.validationPhone]],
-                NDepartamentoId: [element ? candidate.NDepartamentoId: 0, [Validators.required, Validators.min(1)]],
-                NProvinciaId: [element ? candidate.NProvinciaId: 0, [Validators.required, Validators.min(1)]],
-                NDistritoId: [element ? candidate.NDistritoId: 0, [Validators.required, Validators.min(1)]],
-                SDireccion: [element ? candidate.SDireccion: '', [Validators.required, this._validationFormService.spaceValidator, Validators.maxLength(255)]],
-                NEstado: [element ? candidate.NEstado: '', Validators.required],
-                BActivo: [element ? candidate.BActivo: true, Validators.required],
-                //CAMBIAR ABAJOOO
-                NUsuarioRegistroId: [element ? candidate.NUsuarioRegistroId: 123/* this._userService.userLogin().usuarioId */, Validators.required],
+            crearCandidatoRequest: this._fb.group({
+                nCandidatoId: [element ? candidate.nCandidatoId : { disabled: true, value: 0  }, Validators.required],
+                nUsuarioId: [element ? candidate.nUsuarioId : 0/*GERARID*/, Validators.required],
+                sNombres: [element ? { disabled: true, value: candidate.sNombres} : '', [Validators.required, this._validationFormService.spaceValidator, Validators.maxLength(150)]],
+                sApellidos: [element ? { disabled: true, value: candidate.sApellidos} : '', [Validators.required, this._validationFormService.spaceValidator, Validators.maxLength(150)]],
+                nTipoDocumento: [element ? { disabled: true, value: candidate.nTipoDocumento} : 0, [Validators.required, Validators.min(1)]],
+                sNumeroDocumento: [element ? { disabled: true, value: candidate.sNumeroDocumento} : '', Validators.required],
+                dtFechaNacimiento: [element ?  { disabled: true, value: candidate.dtFechaNacimiento} : null, [Validators.required, Validators.maxLength(10)]],
+                nGenero: [element ? { disabled: true, value: candidate.nGenero } : 0, [Validators.required, Validators.min(1)]],
+                sCorreoElectronico: [element ? candidate.sCorreoElectronico: '', [Validators.required, Validators.maxLength(250), this._validationFormService.validationMail]],
+                sTelefono: [element ? candidate.sTelefono: '', [Validators.required, this._validationFormService.validationPhone]],
+                sDepartamentoId: [element ? candidate.sDepartamentoId: 0, [Validators.required, Validators.min(1)]],
+                sProvinciaId: [element ? candidate.sProvinciaId: 0, [Validators.required, Validators.min(1)]],
+                sDistritoId: [element ? candidate.sDistritoId: 0, [Validators.required, Validators.min(1)]],
+                sDireccion: [element ? candidate.sDireccion: '', [Validators.required, this._validationFormService.spaceValidator, Validators.maxLength(255)]],
+                nEstado: [element ? candidate.nEstado: 1, Validators.required],
+                bActivo: [element ? candidate.bActivo: true, Validators.required],
+                nUsuarioRegistroId: [{ disabled: element, value: 1/* this._userService.userLogin().usuarioId */ }, Validators.required],
+                nUsuarioActualizacionId: [{ disabled: !element, value: 2/* this._userService.userLogin().usuarioId */ },Validators.required],
             })
-            /* id: [project?.id ?? 0],
-            schemaId: [project?.schemaId ?? 0, Validators.min(1)],
-            workFlowId:[project?.workFlowId ?? 0, Validators.min(1)],
-            code: [project?.code ?? ""],
-            name: [project?.name ?? "", [Validators.required, Validators.maxLength(80)]],
-            projectTypeId: [project?.projectTypeId ?? 0, Validators.min(1)],
-            cPerJurCodigo: [project?.cPerJurCodigo ?? this.user.cPerJuridica],
-            state: [project?.state ?? 1],
-            registrationDate: [project?.registrationDate ?? new Date()],
-            registrationUsu: [project?.registrationUsu ?? this.user.cPerCodigo],
-            registrationHost: [project?.registrationHost ?? this.ipClient],
-            updateDate: [project?.updateDate ?? new Date()],
-            updateUsu: [project?.updateUsu ?? this.user.cPerCodigo],
-            updateHost: [project?.updateHost ?? this.ipClient] */
         });
     }
     
